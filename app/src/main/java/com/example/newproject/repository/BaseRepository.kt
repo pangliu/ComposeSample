@@ -1,7 +1,7 @@
 package com.example.newproject.repository
 
 import com.example.newproject.network.SessionManager
-import com.example.newproject.network.model.BaseResponse
+import com.example.newproject.network.model.response.BaseResponse
 import com.example.newproject.network.model.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

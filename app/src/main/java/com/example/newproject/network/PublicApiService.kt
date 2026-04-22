@@ -5,9 +5,9 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Body
 
-import com.example.newproject.network.model.LoginRequest
-import com.example.newproject.network.model.LoginResponse
-import com.example.newproject.network.model.BaseResponse
+import com.example.newproject.network.model.request.LoginRequest
+import com.example.newproject.network.model.response.LoginResponse
+import com.example.newproject.network.model.response.BaseResponse
 
 interface PublicApiService {
     // 這裡放不需要 Token 的 API，例如登入、註冊

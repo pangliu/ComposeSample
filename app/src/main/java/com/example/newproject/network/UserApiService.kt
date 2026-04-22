@@ -1,6 +1,6 @@
 package com.example.newproject.network
 
-import com.example.newproject.network.model.BaseResponse
+import com.example.newproject.network.model.response.BaseResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 

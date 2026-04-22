@@ -2,9 +2,9 @@ package com.example.newproject.network.fake
 
 import com.example.newproject.model.Post
 import com.example.newproject.network.PublicApiService
-import com.example.newproject.network.model.BaseResponse
-import com.example.newproject.network.model.LoginRequest
-import com.example.newproject.network.model.LoginResponse
+import com.example.newproject.network.model.response.BaseResponse
+import com.example.newproject.network.model.request.LoginRequest
+import com.example.newproject.network.model.response.LoginResponse
 import kotlinx.coroutines.delay
 
 class FakePublicApiService : PublicApiService {

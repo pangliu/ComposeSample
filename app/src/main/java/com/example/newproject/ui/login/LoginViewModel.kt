@@ -3,7 +3,7 @@ package com.example.newproject.ui.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newproject.repository.AuthRepository
-import com.example.newproject.network.model.LoginRequest
+import com.example.newproject.network.model.request.LoginRequest
 import com.example.newproject.network.model.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

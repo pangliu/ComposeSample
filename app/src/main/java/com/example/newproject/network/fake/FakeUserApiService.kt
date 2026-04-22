@@ -1,7 +1,7 @@
 package com.example.newproject.network.fake
 
 import com.example.newproject.network.UserApiService
-import com.example.newproject.network.model.BaseResponse
+import com.example.newproject.network.model.response.BaseResponse
 import kotlinx.coroutines.delay
 
 class FakeUserApiService : UserApiService {
