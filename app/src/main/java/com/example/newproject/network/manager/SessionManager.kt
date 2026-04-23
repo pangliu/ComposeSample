@@ -1,4 +1,4 @@
-package com.example.newproject.network
+package com.example.newproject.network.manager
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

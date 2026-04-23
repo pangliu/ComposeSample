@@ -1,4 +1,4 @@
-package com.example.newproject.network
+package com.example.newproject.network.api
 
 import com.example.newproject.network.model.response.BaseResponse
 import retrofit2.http.GET

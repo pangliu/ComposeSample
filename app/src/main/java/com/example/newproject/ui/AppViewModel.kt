@@ -1,7 +1,7 @@
 package com.example.newproject.ui
 
 import androidx.lifecycle.ViewModel
-import com.example.newproject.network.SessionManager
+import com.example.newproject.network.manager.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

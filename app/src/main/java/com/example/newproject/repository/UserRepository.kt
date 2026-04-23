@@ -1,9 +1,9 @@
 package com.example.newproject.repository
 
-import com.example.newproject.network.UserApiService
+import com.example.newproject.network.api.UserApiService
 import com.example.newproject.network.model.NetworkResult
 
-import com.example.newproject.network.SessionManager
+import com.example.newproject.network.manager.SessionManager
 import javax.inject.Inject
 
 /**

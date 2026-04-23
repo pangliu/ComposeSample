@@ -1,10 +1,13 @@
 package com.example.newproject.di
 
+import android.util.Log
 import com.example.newproject.network.AuthInterceptor
-import com.example.newproject.network.CardApiService
-import com.example.newproject.network.PaymentApiService
-import com.example.newproject.network.PublicApiService
-import com.example.newproject.network.UserApiService
+import com.example.newproject.network.api.CardApiService
+import com.example.newproject.network.api.PaymentApiService
+import com.example.newproject.network.api.PublicApiService
+import com.example.newproject.network.api.UserApiService
+import com.example.newproject.network.fake.FakePublicApiService
+import com.example.newproject.network.fake.FakeUserApiService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -35,7 +38,9 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().apply {
+        return HttpLoggingInterceptor { message ->
+            Log.d("API_LOG", message)
+        }.apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
     }
@@ -74,10 +79,10 @@ object NetworkModule {
     @Singleton
     fun providePublicApiService(@PublicClient retrofit: Retrofit): PublicApiService {
         // 🔴 正式版：
-        // return retrofit.create(PublicApiService::class.java)
+//         return retrofit.create(PublicApiService::class.java)
 
         // 🟢 假資料開發版：
-        return com.example.newproject.network.fake.FakePublicApiService()
+        return FakePublicApiService()
     }
 
     // ==============================================================
@@ -119,7 +124,7 @@ object NetworkModule {
         // return retrofit.create(UserApiService::class.java)
 
         // 🟢 假資料開發版：
-        return com.example.newproject.network.fake.FakeUserApiService()
+        return FakeUserApiService()
     }
 
     @Provides

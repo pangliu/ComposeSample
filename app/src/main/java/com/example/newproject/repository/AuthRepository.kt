@@ -1,10 +1,10 @@
 package com.example.newproject.repository
 
-import com.example.newproject.network.PublicApiService
-import com.example.newproject.network.SessionManager
+import com.example.newproject.network.api.PublicApiService
+import com.example.newproject.network.manager.SessionManager
 import com.example.newproject.network.model.request.LoginRequest
 import com.example.newproject.network.model.NetworkResult
-import com.example.newproject.network.TokenManager
+import com.example.newproject.network.manager.TokenManager
 import com.example.newproject.network.model.response.LoginResponse
 import javax.inject.Inject
 

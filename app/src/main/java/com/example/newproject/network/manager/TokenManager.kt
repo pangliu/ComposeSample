@@ -1,4 +1,4 @@
-package com.example.newproject.network
+package com.example.newproject.network.manager
 
 import android.content.Context
 import android.content.SharedPreferences
