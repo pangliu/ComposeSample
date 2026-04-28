@@ -24,15 +24,8 @@ fun HomeScreen(viewModel: HomeViewModel) {
 @Composable
 fun HomeScreenContent(state: HomeState) {
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("首頁 (UserInfo)") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                )
-            )
-        }
+        containerColor = androidx.compose.ui.graphics.Color.Black,
+        contentColor = androidx.compose.ui.graphics.Color.White
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -92,7 +85,11 @@ fun HomeScreenPreview() {
 fun PostCard(post: Post) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = androidx.compose.ui.graphics.Color.DarkGray,
+            contentColor = androidx.compose.ui.graphics.Color.White
+        )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = post.title, style = MaterialTheme.typography.titleSmall)

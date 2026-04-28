@@ -11,6 +11,9 @@ import com.example.newproject.ui.home.HomeViewModel
 import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
 
+import com.example.newproject.ui.welcome.WelcomeScreen
+import com.example.newproject.ui.welcome.WelcomeViewModel
+
 @Composable
 fun AppNavigation(
     appViewModel: AppViewModel = hiltViewModel()
@@ -27,7 +30,24 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "welcome") {
+        
+        composable("welcome") {
+            val welcomeViewModel: WelcomeViewModel = hiltViewModel()
+            WelcomeScreen(
+                viewModel = welcomeViewModel,
+                onNavigateToHome = {
+                    navController.navigate("home") {
+                        popUpTo("welcome") { inclusive = true }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.navigate("login") {
+                        popUpTo("welcome") { inclusive = true }
+                    }
+                }
+            )
+        }
         
         composable("login") {
             val loginViewModel: LoginViewModel = hiltViewModel()
