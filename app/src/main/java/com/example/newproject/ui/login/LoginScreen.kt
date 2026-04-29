@@ -42,8 +42,8 @@ fun LoginScreen(
 
     LoginScreenContent(
         state = state,
-        onLoginClick = {
-//            viewModel.login()
+        onLoginClick = { phone, pwd ->
+            viewModel.login(phone, pwd)
         }
     )
 }
@@ -52,7 +52,7 @@ fun LoginScreen(
 @Composable
 fun LoginScreenContent(
     state: LoginState,
-    onLoginClick: () -> Unit
+    onLoginClick: (String, String) -> Unit
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -178,8 +178,7 @@ fun LoginScreenContent(
             onDismissRequest = { showLoginSheet = false },
             onLoginSubmit = { mobileNumber, password ->
                 showLoginSheet = false
-                // 在實際應用中，可以將 mobileNumber 和 password 傳遞給 viewModel 進行登入
-                onLoginClick() 
+                onLoginClick(mobileNumber, password) 
             }
         )
     }
@@ -189,6 +188,6 @@ fun LoginScreenContent(
 @Composable
 fun LoginScreenPreview() {
     MaterialTheme {
-        LoginScreenContent(state = LoginState.Idle, onLoginClick = {})
+        LoginScreenContent(state = LoginState.Idle, onLoginClick = { _, _ -> })
     }
 }

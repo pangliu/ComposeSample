@@ -33,8 +33,8 @@ class LoginViewModel @Inject constructor(
             _loginState.value = LoginState.Loading
             
             val request = LoginRequest(
-                account = "test",
-                password = "1234"
+                account = phoneNum,
+                password = password
             )
             
             // 使用 AuthRepository 與 NetworkResult 來處理
