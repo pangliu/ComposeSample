@@ -1,3 +1,52 @@
 <resources>
+    <!-- App General -->
     <string name="app_name">NewProject</string>
+
+    <!-- DrawerMenuContent -->
+    <string name="tara">Tara!</string>
+    <string name="account_status">Account Status</string>
+    <string name="check_application_progress">Check Application Progress</string>
+    <string name="check_application_status">Check Application Status</string>
+    <string name="verify_my_identity">Verify My Identity</string>
+    <string name="verify_identity">Verify Identity</string>
+    <string name="product_features">Product Features</string>
+    <string name="real_time_fx_rates">Real-time FX Rates</string>
+    <string name="explore_xcash_features">Explore Xcash Features</string>
+    <string name="help_policies">Help &amp; Policies</string>
+    <string name="help_center">Help Center</string>
+    <string name="user_terms_policies">User Terms &amp; Policies</string>
+    <string name="security_privacy">Security &amp; Privacy</string>
+
+    <!-- AccountStatusDialog -->
+    <string name="select_action">SELECT ACTION</string>
+    <string name="close">Close</string>
+    <string name="go">Go</string>
+
+    <!-- LoginScreen -->
+    <string name="menu_desc">Menu</string>
+    <string name="xcash_logo_desc">xCash Logo</string>
+    <string name="language_desc">Language</string>
+    <string name="language_en">EN</string>
+    <string name="center_neon_logo_desc">Center Neon Logo</string>
+    <string name="logging_in">Logging in...</string>
+    <string name="login_btn">Login</string>
+    <string name="login_or">or</string>
+    <string name="dont_have_account">"Don\'t have an account? "</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="shield_desc">Shield</string>
+    <string name="regulated_by_bsp">Regulated by BSP</string>
+
+    <!-- LoginBottomSheet -->
+    <string name="mobile_number">Mobile Number</string>
+    <string name="password">Password</string>
+    <string name="password_hint_length">8+ Chars</string>
+    <string name="password_hint_uppercase">Uppercase</string>
+    <string name="password_hint_number">Number</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login_biometrics">Log in with Biometrics</string>
+    <string name="visibility_desc">Visibility</string>
+    <string name="toggle_visibility_desc">Toggle Password Visibility</string>
+    <string name="submit_login_desc">Submit Login</string>
+    <string name="face_id_desc">Face ID</string>
+    <string name="fingerprint_desc">Fingerprint</string>
 </resources>

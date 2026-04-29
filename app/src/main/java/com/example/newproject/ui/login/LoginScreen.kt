@@ -1,26 +1,20 @@
 package com.example.newproject.ui.login
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
@@ -29,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.components.LoadingDialog
-import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.NeonPurple
 import com.example.newproject.ui.theme.WelcomeBackground
 import kotlinx.coroutines.launch
@@ -49,7 +42,9 @@ fun LoginScreen(
 
     LoginScreenContent(
         state = state,
-        onLoginClick = { viewModel.login() }
+        onLoginClick = {
+//            viewModel.login()
+        }
     )
 }
 
@@ -61,6 +56,7 @@ fun LoginScreenContent(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var showLoginSheet by remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -92,7 +88,7 @@ fun LoginScreenContent(
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Icon(
                         imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu",
+                        contentDescription = stringResource(id = R.string.menu_desc),
                         tint = NeonPurple,
                         modifier = Modifier
                             .size(28.dp)
@@ -102,7 +98,7 @@ fun LoginScreenContent(
                     
                     Image(
                         painter = painterResource(id = R.drawable.ic_xcash),
-                        contentDescription = "xCash Logo",
+                        contentDescription = stringResource(id = R.string.xcash_logo_desc),
                         modifier = Modifier.height(40.dp).align(Alignment.Center)
                     )
                     
@@ -112,12 +108,12 @@ fun LoginScreenContent(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Info,
-                            contentDescription = "Language",
+                            contentDescription = stringResource(id = R.string.language_desc),
                             tint = NeonPurple,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("EN", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text(stringResource(id = R.string.language_en), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     }
                 }
 
@@ -128,7 +124,7 @@ fun LoginScreenContent(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_xcash_logo),
-                        contentDescription = "Center Neon Logo",
+                        contentDescription = stringResource(id = R.string.center_neon_logo_desc),
                         modifier = Modifier.fillMaxWidth(0.9f)
                     )
                 }
@@ -143,7 +139,7 @@ fun LoginScreenContent(
                     }
 
                     Button(
-                        onClick = onLoginClick,
+                        onClick = { showLoginSheet = true },
                         enabled = state !is LoginState.Loading,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -152,29 +148,40 @@ fun LoginScreenContent(
                         colors = ButtonDefaults.buttonColors(containerColor = NeonPurple, contentColor = Color.White),
                         shape = RoundedCornerShape(25.dp)
                     ) {
-                        Text(if (state is LoginState.Loading) "Logging in..." else "Login", fontSize = 16.sp)
+                        Text(if (state is LoginState.Loading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.login_btn), fontSize = 16.sp)
                     }
                     
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = "or", color = Color.LightGray, fontSize = 14.sp)
+                    Text(text = stringResource(id = R.string.login_or), color = Color.LightGray, fontSize = 14.sp)
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = buildAnnotatedString {
-                            append("Don't have an account? ")
-                            withStyle(SpanStyle(color = NeonPurple)) { append("Sign Up") }
+                            append(stringResource(id = R.string.dont_have_account))
+                            withStyle(SpanStyle(color = NeonPurple)) { append(stringResource(id = R.string.sign_up)) }
                         },
                         fontSize = 14.sp
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Info, contentDescription = "Shield", modifier = Modifier.size(14.dp), tint = Color.White)
+                        Icon(Icons.Default.Info, contentDescription = stringResource(id = R.string.shield_desc), modifier = Modifier.size(14.dp), tint = Color.White)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Regulated by BSP", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text(stringResource(id = R.string.regulated_by_bsp), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
+    }
+
+    if (showLoginSheet) {
+        LoginBottomSheet(
+            onDismissRequest = { showLoginSheet = false },
+            onLoginSubmit = { mobileNumber, password ->
+                showLoginSheet = false
+                // 在實際應用中，可以將 mobileNumber 和 password 傳遞給 viewModel 進行登入
+                onLoginClick() 
+            }
+        )
     }
 }
 
