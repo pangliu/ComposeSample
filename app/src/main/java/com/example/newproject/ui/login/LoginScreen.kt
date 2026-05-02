@@ -44,6 +44,9 @@ fun LoginScreen(
         state = state,
         onLoginClick = { phone, pwd ->
             viewModel.login(phone, pwd)
+        },
+        onResetState = {
+            viewModel.resetState()
         }
     )
 }
@@ -52,7 +55,8 @@ fun LoginScreen(
 @Composable
 fun LoginScreenContent(
     state: LoginState,
-    onLoginClick: (String, String) -> Unit
+    onLoginClick: (String, String) -> Unit,
+    onResetState: () -> Unit = {}
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -180,6 +184,14 @@ fun LoginScreenContent(
                 showLoginSheet = false
                 onLoginClick(mobileNumber, password) 
             }
+        )
+    }
+
+    if (state is LoginState.NeedsVerification) {
+        VerifyMobileDialog(
+            initialPhone = state.phone,
+            onDismiss = { onResetState() },
+            onSubmit = { /* TODO: OTP Verification */ }
         )
     }
 }

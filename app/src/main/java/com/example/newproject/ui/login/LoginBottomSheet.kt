@@ -9,6 +9,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -149,6 +151,7 @@ fun LoginBottomSheetContent(
                         textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
                         cursorBrush = SolidColor(NeonCyan),
                         singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -160,7 +163,12 @@ fun LoginBottomSheetContent(
                     contentAlignment = Alignment.Center
                 ) {
                     // 暫時使用 Info 替代眼睛圖示，若要使用 Visibility，需加入 material-icons-extended 依賴
-                    Icon(imageVector = Icons.Default.Info, contentDescription = stringResource(id = R.string.visibility_desc), tint = Color.LightGray)
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = stringResource(id = R.string.visibility_desc),
+                        tint = Color.LightGray,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -209,7 +217,8 @@ fun LoginBottomSheetContent(
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.Info else Icons.Default.Lock,
                         contentDescription = stringResource(id = R.string.toggle_visibility_desc),
-                        tint = Color.LightGray
+                        tint = Color.LightGray,
+                        modifier = Modifier.size(18.dp)
                     )
                 }
             }

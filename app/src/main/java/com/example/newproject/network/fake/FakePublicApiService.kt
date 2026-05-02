@@ -12,21 +12,31 @@ class FakePublicApiService : PublicApiService {
         delay(1000) // 模擬網路延遲
         
         // 假資料邏輯判斷
-        return if (request.account == "test" || request.account == "admin") {
-            BaseResponse(
-                code = 200,
-                errorMsg = "登入成功",
-                result = LoginResponse(
-                    accessToken = "mock_access_token_123",
-                    refreshToken = "mock_refresh_token_456"
+        return when (request.account) {
+            "test", "admin", "success" -> {
+                BaseResponse(
+                    code = 200,
+                    errorMsg = "登入成功",
+                    result = LoginResponse(
+                        accessToken = "mock_access_token_123",
+                        refreshToken = "mock_refresh_token_456"
+                    )
                 )
-            )
-        } else {
-            BaseResponse(
-                code = 1005, // 模擬之前提到的密碼錯誤/無效 token 代碼
-                errorMsg = "帳號或密碼錯誤 (Mock)",
-                result = null
-            )
+            }
+            "verify" -> {
+                BaseResponse(
+                    code = 2001, // 模擬 deviceId 錯誤需簡訊驗證
+                    errorMsg = "需要簡訊驗證",
+                    result = null
+                )
+            }
+            else -> {
+                BaseResponse(
+                    code = 1005, // 模擬之前提到的密碼錯誤/無效 token 代碼
+                    errorMsg = "帳號或密碼錯誤 (Mock)",
+                    result = null
+                )
+            }
         }
     }
 
