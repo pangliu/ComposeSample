@@ -1,5 +1,6 @@
 package com.example.newproject.ui.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -47,6 +49,9 @@ fun LoginScreen(
         },
         onResetState = {
             viewModel.resetState()
+        },
+        onVerifyOtp = { phone, otp, onSuccess, onError ->
+            viewModel.verifyOtp(phone, otp, onSuccess, onError)
         }
     )
 }
@@ -56,8 +61,17 @@ fun LoginScreen(
 fun LoginScreenContent(
     state: LoginState,
     onLoginClick: (String, String) -> Unit,
-    onResetState: () -> Unit = {}
+    onResetState: () -> Unit = {},
+    onVerifyOtp: (String,
+                  String,
+                  () -> Unit,
+                  (String) -> Unit
+            ) -> Unit = { _, _, _, _ -> }
+    /**
+     * 為了預覽方便，給予預設值在後面 preview function 就不用加 onVerifyOtp = { _, _, _, _ -> }
+     */
 ) {
+    val context = LocalContext.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showLoginSheet by remember { mutableStateOf(false) }
@@ -191,7 +205,16 @@ fun LoginScreenContent(
         VerifyMobileDialog(
             initialPhone = state.phone,
             onDismiss = { onResetState() },
-            onSubmit = { /* TODO: OTP Verification */ }
+            onSubmit = { otp -> 
+                onVerifyOtp(
+                    state.phone,
+                    otp,
+                    { /* 成功時由 LaunchedEffect(state) 自動導向 home */ },
+                    { errorMsg ->
+                        Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
+                    }
+                )
+            }
         )
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.newproject.repository.AuthRepository
 import com.example.newproject.network.model.request.LoginRequest
 import com.example.newproject.network.model.NetworkResult
+import com.example.newproject.network.model.request.VerifyOtpRequest
 import com.example.newproject.utils.DeviceInfoProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -71,5 +72,30 @@ class LoginViewModel @Inject constructor(
 
     fun resetState() {
         _loginState.value = LoginState.Idle
+    }
+
+    fun verifyOtp(phone: String, otp: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        viewModelScope.launch {
+            _loginState.value = LoginState.Loading
+            val request = VerifyOtpRequest(
+                phone = phone,
+                otp = otp,
+                deviceId = deviceInfoProvider.deviceId
+            )
+            when (val result = authRepository.verifyOtp(request)) {
+                is NetworkResult.Success -> {
+                    _loginState.value = LoginState.Success
+                    onSuccess()
+                }
+                is NetworkResult.Error -> {
+                    _loginState.value = LoginState.NeedsVerification(phone)
+                    onError(result.message)
+                }
+                is NetworkResult.Exception -> {
+                    _loginState.value = LoginState.NeedsVerification(phone)
+                    onError(result.e.message ?: "網路異常")
+                }
+            }
+        }
     }
 }

@@ -176,6 +176,9 @@ fun VerifyMobileDialog(
                             val digitsOnly = newValue.filter { it.isDigit() }
                             if (digitsOnly.length <= 6) {
                                 otpCode = digitsOnly
+                                if (otpCode.length == 6) {
+                                    onSubmit(otpCode)
+                                }
                             }
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
