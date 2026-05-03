@@ -18,7 +18,4 @@ interface PublicApiService {
 
     @POST("/api/verify-otp")
     suspend fun verifyOtp(@Body request: VerifyOtpRequest): BaseResponse<VerifyOtpResponse>
-
-    @GET("posts?_limit=2") // 僅作為範例
-    suspend fun getPublicPosts(): List<Post>
 }

@@ -61,12 +61,4 @@ class FakePublicApiService : PublicApiService {
             )
         }
     }
-
-    override suspend fun getPublicPosts(): List<Post> {
-        delay(500)
-        return listOf(
-            Post(userId = 1, id = 101, title = "Mock Title 1", body = "Mock Body 1"),
-            Post(userId = 1, id = 102, title = "Mock Title 2", body = "Mock Body 2")
-        )
-    }
 }

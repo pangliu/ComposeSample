@@ -2,15 +2,23 @@ package com.example.newproject.network.fake
 
 import com.example.newproject.network.api.UserApiService
 import com.example.newproject.network.model.response.BaseResponse
+import com.example.newproject.network.model.response.UserInfoResponse
 import kotlinx.coroutines.delay
 
 class FakeUserApiService : UserApiService {
-    override suspend fun getUserInfo(): BaseResponse<Any> {
+    override suspend fun getUserInfo(): BaseResponse<UserInfoResponse> {
         delay(800) // 模擬網路延遲
         return BaseResponse(
             code = 200,
             errorMsg = "成功",
-            result = mapOf("name" to "Hank (Fake)", "email" to "hank.fake@gmail.com")
+            result = UserInfoResponse(
+                userId = "U12345678",
+                userName = "Hank Liu",
+                userPhone = "0912345678",
+                userEmail = "hank.fake@gmail.com",
+                cashBalance = 12500.50,
+                tokenBalance = 8888.0
+            )
         )
     }
 

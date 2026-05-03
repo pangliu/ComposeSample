@@ -4,9 +4,11 @@ import com.example.newproject.network.model.response.BaseResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 
+import com.example.newproject.network.model.response.UserInfoResponse
+
 interface UserApiService {
     @GET("/api/user/info")
-    suspend fun getUserInfo(): BaseResponse<Any> 
+    suspend fun getUserInfo(): BaseResponse<UserInfoResponse> 
 
     @POST("/api/upload/user/image")
     suspend fun uploadUserImage(): BaseResponse<Any>

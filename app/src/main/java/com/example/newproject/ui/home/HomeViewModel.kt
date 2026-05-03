@@ -2,7 +2,6 @@ package com.example.newproject.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newproject.model.Post
 import com.example.newproject.repository.UserRepository
 import com.example.newproject.network.model.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,9 +11,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import com.example.newproject.network.model.response.UserInfoResponse
+
 sealed class HomeState {
     object Loading : HomeState()
-    data class Success(val userInfo: String, val posts: List<Post>) : HomeState()
+    data class Success(val userInfo: UserInfoResponse) : HomeState()
     data class Error(val message: String) : HomeState()
 }
 
@@ -39,10 +40,12 @@ class HomeViewModel @Inject constructor(
             
             when (result) {
                 is NetworkResult.Success -> {
-                    _homeState.value = HomeState.Success(
-                        userInfo = result.data.toString(), // 這裡的 data 已經解開 BaseResponse 拿到內層物件了
-                        posts = listOf(Post(userId = 1, id = 1, title="Hello Domain API", body="成功利用 Repository 拆分！"))
-                    )
+                    val userInfo = result.data
+                    if (userInfo != null) {
+                        _homeState.value = HomeState.Success(userInfo = userInfo)
+                    } else {
+                        _homeState.value = HomeState.Error("無法取得使用者資料")
+                    }
                 }
                 is NetworkResult.Error -> {
                     // API 正常，但是後端回傳特殊的錯誤代碼與訊息
