@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -192,7 +193,7 @@ fun CustomBottomNavigation() {
 }
 
 @Composable
-fun BottomNavItem(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, isSelected: Boolean, onClick: () -> Unit) {
+fun BottomNavItem(icon: ImageVector, title: String, isSelected: Boolean, onClick: () -> Unit) {
     val color = if (isSelected) NeonCyan else Color.Gray
     val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
 

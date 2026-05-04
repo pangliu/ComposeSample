@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -14,20 +15,21 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,15 +38,17 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.zIndex
 import com.example.newproject.ui.theme.CardGradientMid
 import com.example.newproject.ui.theme.CardGradientStart
 import com.example.newproject.ui.theme.CashInGreen
@@ -151,68 +155,89 @@ fun EditEssentialsContent(
             fontWeight = FontWeight.Bold
         )
 
-//        Spacer(modifier = Modifier.height(6.dp))
-
         Text(
-            text = "Drag to reorder your shortcuts",
+            text = "Long press to drag, tap to move",
             color = Color.Gray,
             fontSize = 12.sp
         )
 
-//        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // 帶分類標題的 Grid
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+        // 可滾動的項目區域
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .verticalScroll(rememberScrollState())
         ) {
             // ── My Menu 區塊 ──
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                SectionHeader(title = "My Menu", count = myMenuItems.size)
+            SectionHeader(title = "My Menu", count = myMenuItems.size)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            myMenuItems.chunked(4).forEach { row ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp), // 極小邊距，防止放大裁切但不影響視覺靠邊
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    row.forEach { item ->
+                        key(item.label) {
+                            DraggableEssentialItem(
+                                item = item,
+                                badgeType = BadgeType.REMOVE,
+                                onClick = { onRemoveFromMyMenu(item) },
+                                onDragMoved = { onRemoveFromMyMenu(item) }
+                            )
+                        }
+                    }
+                    repeat(4 - row.size) { Spacer(Modifier.width(70.dp)) }
+                }
+                Spacer(Modifier.height(16.dp))
             }
 
-            items(myMenuItems, key = { it.label }) { item ->
-                EditableEssentialItemView(
-                    item = item,
-                    badgeType = BadgeType.REMOVE,
-                    onClick = { onRemoveFromMyMenu(item) }
-                )
-            }
+            Spacer(modifier = Modifier.height(8.dp))
 
             // ── Other 區塊 ──
             if (otherItems.isNotEmpty()) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    SectionHeader(
-                        title = "Other",
-                        count = otherItems.size,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
+                SectionHeader(
+                    title = "Other",
+                    count = otherItems.size,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                items(otherItems, key = { it.label }) { item ->
-                    EditableEssentialItemView(
-                        item = item,
-                        badgeType = BadgeType.ADD,
-                        onClick = { onAddToMyMenu(item) }
-                    )
+                otherItems.chunked(4).forEach { row ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        row.forEach { item ->
+                            key(item.label) {
+                                DraggableEssentialItem(
+                                    item = item,
+                                    badgeType = BadgeType.ADD,
+                                    onClick = { onAddToMyMenu(item) },
+                                    onDragMoved = { onAddToMyMenu(item) }
+                                )
+                            }
+                        }
+                        repeat(4 - row.size) { Spacer(Modifier.width(70.dp)) }
+                    }
+                    Spacer(Modifier.height(16.dp))
                 }
             }
         }
+
         Spacer(modifier = Modifier.height(15.dp))
+
         // 儲存按鈕
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(50.dp))
-                .background(
-//                    brush = Brush.horizontalGradient(
-//                        colors = listOf(NeonCyan, NeonPurple)
-//                    )
-                    color = CashInGreen
-                )
+                .background(color = CashInGreen)
                 .clickable { onClose() }
                 .padding(vertical = 8.dp, horizontal = 20.dp),
             contentAlignment = Alignment.Center
@@ -229,18 +254,31 @@ fun EditEssentialsContent(
     }
 }
 
-// ── Badge 類型 ───────────────────────────────────────────────────────────────
+// ── 可拖曳的項目 ─────────────────────────────────────────────────────────────
+
+/** 拖曳移動的距離閾值（px） */
+private const val DRAG_THRESHOLD = 120f
 
 enum class BadgeType { ADD, REMOVE }
 
 @Composable
-fun EditableEssentialItemView(
+fun DraggableEssentialItem(
     item: EssentialItem,
     badgeType: BadgeType,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDragMoved: () -> Unit
 ) {
-    // My Menu 的 icon 加上抖動動畫（類似 iOS 長按編輯模式）
-    val jiggleRotation = if (badgeType == BadgeType.REMOVE) {
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var offsetY by remember { mutableFloatStateOf(0f) }
+    var isDragging by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isDragging) 1.15f else 1f,
+        label = "dragScale"
+    )
+
+    // My Menu 項目抖動動畫（拖曳時停止）
+    val jiggleRotation = if (badgeType == BadgeType.REMOVE && !isDragging) {
         val infiniteTransition = rememberInfiniteTransition(label = "jiggle")
         infiniteTransition.animateFloat(
             initialValue = -1.5f,
@@ -257,11 +295,51 @@ fun EditableEssentialItemView(
 
     Box(
         modifier = Modifier
-            .width(70.dp)
-            .rotate(jiggleRotation)
+            .zIndex(if (isDragging) 10f else 0f)
+            .graphicsLayer {
+                translationX = offsetX
+                translationY = offsetY
+                scaleX = scale
+                scaleY = scale
+                rotationZ = jiggleRotation
+                shadowElevation = if (isDragging) 20f else 0f
+                alpha = if (isDragging) 0.9f else 1f
+                clip = false
+            }
+            .pointerInput(Unit) {
+                detectDragGesturesAfterLongPress(
+                    onDragStart = {
+                        isDragging = true
+                    },
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        offsetX += dragAmount.x
+                        offsetY += dragAmount.y
+                    },
+                    onDragEnd = {
+                        isDragging = false
+                        // My Menu 向下拖 → 移到 Other；Other 向上拖 → 移到 My Menu
+                        val shouldMove = when (badgeType) {
+                            BadgeType.REMOVE -> offsetY > DRAG_THRESHOLD
+                            BadgeType.ADD -> offsetY < -DRAG_THRESHOLD
+                        }
+                        if (shouldMove) {
+                            onDragMoved()
+                        }
+                        offsetX = 0f
+                        offsetY = 0f
+                    },
+                    onDragCancel = {
+                        isDragging = false
+                        offsetX = 0f
+                        offsetY = 0f
+                    }
+                )
+            }
+            .requiredWidth(70.dp) // 強制固定寬度，確保不縮放變形
             .clickable { onClick() }
     ) {
-        // 底層：原本的 icon + 文字
+        // 底層：icon + 文字
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -306,31 +384,33 @@ fun EditableEssentialItemView(
             )
         }
 
-        // 右上角的小圓形 Badge
-        val badgeColor = when (badgeType) {
-            BadgeType.REMOVE -> SendPink
-            BadgeType.ADD -> CashInGreen
-        }
-        val badgeIcon = when (badgeType) {
-            BadgeType.REMOVE -> Icons.Default.Close
-            BadgeType.ADD -> Icons.Default.Add
-        }
+        // 右上角的小圓形 Badge（拖曳時隱藏）
+        if (!isDragging) {
+            val badgeColor = when (badgeType) {
+                BadgeType.REMOVE -> SendPink
+                BadgeType.ADD -> CashInGreen
+            }
+            val badgeIcon = when (badgeType) {
+                BadgeType.REMOVE -> Icons.Default.Close
+                BadgeType.ADD -> Icons.Default.Add
+            }
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .offset(x = 2.dp, y = (-4).dp)
-                .size(18.dp)
-                .clip(CircleShape)
-                .background(badgeColor),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = badgeIcon,
-                contentDescription = if (badgeType == BadgeType.REMOVE) "Remove" else "Add",
-                tint = Color.White,
-                modifier = Modifier.size(12.dp)
-            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 1.dp, y = (-2).dp) // 稍微往內縮，確保放大時更安全
+                    .size(18.dp)
+                    .clip(CircleShape)
+                    .background(badgeColor),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = badgeIcon,
+                    contentDescription = if (badgeType == BadgeType.REMOVE) "Remove" else "Add",
+                    tint = Color.White,
+                    modifier = Modifier.size(12.dp)
+                )
+            }
         }
     }
 }
