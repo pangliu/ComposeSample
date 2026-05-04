@@ -32,10 +32,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.newproject.R
 import com.example.newproject.ui.theme.NeonCyan
+import com.example.newproject.ui.theme.NeonBlue
 import com.example.newproject.ui.theme.NeonPurple
 import com.example.newproject.ui.theme.WelcomeBackground
-
-val NeonBlue = Color(0xFF2E88FF)
 
 @Composable
 fun DrawerMenuContent(onClose: () -> Unit) {

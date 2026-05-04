@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
+import com.example.newproject.ui.theme.DarkOverlay
+import com.example.newproject.ui.theme.InputFieldDark
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.NeonPurple
 import com.example.newproject.ui.theme.WelcomeBackground
@@ -92,7 +94,7 @@ fun VerifyMobileDialog(
                             .width(130.dp)
                             .height(30.dp)
                             .shadow(elevation = 10.dp, spotColor = NeonCyan, shape = RoundedCornerShape(25.dp))
-                            .background(Color(0xFF2A2A2A), RoundedCornerShape(25.dp))
+                            .background(InputFieldDark, RoundedCornerShape(25.dp))
                             .border(2.dp, NeonCyan, RoundedCornerShape(25.dp))
                             .padding(horizontal = 16.dp),
                         contentAlignment = Alignment.CenterStart
@@ -112,7 +114,7 @@ fun VerifyMobileDialog(
                         modifier = Modifier
                             .size(30.dp)
                             .shadow(elevation = 10.dp, spotColor = NeonCyan, shape = CircleShape)
-                            .background(Color(0xFF2A2A2A), CircleShape)
+                            .background(InputFieldDark, CircleShape)
                             .border(2.dp, NeonCyan, CircleShape)
                             .rotate(-45f)
                             .clickable { /* TODO: 發送驗證碼邏輯 */ },
@@ -155,7 +157,7 @@ fun VerifyMobileDialog(
                                 modifier = Modifier
                                     .size(45.dp)
                                     .shadow(elevation = 8.dp, spotColor = NeonCyan, shape = RoundedCornerShape(8.dp))
-                                    .background(Color(0xFF2A2A2A), RoundedCornerShape(8.dp))
+                                    .background(InputFieldDark, RoundedCornerShape(8.dp))
                                     .border(2.dp, NeonCyan, RoundedCornerShape(8.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
@@ -214,7 +216,7 @@ fun VerifyMobileDialog(
                 modifier = Modifier
                     .padding(start = 32.dp)
                     .offset(y = (-15).dp) // 往上偏移壓住邊框
-                    .background(Color(0xFF0A0F1A)) // 類似全黑，為了遮住邊框
+                    .background(DarkOverlay) // 類似全黑，為了遮住邊框
                     .padding(horizontal = 8.dp)
             ) {
                 Text(

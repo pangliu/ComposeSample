@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.res.stringResource
 import com.example.newproject.R
+import com.example.newproject.ui.theme.NeonBlue
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.NeonPurple
 import com.example.newproject.ui.theme.WelcomeBackground

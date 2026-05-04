@@ -28,6 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.network.model.response.UserInfoResponse
+import com.example.newproject.ui.home.essential.XEssentialsCard
+import com.example.newproject.ui.theme.DarkOverlay
+import com.example.newproject.ui.theme.NavDivider
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.WelcomeBackground
 
@@ -68,15 +71,18 @@ fun HomeScreenContent(state: HomeState) {
                         // 頂部狀態區 (Header)
                         HeaderSection(userName = s.userInfo.userName)
 
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
                         // B. 總資產卡片
                         BalanceCard(
                             cashBalance = s.userInfo.cashBalance,
                             tokenBalance = s.userInfo.tokenBalance
                         )
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                        // TODO: C. 快捷功能區
+                        // C. X-Essentials 快捷功能區
+                        XEssentialsCard()
+
                         // TODO: D. 任務與行銷橫幅
                     }
                 }
@@ -148,187 +154,6 @@ fun HeaderSection(userName: String) {
     }
 }
 
-// ── Balance Card ─────────────────────────────────────────────────────────────
-
-@Composable
-fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
-    var isBalanceHidden by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(elevation = 20.dp, spotColor = Color(0xFF7B2FBE).copy(alpha = 0.6f), shape = RoundedCornerShape(20.dp))
-            .clip(RoundedCornerShape(20.dp))
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color(0xFF1A1040),
-                        Color(0xFF0D1B35),
-                        Color(0xFF0A1228)
-                    )
-                )
-            )
-            .border(1.dp, Color(0xFF4A3080).copy(alpha = 0.8f), RoundedCornerShape(20.dp))
-            .padding(horizontal = 20.dp, vertical = 18.dp)
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-
-            // ── 第一行：BALANCE 標題 + 眼睛 + Cash In 按鈕 ──
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // 左側：BALANCE 標題 + 鎖圖示
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "BALANCE",
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        letterSpacing = 1.sp
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = "Toggle Balance",
-                        tint = if (isBalanceHidden) NeonCyan else Color.Gray,
-                        modifier = Modifier
-                            .size(18.dp)
-                            .clickable { isBalanceHidden = !isBalanceHidden }
-                    )
-                }
-
-                // 右側：Cash In 綠色膠囊按鈕
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50.dp))
-                        .background(Color(0xFF00C853))
-                        .clickable { /* TODO: Cash In */ }
-                        .padding(horizontal = 14.dp, vertical = 7.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Cash In",
-                            tint = Color.Black,
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "Cash In",
-                            color = Color.Black,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            }
-
-            // ── 第二行：大金額 + Send 粉紫色膠囊按鈕 ──
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = if (isBalanceHidden) "TWD ••••••" else "TWD ${String.format("%,.0f", cashBalance)}",
-                    color = Color.White,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-
-                // Send 粉紫色膠囊按鈕
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50.dp))
-                        .background(Color(0xFFCC00AA))
-                        .clickable { /* TODO: Send */ }
-                        .padding(horizontal = 14.dp, vertical = 7.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Send,
-                            contentDescription = "Send",
-                            tint = Color.White,
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "Send",
-                            color = Color.White,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            }
-
-            // ── 第三行：Token 金幣 + 數量 + Balance Switch 按鈕 ──
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // 左側：金幣圓圈 + Token 數量
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .shadow(6.dp, CircleShape, spotColor = Color(0xFFFFD700))
-                            .background(
-                                brush = Brush.radialGradient(
-                                    colors = listOf(Color(0xFFFFD700), Color(0xFFFF8C00))
-                                ),
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "X",
-                            color = Color(0xFF4A0080),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = if (isBalanceHidden) "••••" else String.format("%,.0f", tokenBalance),
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                // 右側：Balance Switch 深色膠囊按鈕
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50.dp))
-                        .background(Color(0xFF1E1E3A))
-                        .border(1.dp, Color(0xFF4A3080), RoundedCornerShape(50.dp))
-                        .clickable { /* TODO: Balance Switch */ }
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Balance Switch",
-                            tint = Color.Gray,
-                            modifier = Modifier.size(13.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "Balance Switch",
-                            color = Color.Gray,
-                            fontSize = 11.sp
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
 // ── Bottom Navigation ────────────────────────────────────────────────────────
 
 @Composable
@@ -346,7 +171,7 @@ fun CustomBottomNavigation() {
                 .height(70.dp)
                 .background(WelcomeBackground)
         ) {
-            HorizontalDivider(color = Color(0xFF1A2235), thickness = 1.dp)
+            HorizontalDivider(color = NavDivider, thickness = 1.dp)
         }
 
         // 所有的 Item 放同一排，以底部對齊文字
@@ -408,7 +233,7 @@ fun ScanAndPayFab() {
                 .size(64.dp)
                 .shadow(elevation = 8.dp, spotColor = NeonCyan, shape = CircleShape)
                 .border(3.dp, NeonCyan, CircleShape)
-                .background(Color(0xFF0A0F1A), CircleShape),
+                .background(DarkOverlay, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Box(

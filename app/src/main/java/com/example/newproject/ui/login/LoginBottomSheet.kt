@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.NeonPurple
+import com.example.newproject.ui.theme.InputFieldBackground
 import com.example.newproject.ui.theme.WelcomeBackground
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -140,7 +141,7 @@ fun LoginBottomSheetContent(
                     modifier = Modifier
                         .weight(1f)
                         .height(35.dp)
-                        .background(Color(0xFF2C2C2C), RoundedCornerShape(25.dp))
+                        .background(InputFieldBackground, RoundedCornerShape(25.dp))
                         .border(2.dp, NeonCyan, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart
@@ -190,7 +191,7 @@ fun LoginBottomSheetContent(
                     modifier = Modifier
                         .weight(1f)
                         .height(35.dp)
-                        .background(Color(0xFF2C2C2C), RoundedCornerShape(25.dp))
+                        .background(InputFieldBackground, RoundedCornerShape(25.dp))
                         .border(2.dp, NeonCyan, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart

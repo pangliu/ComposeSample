@@ -36,13 +36,13 @@ class WelcomeViewModel @Inject constructor(
             delay(1000)
             
             val token = tokenManager.getAccessToken()
-//            if (!token.isNullOrEmpty()) {
-//                // 有存過 token，直接去首頁
-//                _navigationEvent.value = WelcomeNavigationEvent.GoToHome
-//            } else {
+            if (!token.isNullOrEmpty()) {
+                // 有存過 token，直接去首頁
+                _navigationEvent.value = WelcomeNavigationEvent.GoToHome
+            } else {
                 // 沒有 token，代表沒登入過
                 _navigationEvent.value = WelcomeNavigationEvent.GoToLogin
-//            }
+            }
         }
     }
 }
