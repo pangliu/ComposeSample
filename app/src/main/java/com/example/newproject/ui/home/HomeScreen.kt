@@ -29,7 +29,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.network.model.response.UserInfoResponse
+import com.example.newproject.ui.home.essential.EssentialItem
 import com.example.newproject.ui.home.essential.XEssentialsCard
+import com.example.newproject.ui.home.essential.allEssentialItems
+import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import com.example.newproject.ui.theme.DarkOverlay
 import com.example.newproject.ui.theme.NavDivider
 import com.example.newproject.ui.theme.NeonCyan
@@ -38,12 +41,27 @@ import com.example.newproject.ui.theme.WelcomeBackground
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
     val state by viewModel.homeState.collectAsState()
-    HomeScreenContent(state = state)
+    val myMenuItems by viewModel.myMenuItems.collectAsState()
+    HomeScreenContent(
+        state = state,
+        myMenuItems = myMenuItems,
+        onSaveMyMenu = viewModel::saveMyMenu
+        /**
+         * Method Reference 寫法效果等同於
+         * onSaveMyMenu = { items ->
+         *         viewModel.saveMyMenu(items)
+         * }
+         */
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenContent(state: HomeState) {
+fun HomeScreenContent(
+    state: HomeState,
+    myMenuItems: List<EssentialItem> = allEssentialItems.take(ESSENTIALS_DISPLAY_COUNT),
+    onSaveMyMenu: (List<EssentialItem>) -> Unit = {},
+) {
     Scaffold(
         containerColor = WelcomeBackground,
         contentColor = Color.White,
@@ -82,7 +100,10 @@ fun HomeScreenContent(state: HomeState) {
                         Spacer(modifier = Modifier.height(10.dp))
 
                         // C. X-Essentials 快捷功能區
-                        XEssentialsCard()
+                        XEssentialsCard(
+                            myMenuItems = myMenuItems,
+                            onSaveMyMenu = onSaveMyMenu
+                        )
 
                         // TODO: D. 任務與行銷橫幅
                     }

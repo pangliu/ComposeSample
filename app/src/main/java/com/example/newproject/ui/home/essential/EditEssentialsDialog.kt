@@ -3,10 +3,13 @@ package com.example.newproject.ui.home.essential
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -42,6 +45,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,7 +76,6 @@ fun EditEssentialsDialog(
     var isVisible by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    // 可變動的分類狀態
     val editableMyMenu = remember { myMenuItems.toMutableStateList() }
     val editableOthers = remember { otherItems.toMutableStateList() }
 
@@ -115,6 +119,10 @@ fun EditEssentialsDialog(
                         editableOthers.remove(item)
                         editableMyMenu.add(item)
                     },
+                    onReorderMyMenu = { from, to ->
+                        val item = editableMyMenu.removeAt(from)
+                        editableMyMenu.add(to, item)
+                    },
                     onClose = { dismissWithAnimation() },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -131,6 +139,7 @@ fun EditEssentialsContent(
     otherItems: List<EssentialItem>,
     onRemoveFromMyMenu: (EssentialItem) -> Unit = {},
     onAddToMyMenu: (EssentialItem) -> Unit = {},
+    onReorderMyMenu: (from: Int, to: Int) -> Unit = { _, _ -> },
     onClose: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -147,7 +156,6 @@ fun EditEssentialsContent(
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 標題
         Text(
             text = "Edit Essentials",
             color = Color.White,
@@ -163,7 +171,6 @@ fun EditEssentialsContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 可滾動的項目區域
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -174,27 +181,11 @@ fun EditEssentialsContent(
             SectionHeader(title = "My Menu", count = myMenuItems.size)
             Spacer(modifier = Modifier.height(16.dp))
 
-            myMenuItems.chunked(4).forEach { row ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 4.dp), // 極小邊距，防止放大裁切但不影響視覺靠邊
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    row.forEach { item ->
-                        key(item.label) {
-                            DraggableEssentialItem(
-                                item = item,
-                                badgeType = BadgeType.REMOVE,
-                                onClick = { onRemoveFromMyMenu(item) },
-                                onDragMoved = { onRemoveFromMyMenu(item) }
-                            )
-                        }
-                    }
-                    repeat(4 - row.size) { Spacer(Modifier.width(70.dp)) }
-                }
-                Spacer(Modifier.height(16.dp))
-            }
+            ReorderableEssentialGrid(
+                items = myMenuItems,
+                onReorder = onReorderMyMenu,
+                onRemove = onRemoveFromMyMenu
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -203,7 +194,7 @@ fun EditEssentialsContent(
                 SectionHeader(
                     title = "Other",
                     count = otherItems.size,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 0.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -233,7 +224,6 @@ fun EditEssentialsContent(
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        // 儲存按鈕
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(50.dp))
@@ -254,9 +244,209 @@ fun EditEssentialsContent(
     }
 }
 
-// ── 可拖曳的項目 ─────────────────────────────────────────────────────────────
+// ── My Menu 拖曳排序格子 ──────────────────────────────────────────────────────
 
-/** 拖曳移動的距離閾值（px） */
+@Composable
+private fun ReorderableEssentialGrid(
+    items: List<EssentialItem>,
+    columns: Int = 4,
+    onReorder: (from: Int, to: Int) -> Unit,
+    onRemove: (EssentialItem) -> Unit,
+) {
+    val density = LocalDensity.current
+    val cellHeightDp = 90.dp
+
+    var draggingIndex by remember { mutableStateOf<Int?>(null) }
+    var dragX by remember { mutableFloatStateOf(0f) }
+    var dragY by remember { mutableFloatStateOf(0f) }
+    var hoverIdx by remember { mutableStateOf<Int?>(null) }
+
+    val cellHeightPx = with(density) { cellHeightDp.toPx() }
+    val rowCount = (items.size + columns - 1) / columns
+    var cellWidthPx by remember { mutableFloatStateOf(0f) }
+
+    fun displayOf(raw: Int): Int {
+        val from = draggingIndex ?: return raw
+        val to = hoverIdx ?: return raw
+        return when {
+            raw == from -> to
+            from < to && raw in (from + 1)..to -> raw - 1
+            from > to && raw in to until from -> raw + 1
+            else -> raw
+        }
+    }
+
+    fun centerOf(idx: Int): Pair<Float, Float> = Pair(
+        (idx % columns) * cellWidthPx + cellWidthPx / 2f,
+        (idx / columns) * cellHeightPx + cellHeightPx / 2f
+    )
+
+    fun hoverAt(x: Float, y: Float): Int? {
+        if (y > cellHeightPx * rowCount) return null   // 拖到格子下方 → 移至 Other
+        val c = (x / cellWidthPx).toInt().coerceIn(0, columns - 1)
+        val r = (y / cellHeightPx).toInt().coerceIn(0, rowCount - 1)
+        return (r * columns + c).coerceIn(0, items.lastIndex)
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(cellHeightDp * rowCount)
+            .onSizeChanged { size -> cellWidthPx = size.width.toFloat() / columns }
+    ) {
+        if (cellWidthPx == 0f) return@Box
+            items.forEachIndexed { index, item ->
+                key(item.label) {
+                    val isDragging = index == draggingIndex
+                    val (targetX, targetY) = centerOf(displayOf(index))
+
+                    val animX by animateFloatAsState(
+                        targetValue = if (isDragging) dragX else targetX,
+                        animationSpec = if (isDragging) snap() else spring(stiffness = Spring.StiffnessMediumLow),
+                        label = "x_${item.label}"
+                    )
+                    val animY by animateFloatAsState(
+                        targetValue = if (isDragging) dragY else targetY,
+                        animationSpec = if (isDragging) snap() else spring(stiffness = Spring.StiffnessMediumLow),
+                        label = "y_${item.label}"
+                    )
+                    val scale by animateFloatAsState(
+                        targetValue = if (isDragging) 1.15f else 1f,
+                        label = "scale_${item.label}"
+                    )
+
+                    val infiniteTransition = rememberInfiniteTransition(label = "jiggle_${item.label}")
+                    val jiggle by infiniteTransition.animateFloat(
+                        initialValue = -1.5f,
+                        targetValue = 1.5f,
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(durationMillis = 150, easing = LinearEasing),
+                            repeatMode = RepeatMode.Reverse
+                        ),
+                        label = "rot_${item.label}"
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .zIndex(if (isDragging) 10f else 0f)
+                            .graphicsLayer {
+                                translationX = animX - cellWidthPx / 2f
+                                translationY = animY - cellHeightPx / 2f
+                                scaleX = scale
+                                scaleY = scale
+                                rotationZ = if (isDragging) 0f else jiggle
+                                alpha = if (isDragging) 0.9f else 1f
+                                clip = false
+                            }
+                            .requiredWidth(with(density) { cellWidthPx.toDp() })
+                            .height(cellHeightDp)
+                            .pointerInput(item.label) {
+                                detectDragGesturesAfterLongPress(
+                                    onDragStart = { touchOffset ->
+                                        val idx = items.indexOfFirst { it.label == item.label }
+                                        draggingIndex = idx
+                                        hoverIdx = idx
+                                        dragX = (idx % columns) * cellWidthPx + touchOffset.x
+                                        dragY = (idx / columns) * cellHeightPx + touchOffset.y
+                                    },
+                                    onDrag = { change, dragAmount ->
+                                        change.consume()
+                                        dragX += dragAmount.x
+                                        dragY += dragAmount.y
+                                        hoverIdx = hoverAt(dragX, dragY)
+                                    },
+                                    onDragEnd = {
+                                        val from = draggingIndex
+                                        val to = hoverIdx
+                                        draggingIndex = null
+                                        hoverIdx = null
+                                        when {
+                                            from == null -> {}
+                                            to == null -> onRemove(item)   // 拖出格子 → 移至 Other
+                                            from != to -> onReorder(from, to)
+                                        }
+                                    },
+                                    onDragCancel = {
+                                        draggingIndex = null
+                                        hoverIdx = null
+                                    }
+                                )
+                            }
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) { onRemove(item) }
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(top = 4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .width(60.dp)
+                                    .height(50.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(
+                                        brush = Brush.linearGradient(
+                                            colors = listOf(CardGradientStart, CardGradientMid)
+                                        )
+                                    )
+                                    .border(
+                                        width = 1.5.dp,
+                                        brush = Brush.linearGradient(
+                                            colors = listOf(
+                                                NeonPurple.copy(alpha = 0.8f),
+                                                NeonCyan.copy(alpha = 0.4f)
+                                            )
+                                        ),
+                                        shape = RoundedCornerShape(16.dp)
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.label,
+                                    tint = NeonCyan,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+                            Spacer(Modifier.height(6.dp))
+                            Text(
+                                text = item.label,
+                                color = Color.White,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+
+                        if (!isDragging) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .offset(x = 1.dp, y = (-2).dp)
+                                    .size(18.dp)
+                                    .clip(CircleShape)
+                                    .background(SendPink),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Remove",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(12.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+}
+
+// ── 可拖曳的項目（Other 區塊用） ──────────────────────────────────────────────
+
 private const val DRAG_THRESHOLD = 120f
 
 enum class BadgeType { ADD, REMOVE }
@@ -277,7 +467,6 @@ fun DraggableEssentialItem(
         label = "dragScale"
     )
 
-    // My Menu 項目抖動動畫（拖曳時停止）
     val jiggleRotation = if (badgeType == BadgeType.REMOVE && !isDragging) {
         val infiniteTransition = rememberInfiniteTransition(label = "jiggle")
         infiniteTransition.animateFloat(
@@ -302,15 +491,12 @@ fun DraggableEssentialItem(
                 scaleX = scale
                 scaleY = scale
                 rotationZ = jiggleRotation
-                shadowElevation = if (isDragging) 20f else 0f
                 alpha = if (isDragging) 0.9f else 1f
                 clip = false
             }
             .pointerInput(Unit) {
                 detectDragGesturesAfterLongPress(
-                    onDragStart = {
-                        isDragging = true
-                    },
+                    onDragStart = { isDragging = true },
                     onDrag = { change, dragAmount ->
                         change.consume()
                         offsetX += dragAmount.x
@@ -318,14 +504,11 @@ fun DraggableEssentialItem(
                     },
                     onDragEnd = {
                         isDragging = false
-                        // My Menu 向下拖 → 移到 Other；Other 向上拖 → 移到 My Menu
                         val shouldMove = when (badgeType) {
                             BadgeType.REMOVE -> offsetY > DRAG_THRESHOLD
                             BadgeType.ADD -> offsetY < -DRAG_THRESHOLD
                         }
-                        if (shouldMove) {
-                            onDragMoved()
-                        }
+                        if (shouldMove) onDragMoved()
                         offsetX = 0f
                         offsetY = 0f
                     },
@@ -336,10 +519,12 @@ fun DraggableEssentialItem(
                     }
                 )
             }
-            .requiredWidth(70.dp) // 強制固定寬度，確保不縮放變形
-            .clickable { onClick() }
+            .requiredWidth(70.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) { onClick() }
     ) {
-        // 底層：icon + 文字
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -384,7 +569,6 @@ fun DraggableEssentialItem(
             )
         }
 
-        // 右上角的小圓形 Badge（拖曳時隱藏）
         if (!isDragging) {
             val badgeColor = when (badgeType) {
                 BadgeType.REMOVE -> SendPink
@@ -398,7 +582,7 @@ fun DraggableEssentialItem(
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .offset(x = 1.dp, y = (-2).dp) // 稍微往內縮，確保放大時更安全
+                    .offset(x = 1.dp, y = (-2).dp)
                     .size(18.dp)
                     .clip(CircleShape)
                     .background(badgeColor),

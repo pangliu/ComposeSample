@@ -1,5 +1,6 @@
 package com.example.newproject.ui.home.essential
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,18 +37,15 @@ import com.example.newproject.ui.theme.NeonPurple
 // ── X-Essentials 快捷功能區 ──────────────────────────────────────────────────
 
 @Composable
-fun XEssentialsCard() {
-    // 可變動的 My Menu 清單（初始取前 16 個）
-    var myMenuItems by remember {
-        mutableStateOf(allEssentialItems.take(ESSENTIALS_DISPLAY_COUNT))
-    }
+fun XEssentialsCard(
+    myMenuItems: List<EssentialItem>,
+    onSaveMyMenu: (List<EssentialItem>) -> Unit,
+) {
 
     // 將 myMenuItems 依照每頁 8 個分頁
     val pages = myMenuItems.chunked(ITEMS_PER_PAGE)
     val pagerState = rememberPagerState(pageCount = { pages.size })
-
     var showEditDialog by remember { mutableStateOf(false) }
-
     Column {
         // ── 標題列：X-Essentials + More / Edit ──
         Row(
@@ -201,7 +199,7 @@ fun XEssentialsCard() {
             myMenuItems = myMenuItems,
             otherItems = otherItems,
             onDismissWithResult = { updatedMyMenu ->
-                myMenuItems = updatedMyMenu
+                onSaveMyMenu(updatedMyMenu)
                 showEditDialog = false
             }
         )
@@ -272,7 +270,10 @@ fun XEssentialsCardPreview() {
                 .background(DarkBackground)
                 .padding(16.dp)
         ) {
-            XEssentialsCard()
+            XEssentialsCard(
+                myMenuItems = allEssentialItems.take(ESSENTIALS_DISPLAY_COUNT),
+                onSaveMyMenu = {}
+            )
         }
     }
 }

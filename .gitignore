@@ -71,6 +71,8 @@ lint/tmp/
 # lint/reports/
 # MacOS
 .DS_Store
+# Claude Code
+.claude/
 # App Specific cases
 app/release/output.json
 .idea/codeStyles/
