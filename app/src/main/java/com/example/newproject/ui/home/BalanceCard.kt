@@ -20,10 +20,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.newproject.R
 import com.example.newproject.ui.theme.BalanceSwitchBackground
 import com.example.newproject.ui.theme.CardBorder
 import com.example.newproject.ui.theme.CardGradientEnd
@@ -72,7 +74,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 // 左側：BALANCE 標題 + 鎖圖示
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "BALANCE",
+                        text = stringResource(R.string.balance_title),
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -81,7 +83,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         imageVector = Icons.Default.Lock,
-                        contentDescription = "Toggle Balance",
+                        contentDescription = stringResource(R.string.balance_toggle_desc),
                         tint = if (isBalanceHidden) NeonCyan else Color.Gray,
                         modifier = Modifier
                             .size(18.dp)
@@ -100,13 +102,13 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Cash In",
+                            contentDescription = stringResource(R.string.balance_cash_in),
                             tint = Color.Black,
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Cash In",
+                            text = stringResource(R.string.balance_cash_in),
                             color = Color.Black,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold
@@ -139,13 +141,13 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Default.Send,
-                            contentDescription = "Send",
+                            contentDescription = stringResource(R.string.balance_send),
                             tint = Color.White,
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Send",
+                            text = stringResource(R.string.balance_send),
                             color = Color.White,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold
@@ -175,7 +177,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "X",
+                            text = stringResource(R.string.balance_token_symbol),
                             color = TokenTextPurple,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.ExtraBold
@@ -202,13 +204,13 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Default.Refresh,
-                            contentDescription = "Balance Switch",
+                            contentDescription = stringResource(R.string.balance_switch),
                             tint = Color.Gray,
                             modifier = Modifier.size(13.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Balance Switch",
+                            text = stringResource(R.string.balance_switch),
                             color = Color.Gray,
                             fontSize = 11.sp
                         )

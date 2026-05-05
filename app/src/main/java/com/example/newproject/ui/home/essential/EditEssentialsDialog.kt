@@ -47,10 +47,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.newproject.R
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
@@ -157,14 +159,14 @@ fun EditEssentialsContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Edit Essentials",
+            text = stringResource(R.string.edit_essentials_title),
             color = Color.White,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
 
         Text(
-            text = "Long press to drag, tap to move",
+            text = stringResource(R.string.edit_essentials_hint),
             color = Color.Gray,
             fontSize = 12.sp
         )
@@ -178,7 +180,7 @@ fun EditEssentialsContent(
                 .verticalScroll(rememberScrollState())
         ) {
             // ── My Menu 區塊 ──
-            SectionHeader(title = "My Menu", count = myMenuItems.size)
+            SectionHeader(title = stringResource(R.string.edit_essentials_my_menu), count = myMenuItems.size)
             Spacer(modifier = Modifier.height(16.dp))
 
             ReorderableEssentialGrid(
@@ -192,7 +194,7 @@ fun EditEssentialsContent(
             // ── Other 區塊 ──
             if (otherItems.isNotEmpty()) {
                 SectionHeader(
-                    title = "Other",
+                    title = stringResource(R.string.edit_essentials_other),
                     count = otherItems.size,
                     modifier = Modifier.padding(top = 0.dp)
                 )
@@ -233,7 +235,7 @@ fun EditEssentialsContent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Save My Change",
+                text = stringResource(R.string.edit_essentials_save),
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -397,8 +399,8 @@ private fun ReorderableEssentialGrid(
                                         width = 1.5.dp,
                                         brush = Brush.linearGradient(
                                             colors = listOf(
-                                                NeonPurple.copy(alpha = 0.8f),
-                                                NeonCyan.copy(alpha = 0.4f)
+                                                NeonCyan.copy(alpha = 0.4f),
+                                                NeonPurple.copy(alpha = 0.8f)
                                             )
                                         ),
                                         shape = RoundedCornerShape(16.dp)
@@ -433,7 +435,7 @@ private fun ReorderableEssentialGrid(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
-                                    contentDescription = "Remove",
+                                    contentDescription = stringResource(R.string.edit_essentials_remove_desc),
                                     tint = Color.White,
                                     modifier = Modifier.size(12.dp)
                                 )
@@ -543,8 +545,8 @@ fun DraggableEssentialItem(
                         width = 1.5.dp,
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                NeonPurple.copy(alpha = 0.8f),
-                                NeonCyan.copy(alpha = 0.4f)
+                                NeonCyan.copy(alpha = 0.4f),
+                                NeonPurple.copy(alpha = 0.8f)
                             )
                         ),
                         shape = RoundedCornerShape(16.dp)
@@ -590,7 +592,7 @@ fun DraggableEssentialItem(
             ) {
                 Icon(
                     imageVector = badgeIcon,
-                    contentDescription = if (badgeType == BadgeType.REMOVE) "Remove" else "Add",
+                    contentDescription = if (badgeType == BadgeType.REMOVE) stringResource(R.string.edit_essentials_remove_desc) else stringResource(R.string.edit_essentials_add_desc),
                     tint = Color.White,
                     modifier = Modifier.size(12.dp)
                 )
@@ -619,7 +621,7 @@ fun SectionHeader(
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "$count items",
+            text = stringResource(R.string.edit_essentials_items_count, count),
             color = Color.Gray,
             fontSize = 12.sp
         )

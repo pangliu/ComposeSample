@@ -22,10 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.newproject.R
 import com.example.newproject.ui.theme.CardBorder
 import com.example.newproject.ui.theme.CardGradientEnd
 import com.example.newproject.ui.theme.CardGradientMid
@@ -54,7 +56,7 @@ fun XEssentialsCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "X-Essentials",
+                text = stringResource(R.string.essentials_title),
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -77,7 +79,7 @@ fun XEssentialsCard(
                         .clickable { /* TODO: More */ }
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
-                    Text("More", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                    Text(stringResource(R.string.essentials_more), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium)
                 }
 
                 // Edit 按鈕
@@ -96,7 +98,7 @@ fun XEssentialsCard(
                         .clickable { showEditDialog = true }
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
-                    Text("Edit", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                    Text(stringResource(R.string.essentials_edit), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium)
                 }
             }
         }
@@ -223,8 +225,8 @@ fun EssentialItemView(item: EssentialItem) {
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            CardGradientStart,
-                            CardGradientMid
+                            CardGradientMid,
+                            CardGradientStart
                         )
                     )
                 )
@@ -232,8 +234,8 @@ fun EssentialItemView(item: EssentialItem) {
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            NeonPurple.copy(alpha = 0.8f),
-                            NeonCyan.copy(alpha = 0.4f)
+                            NeonCyan.copy(alpha = 0.4f),
+                            NeonPurple.copy(alpha = 0.8f)
                         )
                     ),
                     shape = RoundedCornerShape(16.dp)

@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.newproject.R
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.NeonDivider
 import com.example.newproject.ui.theme.NeonPurple
@@ -52,6 +54,8 @@ fun WelcomeScreenContent() {
             .background(WelcomeBackground), // 引用統一色碼
         contentAlignment = Alignment.Center
     ) {
+        val brandX = stringResource(R.string.welcome_brand_x)
+        val brandCash = stringResource(R.string.welcome_brand_cash)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
@@ -65,7 +69,7 @@ fun WelcomeScreenContent() {
                             shadow = Shadow(color = NeonCyan, blurRadius = 20f)
                         )
                     ) {
-                        append("x")
+                        append(brandX)
                     }
                     withStyle(
                         SpanStyle(
@@ -73,7 +77,7 @@ fun WelcomeScreenContent() {
                             shadow = Shadow(color = NeonPurple, blurRadius = 20f)
                         )
                     ) {
-                        append("cash")
+                        append(brandCash)
                     }
                 },
                 fontSize = 32.sp,
@@ -95,7 +99,7 @@ fun WelcomeScreenContent() {
 
             // "Tara!" 文字，帶有白青色輝光效果
             Text(
-                text = "Tara!",
+                text = stringResource(R.string.tara),
                 color = Color.White,
                 fontSize = 42.sp,
                 fontWeight = FontWeight.Bold,

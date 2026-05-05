@@ -1,9 +1,13 @@
 <resources>
     <!-- App General -->
     <string name="app_name">NewProject</string>
+    <string name="tara">Tara!</string>
+
+    <!-- WelcomeScreen -->
+    <string name="welcome_brand_x">x</string>
+    <string name="welcome_brand_cash">cash</string>
 
     <!-- DrawerMenuContent -->
-    <string name="tara">Tara!</string>
     <string name="account_status">Account Status</string>
     <string name="check_application_progress">Check Application Progress</string>
     <string name="check_application_status">Check Application Status</string>
@@ -28,10 +32,10 @@
     <string name="language_desc">Language</string>
     <string name="language_en">EN</string>
     <string name="center_neon_logo_desc">Center Neon Logo</string>
-    <string name="logging_in">Logging in...</string>
+    <string name="logging_in">Logging in…</string>
     <string name="login_btn">Login</string>
     <string name="login_or">or</string>
-    <string name="dont_have_account">"Don\'t have an account? "</string>
+    <string name="dont_have_account">Don\'t have an account? </string>
     <string name="sign_up">Sign Up</string>
     <string name="shield_desc">Shield</string>
     <string name="regulated_by_bsp">Regulated by BSP</string>
@@ -49,4 +53,53 @@
     <string name="submit_login_desc">Submit Login</string>
     <string name="face_id_desc">Face ID</string>
     <string name="fingerprint_desc">Fingerprint</string>
+    <string name="login_hint_separator"> | </string>
+
+    <!-- VerifyMobileDialog -->
+    <string name="verify_mobile_title">Verify Mobile</string>
+    <string name="verify_mobile_phone_label">Phone number</string>
+    <string name="verify_mobile_send_desc">Send</string>
+    <string name="verify_mobile_resend_timer">Resend after 00:32 sec.</string>
+    <string name="verify_mobile_close_desc">Close</string>
+
+    <!-- HomeScreen -->
+    <string name="home_greeting">Hi, %s</string>
+    <string name="home_error_message">Error: %s</string>
+    <string name="home_notifications_desc">Notifications</string>
+    <string name="home_settings_desc">Settings</string>
+    <string name="home_nav_home">Home</string>
+    <string name="home_nav_cards">Cards</string>
+    <string name="home_nav_quests">Quests</string>
+    <string name="home_nav_profile">Profile</string>
+    <string name="home_scan_icon_desc">Scan Icon</string>
+    <string name="home_scan_pay">Scan / Pay</string>
+
+    <!-- BalanceCard -->
+    <string name="balance_title">BALANCE</string>
+    <string name="balance_toggle_desc">Toggle Balance</string>
+    <string name="balance_cash_in">Cash In</string>
+    <string name="balance_send">Send</string>
+    <string name="balance_token_symbol">X</string>
+    <string name="balance_switch">Balance Switch</string>
+
+    <!-- XEssentialsCard -->
+    <string name="essentials_title">X-Essentials</string>
+    <string name="essentials_more">More</string>
+    <string name="essentials_edit">Edit</string>
+
+    <!-- EditEssentialsDialog -->
+    <string name="edit_essentials_title">Edit Essentials</string>
+    <string name="edit_essentials_hint">Long press to drag, tap to move</string>
+    <string name="edit_essentials_my_menu">My Menu</string>
+    <string name="edit_essentials_other">Other</string>
+    <string name="edit_essentials_save">Save My Change</string>
+    <string name="edit_essentials_remove_desc">Remove</string>
+    <string name="edit_essentials_add_desc">Add</string>
+    <string name="edit_essentials_items_count">%d items</string>
+
+    <!-- Error Messages (HomeViewModel / LoginViewModel) -->
+    <string name="error_fetch_user_data">無法取得使用者資料</string>
+    <string name="error_network_fetch">無法取得資料：網路異常</string>
+    <string name="error_login">登入異常，請檢查網路</string>
+    <string name="error_network">網路異常</string>
 </resources>

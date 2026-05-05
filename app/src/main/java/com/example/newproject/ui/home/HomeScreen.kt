@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -24,10 +26,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.newproject.R
 import com.example.newproject.network.model.response.UserInfoResponse
 import com.example.newproject.ui.home.essential.EssentialItem
 import com.example.newproject.ui.home.essential.XEssentialsCard
@@ -36,6 +40,7 @@ import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import com.example.newproject.ui.theme.DarkOverlay
 import com.example.newproject.ui.theme.NavDivider
 import com.example.newproject.ui.theme.NeonCyan
+import com.example.newproject.ui.theme.TabActiveColor
 import com.example.newproject.ui.theme.WelcomeBackground
 
 @Composable
@@ -76,7 +81,7 @@ fun HomeScreenContent(
                 is HomeState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 is HomeState.Error -> {
                     Text(
-                        text = "Error: ${s.message}",
+                        text = stringResource(R.string.home_error_message, s.message ?: ""),
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -144,7 +149,7 @@ fun HeaderSection(userName: String) {
         // 使用者問候
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = "Hi, $userName",
+                text = stringResource(R.string.home_greeting, userName),
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
@@ -159,7 +164,7 @@ fun HeaderSection(userName: String) {
             IconButton(onClick = { /* TODO: 通知中心 */ }) {
                 Icon(
                     imageVector = Icons.Default.Notifications,
-                    contentDescription = "Notifications",
+                    contentDescription = stringResource(R.string.home_notifications_desc),
                     tint = Color.Gray,
                     modifier = Modifier.size(28.dp)
                 )
@@ -167,7 +172,7 @@ fun HeaderSection(userName: String) {
             IconButton(onClick = { /* TODO: 系統設定 */ }) {
                 Icon(
                     imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings",
+                    contentDescription = stringResource(R.string.home_settings_desc),
                     tint = Color.Gray,
                     modifier = Modifier.size(28.dp)
                 )
@@ -180,6 +185,9 @@ fun HeaderSection(userName: String) {
 
 @Composable
 fun CustomBottomNavigation() {
+    // 記錄目前被選取的 index，預設為 0 (Home)
+    var selectedIndex by remember { mutableStateOf(0) }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -204,30 +212,75 @@ fun CustomBottomNavigation() {
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            BottomNavItem(icon = Icons.Default.Home, title = "Home", isSelected = true, onClick = { /* TODO */ })
-            BottomNavItem(icon = Icons.Default.List, title = "Cards", isSelected = false, onClick = { /* TODO */ })
+            BottomNavItem(
+                modifier = Modifier.weight(1f),
+                defaultIconRes = R.mipmap.ic_home,
+                activeIconRes = R.mipmap.ic_home_active,
+                title = stringResource(R.string.home_nav_home), 
+                isSelected = selectedIndex == 0, 
+                onClick = { selectedIndex = 0 }
+            )
+            BottomNavItem(
+                modifier = Modifier.weight(1f),
+                defaultIconRes = R.mipmap.ic_card,
+                activeIconRes = R.mipmap.ic_card_active,
+                title = stringResource(R.string.home_nav_cards), 
+                isSelected = selectedIndex == 1, 
+                onClick = { selectedIndex = 1 }
+            )
             ScanAndPayFab()
-            BottomNavItem(icon = Icons.Default.Star, title = "Quests", isSelected = false, onClick = { /* TODO */ })
-            BottomNavItem(icon = Icons.Default.Person, title = "Profile", isSelected = false, onClick = { /* TODO */ })
+            BottomNavItem(
+                modifier = Modifier.weight(1f),
+                defaultIconRes = R.mipmap.ic_quest,
+                activeIconRes = R.mipmap.ic_quest_active,
+                title = stringResource(R.string.home_nav_quests), 
+                isSelected = selectedIndex == 2, 
+                onClick = { selectedIndex = 2 }
+            )
+            BottomNavItem(
+                modifier = Modifier.weight(1f),
+                defaultIconRes = R.mipmap.ic_profile,
+                activeIconRes = R.mipmap.ic_profile_active,
+                title = stringResource(R.string.home_nav_profile), 
+                isSelected = selectedIndex == 3, 
+                onClick = { selectedIndex = 3 }
+            )
         }
     }
 }
 
 @Composable
-fun BottomNavItem(icon: ImageVector, title: String, isSelected: Boolean, onClick: () -> Unit) {
-    val color = if (isSelected) NeonCyan else Color.Gray
+fun BottomNavItem(
+    defaultIconRes: Int,
+    activeIconRes: Int,
+    title: String,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    
+    // 依據狀態決定文字顏色與要顯示的圖片
+    val isActive = isPressed || isSelected
+    val color = if (isActive) TabActiveColor else Color.Gray
     val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+    val iconRes = if (isActive) activeIconRes else defaultIconRes
 
     Column(
-        modifier = Modifier
-            .clickable(onClick = onClick)
+        modifier = modifier
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null, // 移除預設的方塊水波紋
+                onClick = onClick
+            )
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            imageVector = icon,
+            painter = androidx.compose.ui.res.painterResource(id = iconRes),
             contentDescription = title,
-            tint = color,
+            tint = Color.Unspecified, // 使用圖片原始顏色
             modifier = Modifier.size(28.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -235,16 +288,29 @@ fun BottomNavItem(icon: ImageVector, title: String, isSelected: Boolean, onClick
             text = title,
             color = color,
             fontSize = 12.sp,
-            fontWeight = fontWeight
+            fontWeight = fontWeight,
+            maxLines = 1,
+            softWrap = false
         )
     }
 }
 
 @Composable
-fun ScanAndPayFab() {
+fun ScanAndPayFab(modifier: Modifier = Modifier) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    // 掃碼按鈕被按壓時的顏色變化
+    val textColor = Color.White // 文字永遠保持白色
+    val iconColor = if (isPressed) NeonCyan else Color.White
+
     Box(
-        modifier = Modifier
-            .clickable { /* TODO: 點擊開啟 Scan / Pay */ }
+        modifier = modifier
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null, // 移除預設的方塊水波紋
+                onClick = { /* TODO: 點擊開啟 Scan / Pay */ }
+            )
             .padding(8.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
@@ -266,8 +332,8 @@ fun ScanAndPayFab() {
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Scan Icon",
-                    tint = Color.White,
+                    contentDescription = stringResource(R.string.home_scan_icon_desc),
+                    tint = iconColor,
                     modifier = Modifier.size(28.dp)
                 )
             }
@@ -275,10 +341,12 @@ fun ScanAndPayFab() {
 
         // 文字固定在最底部
         Text(
-            text = "Scan / Pay",
-            color = NeonCyan,
+            text = stringResource(R.string.home_scan_pay),
+            color = textColor,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            softWrap = false
         )
     }
 }

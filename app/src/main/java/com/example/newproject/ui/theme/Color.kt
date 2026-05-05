@@ -37,3 +37,4 @@ val BalanceSwitchBackground = Color(0xFF1E1E3A)
 
 // ========== Bottom Navigation ==========
 val NavDivider = Color(0xFF1A2235)
+val TabActiveColor = Color(0xFF61C8E4) // R:97 G:200 B:228

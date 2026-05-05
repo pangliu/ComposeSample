@@ -232,9 +232,9 @@ fun LoginBottomSheetContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(id = R.string.password_hint_length), color = Color.White, fontSize = 12.sp)
-                Text(" | ", color = Color.Gray, fontSize = 12.sp)
+                Text(stringResource(id = R.string.login_hint_separator), color = Color.Gray, fontSize = 12.sp)
                 Text(stringResource(id = R.string.password_hint_uppercase), color = NeonCyan, fontSize = 12.sp)
-                Text(" | ", color = Color.Gray, fontSize = 12.sp)
+                Text(stringResource(id = R.string.login_hint_separator), color = Color.Gray, fontSize = 12.sp)
                 Text(stringResource(id = R.string.password_hint_number), color = NeonCyan, fontSize = 12.sp)
             }
             

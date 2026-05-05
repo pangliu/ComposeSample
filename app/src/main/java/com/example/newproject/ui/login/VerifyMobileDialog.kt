@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -73,7 +74,7 @@ fun VerifyMobileDialog(
 
                 // Phone number 標籤
                 Text(
-                    text = "Phone number",
+                    text = stringResource(R.string.verify_mobile_phone_label),
                     color = NeonCyan,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
@@ -122,7 +123,7 @@ fun VerifyMobileDialog(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
-                            contentDescription = "Send",
+                            contentDescription = stringResource(R.string.verify_mobile_send_desc),
                             tint = Color.LightGray,
                             modifier = Modifier.size(15.dp)
                         )
@@ -131,7 +132,7 @@ fun VerifyMobileDialog(
                     Spacer(modifier = Modifier.width(10.dp))
 
                     Text(
-                        text = "Resend after 00:32 sec.",
+                        text = stringResource(R.string.verify_mobile_resend_timer),
                         color = NeonPurple,
                         fontSize = 10.sp,
                         maxLines = 1,
@@ -204,7 +205,7 @@ fun VerifyMobileDialog(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(R.string.verify_mobile_close_desc),
                         tint = NeonCyan,
                         modifier = Modifier.size(30.dp)
                     )
@@ -220,7 +221,7 @@ fun VerifyMobileDialog(
                     .padding(horizontal = 8.dp)
             ) {
                 Text(
-                    text = "Verify Mobile",
+                    text = stringResource(R.string.verify_mobile_title),
                     color = Color.White,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
