@@ -22,6 +22,11 @@ class FakeUserApiService : UserApiService {
         )
     }
 
+    override suspend fun logout(): BaseResponse<Unit> {
+        delay(1200) // 模擬網路延遲
+        return BaseResponse(code = 200, errorMsg = "登出成功", result = null)
+    }
+
     override suspend fun uploadUserImage(): BaseResponse<Any> {
         delay(1500)
         return BaseResponse(code = 200, errorMsg = "上傳成功", result = null)

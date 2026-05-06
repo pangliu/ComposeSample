@@ -13,6 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,6 +41,11 @@ import com.example.newproject.ui.home.essential.EssentialItem
 import com.example.newproject.ui.home.essential.XEssentialsCard
 import com.example.newproject.ui.home.essential.allEssentialItems
 import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.newproject.ui.cards.CardsScreen
+import com.example.newproject.ui.profile.ProfileScreen
+import com.example.newproject.ui.profile.ProfileViewModel
+import com.example.newproject.ui.quests.QuestsScreen
 import com.example.newproject.ui.theme.DarkOverlay
 import com.example.newproject.ui.theme.NavDivider
 import com.example.newproject.ui.theme.NeonCyan
@@ -67,52 +76,91 @@ fun HomeScreenContent(
     myMenuItems: List<EssentialItem> = allEssentialItems.take(ESSENTIALS_DISPLAY_COUNT),
     onSaveMyMenu: (List<EssentialItem>) -> Unit = {},
 ) {
+    var selectedIndex by remember { mutableStateOf(0) }
+
     Scaffold(
         containerColor = WelcomeBackground,
         contentColor = Color.White,
-        bottomBar = { CustomBottomNavigation() }
+        bottomBar = { 
+            CustomBottomNavigation(
+                selectedIndex = selectedIndex,
+                onTabSelected = { selectedIndex = it }
+            ) 
+        }
     ) { paddingValues ->
-        Box(
+        AnimatedContent(
+            targetState = selectedIndex,
+            transitionSpec = {
+                if (targetState > initialState) {
+                    slideInHorizontally { it } togetherWith slideOutHorizontally { -it }
+                } else {
+                    slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
+                }
+            },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            when (val s = state) {
-                is HomeState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                is HomeState.Error -> {
-                    Text(
-                        text = stringResource(R.string.home_error_message, s.message ?: ""),
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
+                .padding(paddingValues),
+            label = "tab_content"
+        ) { index ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                when (index) {
+                    0 -> HomeTabContent(
+                        state = state,
+                        myMenuItems = myMenuItems,
+                        onSaveMyMenu = onSaveMyMenu
                     )
-                }
-                is HomeState.Success -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 24.dp, vertical = 16.dp)
-                    ) {
-                        // 頂部狀態區 (Header)
-                        HeaderSection(userName = s.userInfo.userName)
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        // B. 總資產卡片
-                        BalanceCard(
-                            cashBalance = s.userInfo.cashBalance,
-                            tokenBalance = s.userInfo.tokenBalance
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        // C. X-Essentials 快捷功能區
-                        XEssentialsCard(
-                            myMenuItems = myMenuItems,
-                            onSaveMyMenu = onSaveMyMenu
-                        )
-
-                        // TODO: D. 任務與行銷橫幅
+                    1 -> CardsScreen()
+                    2 -> QuestsScreen()
+                    3 -> {
+                        val profileViewModel: ProfileViewModel = hiltViewModel()
+                        ProfileScreen(viewModel = profileViewModel)
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun BoxScope.HomeTabContent(
+    state: HomeState,
+    myMenuItems: List<EssentialItem>,
+    onSaveMyMenu: (List<EssentialItem>) -> Unit
+) {
+    when (val s = state) {
+        is HomeState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        is HomeState.Error -> {
+            Text(
+                text = stringResource(R.string.home_error_message, s.message ?: ""),
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+        is HomeState.Success -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
+            ) {
+                // 頂部狀態區 (Header)
+                HeaderSection(userName = s.userInfo.userName)
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // B. 總資產卡片
+                BalanceCard(
+                    cashBalance = s.userInfo.cashBalance,
+                    tokenBalance = s.userInfo.tokenBalance
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // C. X-Essentials 快捷功能區
+                XEssentialsCard(
+                    myMenuItems = myMenuItems,
+                    onSaveMyMenu = onSaveMyMenu
+                )
+
+                // TODO: D. 任務與行銷橫幅
             }
         }
     }
@@ -184,10 +232,10 @@ fun HeaderSection(userName: String) {
 // ── Bottom Navigation ────────────────────────────────────────────────────────
 
 @Composable
-fun CustomBottomNavigation() {
-    // 記錄目前被選取的 index，預設為 0 (Home)
-    var selectedIndex by remember { mutableStateOf(0) }
-
+fun CustomBottomNavigation(
+    selectedIndex: Int,
+    onTabSelected: (Int) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -218,7 +266,7 @@ fun CustomBottomNavigation() {
                 activeIconRes = R.mipmap.ic_home_active,
                 title = stringResource(R.string.home_nav_home), 
                 isSelected = selectedIndex == 0, 
-                onClick = { selectedIndex = 0 }
+                onClick = { onTabSelected(0) }
             )
             BottomNavItem(
                 modifier = Modifier.weight(1f),
@@ -226,7 +274,7 @@ fun CustomBottomNavigation() {
                 activeIconRes = R.mipmap.ic_card_active,
                 title = stringResource(R.string.home_nav_cards), 
                 isSelected = selectedIndex == 1, 
-                onClick = { selectedIndex = 1 }
+                onClick = { onTabSelected(1) }
             )
             ScanAndPayFab()
             BottomNavItem(
@@ -235,7 +283,7 @@ fun CustomBottomNavigation() {
                 activeIconRes = R.mipmap.ic_quest_active,
                 title = stringResource(R.string.home_nav_quests), 
                 isSelected = selectedIndex == 2, 
-                onClick = { selectedIndex = 2 }
+                onClick = { onTabSelected(2) }
             )
             BottomNavItem(
                 modifier = Modifier.weight(1f),
@@ -243,7 +291,7 @@ fun CustomBottomNavigation() {
                 activeIconRes = R.mipmap.ic_profile_active,
                 title = stringResource(R.string.home_nav_profile), 
                 isSelected = selectedIndex == 3, 
-                onClick = { selectedIndex = 3 }
+                onClick = { onTabSelected(3) }
             )
         }
     }

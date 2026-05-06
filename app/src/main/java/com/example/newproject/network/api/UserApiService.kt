@@ -8,7 +8,10 @@ import com.example.newproject.network.model.response.UserInfoResponse
 
 interface UserApiService {
     @GET("/api/user/info")
-    suspend fun getUserInfo(): BaseResponse<UserInfoResponse> 
+    suspend fun getUserInfo(): BaseResponse<UserInfoResponse>
+
+    @POST("/api/logout")
+    suspend fun logout(): BaseResponse<Unit>
 
     @POST("/api/upload/user/image")
     suspend fun uploadUserImage(): BaseResponse<Any>
