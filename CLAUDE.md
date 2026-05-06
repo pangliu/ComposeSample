@@ -105,6 +105,13 @@ Composable → ViewModel (StateFlow) → Repository → API / Manager
 - `clickable` 在深色背景上需加 `indication = null` 避免長按時出現矩形 ripple 陰影
 - Dialog 動畫使用 `AnimatedVisibility` + `slideInVertically`/`fadeIn`
 
+### Network / API
+- 所有 API 呼叫統一透過 `safeApiCall {}` 包裝，回傳 `NetworkResult<T>`
+- ViewModel 必須用 `when (result)` 處理三種分支：`Success`、`Error`、`Exception`
+- 新增 API 時同步在對應的 `Fake*ApiService` 加入模擬實作（含 `delay()` 模擬延遲）
+- 需要 Token 的 API 放 `UserApiService`（`@AuthClient`），公開 API 放 `PublicApiService`（`@PublicClient`）
+- Repository 只在 `NetworkResult.Success` 時執行後續本地操作（如存 token、清 token）
+
 ### 字串管理
 - 所有 UI 顯示字串（Text、contentDescription 等）必須寫入 `app/src/main/res/values/strings.xml`
 - Composable 中使用 `stringResource(R.string.xxx)` 引用，禁止硬編碼字串

@@ -23,17 +23,19 @@ val InputFieldBackground = Color(0xFF2C2C2C) // LoginBottomSheet 輸入框背景
 val InputFieldDark = Color(0xFF2A2A2A)        // VerifyMobileDialog 輸入框背景
 
 // ========== BalanceCard 顏色 ==========
+val CardStringNormal = Color(0xFFD8DADF)
+val CardStringLight = Color(0xFFF7F9F9)
 val CardGradientStart = Color(0xFF1A1040)
 val CardGradientMid = Color(0xFF0D1B35)
 val CardGradientEnd = Color(0xFF0A1228)
 val CardBorder = Color(0xFF4A3080)
 val CardShadow = Color(0xFF7B2FBE)
-val CashInGreen = Color(0xFF00C853)
-val SendPink = Color(0xFFCC00AA)
+val CashInGreen = Color(0xFF96D230)
+val SendPink = Color(0xFFB80FB1)
 val TokenGold = Color(0xFFFFD700)
 val TokenOrange = Color(0xFFFF8C00)
 val TokenTextPurple = Color(0xFF4A0080)
-val BalanceSwitchBackground = Color(0xFF1E1E3A)
+val BalanceSwitchBackground = Color(0xFF3C3C4C)
 
 // ========== Bottom Navigation ==========
 val NavDivider = Color(0xFF1A2235)

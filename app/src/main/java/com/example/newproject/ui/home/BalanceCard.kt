@@ -1,5 +1,6 @@
 package com.example.newproject.ui.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,14 +29,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.theme.BalanceSwitchBackground
-import com.example.newproject.ui.theme.CardBorder
 import com.example.newproject.ui.theme.CardGradientEnd
 import com.example.newproject.ui.theme.CardGradientMid
 import com.example.newproject.ui.theme.CardGradientStart
 import com.example.newproject.ui.theme.CardShadow
+import com.example.newproject.ui.theme.CardStringLight
+import com.example.newproject.ui.theme.CardStringNormal
 import com.example.newproject.ui.theme.CashInGreen
 import com.example.newproject.ui.theme.DarkBackground
 import com.example.newproject.ui.theme.NeonCyan
+import com.example.newproject.ui.theme.NeonPurple
 import com.example.newproject.ui.theme.SendPink
 import com.example.newproject.ui.theme.TokenGold
 import com.example.newproject.ui.theme.TokenOrange
@@ -42,6 +46,7 @@ import com.example.newproject.ui.theme.TokenTextPurple
 
 // ── Balance Card ─────────────────────────────────────────────────────────────
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
     var isBalanceHidden by remember { mutableStateOf(false) }
@@ -60,8 +65,17 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     )
                 )
             )
-            .border(1.dp, CardBorder.copy(alpha = 0.8f), RoundedCornerShape(20.dp))
-            .padding(horizontal = 20.dp, vertical = 18.dp)
+            .border(
+                width = 2.dp,
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        NeonCyan.copy(alpha = 0.4f),
+                        NeonPurple.copy(alpha = 0.8f)
+                    )
+                ),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(horizontal = 15.dp, vertical = 10.dp)
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
@@ -75,12 +89,16 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(R.string.balance_title),
-                        color = Color.White,
+                        color = CardStringNormal,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 1.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
+                }
+
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.Lock,
                         contentDescription = stringResource(R.string.balance_toggle_desc),
@@ -89,30 +107,35 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                             .size(18.dp)
                             .clickable { isBalanceHidden = !isBalanceHidden }
                     )
-                }
-
-                // 右側：Cash In 綠色膠囊按鈕
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50.dp))
-                        .background(CashInGreen)
-                        .clickable { /* TODO: Cash In */ }
-                        .padding(horizontal = 14.dp, vertical = 7.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(R.string.balance_cash_in),
-                            tint = Color.Black,
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = stringResource(R.string.balance_cash_in),
-                            color = Color.Black,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                    Spacer(modifier = Modifier.width(15.dp))
+                    // 右側：Cash In 綠色膠囊按鈕
+                    Box(
+                        modifier = Modifier
+                            .shadow(
+                                elevation = 8.dp,
+                                shape = RoundedCornerShape(8.dp),
+                                spotColor = CashInGreen // 使用綠色產生光暈感，若要一般陰影可改用 Color.Black
+                            )
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(CashInGreen)
+                            .clickable { /* TODO: Cash In */ }
+                            .padding(horizontal = 14.dp, vertical = 3.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = painterResource(id = R.mipmap.ic_cash_in),
+                                contentDescription = stringResource(R.string.balance_cash_in),
+                                tint = Color.Unspecified, // 若圖片本身為黑色則會顯示原貌，若需強制塗成黑色請改為 Color.Black
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = stringResource(R.string.balance_cash_in),
+                                color = Color.Black,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }
@@ -125,7 +148,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
             ) {
                 Text(
                     text = if (isBalanceHidden) "PHP ••••••" else "PHP ${String.format("%,.0f", cashBalance)}",
-                    color = Color.White,
+                    color = CardStringLight,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -133,22 +156,21 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 // Send 粉紫色膠囊按鈕
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(50.dp))
+                        .clip(RoundedCornerShape(8.dp))
                         .background(SendPink)
                         .clickable { /* TODO: Send */ }
-                        .padding(horizontal = 14.dp, vertical = 7.dp)
+                        .padding(horizontal = 14.dp, vertical = 3.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = Icons.Default.Send,
+                            painter = painterResource(id = R.mipmap.ic_balance_send),
                             contentDescription = stringResource(R.string.balance_send),
-                            tint = Color.White,
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = stringResource(R.string.balance_send),
-                            color = Color.White,
+                            color = Color.Black,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -186,7 +208,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         text = if (isBalanceHidden) "••••" else String.format("%,.0f", tokenBalance),
-                        color = Color.White,
+                        color = CardStringNormal,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -195,23 +217,26 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 // 右側：Balance Switch 深色膠囊按鈕
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(50.dp))
+                        .clip(RoundedCornerShape(10.dp))
                         .background(BalanceSwitchBackground)
-                        .border(1.dp, CardBorder, RoundedCornerShape(50.dp))
+                        .border(
+                            width = 1.dp,
+                            color = BalanceSwitchBackground,
+                            shape = RoundedCornerShape(50.dp))
                         .clickable { /* TODO: Balance Switch */ }
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                        .padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = Icons.Default.Refresh,
+                            painter = painterResource(R.mipmap.ic_switch_balance),
+                            tint = CardStringNormal,
                             contentDescription = stringResource(R.string.balance_switch),
-                            tint = Color.Gray,
-                            modifier = Modifier.size(13.dp)
+                            modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = stringResource(R.string.balance_switch),
-                            color = Color.Gray,
+                            color = CardStringNormal,
                             fontSize = 11.sp
                         )
                     }
