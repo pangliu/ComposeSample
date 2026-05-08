@@ -1,7 +1,8 @@
-package com.example.newproject.ui.home.essential
+    package com.example.newproject.ui.home.essential
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -20,8 +21,8 @@ data class EssentialItem(
  * - EditEssentialsDialog 顯示全部
  */
 val allEssentialItems = listOf(
-    EssentialItem(Icons.Default.Send, "Send"),
-    EssentialItem(Icons.Default.List, "Bills"),
+    EssentialItem(Icons.AutoMirrored.Filled.Send, "Send"),
+    EssentialItem(Icons.AutoMirrored.Filled.List, "Bills"),
     EssentialItem(Icons.Default.Phone, "Load Up"),
     EssentialItem(Icons.Default.Add, "Cash In"),
     EssentialItem(Icons.Default.ShoppingCart, "Cash Out"),

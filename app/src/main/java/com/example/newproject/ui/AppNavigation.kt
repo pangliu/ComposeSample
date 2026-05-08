@@ -23,9 +23,11 @@ fun AppNavigation(
     // 🎯 監聽全局的登出事件
     LaunchedEffect(Unit) {
         appViewModel.logoutEvent.collect {
-            // 當接收到登出事件時，清空所有的返回堆疊，並強迫導向登入頁
-            navController.navigate("login") {
-                popUpTo(0) { inclusive = true }
+            // 已在登入頁（例如帳密錯誤觸發的 1005）不重複導向，避免重建畫面
+            if (navController.currentDestination?.route != "login") {
+                navController.navigate("login") {
+                    popUpTo(0) { inclusive = true }
+                }
             }
         }
     }

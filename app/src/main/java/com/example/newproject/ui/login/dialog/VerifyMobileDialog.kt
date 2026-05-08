@@ -1,4 +1,4 @@
-package com.example.newproject.ui.login
+package com.example.newproject.ui.login.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,10 +33,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
+import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.DarkOverlay
 import com.example.newproject.ui.theme.InputFieldDark
 import com.example.newproject.ui.theme.NeonCyan
+import com.example.newproject.ui.theme.NeonCyanLight
 import com.example.newproject.ui.theme.NeonPurple
+import com.example.newproject.ui.theme.NeonPurpleLight
 import com.example.newproject.ui.theme.WelcomeBackground
 
 @Composable
@@ -55,19 +58,28 @@ fun VerifyMobileDialog(
             dismissOnClickOutside = false
         )
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .wrapContentHeight()
-                .padding(top = 20.dp, bottom = 20.dp) // 給 title 留空間
+                .padding(top = 20.dp, bottom = 20.dp)
         ) {
+            // 頂部的標籤，位於框線上方
+            Text(
+                text = stringResource(R.string.verify_mobile_title),
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 5.dp, bottom = 3.dp)
+            )
+
             // 主要背景卡片
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(WelcomeBackground, RoundedCornerShape(20.dp))
-                    .border(2.dp, NeonPurple, RoundedCornerShape(20.dp))
-                    .padding(horizontal = 10.dp, vertical = 20.dp),
+                    .border(2.dp, NeonPurpleLight, RoundedCornerShape(20.dp))
+                    .padding(horizontal = 25.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 //                Spacer(modifier = Modifier.height(16.dp))
@@ -75,7 +87,7 @@ fun VerifyMobileDialog(
                 // Phone number 標籤
                 Text(
                     text = stringResource(R.string.verify_mobile_phone_label),
-                    color = NeonCyan,
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     modifier = Modifier.fillMaxWidth(),
@@ -92,17 +104,17 @@ fun VerifyMobileDialog(
                     // 輸入框 (縮短長度且唯讀)
                     Box(
                         modifier = Modifier
-                            .width(130.dp)
-                            .height(30.dp)
-                            .shadow(elevation = 10.dp, spotColor = NeonCyan, shape = RoundedCornerShape(25.dp))
+                            .weight(1f)
+                            .height(35.dp)
+                            .neonGlow(color = NeonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
                             .background(InputFieldDark, RoundedCornerShape(25.dp))
-                            .border(2.dp, NeonCyan, RoundedCornerShape(25.dp))
+                            .border(2.dp, NeonCyanLight, RoundedCornerShape(25.dp))
                             .padding(horizontal = 16.dp),
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Text(
                             text = phone,
-                            color = Color.LightGray,
+                            color = NeonCyanLight,
                             fontSize = 14.sp,
                             maxLines = 1
                         )
@@ -113,34 +125,43 @@ fun VerifyMobileDialog(
                     // Send 按鈕
                     Box(
                         modifier = Modifier
-                            .size(30.dp)
-                            .shadow(elevation = 10.dp, spotColor = NeonCyan, shape = CircleShape)
+                            .size(35.dp)
+                            .neonGlow(color = NeonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 15.dp)
                             .background(InputFieldDark, CircleShape)
-                            .border(2.dp, NeonCyan, CircleShape)
-                            .rotate(-45f)
+                            .border(2.dp, NeonCyanLight, CircleShape)
+//                            .rotate(-45f)
                             .clickable { /* TODO: 發送驗證碼邏輯 */ },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = stringResource(R.string.verify_mobile_send_desc),
-                            tint = Color.LightGray,
+                            tint = NeonCyanLight,
                             modifier = Modifier.size(15.dp)
                         )
                     }
-
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                    Text(
-                        text = stringResource(R.string.verify_mobile_resend_timer),
-                        color = NeonPurple,
-                        fontSize = 10.sp,
-                        maxLines = 1,
-                        softWrap = false
-                    )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = stringResource(R.string.verify_mobile_resend_timer),
+                    color = NeonPurple,
+                    fontSize = 12.sp,
+                    modifier = Modifier.fillMaxWidth().padding(start = 4.dp),
+                    textAlign = TextAlign.Start
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text(
+                    text = stringResource(R.string.verify_mobile_enter_code),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    textAlign = TextAlign.Start
+                )
 
                 // 6 碼 OTP 輸入區塊
                 Box(
@@ -156,10 +177,10 @@ fun VerifyMobileDialog(
                             val char = otpCode.getOrNull(i)?.toString() ?: ""
                             Box(
                                 modifier = Modifier
-                                    .size(45.dp)
-                                    .shadow(elevation = 8.dp, spotColor = NeonCyan, shape = RoundedCornerShape(8.dp))
+                                    .size(35.dp)
+                                    .neonGlow(color = NeonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 8.dp)
                                     .background(InputFieldDark, RoundedCornerShape(8.dp))
-                                    .border(2.dp, NeonCyan, RoundedCornerShape(8.dp)),
+                                    .border(2.dp, NeonCyanLight, RoundedCornerShape(8.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -197,36 +218,21 @@ fun VerifyMobileDialog(
                 Box(
                     modifier = Modifier
                         .size(50.dp)
-                        .shadow(elevation = 15.dp, spotColor = NeonCyan, shape = CircleShape)
+                        .neonGlow(color = NeonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
                         .background(WelcomeBackground, CircleShape)
-                        .border(2.dp, NeonCyan, CircleShape)
+                        .border(2.dp, NeonCyanLight, CircleShape)
                         .clickable { onDismiss() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(R.string.verify_mobile_close_desc),
-                        tint = NeonCyan,
+                        tint = NeonCyanLight,
                         modifier = Modifier.size(30.dp)
                     )
                 }
             }
 
-            // 頂部的 "Verify Mobile" 標籤，壓在邊框上
-            Box(
-                modifier = Modifier
-                    .padding(start = 32.dp)
-                    .offset(y = (-15).dp) // 往上偏移壓住邊框
-                    .background(DarkOverlay) // 類似全黑，為了遮住邊框
-                    .padding(horizontal = 8.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.verify_mobile_title),
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
         }
     }
 }

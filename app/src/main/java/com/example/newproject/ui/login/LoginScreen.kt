@@ -1,8 +1,12 @@
 package com.example.newproject.ui.login
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.decode.GifDecoder
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,8 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,7 +27,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
+import com.example.newproject.ui.login.dialog.LoginBottomSheet
+import com.example.newproject.ui.login.dialog.VerifyMobileDialog
 import com.example.newproject.ui.components.LoadingDialog
+import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.NeonGreen
+import com.example.newproject.ui.theme.NeonGreenLight
 import com.example.newproject.ui.theme.NeonPurple
 import com.example.newproject.ui.theme.WelcomeBackground
 import kotlinx.coroutines.launch
@@ -75,6 +83,12 @@ fun LoginScreenContent(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showLoginSheet by remember { mutableStateOf(false) }
+
+    LaunchedEffect(state) {
+        if (state is LoginState.Success || state is LoginState.NeedsVerification) {
+            showLoginSheet = false
+        }
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -140,8 +154,14 @@ fun LoginScreenContent(
                     modifier = Modifier.weight(1f).fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_xcash_logo),
+                    val gifLoader = remember(context) {
+                        ImageLoader.Builder(context)
+                            .components { add(GifDecoder.Factory()) }
+                            .build()
+                    }
+                    AsyncImage(
+                        model = R.drawable.xcash_logo_type2,
+                        imageLoader = gifLoader,
                         contentDescription = stringResource(id = R.string.center_neon_logo_desc),
                         modifier = Modifier.fillMaxWidth(0.9f)
                     )
@@ -152,9 +172,9 @@ fun LoginScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    if (state is LoginState.Error) {
-                        Text(text = state.message, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(bottom = 8.dp))
-                    }
+//                    if (state is LoginState.Error) {
+//                        Text(text = state.message, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(bottom = 8.dp))
+//                    }
 
                     Button(
                         onClick = { showLoginSheet = true },
@@ -162,11 +182,25 @@ fun LoginScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .shadow(elevation = 20.dp, spotColor = NeonPurple, shape = RoundedCornerShape(25.dp)),
+                            .neonGlow(color = NeonPurple, alpha = 0.7f, glowRadius = 20.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = NeonPurple, contentColor = Color.White),
                         shape = RoundedCornerShape(25.dp)
                     ) {
                         Text(if (state is LoginState.Loading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.login_btn), fontSize = 16.sp)
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = {},
+                        enabled = state !is LoginState.Loading,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                            .neonGlow(color = NeonGreen, alpha = 0.7f, glowRadius = 20.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = NeonGreen, contentColor = Color.White),
+                        border = BorderStroke(width = 1.dp, color = NeonGreenLight),
+                        shape = RoundedCornerShape(25.dp)
+                    ){
+                        Text(if (state is LoginState.Loading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.sign_up_with_telegram), fontSize = 16.sp)
                     }
                     
                     Spacer(modifier = Modifier.height(16.dp))
@@ -193,11 +227,14 @@ fun LoginScreenContent(
 
     if (showLoginSheet) {
         LoginBottomSheet(
-            onDismissRequest = { showLoginSheet = false },
-            onLoginSubmit = { mobileNumber, password ->
+            onDismissRequest = {
                 showLoginSheet = false
-                onLoginClick(mobileNumber, password) 
-            }
+                onResetState()
+            },
+            onLoginSubmit = { mobileNumber, password ->
+                onLoginClick(mobileNumber, password)
+            },
+            errorMessage = (state as? LoginState.Error)?.message
         )
     }
 

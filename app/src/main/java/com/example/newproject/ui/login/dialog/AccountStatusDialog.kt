@@ -1,4 +1,4 @@
-package com.example.newproject.ui.login
+package com.example.newproject.ui.login.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

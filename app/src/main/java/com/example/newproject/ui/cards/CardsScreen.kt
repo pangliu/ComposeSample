@@ -2,7 +2,7 @@ package com.example.newproject.ui.cards
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +28,7 @@ fun CardsScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.List,
+                imageVector = Icons.AutoMirrored.Filled.List,
                 contentDescription = null,
                 tint = NeonCyan.copy(alpha = 0.4f),
                 modifier = Modifier.size(64.dp)

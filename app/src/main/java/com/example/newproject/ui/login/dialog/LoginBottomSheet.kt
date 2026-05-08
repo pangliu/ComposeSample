@@ -1,5 +1,6 @@
-package com.example.newproject.ui.login
+package com.example.newproject.ui.login.dialog
 
+import com.example.newproject.ui.components.neonGlow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,13 +14,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -32,9 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.InputFieldBackground
 import com.example.newproject.ui.theme.WelcomeBackground
-
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -45,13 +44,18 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.activity.compose.BackHandler
+import com.example.newproject.ui.theme.NeonCyanLight
+import com.example.newproject.ui.theme.NeonMint
+import com.example.newproject.ui.theme.NeonPurpleLight
+import com.example.newproject.ui.theme.SendPink
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginBottomSheet(
     onDismissRequest: () -> Unit,
-    onLoginSubmit: (String, String) -> Unit
+    onLoginSubmit: (String, String) -> Unit,
+    errorMessage: String? = null
 ) {
     var isVisible by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -68,20 +72,23 @@ fun LoginBottomSheet(
         }
     }
 
-    BackHandler(enabled = isVisible) {
-        dismissWithAnimation()
-    }
-
     Dialog(
         onDismissRequest = { dismissWithAnimation() },
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = false
+            decorFitsSystemWindows = false,
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false
         )
     ) {
+        BackHandler(enabled = isVisible) {
+            dismissWithAnimation()
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.6f))
                 .imePadding()
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
@@ -95,7 +102,7 @@ fun LoginBottomSheet(
                 enter = slideInVertically(initialOffsetY = { it }, animationSpec = tween(300)) + fadeIn(animationSpec = tween(300)),
                 exit = slideOutVertically(targetOffsetY = { it }, animationSpec = tween(300)) + fadeOut(animationSpec = tween(300))
             ) {
-                LoginBottomSheetContent(onLoginSubmit = onLoginSubmit)
+                LoginBottomSheetContent(onLoginSubmit = onLoginSubmit, errorMessage = errorMessage)
             }
         }
     }
@@ -103,31 +110,47 @@ fun LoginBottomSheet(
 
 @Composable
 fun LoginBottomSheetContent(
-    onLoginSubmit: (String, String) -> Unit
+    onLoginSubmit: (String, String) -> Unit,
+    errorMessage: String? = null
 ) {
     var mobileNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 16.dp)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = {} // 攔截點擊，避免關閉對話框
-                        )
-                        .background(WelcomeBackground, RoundedCornerShape(32.dp))
-                        .border(2.dp, NeonPurple, RoundedCornerShape(32.dp))
-                        .padding(horizontal = 32.dp, vertical = 32.dp)
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+    val inputBorderColor = if (errorMessage != null) SendPink else NeonCyanLight
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 16.dp)
+    ) {
+        // 頂部的標籤，位於框線上方
+        Text(
+            text = stringResource(id = R.string.login_your_account),
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+        )
+        
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = {} // 攔截點擊，避免關閉對話框
+                )
+                .background(WelcomeBackground, RoundedCornerShape(32.dp))
+                .border(2.dp, NeonPurpleLight, RoundedCornerShape(32.dp))
+                .padding(horizontal = 32.dp, vertical = 25.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             // Mobile Number Label
             Text(
                 text = stringResource(id = R.string.mobile_number),
-                color = NeonCyan,
+                color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 modifier = Modifier
@@ -141,8 +164,9 @@ fun LoginBottomSheetContent(
                     modifier = Modifier
                         .weight(1f)
                         .height(35.dp)
-                        .background(InputFieldBackground, RoundedCornerShape(25.dp))
-                        .border(2.dp, NeonCyan, RoundedCornerShape(25.dp))
+                        .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
+                        .background(WelcomeBackground, RoundedCornerShape(25.dp))
+                        .border(2.dp, inputBorderColor, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
@@ -159,25 +183,35 @@ fun LoginBottomSheetContent(
                 Spacer(modifier = Modifier.width(16.dp))
                 Box(
                     modifier = Modifier
-                        .size(30.dp)
-                        .border(2.dp, NeonCyan, CircleShape),
+                        .size(35.dp)
+                        .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 17.5.dp)
+                        .border(2.dp, inputBorderColor, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-                    // 暫時使用 Info 替代眼睛圖示，若要使用 Visibility，需加入 material-icons-extended 依賴
                     Icon(
-                        imageVector = Icons.Default.Info,
+                        imageVector = Icons.Default.Visibility,
                         contentDescription = stringResource(id = R.string.visibility_desc),
                         tint = Color.LightGray,
                         modifier = Modifier.size(18.dp)
                     )
                 }
             }
+            if (errorMessage != null) {
+                Text(
+                    text = errorMessage,
+                    color = SendPink,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 6.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(10.dp))
-            
+
             // Password Label
             Text(
                 text = stringResource(id = R.string.password),
-                color = NeonCyan,
+                color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 modifier = Modifier
@@ -191,8 +225,9 @@ fun LoginBottomSheetContent(
                     modifier = Modifier
                         .weight(1f)
                         .height(35.dp)
-                        .background(InputFieldBackground, RoundedCornerShape(25.dp))
-                        .border(2.dp, NeonCyan, RoundedCornerShape(25.dp))
+                        .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
+                        .background(WelcomeBackground, RoundedCornerShape(25.dp))
+                        .border(2.dp, inputBorderColor, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
@@ -209,14 +244,14 @@ fun LoginBottomSheetContent(
                 Spacer(modifier = Modifier.width(16.dp))
                 Box(
                     modifier = Modifier
-                        .size(30.dp)
-                        .border(2.dp, NeonCyan, CircleShape)
+                        .size(35.dp)
+                        .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 17.5.dp)
+                        .border(2.dp, inputBorderColor, CircleShape)
                         .clickable { passwordVisible = !passwordVisible },
                     contentAlignment = Alignment.Center
                 ) {
-                    // 暫時使用 Info 與 Lock 替代眼睛圖示，若要使用 Visibility/VisibilityOff，需加入 material-icons-extended 依賴
                     Icon(
-                        imageVector = if (passwordVisible) Icons.Default.Info else Icons.Default.Lock,
+                        imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = stringResource(id = R.string.toggle_visibility_desc),
                         tint = Color.LightGray,
                         modifier = Modifier.size(18.dp)
@@ -232,16 +267,21 @@ fun LoginBottomSheetContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(id = R.string.password_hint_length), color = Color.White, fontSize = 12.sp)
-                Text(stringResource(id = R.string.login_hint_separator), color = Color.Gray, fontSize = 12.sp)
-                Text(stringResource(id = R.string.password_hint_uppercase), color = NeonCyan, fontSize = 12.sp)
-                Text(stringResource(id = R.string.login_hint_separator), color = Color.Gray, fontSize = 12.sp)
-                Text(stringResource(id = R.string.password_hint_number), color = NeonCyan, fontSize = 12.sp)
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(stringResource(id = R.string.login_hint_separator), color = NeonMint, fontSize = 12.sp)
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(stringResource(id = R.string.password_hint_uppercase), color = NeonMint, fontSize = 12.sp)
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(stringResource(id = R.string.login_hint_separator), color = NeonMint, fontSize = 12.sp)
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(stringResource(id = R.string.password_hint_number), color = NeonMint, fontSize = 12.sp)
             }
             
             // Forgot Password
             Text(
                 text = stringResource(id = R.string.forgot_password),
-                color = NeonPurple,
+                color = NeonCyanLight,
+                fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -252,43 +292,42 @@ fun LoginBottomSheetContent(
             // Send Button
             Box(
                 modifier = Modifier
-                    .size(40.dp)
-                    .border(2.dp, NeonPurple, CircleShape)
+                    .size(50.dp)
+                    .neonGlow(color = NeonMint, alpha = 0.6f, glowRadius = 20.dp, borderRadius = 25.dp)
+                    .border(2.dp, NeonMint, CircleShape)
                     .clickable { onLoginSubmit(mobileNumber, password) },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.Send,
+                    imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = stringResource(id = R.string.submit_login_desc),
-                    tint = NeonPurple,
+                    tint = NeonMint,
                     modifier = Modifier
-                        .size(24.dp)
-                        .rotate(-45f)
+                        .size(25.dp)
+                        .rotate(-40f)
                 )
             }
             
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             
             // Biometrics
-            Text(
-                text = stringResource(id = R.string.login_biometrics),
-                color = NeonCyan,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                style = TextStyle(shadow = Shadow(color = NeonCyan, blurRadius = 20f))
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            Row(horizontalArrangement = Arrangement.Center) {
-                Icon(imageVector = Icons.Default.Face, contentDescription = stringResource(id = R.string.face_id_desc), tint = Color.White, modifier = Modifier.size(24.dp))
-                Spacer(modifier = Modifier.width(12.dp))
-                Icon(imageVector = Icons.Default.Lock, contentDescription = stringResource(id = R.string.fingerprint_desc), tint = Color.White, modifier = Modifier.size(24.dp))
-            }
-            
-            Spacer(modifier = Modifier.height(24.dp))
+//            Text(
+//                text = stringResource(id = R.string.login_biometrics),
+//                color = NeonCyan,
+//                fontSize = 18.sp,
+//                fontWeight = FontWeight.Bold,
+//                style = TextStyle(shadow = Shadow(color = NeonCyan, blurRadius = 20f))
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//            Row(horizontalArrangement = Arrangement.Center) {
+//                Icon(imageVector = Icons.Default.Face, contentDescription = stringResource(id = R.string.face_id_desc), tint = Color.White, modifier = Modifier.size(24.dp))
+//                Spacer(modifier = Modifier.width(12.dp))
+//                Icon(imageVector = Icons.Default.Lock, contentDescription = stringResource(id = R.string.fingerprint_desc), tint = Color.White, modifier = Modifier.size(24.dp))
+//            }
+//            Spacer(modifier = Modifier.height(24.dp))
         }
     }
+}
 
 @Preview(showBackground = true)
 @Composable

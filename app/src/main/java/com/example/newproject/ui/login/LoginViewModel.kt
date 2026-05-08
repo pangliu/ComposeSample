@@ -40,6 +40,7 @@ class LoginViewModel @Inject constructor(
             val deviceId = deviceInfoProvider.deviceId
 
             val request = LoginRequest(
+//                account = "aaa",
                 account = "verify",
                 password = password,
                 deviceId = deviceId

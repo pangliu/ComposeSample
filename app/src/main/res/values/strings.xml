@@ -34,6 +34,7 @@
     <string name="center_neon_logo_desc">Center Neon Logo</string>
     <string name="logging_in">Logging in…</string>
     <string name="login_btn">Login</string>
+    <string name="sign_up_with_telegram">Sign up With Telegram</string>
     <string name="login_or">or</string>
     <string name="dont_have_account">Don\'t have an account? </string>
     <string name="sign_up">Sign Up</string>
@@ -41,6 +42,7 @@
     <string name="regulated_by_bsp">Regulated by BSP</string>
 
     <!-- LoginBottomSheet -->
+    <string name="login_your_account">Login your account</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="password">Password</string>
     <string name="password_hint_length">8+ Chars</string>
@@ -58,6 +60,7 @@
     <!-- VerifyMobileDialog -->
     <string name="verify_mobile_title">Verify Mobile</string>
     <string name="verify_mobile_phone_label">Phone number</string>
+    <string name="verify_mobile_enter_code">Enter verify code</string>
     <string name="verify_mobile_send_desc">Send</string>
     <string name="verify_mobile_resend_timer">Resend after 00:32 sec.</string>
     <string name="verify_mobile_close_desc">Close</string>

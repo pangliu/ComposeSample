@@ -9,12 +9,16 @@ val ThemeDarkGray = Color.DarkGray
 
 // ========== 霓虹主題顏色 ==========
 val NeonCyan = Color(0xFF2EFFF5)
+val NeonCyanLight = Color(0xFF74B7D2)
+val NeonGreen = Color(0xFF3993D0)
+val NeonGreenLight = Color(0xFF88CFE9)
 val NeonPurple = Color(0xFFDF4CFF)
+val NeonPurpleLight = Color(0xFFC984D0)
+val NeonMint = Color(0xFF94EEB5)
 val NeonBlue = Color(0xFF2E88FF)
 val NeonDivider = Color(0xAAB0D6DF)
-
 // ========== 背景色 ==========
-val WelcomeBackground = Color(0xFF0A1F37)
+val WelcomeBackground = Color(0xFF0E1422)
 val DarkBackground = Color(0xFF0A0E1A)       // 深色背景（Preview / ScanPay 圓圈）
 val DarkOverlay = Color(0xFF0A0F1A)           // 深色遮罩（VerifyMobile / ScanPay）
 
