@@ -23,15 +23,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import com.example.newproject.ui.components.neonGlow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.annotation.DrawableRes
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.newproject.R
+import com.example.newproject.ui.theme.DrawerAccountDark
+import com.example.newproject.ui.theme.DrawerAccountLight
+import com.example.newproject.ui.theme.DrawerHelpDark
+import com.example.newproject.ui.theme.DrawerHelpLight
+import com.example.newproject.ui.theme.DrawerProductDark
+import com.example.newproject.ui.theme.DrawerProductLight
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.NeonBlue
 import com.example.newproject.ui.theme.NeonPurple
@@ -63,7 +72,8 @@ fun DrawerMenuContent(onClose: () -> Unit) {
                     onClick = {} // 攔截點擊事件，避免傳遞給外層 Box
                 )
                 .background(
-                    color = WelcomeBackground.copy(alpha = 0.95f),
+//                    color = WelcomeBackground.copy(alpha = 0.95f),
+                    color = Color.Transparent,
                     shape = RoundedCornerShape(topEnd = 32.dp, bottomEnd = 32.dp)
                 )
                 .padding(horizontal = 24.dp, vertical = 24.dp)
@@ -88,7 +98,8 @@ fun DrawerMenuContent(onClose: () -> Unit) {
             // Account Status 藍綠色區塊
             MenuCard(
                 title = stringResource(id = R.string.account_status),
-                color = NeonCyan,
+                titleColor = DrawerAccountDark,
+                borderColor = DrawerAccountLight,
                 items = listOf(
                     MenuItem(Icons.Default.Search, stringResource(id = R.string.check_application_progress), stringResource(id = R.string.check_application_status)),
                     MenuItem(Icons.Default.Person, stringResource(id = R.string.verify_my_identity), stringResource(id = R.string.verify_identity))
@@ -101,7 +112,8 @@ fun DrawerMenuContent(onClose: () -> Unit) {
             // Product Features 紫色區塊
             MenuCard(
                 title = stringResource(id = R.string.product_features),
-                color = NeonPurple,
+                titleColor = DrawerProductDark,
+                borderColor = DrawerProductLight,
                 items = listOf(
                     MenuItem(Icons.Default.Refresh, stringResource(id = R.string.real_time_fx_rates), null),
                     MenuItem(Icons.Default.Star, stringResource(id = R.string.explore_xcash_features), null)
@@ -113,7 +125,8 @@ fun DrawerMenuContent(onClose: () -> Unit) {
             // Help & Policies 藍色區塊
             MenuCard(
                 title = stringResource(id = R.string.help_policies),
-                color = NeonBlue,
+                titleColor = DrawerHelpDark,
+                borderColor = DrawerHelpLight,
                 items = listOf(
                     MenuItem(Icons.Default.Email, stringResource(id = R.string.help_center), stringResource(id = R.string.help_center)),
                     MenuItem(Icons.Default.Lock, stringResource(id = R.string.user_terms_policies), stringResource(id = R.string.security_privacy))
@@ -129,17 +142,23 @@ fun DrawerMenuContent(onClose: () -> Unit) {
 }
 
 
-data class MenuItem(val icon: ImageVector, val title: String, val subtitle: String?)
+data class MenuItem(
+    val iconVector: ImageVector? = null,
+    val title: String, 
+    val subtitle: String?,
+    @DrawableRes val iconRes: Int? = null,
+    val useOriginalColor: Boolean = false
+)
 
 @Composable
-fun MenuCard(title: String, color: Color, items: List<MenuItem>, onClick: (() -> Unit)? = null) {
+fun MenuCard(title: String, titleColor: Color, borderColor: Color, items: List<MenuItem>, onClick: (() -> Unit)? = null) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(elevation = 15.dp, shape = RoundedCornerShape(16.dp), spotColor = color.copy(alpha = 0.5f))
+            .neonGlow(color = borderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 16.dp)
             .let { if (onClick != null) it.clickable { onClick() } else it },
         colors = CardDefaults.cardColors(containerColor = WelcomeBackground),
-        border = BorderStroke(1.5.dp, color),
+        border = BorderStroke(1.5.dp, borderColor),
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
@@ -149,7 +168,7 @@ fun MenuCard(title: String, color: Color, items: List<MenuItem>, onClick: (() ->
             ) {
                 Text(
                     text = title, 
-                    color = color, 
+                    color = titleColor, 
                     fontSize = 16.sp, 
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
@@ -158,7 +177,7 @@ fun MenuCard(title: String, color: Color, items: List<MenuItem>, onClick: (() ->
 //                    Icon(
 //                        imageVector = Icons.Default.KeyboardArrowRight,
 //                        contentDescription = "Open",
-//                        tint = color
+//                        tint = titleColor
 //                    )
                 }
             }
@@ -166,7 +185,13 @@ fun MenuCard(title: String, color: Color, items: List<MenuItem>, onClick: (() ->
                 Spacer(modifier = Modifier.height(16.dp))
                 items.forEachIndexed { index, item ->
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                        Icon(imageVector = item.icon, contentDescription = item.title, tint = color, modifier = Modifier.size(24.dp))
+                        if (item.iconVector != null) {
+                            Icon(imageVector = item.iconVector, contentDescription = item.title, tint = titleColor, modifier = Modifier.size(24.dp))
+                        } else if (item.iconRes != null) {
+                            val tint = if (item.useOriginalColor) Color.Unspecified else titleColor
+                            Icon(painter = painterResource(id = item.iconRes), contentDescription = item.title, tint = tint, modifier = Modifier.size(24.dp))
+                        }
+                        
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(text = item.title, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)

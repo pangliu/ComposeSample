@@ -89,6 +89,7 @@
     <string name="balance_toggle_desc">Toggle Balance</string>
     <string name="balance_cash_in">Cash In</string>
     <string name="balance_send">Send</string>
+    <string name="balance_coin">Balance Coin</string>
     <string name="balance_token_symbol">X</string>
     <string name="balance_switch">Balance Switch</string>
 

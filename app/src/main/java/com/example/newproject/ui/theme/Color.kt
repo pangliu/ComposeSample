@@ -37,6 +37,7 @@ val CardShadow = Color(0xFF7B2FBE)
 val CashInGreen = Color(0xFF96D230)
 val SendPink = Color(0xFFB80FB1)
 val TokenGold = Color(0xFFFFD700)
+val BalanceGold = Color(0xFFFEF27C)
 val TokenOrange = Color(0xFFFF8C00)
 val TokenTextPurple = Color(0xFF4A0080)
 val BalanceSwitchBackground = Color(0xFF3C3C4C)
@@ -44,3 +45,13 @@ val BalanceSwitchBackground = Color(0xFF3C3C4C)
 // ========== Bottom Navigation ==========
 val NavDivider = Color(0xFF1A2235)
 val TabActiveColor = Color(0xFF61C8E4) // R:97 G:200 B:228
+
+// ========== Drawer Menu 專用顏色 ==========
+val DrawerAccountLight = Color(0xFF9BFBFD)
+val DrawerAccountDark = Color(0xFF31C8CD)
+
+val DrawerProductLight = Color(0xFFF7A5F9)
+val DrawerProductDark = Color(0xFFA82CC5)
+
+val DrawerHelpLight = Color(0xFF5B80C4)
+val DrawerHelpDark = Color(0xFF1E5BD1)

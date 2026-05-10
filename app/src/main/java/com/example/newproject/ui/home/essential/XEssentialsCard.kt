@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -242,12 +243,22 @@ fun EssentialItemView(item: EssentialItem) {
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = item.icon,
-                contentDescription = item.label,
-                tint = NeonCyan,
-                modifier = Modifier.size(30.dp)
-            )
+            if (item.iconVector != null) {
+                Icon(
+                    imageVector = item.iconVector,
+                    contentDescription = item.label,
+                    tint = NeonCyan,
+                    modifier = Modifier.size(30.dp)
+                )
+            } else if (item.iconRes != null) {
+                val tint = if (item.useOriginalColor) Color.Unspecified else NeonCyan
+                Icon(
+                    painter = painterResource(id = item.iconRes),
+                    contentDescription = item.label,
+                    tint = tint,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(6.dp))

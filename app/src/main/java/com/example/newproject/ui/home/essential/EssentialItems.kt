@@ -1,17 +1,21 @@
     package com.example.newproject.ui.home.essential
 
+import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.newproject.R
 
 /**
  * X-Essentials 功能項目的資料模型
  */
 data class EssentialItem(
-    val icon: ImageVector,
+    val iconVector: ImageVector? = null,
     val label: String,
-    val onClick: () -> Unit = {}
+    val onClick: () -> Unit = {},
+    @DrawableRes val iconRes: Int? = null,
+    val useOriginalColor: Boolean = false
 )
 
 /**
@@ -21,10 +25,13 @@ data class EssentialItem(
  * - EditEssentialsDialog 顯示全部
  */
 val allEssentialItems = listOf(
-    EssentialItem(Icons.AutoMirrored.Filled.Send, "Send"),
-    EssentialItem(Icons.AutoMirrored.Filled.List, "Bills"),
-    EssentialItem(Icons.Default.Phone, "Load Up"),
-    EssentialItem(Icons.Default.Add, "Cash In"),
+    EssentialItem(iconVector = null, label = "Send", iconRes = R.mipmap.ic_essent_send, useOriginalColor = false),
+    EssentialItem(iconVector = null, label = "Bills", iconRes = R.mipmap.ic_essent_bills, useOriginalColor = false),
+    EssentialItem(iconVector = null, label = "Load Up", iconRes = R.mipmap.ic_essent_load_up, useOriginalColor = false),
+    EssentialItem(iconVector = null, label = "Cash In", iconRes = R.mipmap.ic_essent_cash_in, useOriginalColor = false),
+//    EssentialItem(Icons.AutoMirrored.Filled.List, "Bills"),
+//    EssentialItem(Icons.Default.Phone, "Load Up"),
+//    EssentialItem(Icons.Default.Add, "Cash In"),
     EssentialItem(Icons.Default.ShoppingCart, "Cash Out"),
     EssentialItem(Icons.Default.Person, "KYC"),
     EssentialItem(Icons.Default.Star, "Vouchers"),

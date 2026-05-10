@@ -19,9 +19,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,11 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
+import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.BalanceGold
 import com.example.newproject.ui.theme.BalanceSwitchBackground
-import com.example.newproject.ui.theme.CardGradientEnd
-import com.example.newproject.ui.theme.CardGradientMid
-import com.example.newproject.ui.theme.CardGradientStart
-import com.example.newproject.ui.theme.CardShadow
 import com.example.newproject.ui.theme.CardStringLight
 import com.example.newproject.ui.theme.CardStringNormal
 import com.example.newproject.ui.theme.CashInGreen
@@ -55,30 +56,22 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(elevation = 20.dp, spotColor = CardShadow.copy(alpha = 0.6f), shape = RoundedCornerShape(20.dp))
-            .clip(RoundedCornerShape(20.dp))
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        CardGradientStart,
-                        CardGradientMid,
-                        CardGradientEnd
-                    )
-                )
-            )
-            .border(
-                width = 2.dp,
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        NeonCyan.copy(alpha = 0.4f),
-                        NeonPurple.copy(alpha = 0.8f)
-                    )
-                ),
-                shape = RoundedCornerShape(20.dp)
-            )
-            .padding(horizontal = 15.dp, vertical = 10.dp)
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        // 1. 使用 Image 當作背景，它會根據原始比例撐開 Box 的高度
+        Image(
+            painter = painterResource(R.mipmap.bg_balance_card),
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // 2. 讓 Column 充滿整個 Box 的大小，並把 padding 設定在這裡
+        Column(
+            modifier = Modifier
+                .matchParentSize()
+                .padding(horizontal = 15.dp, vertical = 15.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
 
             // ── 第一行：BALANCE 標題 + 眼睛 + Cash In 按鈕 ──
             Row(
@@ -101,7 +94,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.Lock,
+                        imageVector = Icons.Default.Visibility,
                         contentDescription = stringResource(R.string.balance_toggle_desc),
                         tint = if (isBalanceHidden) NeonCyan else Color.Gray,
                         modifier = Modifier
@@ -112,15 +105,11 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     // 右側：Cash In 綠色膠囊按鈕
                     Box(
                         modifier = Modifier
-                            .shadow(
-                                elevation = 8.dp,
-                                shape = RoundedCornerShape(8.dp),
-                                spotColor = CashInGreen // 使用綠色產生光暈感，若要一般陰影可改用 Color.Black
-                            )
+                            .neonGlow(color = CashInGreen, alpha = 0.6f, glowRadius = 15.dp, borderRadius = 8.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .background(CashInGreen)
                             .clickable { /* TODO: Cash In */ }
-                            .padding(horizontal = 14.dp, vertical = 3.dp)
+                            .padding(horizontal = 14.dp, vertical = 5.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
@@ -157,15 +146,17 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 // Send 粉紫色膠囊按鈕
                 Box(
                     modifier = Modifier
+                        .neonGlow(color = SendPink, alpha = 0.6f, glowRadius = 15.dp, borderRadius = 8.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(SendPink)
                         .clickable { /* TODO: Send */ }
-                        .padding(horizontal = 14.dp, vertical = 3.dp)
+                        .padding(horizontal = 14.dp, vertical = 5.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             painter = painterResource(id = R.mipmap.ic_balance_send),
                             contentDescription = stringResource(R.string.balance_send),
+                            tint = Color.Unspecified,
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -187,25 +178,34 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
             ) {
                 // 左側：金幣圓圈 + Token 數量
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
+//                    Box(
+//                        modifier = Modifier
+//                            .size(36.dp)
+//                            .shadow(6.dp, CircleShape, spotColor = TokenGold)
+//                            .background(
+//                                brush = Brush.radialGradient(
+//                                    colors = listOf(TokenGold, TokenOrange)
+//                                ),
+//                                shape = CircleShape
+//                            ),
+//                        contentAlignment = Alignment.Center
+//                    ) {
+//                        Text(
+//                            text = stringResource(R.string.balance_token_symbol),
+//                            color = TokenTextPurple,
+//                            fontSize = 16.sp,
+//                            fontWeight = FontWeight.ExtraBold
+//                        )
+//                    }
+                    Icon(
+                        painter = painterResource(R.mipmap.ic_balance_coin),
+                        contentDescription = stringResource(id = R.string.balance_coin),
+                        tint = Color.Unspecified,
+
                         modifier = Modifier
-                            .size(36.dp)
-                            .shadow(6.dp, CircleShape, spotColor = TokenGold)
-                            .background(
-                                brush = Brush.radialGradient(
-                                    colors = listOf(TokenGold, TokenOrange)
-                                ),
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.balance_token_symbol),
-                            color = TokenTextPurple,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                    }
+                            .neonGlow(color = BalanceGold, alpha = 0.7f, glowRadius = 10.dp)
+                            .size(50.dp)
+                    )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         text = if (isBalanceHidden) "••••" else String.format("%,.0f", tokenBalance),
@@ -225,7 +225,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                             color = BalanceSwitchBackground,
                             shape = RoundedCornerShape(50.dp))
                         .clickable { /* TODO: Balance Switch */ }
-                        .padding(horizontal = 8.dp, vertical = 3.dp)
+                        .padding(horizontal = 8.dp, vertical = 5.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
@@ -238,7 +238,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         Text(
                             text = stringResource(R.string.balance_switch),
                             color = CardStringNormal,
-                            fontSize = 11.sp
+                            fontSize = 14.sp
                         )
                     }
                 }

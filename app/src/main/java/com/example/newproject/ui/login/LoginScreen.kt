@@ -126,23 +126,28 @@ fun LoginScreenContent(
                             .size(28.dp)
                             .align(Alignment.CenterStart)
                             .clickable { scope.launch { drawerState.open() } }
+                            .neonGlow(color = NeonPurple, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 15.dp)
+//                            .neonGlow(color = NeonPurple, alpha = 0.7f, glowRadius = 20.dp),
                     )
                     
                     Image(
                         painter = painterResource(id = R.drawable.ic_xcash),
                         contentDescription = stringResource(id = R.string.xcash_logo_desc),
-                        modifier = Modifier.height(40.dp).align(Alignment.Center)
+                        modifier = Modifier.height(30.dp).align(Alignment.Center)
                     )
                     
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.align(Alignment.CenterEnd)
+                        modifier = Modifier.height(40.dp).align(Alignment.CenterEnd)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Info,
+//                            imageVector = Icons.Default.Public,
+                            painter = painterResource(R.mipmap.ic_global),
                             contentDescription = stringResource(id = R.string.language_desc),
                             tint = NeonPurple,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier
+                                .size(20.dp)
+                                .neonGlow(color = NeonPurple, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 10.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(stringResource(id = R.string.language_en), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
@@ -203,9 +208,9 @@ fun LoginScreenContent(
                         Text(if (state is LoginState.Loading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.sign_up_with_telegram), fontSize = 16.sp)
                     }
                     
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(text = stringResource(id = R.string.login_or), color = Color.LightGray, fontSize = 14.sp)
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(3.dp))
                     Text(
                         text = buildAnnotatedString {
                             append(stringResource(id = R.string.dont_have_account))
@@ -213,9 +218,15 @@ fun LoginScreenContent(
                         },
                         fontSize = 14.sp
                     )
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Info, contentDescription = stringResource(id = R.string.shield_desc), modifier = Modifier.size(14.dp), tint = Color.White)
+                        Icon(
+//                            imageVector = Icons.Default.Info,
+                            painter = painterResource(R.mipmap.ic_shield),
+                            contentDescription = stringResource(id = R.string.shield_desc),
+                            modifier = Modifier.size(14.dp),
+                            tint = Color.Unspecified
+                        )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(stringResource(id = R.string.regulated_by_bsp), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                     }
