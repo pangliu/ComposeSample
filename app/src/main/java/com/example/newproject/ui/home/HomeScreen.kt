@@ -17,6 +17,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,6 +31,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -249,7 +252,7 @@ fun CustomBottomNavigation(
                 .height(70.dp)
                 .background(WelcomeBackground)
         ) {
-            HorizontalDivider(color = NavDivider, thickness = 1.dp)
+//            HorizontalDivider(color = NavDivider, thickness = 1.dp)
         }
 
         // 所有的 Item 放同一排，以底部對齊文字
@@ -366,25 +369,29 @@ fun ScanAndPayFab(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .offset(y = (-22).dp)
-                .size(64.dp)
-                .shadow(elevation = 8.dp, spotColor = NeonCyan, shape = CircleShape)
-                .border(3.dp, NeonCyan, CircleShape)
-                .background(DarkOverlay, CircleShape),
+                .width(80.dp)
+                .height(64.dp),
+//                .size(64.dp),
+//                .shadow(elevation = 8.dp, spotColor = NeonCyan, shape = CircleShape)
+//                .border(3.dp, NeonCyan, CircleShape)
+//                .background(DarkOverlay, CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .size(50.dp)
-                    .border(1.dp, NeonCyan.copy(alpha = 0.5f), CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.home_scan_icon_desc),
-                    tint = iconColor,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
+
+            Image(
+                painter = painterResource(R.mipmap.bg_scanner),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Icon(
+//                imageVector = Icons.Default.Add,
+                painter = painterResource(R.mipmap.ic_scanner),
+                contentDescription = stringResource(R.string.home_scan_icon_desc),
+                tint = Color.Unspecified,
+                modifier = Modifier.size(24.dp)
+            )
+//            }
         }
 
         // 文字固定在最底部

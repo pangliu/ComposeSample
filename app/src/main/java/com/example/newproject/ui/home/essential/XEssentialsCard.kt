@@ -34,8 +34,12 @@ import com.example.newproject.ui.theme.CardGradientEnd
 import com.example.newproject.ui.theme.CardGradientMid
 import com.example.newproject.ui.theme.CardGradientStart
 import com.example.newproject.ui.theme.DarkBackground
+import com.example.newproject.ui.theme.EssentialCardTitle
+import com.example.newproject.ui.theme.EssentialEdit
+import com.example.newproject.ui.theme.EssentialMore
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.NeonPurple
+import com.example.newproject.ui.theme.NormalText
 
 // ── X-Essentials 快捷功能區 ──────────────────────────────────────────────────
 
@@ -58,7 +62,7 @@ fun XEssentialsCard(
         ) {
             Text(
                 text = stringResource(R.string.essentials_title),
-                color = Color.White,
+                color = EssentialCardTitle,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -67,39 +71,37 @@ fun XEssentialsCard(
                 // More 按鈕
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    NeonCyan.copy(alpha = 0.2f),
-                                    NeonPurple.copy(alpha = 0.2f)
-                                )
-                            )
+                        .clip(RoundedCornerShape(10.dp))
+                        .border(
+                            width = 2.dp,
+                            color = EssentialMore,
+                            shape = RoundedCornerShape(10.dp)
                         )
-                        .border(1.dp, NeonCyan.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
                         .clickable { /* TODO: More */ }
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
-                    Text(stringResource(R.string.essentials_more), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                    Text(
+                        text = stringResource(R.string.essentials_more),
+                        color = EssentialMore,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
 
                 // Edit 按鈕
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    NeonCyan.copy(alpha = 0.2f),
-                                    NeonPurple.copy(alpha = 0.2f)
-                                )
-                            )
-                        )
-                        .border(1.dp, NeonCyan.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(EssentialEdit)
                         .clickable { showEditDialog = true }
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
-                    Text(stringResource(R.string.essentials_edit), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                    Text(
+                        text = stringResource(R.string.essentials_edit),
+                        color = NormalText,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         }
@@ -160,7 +162,7 @@ fun XEssentialsCard(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // ── Page Indicator (圓點指示器) ──
                 Row(
@@ -261,12 +263,12 @@ fun EssentialItemView(item: EssentialItem) {
             }
         }
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(3.dp))
 
         // 標籤文字
         Text(
             text = item.label,
-            color = Color.White,
+            color = NormalText,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium
         )

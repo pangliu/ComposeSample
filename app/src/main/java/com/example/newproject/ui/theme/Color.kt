@@ -1,6 +1,7 @@
 package com.example.newproject.ui.theme
 
 import androidx.compose.ui.graphics.Color
+import org.intellij.lang.annotations.Language
 
 // ========== 基礎畫面通用顏色 ==========
 val ThemeBlack = Color.Black
@@ -21,11 +22,10 @@ val NeonDivider = Color(0xAAB0D6DF)
 val WelcomeBackground = Color(0xFF0E1422)
 val DarkBackground = Color(0xFF0A0E1A)       // 深色背景（Preview / ScanPay 圓圈）
 val DarkOverlay = Color(0xFF0A0F1A)           // 深色遮罩（VerifyMobile / ScanPay）
-
 // ========== 輸入框 / 表單 ==========
 val InputFieldBackground = Color(0xFF2C2C2C) // LoginBottomSheet 輸入框背景
 val InputFieldDark = Color(0xFF2A2A2A)        // VerifyMobileDialog 輸入框背景
-
+val NormalText = Color(0xFFADAEB0)
 // ========== BalanceCard 顏色 ==========
 val CardStringNormal = Color(0xFFD8DADF)
 val CardStringLight = Color(0xFFF7F9F9)
@@ -41,6 +41,7 @@ val BalanceGold = Color(0xFFFEF27C)
 val TokenOrange = Color(0xFFFF8C00)
 val TokenTextPurple = Color(0xFF4A0080)
 val BalanceSwitchBackground = Color(0xFF3C3C4C)
+val BalanceVisibility = Color(0xFF353649)
 
 // ========== Bottom Navigation ==========
 val NavDivider = Color(0xFF1A2235)
@@ -49,9 +50,11 @@ val TabActiveColor = Color(0xFF61C8E4) // R:97 G:200 B:228
 // ========== Drawer Menu 專用顏色 ==========
 val DrawerAccountLight = Color(0xFF9BFBFD)
 val DrawerAccountDark = Color(0xFF31C8CD)
-
 val DrawerProductLight = Color(0xFFF7A5F9)
 val DrawerProductDark = Color(0xFFA82CC5)
-
 val DrawerHelpLight = Color(0xFF5B80C4)
 val DrawerHelpDark = Color(0xFF1E5BD1)
+// ========== essential card 專用顏色 ==========
+val EssentialCardTitle = Color(0xFFBEE3EE)
+val EssentialEdit = Color(0xFF3E4155)
+val EssentialMore = Color(0xFF48B4C9)

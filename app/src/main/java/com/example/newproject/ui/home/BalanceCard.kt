@@ -35,12 +35,15 @@ import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.BalanceGold
 import com.example.newproject.ui.theme.BalanceSwitchBackground
+import com.example.newproject.ui.theme.BalanceVisibility
 import com.example.newproject.ui.theme.CardStringLight
 import com.example.newproject.ui.theme.CardStringNormal
 import com.example.newproject.ui.theme.CashInGreen
 import com.example.newproject.ui.theme.DarkBackground
+import com.example.newproject.ui.theme.EssentialEdit
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.NeonPurple
+import com.example.newproject.ui.theme.NormalText
 import com.example.newproject.ui.theme.SendPink
 import com.example.newproject.ui.theme.TokenGold
 import com.example.newproject.ui.theme.TokenOrange
@@ -93,14 +96,22 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
 
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Visibility,
-                        contentDescription = stringResource(R.string.balance_toggle_desc),
-                        tint = if (isBalanceHidden) NeonCyan else Color.Gray,
+                    Box(
                         modifier = Modifier
-                            .size(18.dp)
-                            .clickable { isBalanceHidden = !isBalanceHidden }
-                    )
+                            .clip(shape = RoundedCornerShape(10.dp))
+                            .background(BalanceVisibility)
+                            .clickable {}
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Visibility,
+                            contentDescription = stringResource(R.string.balance_toggle_desc),
+                            tint = if (isBalanceHidden) NeonCyan else Color.Gray,
+                            modifier = Modifier
+                                .size(18.dp)
+                                .clickable { isBalanceHidden = !isBalanceHidden }
+                        )
+                    }
                     Spacer(modifier = Modifier.width(15.dp))
                     // 右側：Cash In 綠色膠囊按鈕
                     Box(
@@ -222,7 +233,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         .background(BalanceSwitchBackground)
                         .border(
                             width = 1.dp,
-                            color = BalanceSwitchBackground,
+                            color = BalanceVisibility,
                             shape = RoundedCornerShape(50.dp))
                         .clickable { /* TODO: Balance Switch */ }
                         .padding(horizontal = 8.dp, vertical = 5.dp)
@@ -230,14 +241,14 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             painter = painterResource(R.mipmap.ic_switch_balance),
-                            tint = CardStringNormal,
+                            tint = NormalText,
                             contentDescription = stringResource(R.string.balance_switch),
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = stringResource(R.string.balance_switch),
-                            color = CardStringNormal,
+                            color = NormalText,
                             fontSize = 14.sp
                         )
                     }

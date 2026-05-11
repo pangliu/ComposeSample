@@ -1,6 +1,8 @@
 package com.example.newproject.ui.login
 
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -31,6 +33,8 @@ import com.example.newproject.ui.login.dialog.LoginBottomSheet
 import com.example.newproject.ui.login.dialog.VerifyMobileDialog
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.DarkBackground
+import com.example.newproject.ui.theme.NeonCyanLight
 import com.example.newproject.ui.theme.NeonGreen
 import com.example.newproject.ui.theme.NeonGreenLight
 import com.example.newproject.ui.theme.NeonPurple
@@ -84,6 +88,9 @@ fun LoginScreenContent(
     val scope = rememberCoroutineScope()
     var showLoginSheet by remember { mutableStateOf(false) }
 
+    var selectedLanguage by remember { mutableStateOf("EN") }
+    val languages = listOf("EN", "CN", "JP", "AU")
+
     LaunchedEffect(state) {
         if (state is LoginState.Success || state is LoginState.NeedsVerification) {
             showLoginSheet = false
@@ -136,22 +143,12 @@ fun LoginScreenContent(
                         modifier = Modifier.height(30.dp).align(Alignment.Center)
                     )
                     
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.height(40.dp).align(Alignment.CenterEnd)
-                    ) {
-                        Icon(
-//                            imageVector = Icons.Default.Public,
-                            painter = painterResource(R.mipmap.ic_global),
-                            contentDescription = stringResource(id = R.string.language_desc),
-                            tint = NeonPurple,
-                            modifier = Modifier
-                                .size(20.dp)
-                                .neonGlow(color = NeonPurple, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 10.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(stringResource(id = R.string.language_en), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                    }
+                    LanguageSelector(
+                        selectedLanguage = selectedLanguage,
+                        languages = languages,
+                        onLanguageSelected = { selectedLanguage = it },
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    )
                 }
 
                 // ================== Center Logo ==================
@@ -274,3 +271,4 @@ fun LoginScreenPreview() {
         LoginScreenContent(state = LoginState.Idle, onLoginClick = { _, _ -> })
     }
 }
+
