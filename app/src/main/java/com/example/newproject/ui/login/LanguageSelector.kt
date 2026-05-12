@@ -1,5 +1,6 @@
 package com.example.newproject.ui.login
 
+import android.graphics.BlurMaskFilter
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -121,9 +122,14 @@ fun LanguageSelector(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .width(72.dp)
-                            .neonGlow(color = NeonCyanLight, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 8.dp)
+                            .neonGlow(
+                                color = NeonCyanLight,
+                                alpha = 0.65f,
+                                glowRadius = 18.dp,
+                                borderRadius = 8.dp,
+                                blurStyle = BlurMaskFilter.Blur.OUTER)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(DarkBackground)
+                            .background(Color.Transparent)
                             .border(1.5.dp, NeonCyanLight, RoundedCornerShape(8.dp))
                             .padding(vertical = 6.dp, horizontal = 6.dp)
                     ) {
@@ -212,7 +218,7 @@ fun LanguageSelectorExpandedPreview() {
                         .clip(RoundedCornerShape(5.dp))
                         .background(DarkBackground)
                         .border(1.5.dp, NeonCyanLight, RoundedCornerShape(8.dp))
-                        .padding(vertical = 0.dp, horizontal = 6.dp)
+                        .padding(vertical = 0.dp, horizontal = 50.dp)
                 ) {
                     languages.forEach { lang ->
                         val isSelected = lang == "EN"

@@ -1,15 +1,10 @@
 package com.example.newproject.ui.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -26,11 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,11 +37,11 @@ import com.example.newproject.ui.home.essential.allEssentialItems
 import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.ui.cards.CardsScreen
+import com.example.newproject.ui.home.balance.BalanceCard
+import com.example.newproject.ui.home.quests.QuestCard
 import com.example.newproject.ui.profile.ProfileScreen
 import com.example.newproject.ui.profile.ProfileViewModel
 import com.example.newproject.ui.quests.QuestsScreen
-import com.example.newproject.ui.theme.DarkOverlay
-import com.example.newproject.ui.theme.NavDivider
 import com.example.newproject.ui.theme.NeonCyan
 import com.example.newproject.ui.theme.TabActiveColor
 import com.example.newproject.ui.theme.WelcomeBackground
@@ -162,7 +153,8 @@ fun BoxScope.HomeTabContent(
                     myMenuItems = myMenuItems,
                     onSaveMyMenu = onSaveMyMenu
                 )
-
+                Spacer(modifier = Modifier.height(10.dp))
+                QuestCard()
                 // TODO: D. 任務與行銷橫幅
             }
         }

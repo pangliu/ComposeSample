@@ -11,7 +11,8 @@ fun Modifier.neonGlow(
     color: Color,
     alpha: Float = 0.7f,
     borderRadius: Dp = 25.dp,
-    glowRadius: Dp = 20.dp
+    glowRadius: Dp = 20.dp,
+    blurStyle: android.graphics.BlurMaskFilter.Blur = android.graphics.BlurMaskFilter.Blur.NORMAL
 ) = this.drawBehind {
     val shadowColor = color.copy(alpha = alpha).toArgb()
 
@@ -19,7 +20,7 @@ fun Modifier.neonGlow(
         this.color = shadowColor
         maskFilter = android.graphics.BlurMaskFilter(
             glowRadius.toPx(),
-            android.graphics.BlurMaskFilter.Blur.NORMAL
+            blurStyle
         )
     }
 
