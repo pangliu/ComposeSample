@@ -1,4 +1,4 @@
-package com.example.newproject.ui.home.nvaTab
+package com.example.newproject.ui.main.nvaTab
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

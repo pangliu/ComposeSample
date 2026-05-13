@@ -4,6 +4,7 @@ import com.example.newproject.network.model.response.BaseResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 
+import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.UserInfoResponse
 
 interface UserApiService {
@@ -18,4 +19,7 @@ interface UserApiService {
 
     @GET("/api/user/level_info")
     suspend fun getUserLevelInfo(): BaseResponse<Any>
+
+    @GET("/api/order/history")
+    suspend fun getOrderHistory(): BaseResponse<List<OrderHistoryResponse>>
 }

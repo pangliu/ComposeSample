@@ -26,6 +26,16 @@
     <string name="close">Close</string>
     <string name="go">Go</string>
 
+    <!-- FindAppDialog -->
+    <string name="find_app_title">Let\'s find your application!</string>
+    <string name="find_app_subtitle">We just need to verify it\'s really you.</string>
+    <string name="find_app_id_label">Gov\'t Issued ID Number</string>
+    <string name="find_app_email_label">Email Address</string>
+    <string name="find_app_toggle_id_visibility">Toggle ID Visibility</string>
+    <string name="find_app_mobile_icon_desc">Mobile Input</string>
+    <string name="find_app_email_icon_desc">Email Input</string>
+    <string name="find_app_submit_desc">Submit</string>
+
     <!-- LoginScreen -->
     <string name="menu_desc">Menu</string>
     <string name="xcash_logo_desc">xCash Logo</string>
@@ -107,6 +117,12 @@
     <string name="edit_essentials_remove_desc">Remove</string>
     <string name="edit_essentials_add_desc">Add</string>
     <string name="edit_essentials_items_count">%d items</string>
+
+    <!-- RecentActivity -->
+    <string name="recent_activity_title">Recent Activity</string>
+    <string name="recent_cash_in">Cash In</string>
+    <string name="recent_cash_out">Cash Out</string>
+    <string name="recent_empty">No recent transactions</string>
 
     <!-- Error Messages (HomeViewModel / LoginViewModel) -->
     <string name="error_fetch_user_data">無法取得使用者資料</string>

@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
+import com.example.newproject.ui.login.dialog.AccountStatusDialog
 import com.example.newproject.ui.login.dialog.LoginBottomSheet
 import com.example.newproject.ui.login.dialog.VerifyMobileDialog
 import com.example.newproject.ui.components.LoadingDialog
@@ -87,6 +88,7 @@ fun LoginScreenContent(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showLoginSheet by remember { mutableStateOf(false) }
+    var showAccountStatusDialog by remember { mutableStateOf(false) }
 
     var selectedLanguage by remember { mutableStateOf("EN") }
     val languages = listOf("EN", "CN", "JP", "AU")
@@ -105,7 +107,15 @@ fun LoginScreenContent(
                 drawerContainerColor = Color.Transparent, // 讓抽屜本身透明，我們自己畫背景
                 modifier = Modifier.fillMaxWidth(0.9f)
             ) {
-                DrawerMenuContent(onClose = { scope.launch { drawerState.close() } })
+                DrawerMenuContent(
+                    onClose = { scope.launch { drawerState.close() } },
+                    onAccountStatusClick = {
+                        scope.launch {
+                            drawerState.close()
+                            showAccountStatusDialog = true
+                        }
+                    }
+                )
             }
         }
     ) {
@@ -231,6 +241,10 @@ fun LoginScreenContent(
                 }
             }
         }
+    }
+
+    if (showAccountStatusDialog) {
+        AccountStatusDialog(onDismiss = { showAccountStatusDialog = false })
     }
 
     if (showLoginSheet) {

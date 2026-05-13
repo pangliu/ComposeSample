@@ -114,7 +114,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Spacer(modifier = Modifier.Companion.width(15.dp))
                     // 右側：Cash In 綠色膠囊按鈕
                     Box(
-                        modifier = Modifier.Companion
+                        modifier = Modifier
                             .neonGlow(
                                 color = CashInGreen,
                                 alpha = 0.6f,

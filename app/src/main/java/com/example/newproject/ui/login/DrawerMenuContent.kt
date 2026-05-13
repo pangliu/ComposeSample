@@ -1,6 +1,5 @@
 package com.example.newproject.ui.login
 
-import com.example.newproject.ui.login.dialog.AccountStatusDialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -47,8 +46,7 @@ import com.example.newproject.ui.theme.NeonPurple
 import com.example.newproject.ui.theme.WelcomeBackground
 
 @Composable
-fun DrawerMenuContent(onClose: () -> Unit) {
-    var showAccountStatusDialog by remember { mutableStateOf(false) }
+fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}) {
 
     // 置中外層 Box，佔滿可用空間但背景透明
     Box(
@@ -100,10 +98,19 @@ fun DrawerMenuContent(onClose: () -> Unit) {
                 titleColor = DrawerAccountDark,
                 borderColor = DrawerAccountLight,
                 items = listOf(
-                    MenuItem(Icons.Default.Search, stringResource(id = R.string.check_application_progress), stringResource(id = R.string.check_application_status)),
-                    MenuItem(Icons.Default.Person, stringResource(id = R.string.verify_my_identity), stringResource(id = R.string.verify_identity))
+                    MenuItem(
+                        icon = MenuIcon.Resource(R.mipmap.ic_check_progress),
+                        title = stringResource(id = R.string.check_application_progress),
+                        subtitle = stringResource(id = R.string.check_application_status)
+                    ),
+                    MenuItem(
+//                        icon = MenuIcon.Vector(Icons.Default.Person),
+                        icon = MenuIcon.Resource(R.mipmap.ic_verify_id),
+                        title = stringResource(id = R.string.verify_my_identity),
+                        subtitle = stringResource(id = R.string.verify_identity)
+                    )
                 ),
-                onClick = { showAccountStatusDialog = true }
+                onClick = onAccountStatusClick
             )
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -114,8 +121,8 @@ fun DrawerMenuContent(onClose: () -> Unit) {
                 titleColor = DrawerProductDark,
                 borderColor = DrawerProductLight,
                 items = listOf(
-                    MenuItem(Icons.Default.Refresh, stringResource(id = R.string.real_time_fx_rates), null),
-                    MenuItem(Icons.Default.Star, stringResource(id = R.string.explore_xcash_features), null)
+                    MenuItem(MenuIcon.Vector(Icons.Default.Refresh), stringResource(id = R.string.real_time_fx_rates), null),
+                    MenuItem(MenuIcon.Vector(Icons.Default.Star), stringResource(id = R.string.explore_xcash_features), null)
                 )
             )
             
@@ -127,26 +134,25 @@ fun DrawerMenuContent(onClose: () -> Unit) {
                 titleColor = DrawerHelpDark,
                 borderColor = DrawerHelpLight,
                 items = listOf(
-                    MenuItem(Icons.Default.Email, stringResource(id = R.string.help_center), stringResource(id = R.string.help_center)),
-                    MenuItem(Icons.Default.Lock, stringResource(id = R.string.user_terms_policies), stringResource(id = R.string.security_privacy))
+                    MenuItem(MenuIcon.Vector(Icons.Default.Email), stringResource(id = R.string.help_center), stringResource(id = R.string.help_center)),
+                    MenuItem(MenuIcon.Vector(Icons.Default.Lock), stringResource(id = R.string.user_terms_policies), stringResource(id = R.string.security_privacy))
                 )
             )
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
-
-    if (showAccountStatusDialog) {
-        AccountStatusDialog(onDismiss = { showAccountStatusDialog = false })
-    }
 }
 
 
+sealed class MenuIcon {
+    data class Vector(val imageVector: ImageVector) : MenuIcon()
+    data class Resource(@DrawableRes val resId: Int, val useOriginalColor: Boolean = false) : MenuIcon()
+}
+
 data class MenuItem(
-    val iconVector: ImageVector? = null,
-    val title: String, 
-    val subtitle: String?,
-    @DrawableRes val iconRes: Int? = null,
-    val useOriginalColor: Boolean = false
+    val icon: MenuIcon,
+    val title: String,
+    val subtitle: String?
 )
 
 @Composable
@@ -195,11 +201,9 @@ fun MenuCard(
                 Spacer(modifier = Modifier.height(16.dp))
                 items.forEachIndexed { index, item ->
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                        if (item.iconVector != null) {
-                            Icon(imageVector = item.iconVector, contentDescription = item.title, tint = titleColor, modifier = Modifier.size(24.dp))
-                        } else if (item.iconRes != null) {
-                            val tint = if (item.useOriginalColor) Color.Unspecified else titleColor
-                            Icon(painter = painterResource(id = item.iconRes), contentDescription = item.title, tint = tint, modifier = Modifier.size(24.dp))
+                        when (val icon = item.icon) {
+                            is MenuIcon.Vector -> Icon(imageVector = icon.imageVector, contentDescription = item.title, tint = titleColor, modifier = Modifier.size(35.dp))
+                            is MenuIcon.Resource -> Icon(painter = painterResource(icon.resId), contentDescription = item.title, tint = if (icon.useOriginalColor) Color.Unspecified else titleColor, modifier = Modifier.size(35.dp))
                         }
                         
                         Spacer(modifier = Modifier.width(16.dp))

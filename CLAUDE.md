@@ -39,18 +39,30 @@ app/src/main/java/com/example/newproject/
 │   │   └── SessionManager.kt
 │   ├── api/                   # Retrofit interface 定義
 │   ├── fake/                  # 開發用假資料實作（取代真實 API）
-│   └── model/                 # request / response data class
+│   └── model/
+│       └── response/
+│           ├── UserInfoResponse.kt        # 使用者資訊（含 empty() companion）
+│           └── OrderHistoryResponse.kt    # 訂單歷史（OrderType / OrderStatus enums）
 ├── repository/
-│   ├── BaseRepository.kt
+│   ├── BaseRepository.kt      # safeApiCall + handleGlobalError（401/1001/1005 → logout）
 │   ├── AuthRepository.kt
-│   └── UserRepository.kt
+│   └── UserRepository.kt      # fetchUserInfo / fetchOrderHistory
 ├── ui/
-│   ├── AppNavigation.kt       # Navigation graph
+│   ├── AppNavigation.kt       # Navigation graph（route "main" → MainScreen）
 │   ├── AppViewModel.kt
+│   ├── main/
+│   │   ├── MainScreen.kt      # 導覽容器：Scaffold + AnimatedContent tab 切換
+│   │   └── nvaTab/
+│   │       └── CustomBottomNavigation.kt  # 底部導覽列（含 ScanAndPayTab overlay）
 │   ├── home/
-│   │   ├── HomeScreen.kt      # Home UI + Bottom Navigation
-│   │   ├── HomeViewModel.kt   # homeState + myMenuItems StateFlow
-│   │   ├── BalanceCard.kt
+│   │   ├── HomeScreen.kt      # 自行注入 HomeViewModel；純內容頁面
+│   │   ├── HomeViewModel.kt   # HomeUiState（純資料容器）+ toastEvent SharedFlow
+│   │   ├── balance/
+│   │   │   └── BalanceCard.kt
+│   │   ├── quests/
+│   │   │   └── QuestCard.kt
+│   │   ├── recent/
+│   │   │   └── RecentActivity.kt  # 接收 List<OrderHistoryResponse>，純 UI
 │   │   └── essential/
 │   │       ├── EssentialItems.kt      # EssentialItem data class + allEssentialItems 清單
 │   │       ├── XEssentialsCard.kt     # Home 頁快捷功能卡片（HorizontalPager）
@@ -111,6 +123,23 @@ Composable → ViewModel (StateFlow) → Repository → API / Manager
 - 新增 API 時同步在對應的 `Fake*ApiService` 加入模擬實作（含 `delay()` 模擬延遲）
 - 需要 Token 的 API 放 `UserApiService`（`@AuthClient`），公開 API 放 `PublicApiService`（`@PublicClient`）
 - Repository 只在 `NetworkResult.Success` 時執行後續本地操作（如存 token、清 token）
+- `BaseRepository.handleGlobalError()` 已攔截 401/1001/1005 並觸發 logout，ViewModel **不需要**再重複檢查這些錯誤碼
+
+### UiState 設計
+- UiState 是**純資料容器**（data fields + `isLoading`），不使用 sealed class 狀態機
+- 每隻 API 對應一個 `isLoadingX: Boolean = true` 欄位；`isLoading` 計算屬性 = 所有旗標的 OR
+- 新增 API 只需在 UiState 加一個 boolean 旗標，`isLoading` 自動包含（保持擴充彈性）
+- API 錯誤 → ViewModel 透過 `_toastEvent.emit(message)` 通知；Composable 用 `LaunchedEffect(Unit)` 收集並呼叫 `Toast.makeText()`
+- 資料缺失 → 使用空預設值（`UserInfoResponse.empty()`、`emptyList()`），不進入錯誤 UI 狀態
+- `toastEvent` 宣告為 `MutableSharedFlow<String>(extraBufferCapacity = 1)`，避免 emit 被丟棄
+
+### 新增 API 步驟（以 HomeScreen 為例）
+1. **`UserApiService`**：新增 `@GET suspend fun xxx(): BaseResponse<T>`
+2. **`FakeUserApiService`**：實作相同 function，加 `delay()` 模擬延遲，回傳假資料
+3. **`UserRepository`**：新增 `suspend fun fetchXxx(): NetworkResult<T>` 包裝 `safeApiCall`
+4. **`HomeUiState`**：新增 `val isLoadingXxx: Boolean = true` 與資料欄位
+5. **`HomeViewModel`**：`init` 中呼叫新 function；用 `when (result)` 更新 `_uiState`，錯誤 emit toast
+6. **Composable**：從 `uiState` 取出資料傳入子元件，不自行處理 loading/error 狀態
 
 ### 字串管理
 - 所有 UI 顯示字串（Text、contentDescription 等）必須寫入 `app/src/main/res/values/strings.xml`

@@ -6,6 +6,7 @@ import com.example.newproject.network.model.NetworkResult
 import com.example.newproject.network.manager.SessionManager
 import javax.inject.Inject
 
+import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.UserInfoResponse
 
 /**
@@ -36,6 +37,12 @@ class UserRepository @Inject constructor(
     suspend fun fetchUserLevelInfo(): NetworkResult<Any> {
         return safeApiCall {
             apiService.getUserLevelInfo()
+        }
+    }
+
+    suspend fun fetchOrderHistory(): NetworkResult<List<OrderHistoryResponse>> {
+        return safeApiCall {
+            apiService.getOrderHistory()
         }
     }
 }

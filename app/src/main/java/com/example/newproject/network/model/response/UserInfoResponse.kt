@@ -11,4 +11,8 @@ data class UserInfoResponse(
     @Json(name = "user_email") val userEmail: String,
     @Json(name = "cash_balance") val cashBalance: Double,
     @Json(name = "token_balance") val tokenBalance: Double
-)
+) {
+    companion object {
+        fun empty() = UserInfoResponse("", "", "", "", 0.0, 0.0)
+    }
+}

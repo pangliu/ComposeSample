@@ -6,8 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.newproject.ui.home.HomeScreen
-import com.example.newproject.ui.home.HomeViewModel
+import com.example.newproject.ui.main.MainScreen
 import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
 
@@ -39,7 +38,7 @@ fun AppNavigation(
             WelcomeScreen(
                 viewModel = welcomeViewModel,
                 onNavigateToHome = {
-                    navController.navigate("home") {
+                    navController.navigate("main") {
                         popUpTo("welcome") { inclusive = true }
                     }
                 },
@@ -56,7 +55,7 @@ fun AppNavigation(
             LoginScreen(
                 viewModel = loginViewModel,
                 onNavigateToHome = {
-                    navController.navigate("home") {
+                    navController.navigate("main") {
                         // 轉跳後把 login 頁面從 back stack 中清掉，確保按返回鍵不會回到登入頁
                         popUpTo("login") { inclusive = true }
                     }
@@ -64,9 +63,8 @@ fun AppNavigation(
             )
         }
 
-        composable("home") {
-            val homeViewModel: HomeViewModel = hiltViewModel()
-            HomeScreen(viewModel = homeViewModel)
+        composable("main") {
+            MainScreen()
         }
 
     }

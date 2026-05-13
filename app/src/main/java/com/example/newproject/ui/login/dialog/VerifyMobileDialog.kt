@@ -77,6 +77,7 @@ fun VerifyMobileDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .neonGlow(color = NeonPurpleLight, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp)
                     .background(WelcomeBackground, RoundedCornerShape(20.dp))
                     .border(2.dp, NeonPurpleLight, RoundedCornerShape(20.dp))
                     .padding(horizontal = 25.dp, vertical = 20.dp),
@@ -237,10 +238,18 @@ fun VerifyMobileDialog(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun VerifyMobileDialogPreview() {
     MaterialTheme {
-        VerifyMobileDialog(initialPhone = "0912345678", onDismiss = {}, onSubmit = {})
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .background(Color.Black)
+//                .padding(24.dp),
+//            contentAlignment = Alignment.Center
+//        ) {
+            VerifyMobileDialog(initialPhone = "0912345678", onDismiss = {}, onSubmit = {})
+//        }
     }
 }

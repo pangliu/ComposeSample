@@ -57,6 +57,7 @@ import com.example.newproject.R
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
+import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.CardGradientMid
 import com.example.newproject.ui.theme.CardGradientStart
 import com.example.newproject.ui.theme.CashInGreen
@@ -154,6 +155,12 @@ fun EditEssentialsContent(
                 indication = null,
                 onClick = {}
             )
+            .neonGlow(
+                color = NeonPurple,
+                alpha = 0.6f,
+                glowRadius = 15.dp,
+                borderRadius = 28.dp
+            )
             .background(WelcomeBackground, RoundedCornerShape(28.dp))
             .border(2.dp, NeonPurple, RoundedCornerShape(28.dp))
             .padding(20.dp),
@@ -229,6 +236,12 @@ fun EditEssentialsContent(
 
         Box(
             modifier = Modifier
+                .neonGlow(
+                    color = CashInGreen,
+                    alpha = 0.6f,
+                    glowRadius = 15.dp,
+                    borderRadius = 8.dp
+                )
                 .clip(RoundedCornerShape(50.dp))
                 .background(color = CashInGreen)
                 .clickable { onClose() }
