@@ -123,7 +123,7 @@ fun XEssentialsCard(
                     )
                 )
                 .border(1.dp, CardBorder.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
-                .padding(horizontal = 8.dp, vertical = 16.dp)
+                .padding(horizontal = 8.dp, vertical = 8.dp)
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 HorizontalPager(
@@ -137,7 +137,7 @@ fun XEssentialsCard(
 
                     Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.height(148.dp) // 固定高度：兩排 70dp + 8dp 間距
+                        modifier = Modifier.height(150.dp) // 固定高度：兩排 70dp + 8dp 間距
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -161,35 +161,33 @@ fun XEssentialsCard(
                         }
                     }
                 }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                // ── Page Indicator (圓點指示器) ──
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+            }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        // ── Page Indicator (圓點指示器) ──
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            repeat(pages.size) { index ->
+                val isSelected = pagerState.currentPage == index
+                // 外層固定大小，避免切換時高度跳動
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .size(8.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    repeat(pages.size) { index ->
-                        val isSelected = pagerState.currentPage == index
-                        // 外層固定大小，避免切換時高度跳動
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 4.dp)
-                                .size(8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(if (isSelected) 8.dp else 6.dp)
-                                    .clip(CircleShape)
-                                    .background(
-                                        if (isSelected) NeonCyan
-                                        else Color.White.copy(alpha = 0.3f)
-                                    )
+                    Box(
+                        modifier = Modifier
+                            .size(if (isSelected) 8.dp else 6.dp)
+                            .clip(CircleShape)
+                            .background(
+                                if (isSelected) NeonCyan
+                                else Color.White.copy(alpha = 0.3f)
                             )
-                        }
-                    }
+                    )
                 }
             }
         }

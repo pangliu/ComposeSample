@@ -72,7 +72,6 @@ fun DrawerMenuContent(onClose: () -> Unit) {
                     onClick = {} // 攔截點擊事件，避免傳遞給外層 Box
                 )
                 .background(
-//                    color = WelcomeBackground.copy(alpha = 0.95f),
                     color = Color.Transparent,
                     shape = RoundedCornerShape(topEnd = 32.dp, bottomEnd = 32.dp)
                 )
@@ -151,11 +150,22 @@ data class MenuItem(
 )
 
 @Composable
-fun MenuCard(title: String, titleColor: Color, borderColor: Color, items: List<MenuItem>, onClick: (() -> Unit)? = null) {
+fun MenuCard(
+    title: String,
+    titleColor: Color,
+    borderColor: Color,
+    items: List<MenuItem>,
+    onClick: (() -> Unit)? = null
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(color = borderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 16.dp)
+            .neonGlow(
+                color = borderColor,
+                alpha = 0.5f,
+                glowRadius = 15.dp,
+                borderRadius = 16.dp
+            )
             .let { if (onClick != null) it.clickable { onClick() } else it },
         colors = CardDefaults.cardColors(containerColor = WelcomeBackground),
         border = BorderStroke(1.5.dp, borderColor),

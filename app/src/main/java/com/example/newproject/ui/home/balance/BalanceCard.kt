@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -70,7 +71,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
         Column(
             modifier = Modifier.Companion
                 .matchParentSize()
-                .padding(horizontal = 15.dp, vertical = 15.dp),
+                .padding(horizontal = 15.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
@@ -193,7 +194,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     }
                 }
             }
-
+//            Spacer(Modifier.height(3.dp))
             // ── 第三行：Token 金幣 + 數量 + Balance Switch 按鈕 ──
             Row(
                 modifier = Modifier.Companion.fillMaxWidth(),

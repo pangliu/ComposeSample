@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.CashInGreen
 import com.example.newproject.ui.theme.DarkBackground
 import com.example.newproject.ui.theme.NeonPurple
 import com.example.newproject.ui.theme.WelcomeBackground
@@ -32,23 +31,23 @@ import com.example.newproject.ui.theme.WelcomeBackground
 @Composable
 fun QuestCard() {
     Box(
-        modifier = Modifier.Companion
+        modifier = Modifier
 //            .padding(top = 20.dp) // 給上方預留一點空間讓人物露出來
             .fillMaxWidth()
     ) {
         Text(
-            modifier = Modifier.Companion
-                .align(Alignment.Companion.TopStart)
+            modifier = Modifier
+                .align(Alignment.TopStart)
                 .padding(top = 0.dp),
             text = "Quest Card",
-            color = Color.Companion.White,
+            color = Color.White,
             fontSize = 20.sp,
-            fontWeight = FontWeight.Companion.Bold
+            fontWeight = FontWeight.Bold
         )
         // 1. 底層的紫色邊框卡片 (Row 所在的容器)
         Row(
-            modifier = Modifier.Companion
-                .align(Alignment.Companion.BottomEnd)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
                 .fillMaxWidth()
                 .height(120.dp) // 固定高度
                 .neonGlow(
@@ -58,7 +57,10 @@ fun QuestCard() {
                     borderRadius = 18.dp,
                     blurStyle = android.graphics.BlurMaskFilter.Blur.OUTER
                 )
-                .background(WelcomeBackground)
+                .background(
+                    color = WelcomeBackground,
+                    shape = RoundedCornerShape(18.dp)
+                )
                 .border(
                     width = 2.dp,
                     color = NeonPurple, // 你剛才轉好的洋紅色
@@ -69,15 +71,15 @@ fun QuestCard() {
             Text(
                 text = "wording here",
                 color = Color.Companion.LightGray,
-                modifier = Modifier.Companion.weight(1f) // 佔滿左側剩餘空間
+                modifier = Modifier.weight(1f) // 佔滿左側剩餘空間
             )
         }
         Image(
             painter = painterResource(id = R.mipmap.bg_quest_card),
             contentDescription = "Quest Card",
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .size(150.dp)
-                .align(Alignment.Companion.BottomEnd) // 關鍵：設定在 Box 中的對齊方式為右下角
+                .align(Alignment.BottomEnd) // 關鍵：設定在 Box 中的對齊方式為右下角
                 .offset(x = 3.dp, y = 0.dp)
         )
     }

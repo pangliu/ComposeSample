@@ -11,6 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.newproject.ui.components.LoadingDialog
+import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.NeonPurple
+import com.example.newproject.ui.theme.NeonPurpleLight
 
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel) {
@@ -52,14 +55,25 @@ fun ProfileScreenContent(
             Button(
                 onClick = onLogout,
                 enabled = state !is ProfileState.Loading,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .neonGlow(
+                        color = NeonPurple,
+                        alpha = 0.7f,
+                        glowRadius = 20.dp
+                    ),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFE53935),
+                    containerColor = NeonPurple,
                     contentColor = Color.White
                 )
             ) {
-                Text(text = "Logout", modifier = Modifier.padding(vertical = 8.dp))
+                Text(
+                    text = "Logout",
+                    modifier = Modifier
+                        .padding(vertical = 5.dp)
+                )
             }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
