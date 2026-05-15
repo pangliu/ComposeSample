@@ -59,7 +59,7 @@ fun FindAppDialog(
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
-            usePlatformDefaultWidth = false,
+            usePlatformDefaultWidth = true,
             dismissOnClickOutside = true
         )
     ) {
@@ -261,12 +261,12 @@ private fun FindAppInputField(
 @Composable
 fun FindAppDialogPreview() {
     MaterialTheme {
-//        Box(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(Color.Black)
-//        ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+        ) {
             FindAppDialog(onDismiss = {}, onSubmit = { _, _, _ -> })
-//        }
+        }
     }
 }

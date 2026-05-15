@@ -6,6 +6,7 @@ import com.example.newproject.network.api.CardApiService
 import com.example.newproject.network.api.PaymentApiService
 import com.example.newproject.network.api.PublicApiService
 import com.example.newproject.network.api.UserApiService
+import com.example.newproject.network.fake.FakeCardApiService
 import com.example.newproject.network.fake.FakePublicApiService
 import com.example.newproject.network.fake.FakeUserApiService
 import com.squareup.moshi.Moshi
@@ -136,6 +137,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideCardApiService(@AuthClient retrofit: Retrofit): CardApiService {
-        return retrofit.create(CardApiService::class.java)
+        // 🔴 正式版：
+        // return retrofit.create(CardApiService::class.java)
+
+        // 🟢 假資料開發版：
+        return FakeCardApiService()
     }
 }

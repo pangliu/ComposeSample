@@ -1,12 +1,10 @@
 package com.example.newproject.network.api
 
+import com.example.newproject.network.model.response.BaseResponse
+import com.example.newproject.network.model.response.CreditCardResponse
 import retrofit2.http.GET
-import retrofit2.http.POST
 
 interface CardApiService {
-    @GET("/api/card/list")
-    suspend fun getCardList(): Any
-
-    @POST("/api/card/update_balance")
-    suspend fun updateBalance(): Any
+    @GET("/api/cridit_card_list")
+    suspend fun getCreditCardList(): BaseResponse<List<CreditCardResponse>>
 }

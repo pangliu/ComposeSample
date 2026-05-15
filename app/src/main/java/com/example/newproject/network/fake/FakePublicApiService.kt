@@ -15,7 +15,7 @@ class FakePublicApiService : PublicApiService {
         
         // 假資料邏輯判斷
         return when (request.account) {
-            "test", "admin", "success" -> {
+            "001", "admin", "success" -> {
                 BaseResponse(
                     code = 200,
                     errorMsg = "登入成功",
@@ -25,7 +25,7 @@ class FakePublicApiService : PublicApiService {
                     )
                 )
             }
-            "verify" -> {
+            "000" -> {
                 BaseResponse(
                     code = 2001, // 模擬 deviceId 錯誤需簡訊驗證
                     errorMsg = "需要簡訊驗證",

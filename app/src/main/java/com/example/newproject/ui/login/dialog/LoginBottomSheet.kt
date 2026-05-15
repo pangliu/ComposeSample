@@ -44,6 +44,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.activity.compose.BackHandler
+import androidx.compose.ui.graphics.Shadow
 import com.example.newproject.ui.theme.NeonCyanLight
 import com.example.newproject.ui.theme.NeonMint
 import com.example.newproject.ui.theme.NeonPurpleLight
@@ -311,20 +312,20 @@ fun LoginBottomSheetContent(
             Spacer(modifier = Modifier.height(20.dp))
             
             // Biometrics
-//            Text(
-//                text = stringResource(id = R.string.login_biometrics),
-//                color = NeonCyan,
-//                fontSize = 18.sp,
-//                fontWeight = FontWeight.Bold,
-//                style = TextStyle(shadow = Shadow(color = NeonCyan, blurRadius = 20f))
-//            )
-//            Spacer(modifier = Modifier.height(16.dp))
-//            Row(horizontalArrangement = Arrangement.Center) {
-//                Icon(imageVector = Icons.Default.Face, contentDescription = stringResource(id = R.string.face_id_desc), tint = Color.White, modifier = Modifier.size(24.dp))
-//                Spacer(modifier = Modifier.width(12.dp))
-//                Icon(imageVector = Icons.Default.Lock, contentDescription = stringResource(id = R.string.fingerprint_desc), tint = Color.White, modifier = Modifier.size(24.dp))
-//            }
-//            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = stringResource(id = R.string.login_biometrics),
+                color = NeonCyan,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                style = TextStyle(shadow = Shadow(color = NeonCyan, blurRadius = 20f))
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(horizontalArrangement = Arrangement.Center) {
+                Icon(imageVector = Icons.Default.Face, contentDescription = stringResource(id = R.string.face_id_desc), tint = Color.White, modifier = Modifier.size(24.dp))
+                Spacer(modifier = Modifier.width(12.dp))
+                Icon(imageVector = Icons.Default.Lock, contentDescription = stringResource(id = R.string.fingerprint_desc), tint = Color.White, modifier = Modifier.size(24.dp))
+            }
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
@@ -333,7 +334,12 @@ fun LoginBottomSheetContent(
 @Composable
 fun LoginBottomSheetPreview() {
     MaterialTheme {
-        Box(modifier = Modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.BottomCenter) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black),
+            contentAlignment = Alignment.BottomCenter
+        ) {
             LoginBottomSheetContent(onLoginSubmit = { _, _ -> })
         }
     }

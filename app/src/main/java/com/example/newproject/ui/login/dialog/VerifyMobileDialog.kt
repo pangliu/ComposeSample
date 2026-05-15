@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
+import kotlinx.coroutines.delay
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.DarkOverlay
 import com.example.newproject.ui.theme.InputFieldDark
@@ -50,17 +51,28 @@ fun VerifyMobileDialog(
 ) {
     var phone by remember { mutableStateOf(initialPhone) }
     var otpCode by remember { mutableStateOf("") }
+    var timeLeft by remember { mutableIntStateOf(60) }
+
+    LaunchedEffect(Unit) {
+        while (timeLeft > 0) {
+            delay(1000L)
+            timeLeft--
+        }
+    }
+
+    val minutes = String.format("%02d", timeLeft / 60)
+    val seconds = String.format("%02d", timeLeft % 60)
+    val timerText = "$minutes:$seconds"
 
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
-            usePlatformDefaultWidth = false,
+            usePlatformDefaultWidth = true,
             dismissOnClickOutside = false
         )
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
                 .wrapContentHeight()
                 .padding(top = 20.dp, bottom = 20.dp)
         ) {
@@ -143,17 +155,19 @@ fun VerifyMobileDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = stringResource(R.string.verify_mobile_resend_timer),
+                    text = stringResource(R.string.verify_mobile_resend_timer, timerText),
                     color = NeonPurple,
                     fontSize = 12.sp,
-                    modifier = Modifier.fillMaxWidth().padding(start = 4.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp),
                     textAlign = TextAlign.Start
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
                     text = stringResource(R.string.verify_mobile_enter_code),
@@ -242,14 +256,14 @@ fun VerifyMobileDialog(
 @Composable
 fun VerifyMobileDialogPreview() {
     MaterialTheme {
-//        Box(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(Color.Black)
-//                .padding(24.dp),
-//            contentAlignment = Alignment.Center
-//        ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
+        ) {
             VerifyMobileDialog(initialPhone = "0912345678", onDismiss = {}, onSubmit = {})
-//        }
+        }
     }
 }

@@ -72,12 +72,23 @@
     <string name="verify_mobile_phone_label">Phone number</string>
     <string name="verify_mobile_enter_code">Enter verify code</string>
     <string name="verify_mobile_send_desc">Send</string>
-    <string name="verify_mobile_resend_timer">Resend after 00:32 sec.</string>
+    <string name="verify_mobile_resend_timer">Resend after %1$s sec.</string>
     <string name="verify_mobile_close_desc">Close</string>
 
     <!-- CardsScreen -->
     <string name="cards_coming_soon_title">Cards</string>
     <string name="coming_soon">Coming Soon</string>
+    <string name="cards_empty">No cards linked yet</string>
+    <string name="cards_item_bank_type">%s · %s</string>
+    <string name="cards_item_number">•••• %s</string>
+    <string name="cards_management_title">Cards Management</string>
+    <string name="cards_info_title">Text / Title</string>
+    <string name="cards_info_body_1">▶ Text / Body line one</string>
+    <string name="cards_info_body_2">( Text / Body line two )</string>
+    <string name="cards_card_nickname">Card Nickname</string>
+    <string name="cards_manage_btn">Manage</string>
+    <string name="cards_primary_badge">Primary</string>
+    <string name="cards_add_new_btn">Add New Card</string>
 
     <!-- QuestsScreen -->
     <string name="quests_coming_soon_title">Quests</string>

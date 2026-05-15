@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.ui.cards.CardsScreen
+import com.example.newproject.ui.cards.CardsViewModel
 import com.example.newproject.ui.home.HomeScreen
 import com.example.newproject.ui.main.nvaTab.CustomBottomNavigation
 import com.example.newproject.ui.profile.ProfileScreen
@@ -57,7 +58,10 @@ fun MainScreen() {
             Box(modifier = Modifier.fillMaxSize()) {
                 when (index) {
                     0 -> HomeScreen()
-                    1 -> CardsScreen()
+                    1 -> {
+                        val cardsViewModel: CardsViewModel = hiltViewModel()
+                        CardsScreen(viewModel = cardsViewModel)
+                    }
                     2 -> QuestsScreen()
                     3 -> {
                         val profileViewModel: ProfileViewModel = hiltViewModel()
