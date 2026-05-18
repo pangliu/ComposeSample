@@ -68,6 +68,13 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
 
+    // AppCompat (FragmentActivity — required by BiometricPrompt)
+    implementation(libs.androidx.appcompat)
+
+    // Biometric + Encrypted Storage
+    implementation(libs.androidx.biometric)
+    implementation(libs.androidx.security.crypto)
+
     debugImplementation(libs.androidx.ui.tooling)
 
     // Hilt

@@ -56,7 +56,9 @@ import kotlinx.coroutines.launch
 fun LoginBottomSheet(
     onDismissRequest: () -> Unit,
     onLoginSubmit: (String, String) -> Unit,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    showBiometricButton: Boolean = false,
+    onBiometricLogin: () -> Unit = {}
 ) {
     var isVisible by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -103,7 +105,12 @@ fun LoginBottomSheet(
                 enter = slideInVertically(initialOffsetY = { it }, animationSpec = tween(300)) + fadeIn(animationSpec = tween(300)),
                 exit = slideOutVertically(targetOffsetY = { it }, animationSpec = tween(300)) + fadeOut(animationSpec = tween(300))
             ) {
-                LoginBottomSheetContent(onLoginSubmit = onLoginSubmit, errorMessage = errorMessage)
+                LoginBottomSheetContent(
+                    onLoginSubmit = onLoginSubmit,
+                    errorMessage = errorMessage,
+                    showBiometricButton = showBiometricButton,
+                    onBiometricLogin = onBiometricLogin
+                )
             }
         }
     }
@@ -112,7 +119,9 @@ fun LoginBottomSheet(
 @Composable
 fun LoginBottomSheetContent(
     onLoginSubmit: (String, String) -> Unit,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    showBiometricButton: Boolean = false,
+    onBiometricLogin: () -> Unit = {}
 ) {
     var mobileNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -310,22 +319,38 @@ fun LoginBottomSheetContent(
             }
             
             Spacer(modifier = Modifier.height(20.dp))
-            
-            // Biometrics
-            Text(
-                text = stringResource(id = R.string.login_biometrics),
-                color = NeonCyan,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                style = TextStyle(shadow = Shadow(color = NeonCyan, blurRadius = 20f))
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(horizontalArrangement = Arrangement.Center) {
-                Icon(imageVector = Icons.Default.Face, contentDescription = stringResource(id = R.string.face_id_desc), tint = Color.White, modifier = Modifier.size(24.dp))
-                Spacer(modifier = Modifier.width(12.dp))
-                Icon(imageVector = Icons.Default.Lock, contentDescription = stringResource(id = R.string.fingerprint_desc), tint = Color.White, modifier = Modifier.size(24.dp))
+
+            if (showBiometricButton) {
+                HorizontalDivider(color = Color.White.copy(alpha = 0.15f))
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = onBiometricLogin
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Fingerprint,
+                        contentDescription = null,
+                        tint = NeonCyan,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(id = R.string.biometric_login_btn),
+                        color = NeonCyan,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            } else {
+                Spacer(modifier = Modifier.height(4.dp))
             }
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

@@ -28,12 +28,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import com.example.newproject.R
 import com.example.newproject.ui.login.dialog.AccountStatusDialog
+import com.example.newproject.ui.login.dialog.BiometricEnrollDialog
 import com.example.newproject.ui.login.dialog.LoginBottomSheet
 import com.example.newproject.ui.login.dialog.VerifyMobileDialog
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.utils.BiometricHelper
 import com.example.newproject.ui.theme.DarkBackground
 import com.example.newproject.ui.theme.NeonCyanLight
 import com.example.newproject.ui.theme.NeonGreen
@@ -48,6 +51,8 @@ fun LoginScreen(
     onNavigateToHome: () -> Unit
 ) {
     val state by viewModel.loginState.collectAsState()
+    val hasSavedCredentials by viewModel.hasSavedCredentials.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(state) {
         if (state is LoginState.Success) {
@@ -57,14 +62,33 @@ fun LoginScreen(
 
     LoginScreenContent(
         state = state,
-        onLoginClick = { phone, pwd ->
-            viewModel.login(phone, pwd)
-        },
-        onResetState = {
-            viewModel.resetState()
-        },
+        hasSavedCredentials = hasSavedCredentials,
+        onLoginClick = { phone, pwd -> viewModel.login(phone, pwd) },
+        onResetState = { viewModel.resetState() },
         onVerifyOtp = { phone, otp, onSuccess, onError ->
             viewModel.verifyOtp(phone, otp, onSuccess, onError)
+        },
+        onBiometricLoginSuccess = { viewModel.loginWithStoredCredentials() },
+        onBiometricEnrollSuccess = { viewModel.enrollBiometric() },
+        onBiometricEnrollSkip = { viewModel.skipBiometricEnroll() },
+        onShowBiometricPromptForLogin = {
+            BiometricHelper.showPrompt(
+                activity = context as FragmentActivity,
+                title = context.getString(R.string.biometric_prompt_login_title),
+                subtitle = context.getString(R.string.biometric_prompt_login_subtitle),
+                negativeText = context.getString(R.string.biometric_prompt_negative),
+                onSuccess = { viewModel.loginWithStoredCredentials() }
+            )
+        },
+        onShowBiometricPromptForEnroll = {
+            BiometricHelper.showPrompt(
+                activity = context as FragmentActivity,
+                title = context.getString(R.string.biometric_prompt_enroll_title),
+                subtitle = context.getString(R.string.biometric_prompt_enroll_subtitle),
+                negativeText = context.getString(R.string.biometric_prompt_negative),
+                onSuccess = { viewModel.enrollBiometric() },
+                onError = { viewModel.skipBiometricEnroll() }
+            )
         }
     )
 }
@@ -73,16 +97,15 @@ fun LoginScreen(
 @Composable
 fun LoginScreenContent(
     state: LoginState,
+    hasSavedCredentials: Boolean = false,
     onLoginClick: (String, String) -> Unit,
     onResetState: () -> Unit = {},
-    onVerifyOtp: (String,
-                  String,
-                  () -> Unit,
-                  (String) -> Unit
-            ) -> Unit = { _, _, _, _ -> }
-    /**
-     * 為了預覽方便，給予預設值在後面 preview function 就不用加 onVerifyOtp = { _, _, _, _ -> }
-     */
+    onVerifyOtp: (String, String, () -> Unit, (String) -> Unit) -> Unit = { _, _, _, _ -> },
+    onBiometricLoginSuccess: () -> Unit = {},
+    onBiometricEnrollSuccess: () -> Unit = {},
+    onBiometricEnrollSkip: () -> Unit = {},
+    onShowBiometricPromptForLogin: () -> Unit = {},
+    onShowBiometricPromptForEnroll: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -93,8 +116,13 @@ fun LoginScreenContent(
     var selectedLanguage by remember { mutableStateOf("EN") }
     val languages = listOf("EN", "CN", "JP", "AU")
 
+    val showBiometricButton = hasSavedCredentials && BiometricHelper.isAvailable(context)
+
     LaunchedEffect(state) {
-        if (state is LoginState.Success || state is LoginState.NeedsVerification) {
+        if (state is LoginState.Success ||
+            state is LoginState.NeedsVerification ||
+            state is LoginState.PromptBiometricEnroll
+        ) {
             showLoginSheet = false
         }
     }
@@ -256,7 +284,16 @@ fun LoginScreenContent(
             onLoginSubmit = { mobileNumber, password ->
                 onLoginClick(mobileNumber, password)
             },
-            errorMessage = (state as? LoginState.Error)?.message
+            errorMessage = (state as? LoginState.Error)?.message,
+            showBiometricButton = showBiometricButton,
+            onBiometricLogin = { onShowBiometricPromptForLogin() }
+        )
+    }
+
+    if (state is LoginState.PromptBiometricEnroll) {
+        BiometricEnrollDialog(
+            onEnroll = { onShowBiometricPromptForEnroll() },
+            onSkip = { onBiometricEnrollSkip() }
         )
     }
 
