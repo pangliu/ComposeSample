@@ -37,13 +37,13 @@ import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.OrderStatus
 import com.example.newproject.network.model.response.OrderType
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.CashInGreen
-import com.example.newproject.ui.theme.DarkBackground
-import com.example.newproject.ui.theme.NeonCyanLight
-import com.example.newproject.ui.theme.NormalText
-import com.example.newproject.ui.theme.SendPink
-import com.example.newproject.ui.theme.ThemeWhite
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.cashInGreen
+import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.normalText
+import com.example.newproject.ui.theme.sendPink
+import com.example.newproject.ui.theme.themeWhite
+import com.example.newproject.ui.theme.welcomeBackground
 
 /**
  * @param orders null → loading；emptyList → 無資料；否則顯示列表
@@ -53,7 +53,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.recent_activity_title),
-            color = ThemeWhite,
+            color = themeWhite,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
@@ -61,9 +61,9 @@ fun RecentActivity(orders: List<OrderHistoryResponse>) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(color = NeonCyanLight, alpha = 0.6f, glowRadius = 18.dp, borderRadius = 18.dp)
-                .border(width = 2.dp, color = NeonCyanLight, shape = RoundedCornerShape(18.dp))
-                .background(color = WelcomeBackground, shape = RoundedCornerShape(18.dp))
+                .neonGlow(color = neonCyanLight, alpha = 0.6f, glowRadius = 18.dp, borderRadius = 18.dp)
+                .border(width = 2.dp, color = neonCyanLight, shape = RoundedCornerShape(18.dp))
+                .background(color = welcomeBackground, shape = RoundedCornerShape(18.dp))
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -71,7 +71,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>) {
                 orders.isEmpty() -> {
                     Text(
                         text = stringResource(R.string.recent_empty),
-                        color = NormalText,
+                        color = normalText,
                         fontSize = 13.sp,
                         modifier = Modifier.padding(vertical = 24.dp)
                     )
@@ -85,7 +85,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>) {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(1.dp)
-                                        .background(NormalText.copy(alpha = 0.15f))
+                                        .background(normalText.copy(alpha = 0.15f))
                                 )
                             }
                         }
@@ -99,7 +99,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>) {
 @Composable
 private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
     val isCashIn = order.type == OrderType.INCOMING
-    val iconColor = if (isCashIn) CashInGreen else SendPink
+    val iconColor = if (isCashIn) cashInGreen else sendPink
     val icon = if (isCashIn) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward
     val descRes = if (isCashIn) R.string.recent_cash_in else R.string.recent_cash_out
     val amountText = if (isCashIn)
@@ -135,14 +135,14 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
 
         Text(
             text = stringResource(descRes),
-            color = NormalText,
+            color = normalText,
             fontSize = 14.sp,
             modifier = Modifier.weight(1f)
         )
 
         Text(
             text = amountText,
-            color = NormalText,
+            color = normalText,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium
         )
@@ -152,7 +152,7 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
-            tint = NormalText,
+            tint = normalText,
             modifier = Modifier.size(20.dp)
         )
     }
@@ -166,7 +166,7 @@ fun RecentActivityPreview() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(DarkBackground)
+                .background(darkBackground)
                 .padding(16.dp)
         ) {
             RecentActivity(

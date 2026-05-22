@@ -1,5 +1,7 @@
 package com.example.newproject.ui
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -9,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.newproject.ui.main.MainScreen
 import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
-
+import com.example.newproject.ui.profile.security.SecurityCenterScreen
 import com.example.newproject.ui.welcome.WelcomeScreen
 import com.example.newproject.ui.welcome.WelcomeViewModel
 
@@ -19,52 +21,72 @@ fun AppNavigation(
 ) {
     val navController = rememberNavController()
 
-    // 🎯 監聽全局的登出事件
     LaunchedEffect(Unit) {
         appViewModel.logoutEvent.collect {
-            // 已在登入頁（例如帳密錯誤觸發的 1005）不重複導向，避免重建畫面
-            if (navController.currentDestination?.route != "login") {
-                navController.navigate("login") {
+            if (navController.currentDestination?.route != Routes.LOGIN) {
+                navController.navigate(Routes.LOGIN) {
                     popUpTo(0) { inclusive = true }
                 }
             }
         }
     }
 
-    NavHost(navController = navController, startDestination = "welcome") {
-        
-        composable("welcome") {
+    NavHost(navController = navController, startDestination = Routes.WELCOME) {
+
+        composable(Routes.WELCOME) {
             val welcomeViewModel: WelcomeViewModel = hiltViewModel()
             WelcomeScreen(
                 viewModel = welcomeViewModel,
                 onNavigateToHome = {
-                    navController.navigate("main") {
-                        popUpTo("welcome") { inclusive = true }
+                    navController.navigate(Routes.MAIN) {
+                        popUpTo(Routes.WELCOME) { inclusive = true }
                     }
                 },
                 onNavigateToLogin = {
-                    navController.navigate("login") {
-                        popUpTo("welcome") { inclusive = true }
-                    }
-                }
-            )
-        }
-        
-        composable("login") {
-            val loginViewModel: LoginViewModel = hiltViewModel()
-            LoginScreen(
-                viewModel = loginViewModel,
-                onNavigateToHome = {
-                    navController.navigate("main") {
-                        // 轉跳後把 login 頁面從 back stack 中清掉，確保按返回鍵不會回到登入頁
-                        popUpTo("login") { inclusive = true }
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.WELCOME) { inclusive = true }
                     }
                 }
             )
         }
 
-        composable("main") {
-            MainScreen()
+        composable(Routes.LOGIN) {
+            val loginViewModel: LoginViewModel = hiltViewModel()
+            LoginScreen(
+                viewModel = loginViewModel,
+                onNavigateToHome = {
+                    navController.navigate(Routes.MAIN) {
+                        popUpTo(Routes.LOGIN) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Routes.MAIN,
+            exitTransition = {
+                when (targetState.destination.route) {
+                    Routes.SECURITY_CENTER -> slideOutHorizontally { -it }
+                    else -> null
+                }
+            },
+            popEnterTransition = {
+                when (initialState.destination.route) {
+                    Routes.SECURITY_CENTER -> slideInHorizontally { -it }
+                    else -> null
+                }
+            }
+        ) {
+            MainScreen(onNavigate = { navController.navigate(it) })
+        }
+
+        // ── Profile sub-pages ──────────────────────────────────────────────
+        composable(
+            route = Routes.SECURITY_CENTER,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) {
+            SecurityCenterScreen(onBack = { navController.popBackStack() })
         }
 
     }

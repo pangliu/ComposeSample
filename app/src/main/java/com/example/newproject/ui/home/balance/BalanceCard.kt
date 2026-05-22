@@ -39,16 +39,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.BalanceGold
-import com.example.newproject.ui.theme.BalanceSwitchBackground
-import com.example.newproject.ui.theme.BalanceVisibility
-import com.example.newproject.ui.theme.CardStringLight
-import com.example.newproject.ui.theme.CardStringNormal
-import com.example.newproject.ui.theme.CashInGreen
-import com.example.newproject.ui.theme.DarkBackground
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NormalText
-import com.example.newproject.ui.theme.SendPink
+import com.example.newproject.ui.theme.cashInGreen
+import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.normalText
+import com.example.newproject.ui.theme.sendPink
+
+private val balanceGold = Color(0xFFFEF27C)
+private val balanceSwitchBackground = Color(0xFF3C3C4C)
+private val balanceVisibility = Color(0xFF353649)
+private val cardStringNormal = Color(0xFFD8DADF)
+private val cardStringLight = Color(0xFFF7F9F9)
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -85,7 +86,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 Row(verticalAlignment = Alignment.Companion.CenterVertically) {
                     Text(
                         text = stringResource(R.string.balance_title),
-                        color = CardStringNormal,
+                        color = cardStringNormal,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Companion.ExtraBold,
                         letterSpacing = 1.sp
@@ -98,14 +99,14 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Box(
                         modifier = Modifier.Companion
                             .clip(shape = RoundedCornerShape(10.dp))
-                            .background(BalanceVisibility)
+                            .background(balanceVisibility)
                             .clickable {}
                             .padding(horizontal = 8.dp, vertical = 6.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Visibility,
                             contentDescription = stringResource(R.string.balance_toggle_desc),
-                            tint = if (isBalanceHidden) NeonCyan else Color.Companion.Gray,
+                            tint = if (isBalanceHidden) neonCyan else Color.Companion.Gray,
                             modifier = Modifier.Companion
                                 .size(18.dp)
                                 .clickable { isBalanceHidden = !isBalanceHidden }
@@ -116,13 +117,13 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Box(
                         modifier = Modifier
                             .neonGlow(
-                                color = CashInGreen,
+                                color = cashInGreen,
                                 alpha = 0.6f,
                                 glowRadius = 15.dp,
                                 borderRadius = 8.dp
                             )
                             .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
-                            .background(CashInGreen)
+                            .background(cashInGreen)
                             .clickable { /* TODO: Cash In */ }
                             .padding(horizontal = 14.dp, vertical = 5.dp)
                     ) {
@@ -158,7 +159,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                             cashBalance
                         )
                     }",
-                    color = CardStringLight,
+                    color = cardStringLight,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Companion.ExtraBold
                 )
@@ -167,13 +168,13 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 Box(
                     modifier = Modifier.Companion
                         .neonGlow(
-                            color = SendPink,
+                            color = sendPink,
                             alpha = 0.6f,
                             glowRadius = 15.dp,
                             borderRadius = 8.dp
                         )
                         .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
-                        .background(SendPink)
+                        .background(sendPink)
                         .clickable { /* TODO: Send */ }
                         .padding(horizontal = 14.dp, vertical = 5.dp)
                 ) {
@@ -209,7 +210,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         tint = Color.Companion.Unspecified,
 
                         modifier = Modifier.Companion
-                            .neonGlow(color = BalanceGold, alpha = 0.7f, glowRadius = 10.dp)
+                            .neonGlow(color = balanceGold, alpha = 0.7f, glowRadius = 10.dp)
                             .size(50.dp)
                     )
                     Spacer(modifier = Modifier.Companion.width(10.dp))
@@ -218,7 +219,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                             "%,.0f",
                             tokenBalance
                         ),
-                        color = CardStringNormal,
+                        color = cardStringNormal,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Companion.Bold
                     )
@@ -228,10 +229,10 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 Box(
                     modifier = Modifier.Companion
                         .clip(androidx.compose.foundation.shape.RoundedCornerShape(10.dp))
-                        .background(BalanceSwitchBackground)
+                        .background(balanceSwitchBackground)
                         .border(
                             width = 1.dp,
-                            color = BalanceVisibility,
+                            color = balanceVisibility,
                             shape = androidx.compose.foundation.shape.RoundedCornerShape(50.dp)
                         )
                         .clickable { /* TODO: Balance Switch */ }
@@ -240,14 +241,14 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Row(verticalAlignment = Alignment.Companion.CenterVertically) {
                         Icon(
                             painter = painterResource(R.mipmap.ic_switch_balance),
-                            tint = NormalText,
+                            tint = normalText,
                             contentDescription = stringResource(R.string.balance_switch),
                             modifier = Modifier.Companion.size(18.dp)
                         )
                         Spacer(modifier = Modifier.Companion.width(4.dp))
                         Text(
                             text = stringResource(R.string.balance_switch),
-                            color = NormalText,
+                            color = normalText,
                             fontSize = 14.sp
                         )
                     }
@@ -264,7 +265,7 @@ fun BalanceCardPreview() {
         Box(
             modifier = Modifier.Companion
                 .fillMaxWidth()
-                .background(DarkBackground)
+                .background(darkBackground)
                 .padding(16.dp)
         ) {
             BalanceCard(cashBalance = 12345.0, tokenBalance = 500.0)

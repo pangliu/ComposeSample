@@ -33,9 +33,9 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.DarkBackground
-import com.example.newproject.ui.theme.NeonCyanLight
-import com.example.newproject.ui.theme.NeonPurple
+import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.neonPurple
 import androidx.compose.runtime.withFrameNanos
 import kotlinx.coroutines.delay
 
@@ -84,10 +84,10 @@ fun LanguageSelector(
             Icon(
                 painter = painterResource(R.mipmap.ic_global),
                 contentDescription = stringResource(R.string.language_desc),
-                tint = NeonPurple,
+                tint = neonPurple,
                 modifier = Modifier
                     .size(20.dp)
-                    .neonGlow(color = NeonPurple, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 10.dp)
+                    .neonGlow(color = neonPurple, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 10.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
@@ -123,14 +123,14 @@ fun LanguageSelector(
                         modifier = Modifier
                             .width(72.dp)
                             .neonGlow(
-                                color = NeonCyanLight,
+                                color = neonCyanLight,
                                 alpha = 0.65f,
                                 glowRadius = 18.dp,
                                 borderRadius = 8.dp,
                                 blurStyle = BlurMaskFilter.Blur.OUTER)
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color.Transparent)
-                            .border(1.5.dp, NeonCyanLight, RoundedCornerShape(8.dp))
+                            .border(1.5.dp, neonCyanLight, RoundedCornerShape(8.dp))
                             .padding(vertical = 6.dp, horizontal = 6.dp)
                     ) {
                         languages.forEach { lang ->
@@ -154,7 +154,7 @@ fun LanguageSelector(
                             ) {
                                 Text(
                                     text = lang,
-                                    color = if (isSelected) Color.White else NeonCyanLight,
+                                    color = if (isSelected) Color.White else neonCyanLight,
                                     fontSize = 14.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                 )
@@ -204,7 +204,7 @@ fun LanguageSelectorExpandedPreview() {
                     Icon(
                         painter = painterResource(R.mipmap.ic_global),
                         contentDescription = null,
-                        tint = NeonPurple,
+                        tint = neonPurple,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(Modifier.width(4.dp))
@@ -214,10 +214,10 @@ fun LanguageSelectorExpandedPreview() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .width(72.dp)
-                        .neonGlow(color = NeonCyanLight, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 20.dp)
+                        .neonGlow(color = neonCyanLight, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 20.dp)
                         .clip(RoundedCornerShape(5.dp))
-                        .background(DarkBackground)
-                        .border(1.5.dp, NeonCyanLight, RoundedCornerShape(8.dp))
+                        .background(darkBackground)
+                        .border(1.5.dp, neonCyanLight, RoundedCornerShape(8.dp))
                         .padding(vertical = 0.dp, horizontal = 50.dp)
                 ) {
                     languages.forEach { lang ->
@@ -234,7 +234,7 @@ fun LanguageSelectorExpandedPreview() {
                         ) {
                             Text(
                                 text = lang,
-                                color = if (isSelected) Color.White else NeonCyanLight,
+                                color = if (isSelected) Color.White else neonCyanLight,
                                 fontSize = 14.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )

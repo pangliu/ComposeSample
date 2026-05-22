@@ -58,14 +58,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.CardGradientMid
-import com.example.newproject.ui.theme.CardGradientStart
-import com.example.newproject.ui.theme.CashInGreen
-import com.example.newproject.ui.theme.DarkBackground
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.SendPink
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.cardGradientMid
+import com.example.newproject.ui.theme.cardGradientStart
+import com.example.newproject.ui.theme.cashInGreen
+import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.sendPink
+import com.example.newproject.ui.theme.welcomeBackground
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -156,13 +156,13 @@ fun EditEssentialsContent(
                 onClick = {}
             )
             .neonGlow(
-                color = NeonPurple,
+                color = neonPurple,
                 alpha = 0.6f,
                 glowRadius = 15.dp,
                 borderRadius = 28.dp
             )
-            .background(WelcomeBackground, RoundedCornerShape(28.dp))
-            .border(2.dp, NeonPurple, RoundedCornerShape(28.dp))
+            .background(welcomeBackground, RoundedCornerShape(28.dp))
+            .border(2.dp, neonPurple, RoundedCornerShape(28.dp))
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -237,13 +237,13 @@ fun EditEssentialsContent(
         Box(
             modifier = Modifier
                 .neonGlow(
-                    color = CashInGreen,
+                    color = cashInGreen,
                     alpha = 0.6f,
                     glowRadius = 15.dp,
                     borderRadius = 8.dp
                 )
                 .clip(RoundedCornerShape(50.dp))
-                .background(color = CashInGreen)
+                .background(color = cashInGreen)
                 .clickable { onClose() }
                 .padding(vertical = 8.dp, horizontal = 20.dp),
             contentAlignment = Alignment.Center
@@ -406,15 +406,15 @@ private fun ReorderableEssentialGrid(
                                     .clip(RoundedCornerShape(16.dp))
                                     .background(
                                         brush = Brush.linearGradient(
-                                            colors = listOf(CardGradientStart, CardGradientMid)
+                                            colors = listOf(cardGradientStart, cardGradientMid)
                                         )
                                     )
                                     .border(
                                         width = 1.5.dp,
                                         brush = Brush.linearGradient(
                                             colors = listOf(
-                                                NeonCyan.copy(alpha = 0.4f),
-                                                NeonPurple.copy(alpha = 0.8f)
+                                                neonCyan.copy(alpha = 0.4f),
+                                                neonPurple.copy(alpha = 0.8f)
                                             )
                                         ),
                                         shape = RoundedCornerShape(16.dp)
@@ -425,11 +425,11 @@ private fun ReorderableEssentialGrid(
                                     Icon(
                                         imageVector = item.iconVector,
                                         contentDescription = item.label,
-                                        tint = NeonCyan,
+                                        tint = neonCyan,
                                         modifier = Modifier.size(30.dp)
                                     )
                                 } else if (item.iconRes != null) {
-                                    val tint = if (item.useOriginalColor) Color.Unspecified else NeonCyan
+                                    val tint = if (item.useOriginalColor) Color.Unspecified else neonCyan
                                     Icon(
                                         painter = painterResource(id = item.iconRes),
                                         contentDescription = item.label,
@@ -454,7 +454,7 @@ private fun ReorderableEssentialGrid(
                                     .offset(x = 1.dp, y = (-2).dp)
                                     .size(18.dp)
                                     .clip(CircleShape)
-                                    .background(SendPink),
+                                    .background(sendPink),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
@@ -562,15 +562,15 @@ fun DraggableEssentialItem(
                     .clip(RoundedCornerShape(16.dp))
                     .background(
                         brush = Brush.linearGradient(
-                            colors = listOf(CardGradientStart, CardGradientMid)
+                            colors = listOf(cardGradientStart, cardGradientMid)
                         )
                     )
                     .border(
                         width = 1.5.dp,
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                NeonCyan.copy(alpha = 0.4f),
-                                NeonPurple.copy(alpha = 0.8f)
+                                neonCyan.copy(alpha = 0.4f),
+                                neonPurple.copy(alpha = 0.8f)
                             )
                         ),
                         shape = RoundedCornerShape(16.dp)
@@ -581,11 +581,11 @@ fun DraggableEssentialItem(
                     Icon(
                         imageVector = item.iconVector,
                         contentDescription = item.label,
-                        tint = NeonCyan,
+                        tint = neonCyan,
                         modifier = Modifier.size(30.dp)
                     )
                 } else if (item.iconRes != null) {
-                    val tint = if (item.useOriginalColor) Color.Unspecified else NeonCyan
+                    val tint = if (item.useOriginalColor) Color.Unspecified else neonCyan
                     Icon(
                         painter = painterResource(id = item.iconRes),
                         contentDescription = item.label,
@@ -607,8 +607,8 @@ fun DraggableEssentialItem(
 
         if (!isDragging) {
             val badgeColor = when (badgeType) {
-                BadgeType.REMOVE -> SendPink
-                BadgeType.ADD -> CashInGreen
+                BadgeType.REMOVE -> sendPink
+                BadgeType.ADD -> cashInGreen
             }
             val badgeIcon = when (badgeType) {
                 BadgeType.REMOVE -> Icons.Default.Close
@@ -650,7 +650,7 @@ fun SectionHeader(
     ) {
         Text(
             text = title,
-            color = NeonCyan,
+            color = neonCyan,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
@@ -674,7 +674,7 @@ fun EditEssentialsContentPreview() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(DarkBackground)
+                .background(darkBackground)
                 .padding(16.dp),
             contentAlignment = Alignment.BottomCenter
         ) {

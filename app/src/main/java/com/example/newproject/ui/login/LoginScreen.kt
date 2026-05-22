@@ -37,12 +37,12 @@ import com.example.newproject.ui.login.dialog.VerifyMobileDialog
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.utils.BiometricHelper
-import com.example.newproject.ui.theme.DarkBackground
-import com.example.newproject.ui.theme.NeonCyanLight
-import com.example.newproject.ui.theme.NeonGreen
-import com.example.newproject.ui.theme.NeonGreenLight
-import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.neonGreen
+import com.example.newproject.ui.theme.neonGreenLight
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.welcomeBackground
 import kotlinx.coroutines.launch
 
 @Composable
@@ -148,7 +148,7 @@ fun LoginScreenContent(
         }
     ) {
         Scaffold(
-            containerColor = WelcomeBackground,
+            containerColor = welcomeBackground,
             contentColor = Color.White
         ) { paddingValues ->
             LoadingDialog(isShowing = state is LoginState.Loading)
@@ -166,13 +166,13 @@ fun LoginScreenContent(
                     Icon(
                         imageVector = Icons.Default.Menu,
                         contentDescription = stringResource(id = R.string.menu_desc),
-                        tint = NeonPurple,
+                        tint = neonPurple,
                         modifier = Modifier
                             .size(28.dp)
                             .align(Alignment.CenterStart)
                             .clickable { scope.launch { drawerState.open() } }
-                            .neonGlow(color = NeonPurple, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 15.dp)
-//                            .neonGlow(color = NeonPurple, alpha = 0.7f, glowRadius = 20.dp),
+                            .neonGlow(color = neonPurple, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 15.dp)
+//                            .neonGlow(color = neonPurple, alpha = 0.7f, glowRadius = 20.dp),
                     )
                     
                     Image(
@@ -222,8 +222,8 @@ fun LoginScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .neonGlow(color = NeonPurple, alpha = 0.7f, glowRadius = 20.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = NeonPurple, contentColor = Color.White),
+                            .neonGlow(color = neonPurple, alpha = 0.7f, glowRadius = 20.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = neonPurple, contentColor = Color.White),
                         shape = RoundedCornerShape(25.dp)
                     ) {
                         Text(if (state is LoginState.Loading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.login_btn), fontSize = 16.sp)
@@ -235,9 +235,9 @@ fun LoginScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .neonGlow(color = NeonGreen, alpha = 0.7f, glowRadius = 20.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = NeonGreen, contentColor = Color.White),
-                        border = BorderStroke(width = 1.dp, color = NeonGreenLight),
+                            .neonGlow(color = neonGreen, alpha = 0.7f, glowRadius = 20.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = neonGreen, contentColor = Color.White),
+                        border = BorderStroke(width = 1.dp, color = neonGreenLight),
                         shape = RoundedCornerShape(25.dp)
                     ){
                         Text(if (state is LoginState.Loading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.sign_up_with_telegram), fontSize = 16.sp)
@@ -249,7 +249,7 @@ fun LoginScreenContent(
                     Text(
                         text = buildAnnotatedString {
                             append(stringResource(id = R.string.dont_have_account))
-                            withStyle(SpanStyle(color = NeonPurple)) { append(stringResource(id = R.string.sign_up)) }
+                            withStyle(SpanStyle(color = neonPurple)) { append(stringResource(id = R.string.sign_up)) }
                         },
                         fontSize = 14.sp
                     )

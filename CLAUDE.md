@@ -141,6 +141,75 @@ Composable → ViewModel (StateFlow) → Repository → API / Manager
 5. **`HomeViewModel`**：`init` 中呼叫新 function；用 `when (result)` 更新 `_uiState`，錯誤 emit toast
 6. **Composable**：從 `uiState` 取出資料傳入子元件，不自行處理 loading/error 狀態
 
+### Navigation — 子頁面（無 TabBar）
+
+主要頁面（Home / Cards / Quests / Profile）由 `MainScreen` 以 tab 切換管理，TabBar 始終可見。  
+**子頁面**（如 SecurityCenter）是獨立的 `NavHost` 路由，TabBar 不顯示。
+
+#### 路由常數
+所有路由字串集中定義在 `ui/Routes.kt`：
+
+```kotlin
+object Routes {
+    const val WELCOME = "welcome"
+    const val LOGIN = "login"
+    const val MAIN = "main"
+    // Profile sub-pages
+    const val SECURITY_CENTER = "security_center"
+}
+```
+
+新增路由時只需在對應 section 下加一行常數，禁止在其他檔案直接寫路由字串。
+
+#### 新增子頁面步驟
+
+1. **`Routes.kt`**：在對應區塊新增常數
+   ```kotlin
+   const val PROFILE_EDIT = "profile_edit"
+   ```
+
+2. **`AppNavigation.kt`**：新增 `composable`，加入進出場動畫
+   ```kotlin
+   composable(
+       route = Routes.PROFILE_EDIT,
+       enterTransition = { slideInHorizontally { it } },
+       popExitTransition = { slideOutHorizontally { it } }
+   ) {
+       ProfileEditScreen(onBack = { navController.popBackStack() })
+   }
+   ```
+   同時在來源路由（通常是 `Routes.MAIN`）補上對應的 `exitTransition` / `popEnterTransition`：
+   ```kotlin
+   exitTransition = {
+       when (targetState.destination.route) {
+           Routes.PROFILE_EDIT -> slideOutHorizontally { -it }
+           ...
+       }
+   }
+   ```
+
+3. **在 Screen 內呼叫導航**：透過已傳入的 `onNavigate` lambda，不需修改 `MainScreen`
+   ```kotlin
+   onClick = { onNavigate(Routes.PROFILE_EDIT) }
+   ```
+
+4. **子頁面本身**：使用自己的 `Scaffold` 處理 statusBar insets，`onBack` 由外部注入
+
+#### 導航 callback 規則
+- `MainScreen` 只持有一個 `onNavigate: (String) -> Unit` 參數，不針對個別子頁面新增 callback
+- `onNavigate` 沿 tab → Screen 向下傳遞，各 Screen 自行決定要導向哪個路由
+- Tab 切換狀態用 `rememberSaveable` 保存，從子頁面返回後仍停留在原來的 tab
+
+#### 標準進出場動畫
+| 情境 | 動畫 |
+|------|------|
+| 進入子頁面 | `slideInHorizontally { it }`（從右） |
+| 返回上一頁 | `slideOutHorizontally { it }`（向右） |
+| 上層頁面被推走 | `slideOutHorizontally { -it }`（向左） |
+| 上層頁面返回 | `slideInHorizontally { -it }`（從左） |
+
+---
+
 ### 字串管理
 - 所有 UI 顯示字串（Text、contentDescription 等）必須寫入 `app/src/main/res/values/strings.xml`
 - Composable 中使用 `stringResource(R.string.xxx)` 引用，禁止硬編碼字串

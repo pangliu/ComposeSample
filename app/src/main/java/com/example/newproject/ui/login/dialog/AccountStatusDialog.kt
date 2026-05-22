@@ -31,11 +31,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.NeonBlue
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NeonCyanLight
-import com.example.newproject.ui.theme.NeonPurpleLight
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.neonBlue
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.neonPurpleLight
+import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun AccountStatusDialog(onDismiss: () -> Unit) {
@@ -60,13 +60,13 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .neonGlow(
-                    color = NeonCyanLight,
+                    color = neonCyanLight,
                     alpha = 0.6f,
                     glowRadius = 16.dp,
                     borderRadius = 24.dp
                 )
-                .background(WelcomeBackground, RoundedCornerShape(24.dp))
-                .border(2.dp, NeonCyanLight, RoundedCornerShape(24.dp))
+                .background(welcomeBackground, RoundedCornerShape(24.dp))
+                .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
                 .padding(24.dp)
         ) {
             Column(
@@ -76,11 +76,11 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                 // Title
                 Text(
                     text = stringResource(id = R.string.select_action),
-                    color = NeonCyanLight,
+                    color = neonCyanLight,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(
-                        shadow = Shadow(color = NeonCyan, blurRadius = 15f)
+                        shadow = Shadow(color = neonCyan, blurRadius = 15f)
                     )
                 )
                 
@@ -90,7 +90,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                 ActionDialogButton(
                     icon = R.mipmap.ic_check_progress,
                     text = stringResource(id = R.string.check_application_progress),
-                    borderColor = NeonPurpleLight,
+                    borderColor = neonPurpleLight,
                     onClick = { showFindAppDialog = true }
                 )
                 
@@ -100,7 +100,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                 ActionDialogButton(
                     icon = R.mipmap.ic_verify_id,
                     text = stringResource(id = R.string.verify_my_identity),
-                    borderColor = NeonBlue,
+                    borderColor = neonBlue,
                     onClick = { 
                         // TODO: 處理點擊事件
                         onDismiss()
@@ -114,14 +114,14 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                     modifier = Modifier
                         .size(48.dp)
                         .neonGlow(
-                            color = NeonCyanLight,
+                            color = neonCyanLight,
                             alpha = 0.6f,
                             glowRadius = 16.dp,
                             borderRadius = 24.dp
                         )
-                        .border(2.dp, NeonCyanLight, RoundedCornerShape(24.dp))
+                        .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
                         .background(
-                            color = WelcomeBackground,
+                            color = welcomeBackground,
                             shape = RoundedCornerShape(24.dp)
                         )
                         .clickable { onDismiss() },
@@ -130,7 +130,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(id = R.string.close),
-                        tint = NeonCyanLight
+                        tint = neonCyanLight
                     )
                 }
             }
@@ -150,7 +150,7 @@ fun ActionDialogButton(icon: Int, text: String, borderColor: Color, onClick: () 
                 glowRadius = 16.dp,
                 borderRadius = 16.dp
             )
-            .background(WelcomeBackground, RoundedCornerShape(16.dp))
+            .background(welcomeBackground, RoundedCornerShape(16.dp))
             .border(2.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(start = 10.dp, top = 20.dp, end = 3.dp, bottom = 20.dp)

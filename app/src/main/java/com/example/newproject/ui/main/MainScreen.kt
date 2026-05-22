@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,14 +26,14 @@ import com.example.newproject.ui.main.nvaTab.CustomBottomNavigation
 import com.example.newproject.ui.profile.ProfileScreen
 import com.example.newproject.ui.profile.ProfileViewModel
 import com.example.newproject.ui.quests.QuestsScreen
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
-fun MainScreen() {
-    var selectedIndex by remember { mutableStateOf(0) }
+fun MainScreen(onNavigate: (String) -> Unit = {}) {
+    var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
     Scaffold(
-        containerColor = WelcomeBackground,
+        containerColor = welcomeBackground,
         contentColor = Color.White,
         bottomBar = {
             CustomBottomNavigation(
@@ -65,7 +66,10 @@ fun MainScreen() {
                     2 -> QuestsScreen()
                     3 -> {
                         val profileViewModel: ProfileViewModel = hiltViewModel()
-                        ProfileScreen(viewModel = profileViewModel)
+                        ProfileScreen(
+                            viewModel = profileViewModel,
+                            onNavigate = onNavigate
+                        )
                     }
                 }
             }
@@ -79,7 +83,7 @@ private fun MainScreenPreview() {
     var selectedIndex by remember { mutableStateOf(0) }
     MaterialTheme {
         Scaffold(
-            containerColor = WelcomeBackground,
+            containerColor = welcomeBackground,
             contentColor = Color.White,
             bottomBar = {
                 CustomBottomNavigation(

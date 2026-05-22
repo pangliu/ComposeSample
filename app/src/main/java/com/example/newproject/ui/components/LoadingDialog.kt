@@ -21,11 +21,11 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.alpha
-import com.example.newproject.ui.theme.DarkBackground
-import com.example.newproject.ui.theme.NeonDivider
-import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.NeonPurpleLight
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.neonDivider
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.neonPurpleLight
+import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun LoadingDialog(
@@ -53,7 +53,7 @@ fun LoadingDialogContent() {
             .alpha(0.8f)
             .fillMaxSize()
             .background(
-                color = DarkBackground
+                color = darkBackground
             )
             // Intercept all touches
             .clickable(
@@ -68,12 +68,12 @@ fun LoadingDialogContent() {
             modifier = Modifier
                 .size(100.dp)
                 .background(
-                    color = WelcomeBackground,
+                    color = welcomeBackground,
                     shape = RoundedCornerShape(12.dp)
                 )
         ) {
             CircularProgressIndicator(
-                color = NeonPurple
+                color = neonPurple
             )
         }
     }

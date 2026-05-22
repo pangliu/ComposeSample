@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
-import com.example.newproject.ui.theme.NeonPurple
+import com.example.newproject.ui.theme.neonPurple
 
 @Composable
 fun QuestsScreen() {
@@ -29,12 +29,12 @@ fun QuestsScreen() {
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
-                tint = NeonPurple.copy(alpha = 0.4f),
+                tint = neonPurple.copy(alpha = 0.4f),
                 modifier = Modifier.size(64.dp)
             )
             Text(
                 text = stringResource(R.string.quests_coming_soon_title),
-                color = NeonPurple,
+                color = neonPurple,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )

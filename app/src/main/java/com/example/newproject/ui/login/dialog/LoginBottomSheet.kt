@@ -31,9 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.welcomeBackground
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -45,10 +45,10 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.activity.compose.BackHandler
 import androidx.compose.ui.graphics.Shadow
-import com.example.newproject.ui.theme.NeonCyanLight
-import com.example.newproject.ui.theme.NeonMint
-import com.example.newproject.ui.theme.NeonPurpleLight
-import com.example.newproject.ui.theme.SendPink
+import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.neonMint
+import com.example.newproject.ui.theme.neonPurpleLight
+import com.example.newproject.ui.theme.sendPink
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -127,7 +127,7 @@ fun LoginBottomSheetContent(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val inputBorderColor = if (errorMessage != null) SendPink else NeonCyanLight
+    val inputBorderColor = if (errorMessage != null) sendPink else neonCyanLight
 
     Column(
         modifier = Modifier
@@ -151,8 +151,8 @@ fun LoginBottomSheetContent(
                     indication = null,
                     onClick = {} // 攔截點擊，避免關閉對話框
                 )
-                .background(WelcomeBackground, RoundedCornerShape(32.dp))
-                .border(2.dp, NeonPurpleLight, RoundedCornerShape(32.dp))
+                .background(welcomeBackground, RoundedCornerShape(32.dp))
+                .border(2.dp, neonPurpleLight, RoundedCornerShape(32.dp))
                 .padding(horizontal = 32.dp, vertical = 25.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -175,7 +175,7 @@ fun LoginBottomSheetContent(
                         .weight(1f)
                         .height(35.dp)
                         .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
-                        .background(WelcomeBackground, RoundedCornerShape(25.dp))
+                        .background(welcomeBackground, RoundedCornerShape(25.dp))
                         .border(2.dp, inputBorderColor, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart
@@ -184,7 +184,7 @@ fun LoginBottomSheetContent(
                         value = mobileNumber,
                         onValueChange = { mobileNumber = it },
                         textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-                        cursorBrush = SolidColor(NeonCyan),
+                        cursorBrush = SolidColor(neonCyan),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth()
@@ -209,7 +209,7 @@ fun LoginBottomSheetContent(
             if (errorMessage != null) {
                 Text(
                     text = errorMessage,
-                    color = SendPink,
+                    color = sendPink,
                     fontSize = 12.sp,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -236,7 +236,7 @@ fun LoginBottomSheetContent(
                         .weight(1f)
                         .height(35.dp)
                         .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
-                        .background(WelcomeBackground, RoundedCornerShape(25.dp))
+                        .background(welcomeBackground, RoundedCornerShape(25.dp))
                         .border(2.dp, inputBorderColor, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart
@@ -245,7 +245,7 @@ fun LoginBottomSheetContent(
                         value = password,
                         onValueChange = { password = it },
                         textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
-                        cursorBrush = SolidColor(NeonCyan),
+                        cursorBrush = SolidColor(neonCyan),
                         singleLine = true,
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth()
@@ -278,19 +278,19 @@ fun LoginBottomSheetContent(
             ) {
                 Text(stringResource(id = R.string.password_hint_length), color = Color.White, fontSize = 12.sp)
                 Spacer(modifier = Modifier.width(3.dp))
-                Text(stringResource(id = R.string.login_hint_separator), color = NeonMint, fontSize = 12.sp)
+                Text(stringResource(id = R.string.login_hint_separator), color = neonMint, fontSize = 12.sp)
                 Spacer(modifier = Modifier.width(3.dp))
-                Text(stringResource(id = R.string.password_hint_uppercase), color = NeonMint, fontSize = 12.sp)
+                Text(stringResource(id = R.string.password_hint_uppercase), color = neonMint, fontSize = 12.sp)
                 Spacer(modifier = Modifier.width(3.dp))
-                Text(stringResource(id = R.string.login_hint_separator), color = NeonMint, fontSize = 12.sp)
+                Text(stringResource(id = R.string.login_hint_separator), color = neonMint, fontSize = 12.sp)
                 Spacer(modifier = Modifier.width(3.dp))
-                Text(stringResource(id = R.string.password_hint_number), color = NeonMint, fontSize = 12.sp)
+                Text(stringResource(id = R.string.password_hint_number), color = neonMint, fontSize = 12.sp)
             }
             
             // Forgot Password
             Text(
                 text = stringResource(id = R.string.forgot_password),
-                color = NeonCyanLight,
+                color = neonCyanLight,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 modifier = Modifier
@@ -303,15 +303,15 @@ fun LoginBottomSheetContent(
             Box(
                 modifier = Modifier
                     .size(50.dp)
-                    .neonGlow(color = NeonMint, alpha = 0.6f, glowRadius = 20.dp, borderRadius = 25.dp)
-                    .border(2.dp, NeonMint, CircleShape)
+                    .neonGlow(color = neonMint, alpha = 0.6f, glowRadius = 20.dp, borderRadius = 25.dp)
+                    .border(2.dp, neonMint, CircleShape)
                     .clickable { onLoginSubmit(mobileNumber, password) },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = stringResource(id = R.string.submit_login_desc),
-                    tint = NeonMint,
+                    tint = neonMint,
                     modifier = Modifier
                         .size(25.dp)
                         .rotate(-40f)
@@ -336,13 +336,13 @@ fun LoginBottomSheetContent(
                     Icon(
                         imageVector = Icons.Default.Fingerprint,
                         contentDescription = null,
-                        tint = NeonCyan,
+                        tint = neonCyan,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(id = R.string.biometric_login_btn),
-                        color = NeonCyan,
+                        color = neonCyan,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     )

@@ -29,13 +29,14 @@ import com.example.newproject.R
 import com.example.newproject.network.model.response.CreditCardResponse
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.DarkBackground
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NeonCyanLight
-import com.example.newproject.ui.theme.NeonPurpleLight
-import com.example.newproject.ui.theme.SendPink
-import com.example.newproject.ui.theme.TokenOrange
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.neonPurpleLight
+import com.example.newproject.ui.theme.sendPink
+import com.example.newproject.ui.theme.welcomeBackground
+
+private val tokenOrange = Color(0xFFFF8C00)
 
 @Composable
 fun CardsScreen(viewModel: CardsViewModel) {
@@ -65,14 +66,14 @@ fun CardsScreenContent(state: CardsState, onRefresh: () -> Unit = {}) {
         state = pullRefreshState,
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBackground),
+            .background(welcomeBackground),
         indicator = {
             PullToRefreshDefaults.Indicator(
                 state = pullRefreshState,
                 isRefreshing = isRefreshing,
                 modifier = Modifier.align(Alignment.TopCenter),
-                color = NeonCyanLight,
-                containerColor = WelcomeBackground
+                color = neonCyanLight,
+                containerColor = welcomeBackground
             )
         }
     ) {
@@ -82,7 +83,7 @@ fun CardsScreenContent(state: CardsState, onRefresh: () -> Unit = {}) {
             is CardsState.Error -> {
                 Text(
                     text = state.message,
-                    color = SendPink,
+                    color = sendPink,
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
@@ -125,7 +126,7 @@ fun CardsScreenContent(state: CardsState, onRefresh: () -> Unit = {}) {
                                     Icon(
                                         imageVector = Icons.Default.CreditCard,
                                         contentDescription = null,
-                                        tint = NeonCyan.copy(alpha = 0.4f),
+                                        tint = neonCyan.copy(alpha = 0.4f),
                                         modifier = Modifier.size(64.dp)
                                     )
                                     Text(
@@ -158,10 +159,10 @@ fun InfoCard() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(color = NeonCyanLight, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 12.dp)
+            .neonGlow(color = neonCyanLight, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 12.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(WelcomeBackground)
-            .border(2.dp, NeonCyanLight.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+            .background(welcomeBackground)
+            .border(2.dp, neonCyanLight.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         Column {
@@ -189,15 +190,15 @@ fun InfoCard() {
 
 @Composable
 fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean) {
-    val glowColor = if (isPrimary) NeonPurpleLight else NeonCyanLight
-    val borderColor = if (isPrimary) NeonPurpleLight else NeonCyanLight
+    val glowColor = if (isPrimary) neonPurpleLight else neonCyanLight
+    val borderColor = if (isPrimary) neonPurpleLight else neonCyanLight
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .neonGlow(color = glowColor, alpha = 0.6f, glowRadius = 15.dp, borderRadius = 16.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(WelcomeBackground)
+            .background(welcomeBackground)
             .border(2.dp, borderColor, RoundedCornerShape(16.dp))
             .padding(20.dp)
     ) {
@@ -225,8 +226,8 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean) {
                 if (isPrimary) {
                     Box(
                         modifier = Modifier
-                            .background(NeonPurpleLight.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
-                            .border(1.dp, NeonPurpleLight, RoundedCornerShape(12.dp))
+                            .background(neonPurpleLight.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+                            .border(1.dp, neonPurpleLight, RoundedCornerShape(12.dp))
                             .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
                         Text(
@@ -285,13 +286,13 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean) {
 
                 Box(
                     modifier = Modifier
-                        .border(1.dp, TokenOrange, RoundedCornerShape(8.dp))
+                        .border(1.dp, tokenOrange, RoundedCornerShape(8.dp))
                         .clickable { /* TODO: Manage */ }
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.cards_manage_btn),
-                        color = TokenOrange,
+                        color = tokenOrange,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -307,10 +308,10 @@ fun AddNewCardButton() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp)
-            .neonGlow(color = NeonCyanLight, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 24.dp)
+            .neonGlow(color = neonCyanLight, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 24.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(WelcomeBackground)
-            .border(2.dp, NeonCyanLight, RoundedCornerShape(24.dp))
+            .background(welcomeBackground)
+            .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
             .clickable { /* TODO: Add New Card */ }
             .padding(vertical = 12.dp),
         contentAlignment = Alignment.Center
@@ -319,13 +320,13 @@ fun AddNewCardButton() {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = null,
-                tint = NeonCyanLight,
+                tint = neonCyanLight,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(R.string.cards_add_new_btn),
-                color = NeonCyanLight,
+                color = neonCyanLight,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )

@@ -34,16 +34,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.newproject.R
-import com.example.newproject.ui.theme.DrawerAccountDark
-import com.example.newproject.ui.theme.DrawerAccountLight
-import com.example.newproject.ui.theme.DrawerHelpDark
-import com.example.newproject.ui.theme.DrawerHelpLight
-import com.example.newproject.ui.theme.DrawerProductDark
-import com.example.newproject.ui.theme.DrawerProductLight
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NeonBlue
-import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonBlue
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.welcomeBackground
+
+private val drawerAccountLight = Color(0xFF9BFBFD)
+private val drawerAccountDark = Color(0xFF31C8CD)
+private val drawerProductLight = Color(0xFFF7A5F9)
+private val drawerProductDark = Color(0xFFA82CC5)
+private val drawerHelpLight = Color(0xFF5B80C4)
+private val drawerHelpDark = Color(0xFF1E5BD1)
 
 @Composable
 fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}) {
@@ -84,7 +85,7 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 style = TextStyle(shadow = Shadow(
-                    color = NeonCyan.copy(alpha = 0.6f),
+                    color = neonCyan.copy(alpha = 0.6f),
                     blurRadius = 25f
                 )
                 )
@@ -95,8 +96,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
             // Account Status 藍綠色區塊
             MenuCard(
                 title = stringResource(id = R.string.account_status),
-                titleColor = DrawerAccountDark,
-                borderColor = DrawerAccountLight,
+                titleColor = drawerAccountDark,
+                borderColor = drawerAccountLight,
                 items = listOf(
                     MenuItem(
                         icon = MenuIcon.Resource(R.mipmap.ic_check_progress),
@@ -118,8 +119,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
             // Product Features 紫色區塊
             MenuCard(
                 title = stringResource(id = R.string.product_features),
-                titleColor = DrawerProductDark,
-                borderColor = DrawerProductLight,
+                titleColor = drawerProductDark,
+                borderColor = drawerProductLight,
                 items = listOf(
                     MenuItem(MenuIcon.Vector(Icons.Default.Refresh), stringResource(id = R.string.real_time_fx_rates), null),
                     MenuItem(MenuIcon.Vector(Icons.Default.Star), stringResource(id = R.string.explore_xcash_features), null)
@@ -131,8 +132,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
             // Help & Policies 藍色區塊
             MenuCard(
                 title = stringResource(id = R.string.help_policies),
-                titleColor = DrawerHelpDark,
-                borderColor = DrawerHelpLight,
+                titleColor = drawerHelpDark,
+                borderColor = drawerHelpLight,
                 items = listOf(
                     MenuItem(MenuIcon.Vector(Icons.Default.Email), stringResource(id = R.string.help_center), stringResource(id = R.string.help_center)),
                     MenuItem(MenuIcon.Vector(Icons.Default.Lock), stringResource(id = R.string.user_terms_policies), stringResource(id = R.string.security_privacy))
@@ -173,7 +174,7 @@ fun MenuCard(
                 borderRadius = 16.dp
             )
             .let { if (onClick != null) it.clickable { onClick() } else it },
-        colors = CardDefaults.cardColors(containerColor = WelcomeBackground),
+        colors = CardDefaults.cardColors(containerColor = welcomeBackground),
         border = BorderStroke(1.5.dp, borderColor),
         shape = RoundedCornerShape(16.dp)
     ) {

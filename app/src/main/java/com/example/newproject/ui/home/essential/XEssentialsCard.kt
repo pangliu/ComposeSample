@@ -29,17 +29,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
-import com.example.newproject.ui.theme.CardBorder
-import com.example.newproject.ui.theme.CardGradientEnd
-import com.example.newproject.ui.theme.CardGradientMid
-import com.example.newproject.ui.theme.CardGradientStart
-import com.example.newproject.ui.theme.DarkBackground
-import com.example.newproject.ui.theme.EssentialCardTitle
-import com.example.newproject.ui.theme.EssentialEdit
-import com.example.newproject.ui.theme.EssentialMore
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.NormalText
+import com.example.newproject.ui.theme.cardBorder
+import com.example.newproject.ui.theme.cardGradientMid
+import com.example.newproject.ui.theme.cardGradientStart
+import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.essentialCardTitle
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.normalText
+
+private val cardGradientEnd = Color(0xFF0A1228)
+private val essentialEdit = Color(0xFF3E4155)
+private val essentialMore = Color(0xFF48B4C9)
 
 // ── X-Essentials 快捷功能區 ──────────────────────────────────────────────────
 
@@ -62,7 +63,7 @@ fun XEssentialsCard(
         ) {
             Text(
                 text = stringResource(R.string.essentials_title),
-                color = EssentialCardTitle,
+                color = essentialCardTitle,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -74,7 +75,7 @@ fun XEssentialsCard(
                         .clip(RoundedCornerShape(10.dp))
                         .border(
                             width = 2.dp,
-                            color = EssentialMore,
+                            color = essentialMore,
                             shape = RoundedCornerShape(10.dp)
                         )
                         .clickable { /* TODO: More */ }
@@ -82,7 +83,7 @@ fun XEssentialsCard(
                 ) {
                     Text(
                         text = stringResource(R.string.essentials_more),
-                        color = EssentialMore,
+                        color = essentialMore,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -92,13 +93,13 @@ fun XEssentialsCard(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(10.dp))
-                        .background(EssentialEdit)
+                        .background(essentialEdit)
                         .clickable { showEditDialog = true }
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.essentials_edit),
-                        color = NormalText,
+                        color = normalText,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -116,13 +117,13 @@ fun XEssentialsCard(
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            CardGradientStart.copy(alpha = 0.7f),
-                            CardGradientMid.copy(alpha = 0.7f),
-                            CardGradientEnd.copy(alpha = 0.7f)
+                            cardGradientStart.copy(alpha = 0.7f),
+                            cardGradientMid.copy(alpha = 0.7f),
+                            cardGradientEnd.copy(alpha = 0.7f)
                         )
                     )
                 )
-                .border(1.dp, CardBorder.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
+                .border(1.dp, cardBorder.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 8.dp, vertical = 8.dp)
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -184,7 +185,7 @@ fun XEssentialsCard(
                             .size(if (isSelected) 8.dp else 6.dp)
                             .clip(CircleShape)
                             .background(
-                                if (isSelected) NeonCyan
+                                if (isSelected) neonCyan
                                 else Color.White.copy(alpha = 0.3f)
                             )
                     )
@@ -226,8 +227,8 @@ fun EssentialItemView(item: EssentialItem) {
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            CardGradientMid,
-                            CardGradientStart
+                            cardGradientMid,
+                            cardGradientStart
                         )
                     )
                 )
@@ -235,8 +236,8 @@ fun EssentialItemView(item: EssentialItem) {
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            NeonCyan.copy(alpha = 0.4f),
-                            NeonPurple.copy(alpha = 0.8f)
+                            neonCyan.copy(alpha = 0.4f),
+                            neonPurple.copy(alpha = 0.8f)
                         )
                     ),
                     shape = RoundedCornerShape(16.dp)
@@ -247,11 +248,11 @@ fun EssentialItemView(item: EssentialItem) {
                 Icon(
                     imageVector = item.iconVector,
                     contentDescription = item.label,
-                    tint = NeonCyan,
+                    tint = neonCyan,
                     modifier = Modifier.size(30.dp)
                 )
             } else if (item.iconRes != null) {
-                val tint = if (item.useOriginalColor) Color.Unspecified else NeonCyan
+                val tint = if (item.useOriginalColor) Color.Unspecified else neonCyan
                 Icon(
                     painter = painterResource(id = item.iconRes),
                     contentDescription = item.label,
@@ -266,7 +267,7 @@ fun EssentialItemView(item: EssentialItem) {
         // 標籤文字
         Text(
             text = item.label,
-            color = NormalText,
+            color = normalText,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium
         )
@@ -280,7 +281,7 @@ fun XEssentialsCardPreview() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(DarkBackground)
+                .background(darkBackground)
                 .padding(16.dp)
         ) {
             XEssentialsCard(

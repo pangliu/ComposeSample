@@ -145,6 +145,33 @@
     <string name="recent_cash_out">Cash Out</string>
     <string name="recent_empty">No recent transactions</string>
 
+    <!-- ProfileScreen -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_section_identity">Identity &amp; Status</string>
+    <string name="profile_hi_name">Hi, %s 👋</string>
+    <string name="profile_xcash_id">Xcash ID: %s</string>
+    <string name="profile_fully_verified">FULLY VERIFIED</string>
+    <string name="profile_avatar_desc">User Avatar</string>
+    <string name="profile_section_social">Social &amp; Rewards</string>
+    <string name="profile_invite_earn">Invite &amp; Earn</string>
+    <string name="profile_g_code">G! Code: %s</string>
+    <string name="profile_invite_friends">Invite Friends</string>
+    <string name="profile_invite_channels">Messenger / WhatsApp</string>
+    <string name="profile_my_badges">My Badges</string>
+    <string name="profile_earned_badges">Earned %d Badges</string>
+    <string name="profile_section_account">Account Management</string>
+    <string name="profile_edit">Profile Edit</string>
+    <string name="profile_recurring">Edit Recurring Accounts</string>
+    <string name="profile_transaction_history">Transaction History</string>
+    <string name="profile_section_security">Security &amp; Settings</string>
+    <string name="profile_security_center">Security Center</string>
+    <string name="profile_section_support">Support &amp; About</string>
+    <string name="profile_help_center">Help Center &amp; Chat Support</string>
+    <string name="profile_terms">Terms &amp; Privacy Policy</string>
+    <string name="profile_logout">LOGOUT</string>
+    <!-- SecurityCenterScreen -->
+    <string name="security_center_back_desc">Back</string>
+
     <!-- Error Messages (HomeViewModel / LoginViewModel) -->
     <string name="error_fetch_user_data">無法取得使用者資料</string>
     <string name="error_network_fetch">無法取得資料：網路異常</string>

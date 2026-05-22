@@ -21,10 +21,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NeonDivider
-import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonDivider
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun WelcomeScreen(
@@ -51,7 +51,7 @@ fun WelcomeScreenContent() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(WelcomeBackground), // 引用統一色碼
+            .background(welcomeBackground), // 引用統一色碼
         contentAlignment = Alignment.Center
     ) {
         val brandX = stringResource(R.string.welcome_brand_x)
@@ -65,16 +65,16 @@ fun WelcomeScreenContent() {
                 text = buildAnnotatedString {
                     withStyle(
                         SpanStyle(
-                            color = NeonCyan,
-                            shadow = Shadow(color = NeonCyan, blurRadius = 20f)
+                            color = neonCyan,
+                            shadow = Shadow(color = neonCyan, blurRadius = 20f)
                         )
                     ) {
                         append(brandX)
                     }
                     withStyle(
                         SpanStyle(
-                            color = NeonPurple,
-                            shadow = Shadow(color = NeonPurple, blurRadius = 20f)
+                            color = neonPurple,
+                            shadow = Shadow(color = neonPurple, blurRadius = 20f)
                         )
                     ) {
                         append(brandCash)
@@ -92,7 +92,7 @@ fun WelcomeScreenContent() {
                 modifier = Modifier
                     .width(2.dp)
                     .height(34.dp)
-                    .background(NeonDivider)
+                    .background(neonDivider)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -104,7 +104,7 @@ fun WelcomeScreenContent() {
                 fontSize = 42.sp,
                 fontWeight = FontWeight.Bold,
                 style = TextStyle(
-                    shadow = Shadow(color = NeonCyan.copy(alpha = 0.53f), blurRadius = 25f)
+                    shadow = Shadow(color = neonCyan.copy(alpha = 0.53f), blurRadius = 25f)
                 ),
                 letterSpacing = 1.sp
             )

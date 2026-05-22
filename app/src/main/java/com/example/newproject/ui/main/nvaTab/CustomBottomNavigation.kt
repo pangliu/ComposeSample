@@ -25,8 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
-import com.example.newproject.ui.theme.TabActiveColor
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.tabActiveColor
+import com.example.newproject.ui.theme.welcomeBackground
 
 private val NavBarHeight = 60.dp
 
@@ -46,7 +46,7 @@ fun CustomBottomNavigation(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(NavBarHeight)
-                .background(WelcomeBackground),
+                .background(welcomeBackground),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -106,7 +106,7 @@ private fun BottomNavItem(
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val isActive = isPressed || isSelected
-    val color = if (isActive) TabActiveColor else Color.Gray
+    val color = if (isActive) tabActiveColor else Color.Gray
     val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
     val iconRes = if (isActive) activeIconRes else defaultIconRes
 

@@ -37,12 +37,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.InputFieldDark
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NeonCyanLight
-import com.example.newproject.ui.theme.NeonMint
-import com.example.newproject.ui.theme.NormalText
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.inputFieldDark
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.neonMint
+import com.example.newproject.ui.theme.normalText
+import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun FindAppDialog(
@@ -67,13 +67,13 @@ fun FindAppDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .neonGlow(
-                    color = NeonCyanLight,
+                    color = neonCyanLight,
                     alpha = 0.6f,
                     glowRadius = 16.dp,
                     borderRadius = 20.dp
                 )
-                .background(WelcomeBackground, RoundedCornerShape(20.dp))
-                .border(2.dp, NeonCyanLight, RoundedCornerShape(20.dp))
+                .background(welcomeBackground, RoundedCornerShape(20.dp))
+                .border(2.dp, neonCyanLight, RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp)
         ) {
             Column(
@@ -83,7 +83,7 @@ fun FindAppDialog(
                 // Title
                 Text(
                     text = stringResource(R.string.find_app_title),
-                    color = NeonCyan,
+                    color = neonCyan,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -95,7 +95,7 @@ fun FindAppDialog(
                 // Subtitle
                 Text(
                     text = stringResource(R.string.find_app_subtitle),
-                    color = NormalText,
+                    color = normalText,
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -154,20 +154,20 @@ fun FindAppDialog(
                         modifier = Modifier
                             .size(48.dp)
                             .neonGlow(
-                                color = NeonMint,
+                                color = neonMint,
                                 alpha = 0.6f,
                                 glowRadius = 16.dp,
                                 borderRadius = 24.dp
                             )
-                            .background(WelcomeBackground, CircleShape)
-                            .border(2.dp, NeonMint, CircleShape)
+                            .background(welcomeBackground, CircleShape)
+                            .border(2.dp, neonMint, CircleShape)
                             .clickable { onSubmit(idNumber, mobile, email) },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = stringResource(R.string.find_app_submit_desc),
-                            tint = NeonMint,
+                            tint = neonMint,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -205,13 +205,13 @@ private fun FindAppInputField(
                     .weight(1f)
                     .height(40.dp)
                     .neonGlow(
-                        color = NeonCyanLight,
+                        color = neonCyanLight,
                         alpha = 0.8f,
                         glowRadius = 12.dp,
                         borderRadius = 20.dp
                     )
-                    .background(InputFieldDark, RoundedCornerShape(20.dp))
-                    .border(1.5.dp, NeonCyanLight, RoundedCornerShape(20.dp))
+                    .background(inputFieldDark, RoundedCornerShape(20.dp))
+                    .border(1.5.dp, neonCyanLight, RoundedCornerShape(20.dp))
                     .padding(horizontal = 14.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
@@ -222,7 +222,7 @@ private fun FindAppInputField(
                     visualTransformation = visualTransformation,
                     keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
                     textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-                    cursorBrush = SolidColor(NeonCyanLight),
+                    cursorBrush = SolidColor(neonCyanLight),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -233,13 +233,13 @@ private fun FindAppInputField(
                 modifier = Modifier
                     .size(40.dp)
                     .neonGlow(
-                        color = NeonCyanLight,
+                        color = neonCyanLight,
                         alpha = 0.8f,
                         glowRadius = 12.dp,
                         borderRadius = 20.dp
                     )
-                    .background(InputFieldDark, CircleShape)
-                    .border(1.5.dp, NeonCyanLight, CircleShape)
+                    .background(inputFieldDark, CircleShape)
+                    .border(1.5.dp, neonCyanLight, CircleShape)
                     .then(
                         if (onTrailingClick != null) Modifier.clickable { onTrailingClick() }
                         else Modifier
@@ -249,7 +249,7 @@ private fun FindAppInputField(
                 Icon(
                     imageVector = trailingIcon,
                     contentDescription = trailingIconDesc,
-                    tint = NeonCyanLight,
+                    tint = neonCyanLight,
                     modifier = Modifier.size(18.dp)
                 )
             }

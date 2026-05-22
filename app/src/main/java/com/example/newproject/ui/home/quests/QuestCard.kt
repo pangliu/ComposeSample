@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,9 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.DarkBackground
-import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun QuestCard() {
@@ -51,26 +52,26 @@ fun QuestCard() {
                 .fillMaxWidth()
                 .height(120.dp) // 固定高度
                 .neonGlow(
-                    color = NeonPurple, 
+                    color = neonPurple, 
                     alpha = 0.6f, 
                     glowRadius = 15.dp, 
                     borderRadius = 18.dp,
                     blurStyle = android.graphics.BlurMaskFilter.Blur.OUTER
                 )
                 .background(
-                    color = WelcomeBackground,
+                    color = welcomeBackground,
                     shape = RoundedCornerShape(18.dp)
                 )
                 .border(
                     width = 2.dp,
-                    color = NeonPurple, // 你剛才轉好的洋紅色
+                    color = neonPurple, // 你剛才轉好的洋紅色
                     shape = RoundedCornerShape(18.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 8.dp) // 內部元件距離邊框的距離
         ) {
             Text(
                 text = "wording here",
-                color = Color.Companion.LightGray,
+                color = LightGray,
                 modifier = Modifier.weight(1f) // 佔滿左側剩餘空間
             )
         }
@@ -93,7 +94,7 @@ fun QuestCardPreview() {
         Box(
             modifier = Modifier.Companion
                 .fillMaxWidth()
-                .background(DarkBackground)
+                .background(darkBackground)
                 .padding(16.dp)
         ) {
             QuestCard()

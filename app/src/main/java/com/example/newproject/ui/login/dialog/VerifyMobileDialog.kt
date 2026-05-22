@@ -17,11 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -35,13 +31,11 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
 import kotlinx.coroutines.delay
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.DarkOverlay
-import com.example.newproject.ui.theme.InputFieldDark
-import com.example.newproject.ui.theme.NeonCyan
-import com.example.newproject.ui.theme.NeonCyanLight
-import com.example.newproject.ui.theme.NeonPurple
-import com.example.newproject.ui.theme.NeonPurpleLight
-import com.example.newproject.ui.theme.WelcomeBackground
+import com.example.newproject.ui.theme.inputFieldDark
+import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.neonPurpleLight
+import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun VerifyMobileDialog(
@@ -89,9 +83,9 @@ fun VerifyMobileDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .neonGlow(color = NeonPurpleLight, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp)
-                    .background(WelcomeBackground, RoundedCornerShape(20.dp))
-                    .border(2.dp, NeonPurpleLight, RoundedCornerShape(20.dp))
+                    .neonGlow(color = neonPurpleLight, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp)
+                    .background(welcomeBackground, RoundedCornerShape(20.dp))
+                    .border(2.dp, neonPurpleLight, RoundedCornerShape(20.dp))
                     .padding(horizontal = 25.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -119,15 +113,15 @@ fun VerifyMobileDialog(
                         modifier = Modifier
                             .weight(1f)
                             .height(35.dp)
-                            .neonGlow(color = NeonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
-                            .background(InputFieldDark, RoundedCornerShape(25.dp))
-                            .border(2.dp, NeonCyanLight, RoundedCornerShape(25.dp))
+                            .neonGlow(color = neonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
+                            .background(inputFieldDark, RoundedCornerShape(25.dp))
+                            .border(2.dp, neonCyanLight, RoundedCornerShape(25.dp))
                             .padding(horizontal = 16.dp),
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Text(
                             text = phone,
-                            color = NeonCyanLight,
+                            color = neonCyanLight,
                             fontSize = 14.sp,
                             maxLines = 1
                         )
@@ -139,9 +133,9 @@ fun VerifyMobileDialog(
                     Box(
                         modifier = Modifier
                             .size(35.dp)
-                            .neonGlow(color = NeonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 15.dp)
-                            .background(InputFieldDark, CircleShape)
-                            .border(2.dp, NeonCyanLight, CircleShape)
+                            .neonGlow(color = neonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 15.dp)
+                            .background(inputFieldDark, CircleShape)
+                            .border(2.dp, neonCyanLight, CircleShape)
 //                            .rotate(-45f)
                             .clickable { /* TODO: 發送驗證碼邏輯 */ },
                         contentAlignment = Alignment.Center
@@ -149,7 +143,7 @@ fun VerifyMobileDialog(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = stringResource(R.string.verify_mobile_send_desc),
-                            tint = NeonCyanLight,
+                            tint = neonCyanLight,
                             modifier = Modifier.size(15.dp)
                         )
                     }
@@ -159,7 +153,7 @@ fun VerifyMobileDialog(
 
                 Text(
                     text = stringResource(R.string.verify_mobile_resend_timer, timerText),
-                    color = NeonPurple,
+                    color = neonPurple,
                     fontSize = 12.sp,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -193,9 +187,9 @@ fun VerifyMobileDialog(
                             Box(
                                 modifier = Modifier
                                     .size(35.dp)
-                                    .neonGlow(color = NeonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 8.dp)
-                                    .background(InputFieldDark, RoundedCornerShape(8.dp))
-                                    .border(2.dp, NeonCyanLight, RoundedCornerShape(8.dp)),
+                                    .neonGlow(color = neonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 8.dp)
+                                    .background(inputFieldDark, RoundedCornerShape(8.dp))
+                                    .border(2.dp, neonCyanLight, RoundedCornerShape(8.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -233,16 +227,16 @@ fun VerifyMobileDialog(
                 Box(
                     modifier = Modifier
                         .size(50.dp)
-                        .neonGlow(color = NeonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
-                        .background(WelcomeBackground, CircleShape)
-                        .border(2.dp, NeonCyanLight, CircleShape)
+                        .neonGlow(color = neonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
+                        .background(welcomeBackground, CircleShape)
+                        .border(2.dp, neonCyanLight, CircleShape)
                         .clickable { onDismiss() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(R.string.verify_mobile_close_desc),
-                        tint = NeonCyanLight,
+                        tint = neonCyanLight,
                         modifier = Modifier.size(30.dp)
                     )
                 }
