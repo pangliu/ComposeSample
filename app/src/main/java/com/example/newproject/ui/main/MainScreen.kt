@@ -61,7 +61,7 @@ fun MainScreen(onNavigate: (String) -> Unit = {}) {
                     0 -> HomeScreen()
                     1 -> {
                         val cardsViewModel: CardsViewModel = hiltViewModel()
-                        CardsScreen(viewModel = cardsViewModel)
+                        CardsScreen(viewModel = cardsViewModel, onNavigate = onNavigate)
                     }
                     2 -> QuestsScreen()
                     3 -> {

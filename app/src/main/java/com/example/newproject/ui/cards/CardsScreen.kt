@@ -3,9 +3,13 @@ package com.example.newproject.ui.cards
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -18,7 +22,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,19 +39,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.network.model.response.CreditCardResponse
+import com.example.newproject.ui.Routes
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.darkBackground
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.neonGreen
+import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
+import com.example.newproject.ui.theme.normalText
 import com.example.newproject.ui.theme.sendPink
 import com.example.newproject.ui.theme.welcomeBackground
 
 private val tokenOrange = Color(0xFFFF8C00)
+private val promoBannerCount = 4
 
 @Composable
-fun CardsScreen(viewModel: CardsViewModel) {
+fun CardsScreen(viewModel: CardsViewModel, onNavigate: (String) -> Unit = {}) {
     val state by viewModel.cardsState.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -48,104 +64,82 @@ fun CardsScreen(viewModel: CardsViewModel) {
 
     CardsScreenContent(
         state = state,
-        onRefresh = { viewModel.refreshCards() }
+        onRefresh = { viewModel.refreshCards() },
+        onNavigate = onNavigate
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardsScreenContent(state: CardsState, onRefresh: () -> Unit = {}) {
+fun CardsScreenContent(state: CardsState, onRefresh: () -> Unit = {}, onNavigate: (String) -> Unit = {}) {
     val isRefreshing = (state as? CardsState.Success)?.isRefreshing == true
     val pullRefreshState = rememberPullToRefreshState()
 
     LoadingDialog(isShowing = state is CardsState.Loading)
 
-    PullToRefreshBox(
-        isRefreshing = isRefreshing,
-        onRefresh = onRefresh,
-        state = pullRefreshState,
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(welcomeBackground),
-        indicator = {
-            PullToRefreshDefaults.Indicator(
-                state = pullRefreshState,
-                isRefreshing = isRefreshing,
-                modifier = Modifier.align(Alignment.TopCenter),
-                color = neonCyanLight,
-                containerColor = welcomeBackground
-            )
-        }
+            .background(welcomeBackground)
     ) {
-        when (state) {
-            is CardsState.Loading -> Unit
+        Text(
+            text = stringResource(R.string.cards_management_title),
+            color = Color.White,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp, bottom = 16.dp),
+            textAlign = TextAlign.Center
+        )
 
-            is CardsState.Error -> {
-                Text(
-                    text = state.message,
-                    color = sendPink,
-                    modifier = Modifier.align(Alignment.Center)
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            state = pullRefreshState,
+            modifier = Modifier.weight(1f),
+            indicator = {
+                PullToRefreshDefaults.Indicator(
+                    state = pullRefreshState,
+                    isRefreshing = isRefreshing,
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    color = neonCyanLight,
+                    containerColor = welcomeBackground
                 )
             }
+        ) {
+            when (state) {
+                is CardsState.Loading -> Unit
 
-            is CardsState.Success -> {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    // Cards Management Title
+                is CardsState.Error -> {
                     Text(
-                        text = stringResource(R.string.cards_management_title),
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 24.dp, bottom = 16.dp),
-                        textAlign = TextAlign.Center
+                        text = state.message,
+                        color = sendPink,
+                        modifier = Modifier.align(Alignment.Center)
                     )
+                }
 
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 24.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(bottom = 32.dp)
-                    ) {
-                        // Top Info Card
-//                        item {
-//                            InfoCard()
-//                        }
-
-                        if (state.cards.isEmpty()) {
-                            item {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 32.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.CreditCard,
-                                        contentDescription = null,
-                                        tint = neonCyan.copy(alpha = 0.4f),
-                                        modifier = Modifier.size(64.dp)
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.cards_empty),
-                                        color = Color.Gray,
-                                        fontSize = 14.sp
-                                    )
-                                }
-                            }
-                        } else {
+                is CardsState.Success -> {
+                    if (state.cards.isEmpty()) {
+                        // 純 Column，不加任何會觸發 clip 的 modifier
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            CardsEmptyState(onNavigate = onNavigate)
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 24.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            contentPadding = PaddingValues(bottom = 32.dp)
+                        ) {
                             itemsIndexed(state.cards) { index, card ->
                                 CreditCardItem(card = card, isPrimary = index == 0)
                             }
-                        }
-
-                        // Add New Card Button
-                        item {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            AddNewCardButton()
+                            item {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                AddNewCardButton(onNavigate = onNavigate)
+                            }
                         }
                     }
                 }
@@ -303,7 +297,7 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean) {
 }
 
 @Composable
-fun AddNewCardButton() {
+fun AddNewCardButton(onNavigate: (String) -> Unit = {}) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -312,7 +306,7 @@ fun AddNewCardButton() {
             .clip(RoundedCornerShape(24.dp))
             .background(welcomeBackground)
             .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
-            .clickable { /* TODO: Add New Card */ }
+            .clickable { onNavigate(Routes.SELECT_CARD_TYPE) }
             .padding(vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -334,16 +328,209 @@ fun AddNewCardButton() {
     }
 }
 
+@Composable
+private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
+    val pagerState = rememberPagerState(pageCount = { promoBannerCount })
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 24.dp, horizontal = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        // 輪播 Banner：horizontal padding 僅為光暈預留空間，不做視覺縮排
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth(),
+            pageSpacing = 16.dp
+        ) { page ->
+            PromoBannerCard(page = page)
+        }
+
+        // 分頁指示點
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            repeat(promoBannerCount) { index ->
+                Box(
+                    modifier = Modifier
+                        .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
+                        .background(
+                            if (pagerState.currentPage == index) neonCyan else Color.White.copy(alpha = 0.3f),
+                            CircleShape
+                        )
+                )
+            }
+        }
+
+        // Link Your First Card 按鈕：外層提供光暈空間，內層才是可見元件
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+                    .neonGlow(neonCyan, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 26.dp)
+                    .background(welcomeBackground, RoundedCornerShape(26.dp))
+                    .border(1.5.dp, neonCyan, RoundedCornerShape(26.dp))
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = { onNavigate(Routes.SELECT_CARD_TYPE) }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.cards_link_first),
+                    color = neonGreen,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
+        Text(
+            text = stringResource(R.string.cards_protected),
+            color = normalText,
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun PromoBannerCard(page: Int) {
+    // 外層 Box：padding 為光暈預留空間，光暈永遠在此範圍內，不依賴父容器允許 overflow
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 12.dp)
+    ) {
+        // 內層 Box：實際的卡片外觀
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(220.dp)
+                .neonGlow(neonCyan, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 16.dp)
+                .background(
+                    Brush.verticalGradient(listOf(Color(0xFF1A1050), Color(0xFF0B1030))),
+                    RoundedCornerShape(16.dp)
+                )
+                .border(
+                    width = 1.5.dp,
+                    brush = Brush.linearGradient(listOf(neonCyan, neonPurple, neonCyan)),
+                    shape = RoundedCornerShape(16.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            if (page == 0) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    VoucherTicket(amount = stringResource(R.string.cards_empty_voucher_amount))
+                    Text(
+                        text = stringResource(R.string.cards_empty_promo_text),
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 28.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun VoucherTicket(amount: String) {
+    // 用 drawWithContent 畫出左右有缺口的票券形狀
+    val ticketColor = neonPurple
+    Box(
+        modifier = Modifier
+            .width(80.dp)
+            .height(56.dp)
+            .drawWithContent {
+                val notchRadius = 10.dp.toPx()
+                val cornerRadius = 8.dp.toPx()
+                val strokeWidth = 2.dp.toPx()
+
+                val path = Path().apply {
+                    // 從左上角開始，順時針
+                    moveTo(cornerRadius, 0f)
+                    lineTo(size.width - cornerRadius, 0f)
+                    arcTo(
+                        rect = androidx.compose.ui.geometry.Rect(size.width - cornerRadius * 2, 0f, size.width, cornerRadius * 2),
+                        startAngleDegrees = -90f, sweepAngleDegrees = 90f, forceMoveTo = false
+                    )
+                    // 右側缺口（往內弧）
+                    lineTo(size.width, size.height / 2 - notchRadius)
+                    arcTo(
+                        rect = androidx.compose.ui.geometry.Rect(size.width - notchRadius, size.height / 2 - notchRadius, size.width + notchRadius, size.height / 2 + notchRadius),
+                        startAngleDegrees = -90f, sweepAngleDegrees = -180f, forceMoveTo = false
+                    )
+                    lineTo(size.width, size.height - cornerRadius)
+                    arcTo(
+                        rect = androidx.compose.ui.geometry.Rect(size.width - cornerRadius * 2, size.height - cornerRadius * 2, size.width, size.height),
+                        startAngleDegrees = 0f, sweepAngleDegrees = 90f, forceMoveTo = false
+                    )
+                    lineTo(cornerRadius, size.height)
+                    arcTo(
+                        rect = androidx.compose.ui.geometry.Rect(0f, size.height - cornerRadius * 2, cornerRadius * 2, size.height),
+                        startAngleDegrees = 90f, sweepAngleDegrees = 90f, forceMoveTo = false
+                    )
+                    // 左側缺口（往內弧）
+                    lineTo(0f, size.height / 2 + notchRadius)
+                    arcTo(
+                        rect = androidx.compose.ui.geometry.Rect(-notchRadius, size.height / 2 - notchRadius, notchRadius, size.height / 2 + notchRadius),
+                        startAngleDegrees = 90f, sweepAngleDegrees = -180f, forceMoveTo = false
+                    )
+                    lineTo(0f, cornerRadius)
+                    arcTo(
+                        rect = androidx.compose.ui.geometry.Rect(0f, 0f, cornerRadius * 2, cornerRadius * 2),
+                        startAngleDegrees = 180f, sweepAngleDegrees = 90f, forceMoveTo = false
+                    )
+                    close()
+                }
+
+                drawPath(
+                    path = path,
+                    color = ticketColor.copy(alpha = 0.12f)
+                )
+                drawPath(
+                    path = path,
+                    color = ticketColor,
+                    style = Stroke(width = strokeWidth)
+                )
+                drawContent()
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = amount,
+            color = neonPurple,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.ExtraBold,
+            letterSpacing = 1.sp
+        )
+    }
+}
+
 @Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
 @Composable
 fun CardsScreenPreview() {
     MaterialTheme {
         CardsScreenContent(
             state = CardsState.Success(
-                cards = listOf(
-                    CreditCardResponse(1, "Visa", "Text / Caption", "1234", "bank"),
-                    CreditCardResponse(2, "Mastercard", "Text / Caption", "1234", "bank")
-                )
+//                cards = listOf(
+//                    CreditCardResponse(1, "Visa", "Text / Caption", "1234", "bank"),
+//                    CreditCardResponse(2, "Mastercard", "Text / Caption", "1234", "bank")
+//                )
+                cards = emptyList()
             )
         )
     }

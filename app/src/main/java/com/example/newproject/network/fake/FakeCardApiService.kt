@@ -11,43 +11,44 @@ class FakeCardApiService : CardApiService {
         return BaseResponse(
             code = 200,
             errorMsg = "success",
-            result = listOf(
-                CreditCardResponse(
-                    id = 1,
-                    cardType = "Visa",
-                    cardName = "Hank Liu",
-                    cardNumber = "4242",
-                    bankName = "gcash"
-                ),
-                CreditCardResponse(
-                    id = 2,
-                    cardType = "Mastercard",
-                    cardName = "Hank Liu",
-                    cardNumber = "5353",
-                    bankName = "gotyme"
-                ),
-                CreditCardResponse(
-                    id = 3,
-                    cardType = "Visa",
-                    cardName = "Hank Liu",
-                    cardNumber = "5353",
-                    bankName = "shopee"
-                ),
-                CreditCardResponse(
-                    id = 4,
-                    cardType = "Mastercard",
-                    cardName = "Hank Liu",
-                    cardNumber = "5353",
-                    bankName = "metrobank"
-                ),
-                CreditCardResponse(
-                    id = 5,
-                    cardType = "Visa",
-                    cardName = "Hank Liu",
-                    cardNumber = "5353",
-                    bankName = "grab"
-                )
-            )
+            result = emptyList()
+//            result = listOf(
+//                CreditCardResponse(
+//                    id = 1,
+//                    cardType = "Visa",
+//                    cardName = "Hank Liu",
+//                    cardNumber = "4242",
+//                    bankName = "gcash"
+//                ),
+//                CreditCardResponse(
+//                    id = 2,
+//                    cardType = "Mastercard",
+//                    cardName = "Hank Liu",
+//                    cardNumber = "5353",
+//                    bankName = "gotyme"
+//                ),
+//                CreditCardResponse(
+//                    id = 3,
+//                    cardType = "Visa",
+//                    cardName = "Hank Liu",
+//                    cardNumber = "5353",
+//                    bankName = "shopee"
+//                ),
+//                CreditCardResponse(
+//                    id = 4,
+//                    cardType = "Mastercard",
+//                    cardName = "Hank Liu",
+//                    cardNumber = "5353",
+//                    bankName = "metrobank"
+//                ),
+//                CreditCardResponse(
+//                    id = 5,
+//                    cardType = "Visa",
+//                    cardName = "Hank Liu",
+//                    cardNumber = "5353",
+//                    bankName = "grab"
+//                )
+//            )
         )
     }
 }
