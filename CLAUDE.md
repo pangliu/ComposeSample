@@ -118,6 +118,32 @@ Composable → ViewModel (StateFlow) → Repository → API / Manager
 - `clickable` 在深色背景上需加 `indication = null` 避免長按時出現矩形 ripple 陰影
 - Dialog 動畫使用 `AnimatedVisibility` + `slideInVertically`/`fadeIn`
 
+### TopBar / 標題高度規範
+
+| 頁面類型 | 結構 | fontSize | 高度來源 |
+|----------|------|----------|----------|
+| **Tab 主頁面**（Home / Cards / Quests / Profile） | 純 `Text` + padding | `20.sp` Bold | `padding(top = 24.dp, bottom = 16.dp)` |
+| **子頁面**（含返回鍵） | `Box(height = 56.dp)` + 標題置中 | `20.sp` Bold | `height = 56.dp` |
+
+**Tab 主頁面標題標準寫法：**
+```kotlin
+Text(
+    text = stringResource(R.string.xxx_title),
+    color = Color.White,
+    fontSize = 20.sp,
+    fontWeight = FontWeight.Bold,
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 24.dp, bottom = 16.dp),
+    textAlign = TextAlign.Center
+)
+```
+
+**注意事項：**
+- Tab 主頁面標題列若需放置圖示按鈕（如 HomeScreen 的通知/設定），禁止使用 `IconButton`
+- `IconButton` 強制最小觸控區域為 **48dp**，會撐高整個 Row 造成標題高度不一致
+- 改用 `Icon + clickable(indication = null)` 並設定 `Modifier.size(24.dp)` 自行控制大小
+
 ### Network / API
 - 所有 API 呼叫統一透過 `safeApiCall {}` 包裝，回傳 `NetworkResult<T>`
 - ViewModel 必須用 `when (result)` 處理三種分支：`Success`、`Error`、`Exception`

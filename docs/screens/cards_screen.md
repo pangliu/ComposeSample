@@ -5,7 +5,7 @@
 ```
 CardsScreen（有 ViewModel）
   └── CardsScreenContent（無狀態，只接收參數）
-        ├── 標題「Cards Management」（永遠顯示）
+        ├── 標題「Cards Management」（20.sp Bold, padding top=24dp bottom=16dp, 永遠顯示）
         ├── LoadingDialog（isShowing = uiState.isLoading）
         └── PullToRefreshBox（weight = 1f）
               ├── cards 為空 → Column（verticalScroll）

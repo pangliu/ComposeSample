@@ -7,6 +7,7 @@ ProfileScreen（有 ViewModel）
   ├── LaunchedEffect → 收集 viewModel.eventFlow（Toast / Dialog 顯示）
   ├── LoadingDialog（isShowing = uiState.isLoggingOut）
   └── ProfileScreenContent（無狀態，只接收參數）
+        ├── 標題「Profile」（20.sp Bold, padding top=24dp bottom=16dp）
         ├── ProfileSectionHeader × 5
         ├── IdentityCard
         │     └── VerifiedBadge（if isVerified）

@@ -96,12 +96,15 @@ HomeScreenContent
 ### A. HeaderSection（固定頂部）
 
 ```
-Row (fillMaxWidth, SpaceBetween)
-├── Row → 問候文字（stringResource home_greeting + userName）
+Row (fillMaxWidth, padding top=24dp bottom=16dp, SpaceBetween)
+├── Row → 問候文字（stringResource home_greeting + userName, 20.sp Bold）
 └── Row → 右側圖示
-    ├── IconButton → 通知 (Notifications icon)
-    └── IconButton → 設定 (Settings icon)
+    ├── Icon (size=24dp) + clickable → 通知 (Notifications icon)
+    └── Icon (size=24dp) + clickable → 設定 (Settings icon)
 ```
+
+**注意**：右側圖示使用 `Icon + clickable(indication = null)`，而非 `IconButton`。
+`IconButton` 預設最小觸控高度 48dp 會撐高整個 Row，導致標題高度與其他 Tab 頁面不一致。
 
 ---
 
