@@ -9,23 +9,30 @@ import com.example.newproject.network.model.NetworkResult
 import com.example.newproject.network.model.request.LoginRequest
 import com.example.newproject.network.model.request.VerifyOtpRequest
 import com.example.newproject.repository.AuthRepository
+import com.example.newproject.ui.UiEvent
 import com.example.newproject.utils.BiometricHelper
 import com.example.newproject.utils.DeviceInfoProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed class LoginState {
-    object Idle : LoginState()
-    object Loading : LoginState()
-    object Success : LoginState()
-    object PromptBiometricEnroll : LoginState()
-    data class Error(val message: String) : LoginState()
-    data class NeedsVerification(val phone: String) : LoginState()
+data class LoginUiState(
+    val isLoading: Boolean = false,
+    val loginError: String? = null
+)
+
+sealed class LoginNavigationEvent {
+    object Success : LoginNavigationEvent()
+    object PromptBiometricEnroll : LoginNavigationEvent()
+    data class NeedsVerification(val phone: String) : LoginNavigationEvent()
 }
 
 @HiltViewModel
@@ -36,8 +43,14 @@ class LoginViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
-    val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+
+    private val _navigationEvent = MutableSharedFlow<LoginNavigationEvent>(extraBufferCapacity = 1)
+    val navigationEvent: SharedFlow<LoginNavigationEvent> = _navigationEvent.asSharedFlow()
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val eventFlow: SharedFlow<UiEvent> = _eventFlow.asSharedFlow()
 
     private val _hasSavedCredentials = MutableStateFlow(credentialManager.hasCredentials())
     val hasSavedCredentials: StateFlow<Boolean> = _hasSavedCredentials.asStateFlow()
@@ -47,7 +60,7 @@ class LoginViewModel @Inject constructor(
 
     fun login(phoneNum: String, password: String) {
         viewModelScope.launch {
-            _loginState.value = LoginState.Loading
+            _uiState.update { it.copy(isLoading = true, loginError = null) }
 
             val request = LoginRequest(
                 account = phoneNum,
@@ -59,25 +72,27 @@ class LoginViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     Log.e("LoginViewModel", "credentialManager: ${credentialManager.hasCredentials()}")
                     Log.e("LoginViewModel", "biometricHelper: ${BiometricHelper.isAvailable(context)}")
+                    _uiState.update { it.copy(isLoading = false) }
                     if (!credentialManager.hasCredentials() && BiometricHelper.isAvailable(context)) {
                         pendingPhone = phoneNum
                         pendingPassword = password
-                        _loginState.value = LoginState.PromptBiometricEnroll
+                        _navigationEvent.emit(LoginNavigationEvent.PromptBiometricEnroll)
                     } else {
-                        _loginState.value = LoginState.Success
+                        _navigationEvent.emit(LoginNavigationEvent.Success)
                     }
                 }
                 is NetworkResult.Error -> {
                     if (result.code == 2001) {
                         pendingPhone = phoneNum
                         pendingPassword = password
-                        _loginState.value = LoginState.NeedsVerification(phoneNum)
+                        _uiState.update { it.copy(isLoading = false) }
+                        _navigationEvent.emit(LoginNavigationEvent.NeedsVerification(phoneNum))
                     } else {
-                        _loginState.value = LoginState.Error(result.message)
+                        _uiState.update { it.copy(isLoading = false, loginError = result.message) }
                     }
                 }
                 is NetworkResult.Exception -> {
-                    _loginState.value = LoginState.Error(result.e.message ?: "登入異常，請檢查網路")
+                    _uiState.update { it.copy(isLoading = false, loginError = result.e.message ?: "登入異常，請檢查網路") }
                 }
             }
         }
@@ -87,12 +102,12 @@ class LoginViewModel @Inject constructor(
         credentialManager.saveCredentials(pendingPhone, pendingPassword)
         _hasSavedCredentials.value = true
         clearPending()
-        _loginState.value = LoginState.Success
+        viewModelScope.launch { _navigationEvent.emit(LoginNavigationEvent.Success) }
     }
 
     fun skipBiometricEnroll() {
         clearPending()
-        _loginState.value = LoginState.Success
+        viewModelScope.launch { _navigationEvent.emit(LoginNavigationEvent.Success) }
     }
 
     fun loginWithStoredCredentials() {
@@ -102,12 +117,12 @@ class LoginViewModel @Inject constructor(
     }
 
     fun resetState() {
-        _loginState.value = LoginState.Idle
+        _uiState.update { it.copy(loginError = null) }
     }
 
-    fun verifyOtp(phone: String, otp: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun verifyOtp(phone: String, otp: String) {
         viewModelScope.launch {
-            _loginState.value = LoginState.Loading
+            _uiState.update { it.copy(isLoading = true) }
             val request = VerifyOtpRequest(
                 phone = phone,
                 otp = otp,
@@ -115,21 +130,21 @@ class LoginViewModel @Inject constructor(
             )
             when (val result = authRepository.verifyOtp(request)) {
                 is NetworkResult.Success -> {
+                    _uiState.update { it.copy(isLoading = false) }
                     if (pendingPhone.isNotEmpty() && !credentialManager.hasCredentials() && BiometricHelper.isAvailable(context)) {
-                        _loginState.value = LoginState.PromptBiometricEnroll
+                        _navigationEvent.emit(LoginNavigationEvent.PromptBiometricEnroll)
                     } else {
                         clearPending()
-                        _loginState.value = LoginState.Success
+                        _navigationEvent.emit(LoginNavigationEvent.Success)
                     }
-                    onSuccess()
                 }
                 is NetworkResult.Error -> {
-                    _loginState.value = LoginState.NeedsVerification(phone)
-                    onError(result.message)
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventFlow.emit(UiEvent.ShowToast(result.message))
                 }
                 is NetworkResult.Exception -> {
-                    _loginState.value = LoginState.NeedsVerification(phone)
-                    onError(result.e.message ?: "網路異常")
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
                 }
             }
         }

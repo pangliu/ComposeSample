@@ -8,7 +8,8 @@ HomeScreen 是 **Home Tab 的純內容頁面**，由 `MainScreen` 透過 tab 切
 MainScreen（導覽容器）
   └── HomeScreen()          ← 自己注入 HomeViewModel，管理自己的所有資料
         └── HomeViewModel
-              ├── uiState: HomeUiState     ← 統一 UI 狀態（所有初始 API 的結果）
+              ├── uiState: HomeUiState              ← 統一 UI 狀態（所有初始 API 的結果）
+              ├── eventFlow: SharedFlow<UiEvent>    ← 一次性事件（Toast 等）
               └── myMenuItems: List<EssentialItem>  ← My Menu 持久化（SharedPreferences）
 ```
 
@@ -34,11 +35,10 @@ MainScreen（導覽容器）
 
 ```
 HomeScreen()                        ← hiltViewModel() 注入 HomeViewModel
+├── LoadingDialog(isShowing = uiState.isLoading)   ← 所有初始 API 完成前共用
 └── HomeScreenContent(uiState, myMenuItems, onSaveMyMenu)
     └── Box (fillMaxSize)
-        ├── [isLoading]     → LoadingDialogContent()   ← 所有初始 API 完成前共用
-        ├── [criticalError] → Text（置中錯誤訊息）
-        └── [Success]       → Column
+        └── Column
               ├── HeaderSection                         ← 固定，不隨滾動移動
               └── Column (weight(1f) + verticalScroll)  ← 可滾動區域
                     ├── BalanceCard
@@ -51,43 +51,27 @@ HomeScreen()                        ← hiltViewModel() 注入 HomeViewModel
 
 ## HomeUiState（統一 UI 狀態）
 
-`HomeViewModel` 以單一 `HomeUiState` 管理所有初始 API 的結果：
+`HomeViewModel` 以單一 `HomeUiState` 管理所有初始 API 的結果，是**純資料容器**，不使用 sealed class 狀態機：
 
 ```kotlin
 data class HomeUiState(
-    val userState: HomeState = HomeState.Loading,
-    val orderHistoryState: OrderHistoryState = OrderHistoryState.Loading,
+    val isLoadingUserInfo: Boolean = true,
+    val isLoadingOrders: Boolean = true,
+    val userInfo: UserInfoResponse = UserInfoResponse.empty(),
+    val orders: List<OrderHistoryResponse> = emptyList(),
 ) {
     /** 任一 API 仍在載入中即為 true */
-    val isLoading: Boolean
-        get() = userState is HomeState.Loading || orderHistoryState is OrderHistoryState.Loading
-
-    /** userInfo 失敗才算 critical error，整頁顯示錯誤訊息 */
-    val criticalError: String?
-        get() = (userState as? HomeState.Error)?.message
+    val isLoading: Boolean get() = isLoadingUserInfo || isLoadingOrders
 }
 ```
 
-### 各 API 狀態說明
-
-| State | 類型 | 失敗影響範圍 |
-|-------|------|-------------|
-| `userState` | `HomeState` | critical — 整頁顯示錯誤 |
-| `orderHistoryState` | `OrderHistoryState` | non-critical — 僅影響 RecentActivity（顯示 emptyList） |
-
-### 畫面狀態對應
-
-```
-uiState.isLoading = true      → 共用 LoadingDialogContent()
-uiState.criticalError != null → 整頁錯誤文字（userInfo 失敗）
-userState is Success          → 顯示完整 Home 內容
-  └── orderHistoryState is Success → RecentActivity 顯示交易列表
-  └── orderHistoryState is Error   → RecentActivity 顯示 emptyList
-```
+- 每隻 API 對應一個 `isLoadingX: Boolean = true` 欄位；`isLoading` 計算屬性 = 所有旗標的 OR
+- 資料缺失使用空預設值（`UserInfoResponse.empty()`、`emptyList()`），不進入錯誤 UI 狀態
+- API 錯誤透過 `eventFlow` 發送 Toast，不修改 UiState 為錯誤狀態
 
 ---
 
-## Home Tab 內容佈局（Success 狀態）
+## Home Tab 內容佈局
 
 ```
 HomeScreenContent
@@ -179,14 +163,13 @@ Box
 ### E. RecentActivity（最近活動）
 
 **位置**：`ui/home/recent/RecentActivity.kt`  
-**參數**：`orders: List<OrderHistoryResponse>?`  
+**參數**：`orders: List<OrderHistoryResponse>`  
 **API**：`GET /api/order/history`（需 Token，由 `AuthInterceptor` 自動附加）
 
 ```
 Column
 ├── Text → "Recent Activity"
 └── Box (NeonCyanLight 邊框)
-    ├── orders == null      → CircularProgressIndicator
     ├── orders.isEmpty()    → "No recent transactions"
     └── orders.isNotEmpty() → Column
           └── TransactionRow × N（icon + 說明 + 金額 + 箭頭）
@@ -208,19 +191,25 @@ HomeViewModel.init()
 每個 fetch 完成時透過 _uiState.update { it.copy(...) } 更新對應欄位：
 
 fetchUserInfo()
-  ├── Success → _uiState.update { it.copy(userState = HomeState.Success(data)) }
-  ├── Error   → _uiState.update { it.copy(userState = HomeState.Error(message)) }
-  └── Exception → _uiState.update { it.copy(userState = HomeState.Error(...)) }
+  ├── Success   → _uiState.update { it.copy(isLoadingUserInfo = false, userInfo = data) }
+  ├── Error     → _uiState.update { it.copy(isLoadingUserInfo = false) }
+  │               + _eventFlow.emit(UiEvent.ShowToast(message))
+  └── Exception → _uiState.update { it.copy(isLoadingUserInfo = false) }
+                  + _eventFlow.emit(UiEvent.ShowToast(...))
 
 fetchOrderHistory()
-  ├── Success → _uiState.update { it.copy(orderHistoryState = OrderHistoryState.Success(data)) }
-  ├── Error   → _uiState.update { it.copy(orderHistoryState = OrderHistoryState.Error(message)) }
-  └── Exception → _uiState.update { it.copy(orderHistoryState = OrderHistoryState.Error(...)) }
+  ├── Success   → _uiState.update { it.copy(isLoadingOrders = false, orders = data) }
+  ├── Error     → _uiState.update { it.copy(isLoadingOrders = false) }
+  │               + _eventFlow.emit(UiEvent.ShowToast(message))
+  └── Exception → _uiState.update { it.copy(isLoadingOrders = false) }
+                  + _eventFlow.emit(UiEvent.ShowToast(...))
 
 saveMyMenu(items)
   ├── _myMenuItems.value = items
   └── essentialsManager.save(items)
 ```
+
+**Toast 收集**：Composable 以 `LaunchedEffect(Unit)` 收集 `eventFlow`，收到 `UiEvent.ShowToast` 時呼叫 `Toast.makeText()`。
 
 ---
 
@@ -267,23 +256,19 @@ suspend fun fetchNewData(): NetworkResult<NewDataResponse> {
 
 ### Step 5 — 在 `HomeUiState` 新增欄位
 
-```kotlin
-sealed class NewDataState {
-    object Loading : NewDataState()
-    data class Success(val data: NewDataResponse) : NewDataState()
-    data class Error(val message: String) : NewDataState()
-}
+在 `HomeUiState` 加入一個 boolean loading 旗標與對應資料欄位，`isLoading` 計算屬性自動包含新旗標：
 
+```kotlin
 data class HomeUiState(
-    val userState: HomeState = HomeState.Loading,
-    val orderHistoryState: OrderHistoryState = OrderHistoryState.Loading,
-    val newDataState: NewDataState = NewDataState.Loading,   // ← 新增
+    val isLoadingUserInfo: Boolean = true,
+    val isLoadingOrders: Boolean = true,
+    val isLoadingNewData: Boolean = true,       // ← 新增
+    val userInfo: UserInfoResponse = UserInfoResponse.empty(),
+    val orders: List<OrderHistoryResponse> = emptyList(),
+    val newData: NewDataResponse? = null,       // ← 新增
 ) {
     val isLoading: Boolean
-        get() = userState is HomeState.Loading
-             || orderHistoryState is OrderHistoryState.Loading
-             || newDataState is NewDataState.Loading          // ← 新增
-    ...
+        get() = isLoadingUserInfo || isLoadingOrders || isLoadingNewData  // ← 自動包含
 }
 ```
 
@@ -300,13 +285,15 @@ private fun fetchNewData() {
     viewModelScope.launch {
         when (val result = userRepository.fetchNewData()) {
             is NetworkResult.Success -> _uiState.update {
-                it.copy(newDataState = NewDataState.Success(result.data ?: ...))
+                it.copy(isLoadingNewData = false, newData = result.data)
             }
-            is NetworkResult.Error -> _uiState.update {
-                it.copy(newDataState = NewDataState.Error(result.message))
+            is NetworkResult.Error -> {
+                _uiState.update { it.copy(isLoadingNewData = false) }
+                _eventFlow.emit(UiEvent.ShowToast(result.message))
             }
-            is NetworkResult.Exception -> _uiState.update {
-                it.copy(newDataState = NewDataState.Error(result.e.message ?: "網路異常"))
+            is NetworkResult.Exception -> {
+                _uiState.update { it.copy(isLoadingNewData = false) }
+                _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
             }
         }
     }
@@ -316,11 +303,10 @@ private fun fetchNewData() {
 ### Step 7 — 在 `HomeScreenContent` 使用資料
 
 ```kotlin
-val newData = (uiState.newDataState as? NewDataState.Success)?.data
-NewDataWidget(data = newData)
+NewDataWidget(data = uiState.newData)
 ```
 
-> **LoadingDialog 自動共用**：只要 `newDataState` 預設為 `Loading` 且加入 `isLoading`，進入頁面時就會自動等待新 API 完成後才顯示內容，不需要其他改動。
+> **LoadingDialog 自動共用**：只要 `isLoadingNewData` 預設為 `true` 且加入 `isLoading` 的 OR 運算，進入頁面時就會自動等待新 API 完成後才顯示內容，不需要其他改動。
 
 ---
 

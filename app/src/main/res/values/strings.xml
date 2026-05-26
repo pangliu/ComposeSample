@@ -104,6 +104,19 @@
     <string name="cards_primary_badge">Primary</string>
     <string name="cards_add_new_btn">Add New Card</string>
 
+    <!-- CardDetailScreen -->
+    <string name="card_detail_title">Card Details &amp; Settings</string>
+    <string name="card_detail_back_desc">Back</string>
+    <string name="card_detail_edit_btn">Edit</string>
+    <string name="card_detail_set_primary">Set as Primary</string>
+    <string name="card_detail_unlink_btn">Unlink Card</string>
+    <string name="card_detail_nickname_updated">Nickname updated</string>
+    <string name="card_detail_set_primary_success">Set as primary card</string>
+    <string name="card_detail_unlink_success">Card unlinked successfully</string>
+    <string name="card_detail_unlink_dialog_title">Are you sure you want to</string>
+    <string name="card_detail_unlink_dialog_desc">Unlinking this card will disable automatic payments using this card.</string>
+    <string name="card_detail_unlink_dialog_cancel">Cancel</string>
+
     <!-- AddNewCardScreen -->
     <string name="add_new_card_title">Add New Card</string>
     <string name="add_new_card_back_desc">Back</string>

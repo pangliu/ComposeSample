@@ -11,4 +11,7 @@ object Routes {
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"
     const val ADD_NEW_CARD = "add_new_card"
+    const val CARD_DETAIL = "card_detail/{cardId}"
+
+    fun cardDetail(cardId: Int) = "card_detail/$cardId"
 }

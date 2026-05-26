@@ -7,6 +7,7 @@ import com.example.newproject.network.model.NetworkResult
 import com.example.newproject.network.model.response.UserInfoResponse
 import com.example.newproject.repository.AuthRepository
 import com.example.newproject.repository.UserRepository
+import com.example.newproject.ui.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,19 +21,14 @@ import javax.inject.Inject
 
 data class ProfileUiState(
     val isLoadingUserInfo: Boolean = true,
+    val isLoggingOut: Boolean = false,
     val userName: String = "",
     val xcashId: String = "",
     val inviteCode: String = "G12345",
     val badgeCount: Int = 8,
     val isVerified: Boolean = true
 ) {
-    val isLoading: Boolean get() = isLoadingUserInfo
-}
-
-sealed class ProfileState {
-    object Idle : ProfileState()
-    object Loading : ProfileState()
-    data class Error(val message: String) : ProfileState()
+    val isLoading: Boolean get() = isLoadingUserInfo || isLoggingOut
 }
 
 @HiltViewModel
@@ -45,11 +41,8 @@ class ProfileViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    private val _profileState = MutableStateFlow<ProfileState>(ProfileState.Idle)
-    val profileState: StateFlow<ProfileState> = _profileState.asStateFlow()
-
-    private val _toastEvent = MutableSharedFlow<String>(extraBufferCapacity = 1)
-    val toastEvent: SharedFlow<String> = _toastEvent.asSharedFlow()
+    private val _eventFlow = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val eventFlow: SharedFlow<UiEvent> = _eventFlow.asSharedFlow()
 
     init {
         fetchUserInfo()
@@ -70,11 +63,11 @@ class ProfileViewModel @Inject constructor(
                 }
                 is NetworkResult.Error -> {
                     _uiState.update { it.copy(isLoadingUserInfo = false) }
-                    _toastEvent.emit(result.message)
+                    _eventFlow.emit(UiEvent.ShowToast(result.message))
                 }
                 is NetworkResult.Exception -> {
                     _uiState.update { it.copy(isLoadingUserInfo = false) }
-                    _toastEvent.emit(result.e.message ?: "網路異常")
+                    _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
                 }
             }
         }
@@ -82,16 +75,18 @@ class ProfileViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            _profileState.value = ProfileState.Loading
+            _uiState.update { it.copy(isLoggingOut = true) }
             when (val result = authRepository.logout()) {
-                is NetworkResult.Success   -> sessionManager.triggerLogout()
-                is NetworkResult.Error     -> _profileState.value = ProfileState.Error(result.message)
-                is NetworkResult.Exception -> _profileState.value = ProfileState.Error(result.e.message ?: "網路異常")
+                is NetworkResult.Success -> sessionManager.triggerLogout()
+                is NetworkResult.Error -> {
+                    _uiState.update { it.copy(isLoggingOut = false) }
+                    _eventFlow.emit(UiEvent.ShowToast(result.message))
+                }
+                is NetworkResult.Exception -> {
+                    _uiState.update { it.copy(isLoggingOut = false) }
+                    _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
+                }
             }
         }
-    }
-
-    fun resetState() {
-        _profileState.value = ProfileState.Idle
     }
 }

@@ -8,12 +8,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.newproject.ui.main.MainScreen
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.example.newproject.ui.cards.add.AddNewCardScreen
+import com.example.newproject.ui.cards.detail.CardDetailScreen
+import com.example.newproject.ui.cards.select.SelectCardTypeScreen
 import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
-import com.example.newproject.ui.cards.select.SelectCardTypeScreen
-import com.example.newproject.ui.cards.add.AddNewCardScreen
-import com.example.newproject.ui.cards.select.SelectCardTypeScreen
+import com.example.newproject.ui.main.MainScreen
 import com.example.newproject.ui.profile.security.SecurityCenterScreen
 import com.example.newproject.ui.welcome.WelcomeScreen
 import com.example.newproject.ui.welcome.WelcomeViewModel
@@ -71,6 +73,7 @@ fun AppNavigation(
                 when (targetState.destination.route) {
                     Routes.SECURITY_CENTER -> slideOutHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideOutHorizontally { -it }
+                    Routes.CARD_DETAIL -> slideOutHorizontally { -it }
                     else -> null
                 }
             },
@@ -78,6 +81,7 @@ fun AppNavigation(
                 when (initialState.destination.route) {
                     Routes.SECURITY_CENTER -> slideInHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideInHorizontally { -it }
+                    Routes.CARD_DETAIL -> slideInHorizontally { -it }
                     else -> null
                 }
             }
@@ -114,6 +118,15 @@ fun AppNavigation(
             popExitTransition = { slideOutHorizontally { it } }
         ) {
             AddNewCardScreen(onBack = { navController.popBackStack() })
+        }
+
+        composable(
+            route = Routes.CARD_DETAIL,
+            arguments = listOf(navArgument("cardId") { type = NavType.IntType }),
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) {
+            CardDetailScreen(onBack = { navController.popBackStack() })
         }
 
     }

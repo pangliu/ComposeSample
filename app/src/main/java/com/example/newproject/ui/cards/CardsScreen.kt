@@ -7,6 +7,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -18,7 +20,9 @@ import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import android.widget.Toast
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.network.model.response.CreditCardResponse
 import com.example.newproject.ui.Routes
+import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.neonCyan
@@ -48,7 +53,6 @@ import com.example.newproject.ui.theme.neonGreen
 import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
 import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.sendPink
 import com.example.newproject.ui.theme.welcomeBackground
 
 private val tokenOrange = Color(0xFFFF8C00)
@@ -56,26 +60,39 @@ private val promoBannerCount = 4
 
 @Composable
 fun CardsScreen(viewModel: CardsViewModel, onNavigate: (String) -> Unit = {}) {
-    val state by viewModel.cardsState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.fetchCards()
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     CardsScreenContent(
-        state = state,
+        uiState = uiState,
         onRefresh = { viewModel.refreshCards() },
-        onNavigate = onNavigate
+        onNavigate = onNavigate,
+        onCardClick = { card ->
+            viewModel.selectCard(card)
+            onNavigate(Routes.cardDetail(card.id))
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardsScreenContent(state: CardsState, onRefresh: () -> Unit = {}, onNavigate: (String) -> Unit = {}) {
-    val isRefreshing = (state as? CardsState.Success)?.isRefreshing == true
+fun CardsScreenContent(uiState: CardsUiState, onRefresh: () -> Unit = {}, onNavigate: (String) -> Unit = {}, onCardClick: (CreditCardResponse) -> Unit = {}) {
     val pullRefreshState = rememberPullToRefreshState()
 
-    LoadingDialog(isShowing = state is CardsState.Loading)
+    LoadingDialog(isShowing = uiState.isLoading)
 
     Column(
         modifier = Modifier
@@ -94,53 +111,46 @@ fun CardsScreenContent(state: CardsState, onRefresh: () -> Unit = {}, onNavigate
         )
 
         PullToRefreshBox(
-            isRefreshing = isRefreshing,
+            isRefreshing = uiState.isRefreshing,
             onRefresh = onRefresh,
             state = pullRefreshState,
             modifier = Modifier.weight(1f),
             indicator = {
                 PullToRefreshDefaults.Indicator(
                     state = pullRefreshState,
-                    isRefreshing = isRefreshing,
+                    isRefreshing = uiState.isRefreshing,
                     modifier = Modifier.align(Alignment.TopCenter),
                     color = neonCyanLight,
                     containerColor = welcomeBackground
                 )
             }
         ) {
-            when (state) {
-                is CardsState.Loading -> Unit
-
-                is CardsState.Error -> {
-                    Text(
-                        text = state.message,
-                        color = sendPink,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+            if (uiState.cards.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    CardsEmptyState(onNavigate = onNavigate)
                 }
-
-                is CardsState.Success -> {
-                    if (state.cards.isEmpty()) {
-                        // 純 Column，不加任何會觸發 clip 的 modifier
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            CardsEmptyState(onNavigate = onNavigate)
-                        }
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 24.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            contentPadding = PaddingValues(bottom = 32.dp)
-                        ) {
-                            itemsIndexed(state.cards) { index, card ->
-                                CreditCardItem(card = card, isPrimary = index == 0)
-                            }
-                            item {
-                                Spacer(modifier = Modifier.height(8.dp))
-                                AddNewCardButton(onNavigate = onNavigate)
-                            }
-                        }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(bottom = 32.dp)
+                ) {
+                    itemsIndexed(uiState.cards) { index, card ->
+                        CreditCardItem(
+                            card = card,
+                            isPrimary = index == 0,
+                            onClick = { onCardClick(card) }
+                        )
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        AddNewCardButton(onNavigate = onNavigate)
                     }
                 }
             }
@@ -183,7 +193,7 @@ fun InfoCard() {
 }
 
 @Composable
-fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean) {
+fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> Unit = {}) {
     val glowColor = if (isPrimary) neonPurpleLight else neonCyanLight
     val borderColor = if (isPrimary) neonPurpleLight else neonCyanLight
 
@@ -193,7 +203,11 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean) {
             .neonGlow(color = glowColor, alpha = 0.6f, glowRadius = 15.dp, borderRadius = 16.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(welcomeBackground)
-            .border(2.dp, borderColor, RoundedCornerShape(16.dp))
+            .border(1.5.dp, borderColor, RoundedCornerShape(16.dp))
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) { onClick() }
             .padding(20.dp)
     ) {
         Column {
@@ -281,7 +295,10 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean) {
                 Box(
                     modifier = Modifier
                         .border(1.dp, tokenOrange, RoundedCornerShape(8.dp))
-                        .clickable { /* TODO: Manage */ }
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { onClick() }
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
                     Text(
@@ -305,7 +322,7 @@ fun AddNewCardButton(onNavigate: (String) -> Unit = {}) {
             .neonGlow(color = neonCyanLight, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 24.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(welcomeBackground)
-            .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
+            .border(1.5.dp, neonCyanLight, RoundedCornerShape(24.dp))
             .clickable { onNavigate(Routes.SELECT_CARD_TYPE) }
             .padding(vertical = 12.dp),
         contentAlignment = Alignment.Center
@@ -525,12 +542,13 @@ private fun VoucherTicket(amount: String) {
 fun CardsScreenPreview() {
     MaterialTheme {
         CardsScreenContent(
-            state = CardsState.Success(
-//                cards = listOf(
-//                    CreditCardResponse(1, "Visa", "Text / Caption", "1234", "bank"),
-//                    CreditCardResponse(2, "Mastercard", "Text / Caption", "1234", "bank")
-//                )
-                cards = emptyList()
+            uiState = CardsUiState(
+                isLoadingCards = false,
+                cards = listOf(
+                    CreditCardResponse(1, "Visa", "Text / Caption", "1234", "bank"),
+                    CreditCardResponse(2, "Mastercard", "Text / Caption", "1234", "bank")
+                )
+//                cards = emptyList()
             )
         )
     }

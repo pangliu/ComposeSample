@@ -7,6 +7,7 @@ import com.example.newproject.network.model.NetworkResult
 import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.UserInfoResponse
 import com.example.newproject.repository.UserRepository
+import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.home.essential.EssentialItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 /**
  * HomeScreen 的統一 UI 資料。
- * 只存資料，不存 UI 狀態；錯誤由 toastEvent 通知，畫面永遠顯示資料。
+ * 只存資料，不存 UI 狀態；錯誤由 eventFlow 通知，畫面永遠顯示資料。
  * 新增初始 API 時，加一個 isLoading 欄位與對應資料欄位即可。
  */
 data class HomeUiState(
@@ -45,8 +46,8 @@ class HomeViewModel @Inject constructor(
     private val _myMenuItems = MutableStateFlow(essentialsManager.load())
     val myMenuItems: StateFlow<List<EssentialItem>> = _myMenuItems.asStateFlow()
 
-    private val _toastEvent = MutableSharedFlow<String>(extraBufferCapacity = 1)
-    val toastEvent: SharedFlow<String> = _toastEvent.asSharedFlow()
+    private val _eventFlow = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val eventFlow: SharedFlow<UiEvent> = _eventFlow.asSharedFlow()
 
     init {
         fetchUserInfo()
@@ -59,15 +60,15 @@ class HomeViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     val data = result.data
                     _uiState.update { it.copy(isLoadingUserInfo = false, userInfo = data ?: UserInfoResponse.empty()) }
-                    if (data == null) _toastEvent.emit("無法取得使用者資料")
+                    if (data == null) _eventFlow.emit(UiEvent.ShowToast("無法取得使用者資料"))
                 }
                 is NetworkResult.Error -> {
                     _uiState.update { it.copy(isLoadingUserInfo = false) }
-                    _toastEvent.emit(result.message)
+                    _eventFlow.emit(UiEvent.ShowToast(result.message))
                 }
                 is NetworkResult.Exception -> {
                     _uiState.update { it.copy(isLoadingUserInfo = false) }
-                    _toastEvent.emit(result.e.message ?: "網路異常")
+                    _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
                 }
             }
         }
@@ -81,11 +82,11 @@ class HomeViewModel @Inject constructor(
                 }
                 is NetworkResult.Error -> {
                     _uiState.update { it.copy(isLoadingOrders = false) }
-                    _toastEvent.emit(result.message)
+                    _eventFlow.emit(UiEvent.ShowToast(result.message))
                 }
                 is NetworkResult.Exception -> {
                     _uiState.update { it.copy(isLoadingOrders = false) }
-                    _toastEvent.emit(result.e.message ?: "網路異常")
+                    _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
                 }
             }
         }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -34,19 +36,28 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.newproject.ui.cards.CardsViewModel
+import com.example.newproject.ui.components.LoadingDialog
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -54,7 +65,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
+import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.normalText
 import com.example.newproject.ui.theme.welcomeBackground
 
@@ -64,18 +77,42 @@ private val InputFieldBackground = Color(0xFF0D1525)
 private val InputMethodSelectedBg = Color(0xFF1A2A40)
 
 @Composable
-fun AddNewCardScreen(onBack: () -> Unit) {
-    AddNewCardContent(onBack = onBack)
+fun AddNewCardScreen(onBack: () -> Unit, viewModel: CardsViewModel = hiltViewModel()) {
+    val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    AddNewCardContent(
+        onBack = onBack,
+        isLoading = uiState.isAddingCard,
+        onSubmit = { cardNumber, cardholderName, expiryDate, cvv, billingZip ->
+            viewModel.addNewCard(cardNumber, cardholderName, expiryDate, cvv, billingZip)
+        }
+    )
 }
 
 @Composable
-fun AddNewCardContent(onBack: () -> Unit = {}) {
+fun AddNewCardContent(
+    onBack: () -> Unit = {},
+    isLoading: Boolean = false,
+    onSubmit: (cardNumber: String, cardholderName: String, expiryDate: String, cvv: String, billingZip: String) -> Unit = { _, _, _, _, _ -> }
+) {
     var selectedMethod by rememberSaveable { mutableStateOf(CardInputMethod.OCR) }
     var cardNumber by rememberSaveable { mutableStateOf("") }
     var cardholderName by rememberSaveable { mutableStateOf("") }
     var expiryDate by rememberSaveable { mutableStateOf("") }
     var cvv by rememberSaveable { mutableStateOf("") }
     var billingZip by rememberSaveable { mutableStateOf("") }
+
+    LoadingDialog(isShowing = isLoading)
 
     Scaffold(
         containerColor = welcomeBackground,
@@ -223,10 +260,11 @@ fun AddNewCardContent(onBack: () -> Unit = {}) {
 
                 // Confirm button
                 Button(
-                    onClick = { /* TODO: submit */ },
+                    onClick = { onSubmit(cardNumber, cardholderName, expiryDate, cvv, billingZip) },
+                    enabled = !isLoading,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(52.dp),
+                        .height(45.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = neonCyan,
@@ -310,6 +348,12 @@ private fun CardFormField(
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    
+    val borderColor = if (isFocused) neonCyan else neonCyan.copy(alpha = 0.4f)
+    val borderWidth = 1.5.dp
+
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(
             text = label,
@@ -317,24 +361,36 @@ private fun CardFormField(
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium
         )
-        OutlinedTextField(
+        
+        BasicTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(placeholder, color = normalText, fontSize = 14.sp) },
+            textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+            singleLine = true,
             visualTransformation = visualTransformation,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-            singleLine = true,
-            shape = RoundedCornerShape(8.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = neonCyan,
-                unfocusedBorderColor = neonCyan.copy(alpha = 0.4f),
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                cursorColor = neonCyan,
-                focusedContainerColor = InputFieldBackground,
-                unfocusedContainerColor = InputFieldBackground
-            ),
-            modifier = Modifier.fillMaxWidth()
+            interactionSource = interactionSource,
+            cursorBrush = SolidColor(neonCyan),
+            modifier = Modifier.fillMaxWidth(),
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(InputFieldBackground, RoundedCornerShape(8.dp))
+                        .border(borderWidth, borderColor, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    if (value.isEmpty()) {
+                        Text(
+                            text = placeholder,
+                            color = normalText,
+                            fontSize = 14.sp
+                        )
+                    }
+                    innerTextField()
+                }
+            }
         )
     }
 }

@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.Routes
+import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.essentialCardTitle
@@ -87,21 +88,22 @@ fun ProfileScreen(
     viewModel: ProfileViewModel,
     onNavigate: (String) -> Unit = {}
 ) {
-    val state by viewModel.profileState.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.toastEvent.collect { msg ->
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
-    LoadingDialog(isShowing = state is ProfileState.Loading)
+    LoadingDialog(isShowing = uiState.isLoggingOut)
 
     ProfileScreenContent(
         uiState = uiState,
-        state = state,
         onLogout = { viewModel.logout() },
         onNavigate = onNavigate
     )
@@ -110,7 +112,6 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenContent(
     uiState: ProfileUiState = ProfileUiState(),
-    state: ProfileState = ProfileState.Idle,
     onLogout: () -> Unit = {},
     onNavigate: (String) -> Unit = {}
 ) {
@@ -186,19 +187,10 @@ fun ProfileScreenContent(
             )
         }
 
-        if (state is ProfileState.Error) {
-            Text(
-                text = state.message,
-                color = MaterialTheme.colorScheme.error,
-                fontSize = 13.sp,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
         Spacer(Modifier.height(4.dp))
 
         LogoutButton(
-            enabled = state !is ProfileState.Loading,
+            enabled = !uiState.isLoggingOut,
             onClick = onLogout
         )
 

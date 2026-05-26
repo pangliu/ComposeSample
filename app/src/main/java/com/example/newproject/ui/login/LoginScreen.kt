@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
 import com.example.newproject.R
+import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.login.dialog.AccountStatusDialog
 import com.example.newproject.ui.login.dialog.BiometricEnrollDialog
 import com.example.newproject.ui.login.dialog.LoginBottomSheet
@@ -50,25 +51,47 @@ fun LoginScreen(
     viewModel: LoginViewModel,
     onNavigateToHome: () -> Unit
 ) {
-    val state by viewModel.loginState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val hasSavedCredentials by viewModel.hasSavedCredentials.collectAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(state) {
-        if (state is LoginState.Success) {
-            onNavigateToHome()
+    var showVerifyDialog by remember { mutableStateOf(false) }
+    var verifyPhone by remember { mutableStateOf("") }
+    var showBiometricEnrollDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is LoginNavigationEvent.Success -> onNavigateToHome()
+                is LoginNavigationEvent.PromptBiometricEnroll -> showBiometricEnrollDialog = true
+                is LoginNavigationEvent.NeedsVerification -> {
+                    verifyPhone = event.phone
+                    showVerifyDialog = true
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
     LoginScreenContent(
-        state = state,
+        uiState = uiState,
         hasSavedCredentials = hasSavedCredentials,
+        showVerifyDialog = showVerifyDialog,
+        verifyPhone = verifyPhone,
+        showBiometricEnrollDialog = showBiometricEnrollDialog,
         onLoginClick = { phone, pwd -> viewModel.login(phone, pwd) },
         onResetState = { viewModel.resetState() },
-        onVerifyOtp = { phone, otp, onSuccess, onError ->
-            viewModel.verifyOtp(phone, otp, onSuccess, onError)
-        },
-        onBiometricLoginSuccess = { viewModel.loginWithStoredCredentials() },
+        onVerifyOtp = { otp -> viewModel.verifyOtp(verifyPhone, otp) },
+        onDismissVerifyDialog = { showVerifyDialog = false; viewModel.resetState() },
+        onDismissBiometricEnrollDialog = { showBiometricEnrollDialog = false },
         onBiometricEnrollSuccess = { viewModel.enrollBiometric() },
         onBiometricEnrollSkip = { viewModel.skipBiometricEnroll() },
         onShowBiometricPromptForLogin = {
@@ -96,12 +119,16 @@ fun LoginScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreenContent(
-    state: LoginState,
+    uiState: LoginUiState,
     hasSavedCredentials: Boolean = false,
+    showVerifyDialog: Boolean = false,
+    verifyPhone: String = "",
+    showBiometricEnrollDialog: Boolean = false,
     onLoginClick: (String, String) -> Unit,
     onResetState: () -> Unit = {},
-    onVerifyOtp: (String, String, () -> Unit, (String) -> Unit) -> Unit = { _, _, _, _ -> },
-    onBiometricLoginSuccess: () -> Unit = {},
+    onVerifyOtp: (String) -> Unit = {},
+    onDismissVerifyDialog: () -> Unit = {},
+    onDismissBiometricEnrollDialog: () -> Unit = {},
     onBiometricEnrollSuccess: () -> Unit = {},
     onBiometricEnrollSkip: () -> Unit = {},
     onShowBiometricPromptForLogin: () -> Unit = {},
@@ -118,11 +145,8 @@ fun LoginScreenContent(
 
     val showBiometricButton = hasSavedCredentials && BiometricHelper.isAvailable(context)
 
-    LaunchedEffect(state) {
-        if (state is LoginState.Success ||
-            state is LoginState.NeedsVerification ||
-            state is LoginState.PromptBiometricEnroll
-        ) {
+    LaunchedEffect(showVerifyDialog, showBiometricEnrollDialog) {
+        if (showVerifyDialog || showBiometricEnrollDialog) {
             showLoginSheet = false
         }
     }
@@ -151,7 +175,7 @@ fun LoginScreenContent(
             containerColor = welcomeBackground,
             contentColor = Color.White
         ) { paddingValues ->
-            LoadingDialog(isShowing = state is LoginState.Loading)
+            LoadingDialog(isShowing = uiState.isLoading)
 
             Column(
                 modifier = Modifier
@@ -218,7 +242,7 @@ fun LoginScreenContent(
 
                     Button(
                         onClick = { showLoginSheet = true },
-                        enabled = state !is LoginState.Loading,
+                        enabled = !uiState.isLoading,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -226,12 +250,12 @@ fun LoginScreenContent(
                         colors = ButtonDefaults.buttonColors(containerColor = neonPurple, contentColor = Color.White),
                         shape = RoundedCornerShape(25.dp)
                     ) {
-                        Text(if (state is LoginState.Loading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.login_btn), fontSize = 16.sp)
+                        Text(if (uiState.isLoading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.login_btn), fontSize = 16.sp)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
                         onClick = {},
-                        enabled = state !is LoginState.Loading,
+                        enabled = !uiState.isLoading,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -240,7 +264,7 @@ fun LoginScreenContent(
                         border = BorderStroke(width = 1.dp, color = neonGreenLight),
                         shape = RoundedCornerShape(25.dp)
                     ){
-                        Text(if (state is LoginState.Loading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.sign_up_with_telegram), fontSize = 16.sp)
+                        Text(if (uiState.isLoading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.sign_up_with_telegram), fontSize = 16.sp)
                     }
                     
                     Spacer(modifier = Modifier.height(8.dp))
@@ -284,33 +308,24 @@ fun LoginScreenContent(
             onLoginSubmit = { mobileNumber, password ->
                 onLoginClick(mobileNumber, password)
             },
-            errorMessage = (state as? LoginState.Error)?.message,
+            errorMessage = uiState.loginError,
             showBiometricButton = showBiometricButton,
             onBiometricLogin = { onShowBiometricPromptForLogin() }
         )
     }
 
-    if (state is LoginState.PromptBiometricEnroll) {
+    if (showBiometricEnrollDialog) {
         BiometricEnrollDialog(
             onEnroll = { onShowBiometricPromptForEnroll() },
-            onSkip = { onBiometricEnrollSkip() }
+            onSkip = { onBiometricEnrollSkip(); onDismissBiometricEnrollDialog() }
         )
     }
 
-    if (state is LoginState.NeedsVerification) {
+    if (showVerifyDialog) {
         VerifyMobileDialog(
-            initialPhone = state.phone,
-            onDismiss = { onResetState() },
-            onSubmit = { otp -> 
-                onVerifyOtp(
-                    state.phone,
-                    otp,
-                    { /* 成功時由 LaunchedEffect(state) 自動導向 home */ },
-                    { errorMsg ->
-                        Toast.makeText(context, errorMsg, Toast.LENGTH_LONG).show()
-                    }
-                )
-            }
+            initialPhone = verifyPhone,
+            onDismiss = onDismissVerifyDialog,
+            onSubmit = { otp -> onVerifyOtp(otp) }
         )
     }
 }
@@ -319,7 +334,7 @@ fun LoginScreenContent(
 @Composable
 fun LoginScreenPreview() {
     MaterialTheme {
-        LoginScreenContent(state = LoginState.Idle, onLoginClick = { _, _ -> })
+        LoginScreenContent(uiState = LoginUiState(), onLoginClick = { _, _ -> })
     }
 }
 

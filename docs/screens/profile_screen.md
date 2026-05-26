@@ -4,6 +4,8 @@
 
 ```
 ProfileScreen（有 ViewModel）
+  ├── LaunchedEffect → 收集 viewModel.eventFlow（Toast / Dialog 顯示）
+  ├── LoadingDialog（isShowing = uiState.isLoggingOut）
   └── ProfileScreenContent（無狀態，只接收參數）
         ├── ProfileSectionHeader × 5
         ├── IdentityCard
@@ -15,8 +17,7 @@ ProfileScreen（有 ViewModel）
         │     └── ProfileMenuItem × 1
         ├── ProfileMenuCard（Support）
         │     └── ProfileMenuItem × 2
-        ├── Error Text（if ProfileState.Error）
-        └── LogoutButton
+        └── LogoutButton（enabled = !uiState.isLoggingOut）
 ```
 
 ---
@@ -25,13 +26,23 @@ ProfileScreen（有 ViewModel）
 
 ### `ProfileScreen`
 **有 ViewModel 的入口層**，負責：
-- 訂閱 `viewModel.uiState` 與 `viewModel.profileState`（透過 `collectAsState()`）
-- 收集 `viewModel.toastEvent`，以 `Toast.makeText()` 顯示錯誤訊息
-- 把狀態與操作傳給 `ProfileScreenContent`
+- 訂閱 `viewModel.uiState`（透過 `collectAsState()`）
+- `LaunchedEffect(Unit)` 收集 `viewModel.eventFlow`，以 Toast 顯示錯誤訊息
+- `LoadingDialog(isShowing = uiState.isLoggingOut)` 顯示 logout 進行中的遮罩
 
 ```kotlin
-val state by viewModel.profileState.collectAsState()
 val uiState by viewModel.uiState.collectAsState()
+
+LaunchedEffect(Unit) {
+    viewModel.eventFlow.collect { event ->
+        when (event) {
+            is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+            is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+        }
+    }
+}
+
+LoadingDialog(isShowing = uiState.isLoggingOut)
 ```
 
 ---
@@ -41,9 +52,9 @@ val uiState by viewModel.uiState.collectAsState()
 
 | 參數 | 類型 | 說明 |
 |------|------|------|
-| `uiState` | `ProfileUiState` | 顯示用資料（姓名、ID、邀請碼等） |
-| `state` | `ProfileState` | 操作狀態（Idle / Loading / Error） |
+| `uiState` | `ProfileUiState` | 顯示用資料 + loading 旗標 |
 | `onLogout` | `() -> Unit` | Logout 按鈕觸發的回呼 |
+| `onNavigate` | `(String) -> Unit` | 導航回呼 |
 
 ---
 
@@ -90,7 +101,7 @@ val uiState by viewModel.uiState.collectAsState()
 
 ### `LogoutButton`
 - `NeonPurple` 背景、`neonGlow` 光暈效果
-- `state is ProfileState.Loading` 時 `enabled = false`
+- `enabled = !uiState.isLoggingOut`（logout 進行中禁用）
 
 ---
 
@@ -120,52 +131,43 @@ ProfileMenuItem(icon = ProfileIcon.Resource(R.mipmap.ic_profile_setting), ...)
 ```kotlin
 data class ProfileUiState(
     val isLoadingUserInfo: Boolean = true,
+    val isLoggingOut: Boolean = false,
     val userName: String = "",
     val xcashId: String = "",
     val inviteCode: String = "G12345",   // 目前硬編碼，待 API 接入
     val badgeCount: Int = 8,             // 目前硬編碼，待 API 接入
     val isVerified: Boolean = true       // 目前硬編碼，待 API 接入
 ) {
-    val isLoading: Boolean get() = isLoadingUserInfo
+    val isLoading: Boolean get() = isLoadingUserInfo || isLoggingOut
 }
 ```
 
-> `inviteCode`、`badgeCount`、`isVerified` 尚未從 API 拉取，為預設值佔位。
+| 欄位 | 用途 |
+|------|------|
+| `isLoadingUserInfo` | 初始用戶資料載入旗標 |
+| `isLoggingOut` | logout API 進行中旗標，控制 `LoadingDialog` 與 `LogoutButton` 的 `enabled` |
 
----
-
-## ProfileState 狀態機
-
-```
-Idle
-  ↓ logout()
-Loading
-  ↓ API 成功              ↓ API 失敗
-sessionManager            Error（顯示 errorMessage）
-  .triggerLogout()
-  → 導航回 LoginScreen
-```
-
-`ProfileState` 僅用於追蹤 **logout 操作**本身，與頁面資料載入（`uiState.isLoading`）分開。
+- API 錯誤（fetchUserInfo / logout）透過 `eventFlow` 以 Toast 通知，**不**進入 UiState
+- `inviteCode`、`badgeCount`、`isVerified` 尚未從 API 拉取，為預設值佔位
 
 ---
 
 ## 資料流向
 
 ```
-用戶操作
+初始載入
+  → ProfileViewModel.init() → fetchUserInfo()
+  → UserRepository.fetchUserInfo()
+  → 成功：_uiState.update { it.copy(isLoadingUserInfo = false, userName = ...) }
+  → 失敗：_uiState.update { isLoadingUserInfo = false } + _eventFlow.emit(ShowToast)
+
+Logout 操作
   → ProfileScreenContent（onLogout）
   → ProfileViewModel.logout()
+  → _uiState.update { isLoggingOut = true }
   → AuthRepository.logout()
-  → ProfileState（StateFlow）
-  → ProfileScreen.collectAsState()
-  → 傳入 ProfileScreenContent(state = ...) → UI 更新
-
-init 自動呼叫
-  → UserRepository.fetchUserInfo()
-  → ProfileUiState（StateFlow）
-  → ProfileScreen.collectAsState()
-  → 傳入 ProfileScreenContent(uiState = ...) → UI 更新
+  → 成功：sessionManager.triggerLogout() → 導航回 LoginScreen
+  → 失敗：_uiState.update { isLoggingOut = false } + _eventFlow.emit(ShowToast)
 ```
 
 ---
@@ -175,7 +177,7 @@ init 自動呼叫
 ```
 ui/profile/
 ├── ProfileScreen.kt    # 頁面入口 + ProfileScreenContent + 所有子元件
-└── ProfileViewModel.kt # ProfileUiState / ProfileState / ProfileViewModel
+└── ProfileViewModel.kt # ProfileUiState / ProfileViewModel
 ```
 
 ---
@@ -183,6 +185,8 @@ ui/profile/
 ## 注意事項
 
 - `ProfileScreenContent` 是無狀態設計，可直接用於 `@Preview`
+- logout 錯誤透過 `eventFlow` 顯示 Toast，不在畫面上顯示 inline 錯誤文字
+- `LoadingDialog` 只在 `isLoggingOut` 時出現（logout 操作），初始 `fetchUserInfo` 無 dialog 遮罩
 - `ProfileMenuItem` 使用 `indication = null` 避免深色背景上出現矩形 ripple 陰影
 - `CardBackground` 目前指向 `WelcomeBackground`（`0xFF0E1422`），與頁面底色相同，呈現無邊界融合效果
 - 所有 `ProfileMenuItem` 的 `onClick` 目前為空，導航尚未接入

@@ -54,9 +54,10 @@ app/src/main/java/com/example/newproject/
 │   │   ├── MainScreen.kt      # 導覽容器：Scaffold + AnimatedContent tab 切換
 │   │   └── nvaTab/
 │   │       └── CustomBottomNavigation.kt  # 底部導覽列（含 ScanAndPayTab overlay）
+│   ├── UiEvent.kt             # 共用一次性事件 sealed class（ShowToast / ShowDialog）
 │   ├── home/
 │   │   ├── HomeScreen.kt      # 自行注入 HomeViewModel；純內容頁面
-│   │   ├── HomeViewModel.kt   # HomeUiState（純資料容器）+ toastEvent SharedFlow
+│   │   ├── HomeViewModel.kt   # HomeUiState（純資料容器）+ eventFlow SharedFlow
 │   │   ├── balance/
 │   │   │   └── BalanceCard.kt
 │   │   ├── quests/
@@ -125,20 +126,49 @@ Composable → ViewModel (StateFlow) → Repository → API / Manager
 - Repository 只在 `NetworkResult.Success` 時執行後續本地操作（如存 token、清 token）
 - `BaseRepository.handleGlobalError()` 已攔截 401/1001/1005 並觸發 logout，ViewModel **不需要**再重複檢查這些錯誤碼
 
+### State vs Event 設計原則
+
+兩種概念用不同的 Flow 承載，**不可混用**：
+
+| | State（持續） | Event（一次性） |
+|---|---|---|
+| Flow 類型 | `StateFlow` | `SharedFlow` |
+| sealed class 用法 | ❌ 禁止 | ✅ 適合 |
+| 例子 | `isLoading`、卡片清單 | ShowToast、導航到某頁 |
+
 ### UiState 設計
 - UiState 是**純資料容器**（data fields + `isLoading`），不使用 sealed class 狀態機
 - 每隻 API 對應一個 `isLoadingX: Boolean = true` 欄位；`isLoading` 計算屬性 = 所有旗標的 OR
 - 新增 API 只需在 UiState 加一個 boolean 旗標，`isLoading` 自動包含（保持擴充彈性）
-- API 錯誤 → ViewModel 透過 `_toastEvent.emit(message)` 通知；Composable 用 `LaunchedEffect(Unit)` 收集並呼叫 `Toast.makeText()`
 - 資料缺失 → 使用空預設值（`UserInfoResponse.empty()`、`emptyList()`），不進入錯誤 UI 狀態
-- `toastEvent` 宣告為 `MutableSharedFlow<String>(extraBufferCapacity = 1)`，避免 emit 被丟棄
+
+### UiEvent 設計
+- API 錯誤 → ViewModel 透過 `_eventFlow.emit(UiEvent.ShowToast(message))` 通知
+- 需要彈窗 → `_eventFlow.emit(UiEvent.ShowDialog(title, message))`
+- `_eventFlow` 宣告為 `MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)`，避免 emit 被丟棄
+- Composable 用 `LaunchedEffect(Unit)` 收集，用 `when (event)` 分支處理：
+  ```kotlin
+  LaunchedEffect(Unit) {
+      viewModel.eventFlow.collect { event ->
+          when (event) {
+              is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+              is UiEvent.ShowDialog -> { /* 顯示 AlertDialog */ }
+          }
+      }
+  }
+  ```
+
+### NavigationEvent 設計（Login 等多步驟流程）
+- 導航事件（Success、NeedsVerification、PromptBiometricEnroll）用獨立的 `LoginNavigationEvent` sealed class + `SharedFlow`
+- 這些事件屬於「一次性觸發導航/彈窗」，與 UiEvent 分開宣告，不混入 UiState
+- Screen 層用 `LaunchedEffect(Unit) { viewModel.navigationEvent.collect { ... } }` 收集，更新 local state 或直接呼叫導航
 
 ### 新增 API 步驟（以 HomeScreen 為例）
 1. **`UserApiService`**：新增 `@GET suspend fun xxx(): BaseResponse<T>`
 2. **`FakeUserApiService`**：實作相同 function，加 `delay()` 模擬延遲，回傳假資料
 3. **`UserRepository`**：新增 `suspend fun fetchXxx(): NetworkResult<T>` 包裝 `safeApiCall`
 4. **`HomeUiState`**：新增 `val isLoadingXxx: Boolean = true` 與資料欄位
-5. **`HomeViewModel`**：`init` 中呼叫新 function；用 `when (result)` 更新 `_uiState`，錯誤 emit toast
+5. **`HomeViewModel`**：`init` 中呼叫新 function；用 `when (result)` 更新 `_uiState`，錯誤用 `_eventFlow.emit(UiEvent.ShowToast(...))` 通知
 6. **Composable**：從 `uiState` 取出資料傳入子元件，不自行處理 loading/error 狀態
 
 ### Navigation — 子頁面（無 TabBar）
