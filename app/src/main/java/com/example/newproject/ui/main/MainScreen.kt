@@ -26,6 +26,7 @@ import com.example.newproject.ui.main.nvaTab.CustomBottomNavigation
 import com.example.newproject.ui.profile.ProfileScreen
 import com.example.newproject.ui.profile.ProfileViewModel
 import com.example.newproject.ui.quests.QuestsScreen
+import com.example.newproject.ui.scanpay.ScanPayScreen
 import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
@@ -38,7 +39,8 @@ fun MainScreen(onNavigate: (String) -> Unit = {}) {
         bottomBar = {
             CustomBottomNavigation(
                 selectedIndex = selectedIndex,
-                onTabSelected = { selectedIndex = it }
+                onTabSelected = { selectedIndex = it },
+                onScanPayClick = { selectedIndex = 4 }
             )
         }
     ) { paddingValues ->
@@ -66,11 +68,9 @@ fun MainScreen(onNavigate: (String) -> Unit = {}) {
                     2 -> QuestsScreen()
                     3 -> {
                         val profileViewModel: ProfileViewModel = hiltViewModel()
-                        ProfileScreen(
-                            viewModel = profileViewModel,
-                            onNavigate = onNavigate
-                        )
+                        ProfileScreen(viewModel = profileViewModel, onNavigate = onNavigate)
                     }
+                    4 -> ScanPayScreen()
                 }
             }
         }

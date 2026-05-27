@@ -38,5 +38,5 @@ val tabActiveColor = Color(0xFF61C8E4)
 
 // ========== Essential card ==========
 val essentialCardTitle = Color(0xFFBEE3EE)
-
+val balanceGold = Color(0xFFFEF27C)
 //

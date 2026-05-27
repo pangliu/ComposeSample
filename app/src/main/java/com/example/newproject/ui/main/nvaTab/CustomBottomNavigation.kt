@@ -31,9 +31,10 @@ import com.example.newproject.ui.theme.welcomeBackground
 private val NavBarHeight = 60.dp
 
 @Composable
-fun CustomBottomNavigation(
+    fun CustomBottomNavigation(
     selectedIndex: Int,
-    onTabSelected: (Int) -> Unit
+    onTabSelected: (Int) -> Unit,
+    onScanPayClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -89,7 +90,7 @@ fun CustomBottomNavigation(
         // 掃碼按鈕：overlay 在 Box 底部正中央
         // wrapContentHeight(unbounded = true) 讓 Column 突破父層 60dp 限制往上延伸，
         // 圖片因此自然超出 nav bar 高度，不需要 offset 或 requiredSize
-        ScanAndPayTab()
+        ScanAndPayTab(isSelected = selectedIndex == 4, onClick = onScanPayClick)
     }
 }
 
@@ -139,8 +140,13 @@ private fun BottomNavItem(
 }
 
 @Composable
-private fun ScanAndPayTab(modifier: Modifier = Modifier) {
+private fun ScanAndPayTab(modifier: Modifier = Modifier, isSelected: Boolean = false, onClick: () -> Unit = {}) {
     val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val isActive = isPressed || isSelected
+    val color = if (isActive) tabActiveColor else Color.Gray
+    val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
 
     Column(
         modifier = modifier
@@ -150,7 +156,7 @@ private fun ScanAndPayTab(modifier: Modifier = Modifier) {
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
-                onClick = { /* TODO: 點擊開啟 Scan / Pay */ }
+                onClick = onClick
             )
             .padding(bottom = 8.dp), // 與 BottomNavItem 相同的底部 padding，確保文字對齊
         horizontalAlignment = Alignment.CenterHorizontally
@@ -175,9 +181,9 @@ private fun ScanAndPayTab(modifier: Modifier = Modifier) {
         }
         Text(
             text = stringResource(R.string.home_scan_pay),
-            color = Color.White,
+            color = color,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
+            fontWeight = fontWeight,
             maxLines = 1,
             softWrap = false
         )
