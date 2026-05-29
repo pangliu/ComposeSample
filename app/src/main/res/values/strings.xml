@@ -223,10 +223,13 @@
     <string name="scan_pay_title">Scan / Pay</string>
     <string name="scan_pay_back_desc">Back</string>
     <string name="scan_pay_hint">將相機對準 QR Code</string>
+    <string name="scan_pay_camera_permission_required">請允許相機權限以使用掃描功能</string>
     <string name="scan_pay_tab_scan_qr">SCAN QR</string>
     <string name="scan_pay_tab_my_qr">MY QR</string>
     <string name="scan_pay_my_qr_close_desc">Close</string>
     <string name="scan_pay_my_qr_qr_code_desc">QR Code</string>
+    <string name="scan_pay_my_qr_left_qr_code_desc">left_qrcode</string>
+    <string name="scan_pay_my_qr_right_qr_code_desc">right_qrcode</string>
     <string name="scan_pay_my_qr_username">@bruceb</string>
     <string name="scan_pay_my_qr_name">Bruce Banner</string>
     <string name="scan_pay_my_qr_balance">Current Balance:</string>

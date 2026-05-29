@@ -1,0 +1,392 @@
+package com.example.newproject.ui.scanpay
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.newproject.R
+import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.balanceGold
+import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.normalText
+import com.example.newproject.ui.theme.welcomeBackground
+import io.github.alexzhirkevich.qrose.options.QrBallShape
+import io.github.alexzhirkevich.qrose.options.QrBrush
+import io.github.alexzhirkevich.qrose.options.QrColors
+import io.github.alexzhirkevich.qrose.options.QrErrorCorrectionLevel
+import io.github.alexzhirkevich.qrose.options.QrFrameShape
+import io.github.alexzhirkevich.qrose.options.QrLogo
+import io.github.alexzhirkevich.qrose.options.QrLogoPadding
+import io.github.alexzhirkevich.qrose.options.QrPixelShape
+import io.github.alexzhirkevich.qrose.options.QrShapes
+import io.github.alexzhirkevich.qrose.options.circle
+import io.github.alexzhirkevich.qrose.options.roundCorners
+import io.github.alexzhirkevich.qrose.options.solid
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.newproject.ui.theme.qrCodeBackground
+import io.github.alexzhirkevich.qrose.rememberQrCodePainter
+
+@Composable
+internal fun MyQrContent(qrCodeUrl: String) {
+    var isBalanceVisible by remember { mutableStateOf(false) }
+    val qrPainter = rememberQrCodePainter(
+        data = qrCodeUrl,
+        shapes = QrShapes(
+            ball = QrBallShape.circle(),
+            darkPixel = QrPixelShape.roundCorners(),
+            frame = QrFrameShape.roundCorners(.25f)
+        ),
+        colors = QrColors(
+            dark = QrBrush.solid(neonCyan),
+            light = QrBrush.solid(Color.Transparent)
+        ),
+        logo = QrLogo(
+            painter = painterResource(R.mipmap.ic_qrcode_logo),
+            size = 0.2f,
+            padding = QrLogoPadding.Empty
+        ),
+        errorCorrectionLevel = QrErrorCorrectionLevel.High
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // ── QR Code Section ──────────────────────────────────────────────────
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // 左邊裝飾圖：延伸至邊緣，靠右貼齊中間 Box，等比例裁切放大
+            Image(
+                modifier = Modifier
+                    .weight(0.2f)
+                    .fillMaxHeight(),
+                painter = painterResource(R.mipmap.bg_left_qrcode),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.CenterEnd,
+                contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc),
+            )
+
+            // 中間的 QR Code Box，維持正方形並置中
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .weight(0.65f)
+                    .aspectRatio(1f)
+            ) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .background(
+                            color = qrCodeBackground,
+                            shape = RoundedCornerShape(20.dp))
+                        .align(Alignment.Center),
+                    contentScale = ContentScale.FillBounds,
+                    painter = painterResource(R.mipmap.bg_qrcode_border),
+                    contentDescription = stringResource(R.string.scan_pay_my_qr_qr_code_desc)
+                )
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 5.dp),
+                    text = stringResource(R.string.scan_pay_my_qr_username),
+                    color = neonCyan,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 5.dp),
+                    text = stringResource(R.string.scan_pay_my_qr_name),
+                    color = normalText,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Box(
+                    modifier = Modifier
+                        .testTag("qrcode_box")
+                        .fillMaxWidth(0.8f)
+                        .aspectRatio(1f)
+                        .background(color = Color.Transparent, shape = RoundedCornerShape(12.dp))
+                        .align(Alignment.Center)
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = qrPainter,
+                        contentDescription = stringResource(R.string.scan_pay_my_qr_qr_code_desc),
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+
+            // 右邊裝飾圖：延伸至邊緣，靠左貼齊中間 Box，等比例裁切放大
+            Image(
+                modifier = Modifier
+                    .weight(0.2f)
+                    .fillMaxHeight(),
+                painter = painterResource(R.mipmap.bg_right_qrcode),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.CenterStart,
+                contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
+            )
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        // ── Balance Section ──────────────────────────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+        ) {
+            Image(
+                painter = painterResource(R.mipmap.ic_car),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(80.dp)
+                    .neonGlow(color = neonPurple, alpha = 0.25f, glowRadius = 30.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.scan_pay_my_qr_balance),
+                        color = normalText,
+                        fontSize = 14.sp,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = if (isBalanceVisible) "PHP 1000" else "••••",
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        imageVector = if (isBalanceVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                        contentDescription = stringResource(R.string.balance_toggle_desc),
+                        tint = Color.Gray,
+                        modifier = Modifier
+                            .size(18.dp)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) { isBalanceVisible = !isBalanceVisible }
+                    )
+                }
+                Text(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = stringResource(R.string.scan_pay_my_qr_x_points),
+                    color = normalText,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Image(
+                painter = painterResource(R.mipmap.ic_monkey),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(60.dp)
+                    .neonGlow(color = balanceGold, alpha = 0.3f, glowRadius = 30.dp)
+                    .align(Alignment.CenterVertically)
+            )
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        // ── Action Buttons ───────────────────────────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            MyQrActionButton(
+                iconRes = R.mipmap.ic_gift,
+                label = stringResource(R.string.scan_pay_my_qr_generate_ang_pao_btn),
+                modifier = Modifier.weight(1f)
+            )
+            MyQrActionButton(
+                iconRes = R.mipmap.ic_money,
+                label = stringResource(R.string.scan_pay_my_qr_split_bill_btn),
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        // ── Daily Quests Card ────────────────────────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .neonGlow(color = neonCyan, alpha = 0.5f, glowRadius = 8.dp, borderRadius = 12.dp)
+                .border(
+                    width = 1.5.dp,
+                    color = neonCyan.copy(alpha = 0.7f),
+                    shape = RoundedCornerShape(12.dp))
+                .background(
+                    color = Color.Black.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(12.dp))
+                .padding(horizontal = 12.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(R.string.scan_pay_my_qr_daily_quest_title),
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.width(5.dp))
+                    Text(
+                        text = stringResource(R.string.scan_pay_my_qr_daily_quest_progress),
+                        color = normalText,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(Modifier.height(4.dp))
+                LinearProgressIndicator(
+                    progress = 0f,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp)
+                        .clip(RoundedCornerShape(50)),
+                    color = neonCyan,
+                    trackColor = Color.White.copy(alpha = 0.2f)
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = stringResource(R.string.scan_pay_my_qr_daily_quest_progress),
+                    color = normalText,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(Modifier.width(10.dp))
+            Image(
+                painter = painterResource(R.mipmap.ic_girl),
+                contentDescription = null,
+                modifier = Modifier.size(60.dp)
+            )
+        }
+
+        Spacer(Modifier.height(24.dp))
+    }
+}
+
+@Composable
+internal fun MyQrActionButton(
+    iconRes: Int,
+    label: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    Row(
+        modifier = modifier
+            .border(
+                width = 1.5.dp,
+                color = neonPurple.copy(alpha = 0.6f),
+                shape = RoundedCornerShape(12.dp))
+            .neonGlow(color = neonPurple, alpha = 0.3f, glowRadius = 8.dp, borderRadius = 12.dp)
+            .background(
+                color = welcomeBackground.copy(alpha = 0.7f),
+                shape = RoundedCornerShape(12.dp))
+            .padding(vertical = 8.dp, horizontal = 8.dp)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) { onClick() }
+    ) {
+        Box(
+            modifier = Modifier
+                .border(color = neonCyan, width = 1.5.dp, shape = RoundedCornerShape(50.dp))
+                .neonGlow(color = neonCyan, alpha = 0.7f, glowRadius = 50.dp, borderRadius = 50.dp)
+                .background(
+                    color = welcomeBackground.copy(alpha = 0.3f),
+                    shape = RoundedCornerShape(50.dp))
+                .padding(10.dp)
+        ) {
+            Icon(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        Spacer(Modifier.width(5.dp))
+        Text(
+            text = label,
+            color = normalText,
+            fontSize = 11.sp,
+            textAlign = TextAlign.Center,
+            lineHeight = 15.sp
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Composable
+private fun MyQrContentPreview() {
+    MaterialTheme {
+        MyQrContent(qrCodeUrl = "https://example.com")
+    }
+}

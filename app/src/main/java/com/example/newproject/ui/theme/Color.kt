@@ -20,6 +20,7 @@ val neonBlue = Color(0xFF2E88FF)
 val neonDivider = Color(0xAAB0D6DF)
 // ========== 背景色 ==========
 val welcomeBackground = Color(0xFF0B1327)
+val qrCodeBackground = Color(0xFF333C55)
 val darkBackground = Color(0xFF0A0E1A)       // 深色背景（Preview / ScanPay 圓圈）
 val darkOverlay = Color(0xFF0A0F1A)           // 深色遮罩（VerifyMobile / ScanPay）
 // ========== 輸入框 / 表單 ==========

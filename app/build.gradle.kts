@@ -75,6 +75,16 @@ dependencies {
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.security.crypto)
 
+    // QR Code
+    implementation(libs.zxing.core)
+    implementation(libs.qrose)
+
+    // CameraX
+    implementation(libs.camera.core)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.view)
+
     debugImplementation(libs.androidx.ui.tooling)
 
     // Hilt
