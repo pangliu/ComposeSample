@@ -21,7 +21,7 @@ import com.example.newproject.ui.components.QrModeTabSelector
 import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
-fun ScanPayScreen() {
+fun ScanPayScreen(onQrCodeScanned: (String) -> Unit = {}) {
     var selectedMode by rememberSaveable { mutableStateOf(QrMode.MY_QR) }
     val qrCodeUrl = "http://xcash.xxxx.cpu.ttw"
     Column(
@@ -37,10 +37,11 @@ fun ScanPayScreen() {
             modifier = Modifier.padding(horizontal = 32.dp)
         )
         Spacer(modifier = Modifier.height(15.dp))
-        when (selectedMode) {
-            QrMode.SCAN_QR -> ScanQrContent()
-            QrMode.MY_QR   -> MyQrContent(qrCodeUrl = qrCodeUrl)
-        }
+        MyQrContent(
+            qrCodeUrl = qrCodeUrl,
+            selectedMode = selectedMode,
+            onQrCodeScanned = onQrCodeScanned
+        )
     }
 }
 

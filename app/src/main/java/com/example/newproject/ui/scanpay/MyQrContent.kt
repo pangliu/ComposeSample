@@ -1,5 +1,18 @@
 package com.example.newproject.ui.scanpay
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview as CameraXPreview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.NotFoundException
+import com.google.zxing.PlanarYUVLuminanceSource
+import com.google.zxing.common.HybridBinarizer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,7 +21,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -27,30 +39,40 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.newproject.R
+import com.example.newproject.ui.components.QrMode
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.balanceGold
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.normalText
+import com.example.newproject.ui.theme.qrCodeBackground
 import com.example.newproject.ui.theme.welcomeBackground
 import io.github.alexzhirkevich.qrose.options.QrBallShape
 import io.github.alexzhirkevich.qrose.options.QrBrush
@@ -64,13 +86,19 @@ import io.github.alexzhirkevich.qrose.options.QrShapes
 import io.github.alexzhirkevich.qrose.options.circle
 import io.github.alexzhirkevich.qrose.options.roundCorners
 import io.github.alexzhirkevich.qrose.options.solid
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.newproject.ui.theme.qrCodeBackground
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 
 @Composable
-internal fun MyQrContent(qrCodeUrl: String) {
+internal fun MyQrContent(
+    qrCodeUrl: String,
+    selectedMode: QrMode,
+    onQrCodeScanned: (String) -> Unit = {}
+) {
+    val context = LocalContext.current
+    val hasCameraPermission = remember {
+        ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED
+    }
     var isBalanceVisible by remember { mutableStateOf(false) }
     val qrPainter = rememberQrCodePainter(
         data = qrCodeUrl,
@@ -102,7 +130,6 @@ internal fun MyQrContent(qrCodeUrl: String) {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 左邊裝飾圖：延伸至邊緣，靠右貼齊中間 Box，等比例裁切放大
             Image(
                 modifier = Modifier
                     .weight(0.2f)
@@ -113,63 +140,87 @@ internal fun MyQrContent(qrCodeUrl: String) {
                 contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc),
             )
 
-            // 中間的 QR Code Box，維持正方形並置中
             Box(
                 modifier = Modifier
+                    .testTag("qrcode_camera_box")
                     .align(Alignment.CenterVertically)
                     .weight(0.65f)
                     .aspectRatio(1f)
+                    .clip(RoundedCornerShape(10.dp))
             ) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .background(
-                            color = qrCodeBackground,
-                            shape = RoundedCornerShape(20.dp))
-                        .align(Alignment.Center),
-                    contentScale = ContentScale.FillBounds,
-                    painter = painterResource(R.mipmap.bg_qrcode_border),
-                    contentDescription = stringResource(R.string.scan_pay_my_qr_qr_code_desc)
-                )
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 5.dp),
-                    text = stringResource(R.string.scan_pay_my_qr_username),
-                    color = neonCyan,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium
-                )
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 5.dp),
-                    text = stringResource(R.string.scan_pay_my_qr_name),
-                    color = normalText,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Box(
-                    modifier = Modifier
-                        .testTag("qrcode_box")
-                        .fillMaxWidth(0.8f)
-                        .aspectRatio(1f)
-                        .background(color = Color.Transparent, shape = RoundedCornerShape(12.dp))
-                        .align(Alignment.Center)
-                        .padding(8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = qrPainter,
-                        contentDescription = stringResource(R.string.scan_pay_my_qr_qr_code_desc),
-                        modifier = Modifier.fillMaxSize()
-                    )
+                when (selectedMode) {
+                    QrMode.MY_QR -> {
+                        Image(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                                .background(color = qrCodeBackground, shape = RoundedCornerShape(10.dp))
+                                .align(Alignment.Center),
+                            contentScale = ContentScale.FillBounds,
+                            painter = painterResource(R.mipmap.bg_qrcode_border),
+                            contentDescription = stringResource(R.string.scan_pay_my_qr_qr_code_desc)
+                        )
+                        Text(
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(top = 5.dp),
+                            text = stringResource(R.string.scan_pay_my_qr_username),
+                            color = neonCyan,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 5.dp),
+                            text = stringResource(R.string.scan_pay_my_qr_name),
+                            color = normalText,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Box(
+                            modifier = Modifier
+                                .testTag("qrcode_box")
+                                .fillMaxWidth(0.8f)
+                                .aspectRatio(1f)
+                                .background(color = Color.Transparent, shape = RoundedCornerShape(12.dp))
+                                .align(Alignment.Center)
+                                .padding(8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = qrPainter,
+                                contentDescription = stringResource(R.string.scan_pay_my_qr_qr_code_desc),
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
+                    QrMode.SCAN_QR -> {
+                        if (hasCameraPermission) {
+                            CameraPreviewView(
+                                modifier = Modifier.fillMaxSize(),
+                                onQrCodeScanned = onQrCodeScanned
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.Black.copy(alpha = 0.3f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.scan_pay_camera_permission_required),
+                                    color = normalText,
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(horizontal = 12.dp)
+                                )
+                            }
+                        }
+                    }
                 }
             }
 
-            // 右邊裝飾圖：延伸至邊緣，靠左貼齊中間 Box，等比例裁切放大
             Image(
                 modifier = Modifier
                     .weight(0.2f)
@@ -187,7 +238,7 @@ internal fun MyQrContent(qrCodeUrl: String) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp)
+                .padding(horizontal = 0.dp)
         ) {
             Image(
                 painter = painterResource(R.mipmap.ic_car),
@@ -248,7 +299,7 @@ internal fun MyQrContent(qrCodeUrl: String) {
             )
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(10.dp))
 
         // ── Action Buttons ───────────────────────────────────────────────────
         Row(
@@ -269,7 +320,7 @@ internal fun MyQrContent(qrCodeUrl: String) {
             )
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(10.dp))
 
         // ── Daily Quests Card ────────────────────────────────────────────────
         Row(
@@ -334,6 +385,79 @@ internal fun MyQrContent(qrCodeUrl: String) {
 }
 
 @Composable
+private fun CameraPreviewView(
+    modifier: Modifier = Modifier,
+    onQrCodeScanned: (String) -> Unit = {}
+) {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val providerRef = remember { arrayOfNulls<ProcessCameraProvider>(1) }
+    val onScannedRef = rememberUpdatedState(onQrCodeScanned)
+    val lastScannedRef = remember { arrayOfNulls<String>(1) }
+
+    DisposableEffect(Unit) {
+        onDispose { providerRef[0]?.unbindAll() }
+    }
+
+    AndroidView(
+        factory = { ctx ->
+            PreviewView(ctx).apply {
+                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                val future = ProcessCameraProvider.getInstance(ctx)
+                future.addListener({
+                    val provider = future.get().also { providerRef[0] = it }
+                    val preview = CameraXPreview.Builder().build().also {
+                        it.setSurfaceProvider(surfaceProvider)
+                    }
+                    val imageAnalysis = ImageAnalysis.Builder()
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                        .build().also { analysis ->
+                            analysis.setAnalyzer(ContextCompat.getMainExecutor(ctx)) { imageProxy ->
+                                val result = decodeQrFromProxy(imageProxy)
+                                imageProxy.close()
+                                if (result != null && lastScannedRef[0] != result) {
+                                    lastScannedRef[0] = result
+                                    onScannedRef.value(result)
+                                }
+                            }
+                        }
+                    try {
+                        provider.unbindAll()
+                        provider.bindToLifecycle(
+                            lifecycleOwner,
+                            CameraSelector.DEFAULT_BACK_CAMERA,
+                            preview,
+                            imageAnalysis
+                        )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }, ContextCompat.getMainExecutor(ctx))
+            }
+        },
+        modifier = modifier
+    )
+}
+
+private fun decodeQrFromProxy(imageProxy: ImageProxy): String? {
+    val buffer = imageProxy.planes[0].buffer
+    val bytes = ByteArray(buffer.remaining())
+    buffer.get(bytes)
+    val source = PlanarYUVLuminanceSource(
+        bytes,
+        imageProxy.width, imageProxy.height,
+        0, 0,
+        imageProxy.width, imageProxy.height,
+        false
+    )
+    return try {
+        MultiFormatReader().decode(BinaryBitmap(HybridBinarizer(source)))?.text
+    } catch (e: NotFoundException) {
+        null
+    }
+}
+
+@Composable
 internal fun MyQrActionButton(
     iconRes: Int,
     label: String,
@@ -387,6 +511,6 @@ internal fun MyQrActionButton(
 @Composable
 private fun MyQrContentPreview() {
     MaterialTheme {
-        MyQrContent(qrCodeUrl = "https://example.com")
+        MyQrContent(qrCodeUrl = "https://example.com", selectedMode = QrMode.MY_QR)
     }
 }
