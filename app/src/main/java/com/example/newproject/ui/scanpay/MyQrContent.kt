@@ -2,6 +2,7 @@ package com.example.newproject.ui.scanpay
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -9,10 +10,12 @@ import androidx.camera.core.Preview as CameraXPreview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import com.google.zxing.BinaryBitmap
+import com.google.zxing.DecodeHintType
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.NotFoundException
 import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.common.HybridBinarizer
+import java.util.concurrent.Executors
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -111,11 +114,11 @@ internal fun MyQrContent(
             dark = QrBrush.solid(neonCyan),
             light = QrBrush.solid(Color.Transparent)
         ),
-        logo = QrLogo(
-            painter = painterResource(R.mipmap.ic_qrcode_logo),
-            size = 0.2f,
-            padding = QrLogoPadding.Empty
-        ),
+//        logo = QrLogo(
+//            painter = painterResource(R.mipmap.ic_qrcode_logo),
+//            size = 0.2f,
+//            padding = QrLogoPadding.Empty
+//        ),
         errorCorrectionLevel = QrErrorCorrectionLevel.High
     )
 
@@ -196,6 +199,7 @@ internal fun MyQrContent(
                         }
                     }
                     QrMode.SCAN_QR -> {
+
                         if (hasCameraPermission) {
                             CameraPreviewView(
                                 modifier = Modifier.fillMaxSize(),
@@ -217,6 +221,16 @@ internal fun MyQrContent(
                                 )
                             }
                         }
+                        Image(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+//                                .background(color = qrCodeBackground, shape = RoundedCornerShape(10.dp))
+                                .align(Alignment.Center),
+                            contentScale = ContentScale.FillBounds,
+                            painter = painterResource(R.mipmap.bg_qrcode_border),
+                            contentDescription = stringResource(R.string.scan_pay_my_qr_qr_code_desc)
+                        )
                     }
                 }
             }
@@ -392,11 +406,15 @@ private fun CameraPreviewView(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val providerRef = remember { arrayOfNulls<ProcessCameraProvider>(1) }
+    val analysisExecutor = remember { Executors.newSingleThreadExecutor() }
     val onScannedRef = rememberUpdatedState(onQrCodeScanned)
     val lastScannedRef = remember { arrayOfNulls<String>(1) }
 
     DisposableEffect(Unit) {
-        onDispose { providerRef[0]?.unbindAll() }
+        onDispose {
+            providerRef[0]?.unbindAll()
+            analysisExecutor.shutdown()
+        }
     }
 
     AndroidView(
@@ -412,12 +430,13 @@ private fun CameraPreviewView(
                     val imageAnalysis = ImageAnalysis.Builder()
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                         .build().also { analysis ->
-                            analysis.setAnalyzer(ContextCompat.getMainExecutor(ctx)) { imageProxy ->
+                            val mainExecutor = ContextCompat.getMainExecutor(ctx)
+                            analysis.setAnalyzer(analysisExecutor) { imageProxy ->
                                 val result = decodeQrFromProxy(imageProxy)
                                 imageProxy.close()
                                 if (result != null && lastScannedRef[0] != result) {
                                     lastScannedRef[0] = result
-                                    onScannedRef.value(result)
+                                    mainExecutor.execute { onScannedRef.value(result) }
                                 }
                             }
                         }
@@ -440,20 +459,29 @@ private fun CameraPreviewView(
 }
 
 private fun decodeQrFromProxy(imageProxy: ImageProxy): String? {
-    val buffer = imageProxy.planes[0].buffer
+    val plane = imageProxy.planes[0]
+    val rowStride = plane.rowStride
+    val buffer = plane.buffer
     val bytes = ByteArray(buffer.remaining())
     buffer.get(bytes)
     val source = PlanarYUVLuminanceSource(
         bytes,
-        imageProxy.width, imageProxy.height,
+        rowStride, imageProxy.height,
         0, 0,
         imageProxy.width, imageProxy.height,
         false
     )
+    val hints = mapOf(DecodeHintType.TRY_HARDER to true)
+    val reader = MultiFormatReader().also { it.setHints(hints) }
     return try {
-        MultiFormatReader().decode(BinaryBitmap(HybridBinarizer(source)))?.text
+        reader.decode(BinaryBitmap(HybridBinarizer(source)))?.text
     } catch (e: NotFoundException) {
-        null
+        // 反色 QR code（亮色模組 + 深色背景，如 neonCyan on dark）
+        try {
+            reader.decode(BinaryBitmap(HybridBinarizer(source.invert())))?.text
+        } catch (e2: NotFoundException) {
+            null
+        }
     }
 }
 
@@ -465,6 +493,7 @@ internal fun MyQrActionButton(
     onClick: () -> Unit = {}
 ) {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .border(
                 width = 1.5.dp,

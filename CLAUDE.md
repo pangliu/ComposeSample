@@ -266,6 +266,71 @@ object Routes {
 
 ---
 
+### 子頁面間資料傳遞規則
+
+依資料性質選擇對應方式，**禁止混用**：
+
+| 情境 | 方式 |
+|------|------|
+| 進入 flow 入口時帶入少量初始資料（ID、名稱） | **Nav Argument**（query param） |
+| 同一個 flow 內多個頁面共享 / 讀寫資料 | **共享 ViewModel**（Nested NavGraph scoped） |
+| 子頁面完成後通知上層（返回、觸發導航） | **Lambda Callback**（`onBack`、`onNavigate`） |
+| 多個欄位的物件跨頁面傳遞 | **ViewModel**（禁止序列化塞入路由字串） |
+
+#### Flow ViewModel 設計（Nested NavGraph）
+
+需要跨多個子頁面共享資料時，建立巢狀 NavGraph 並 scope ViewModel 到該 graph：
+
+```kotlin
+// Routes.kt
+const val SCAN_PAY_FLOW = "scan_pay_flow"
+const val SCAN_PAY_INPUT_AMOUNT = "scan_pay_input_amount?username={username}&name={name}"
+fun inputAmount(username: String = "", name: String = "") =
+    "scan_pay_input_amount?username=${android.net.Uri.encode(username)}&name=${android.net.Uri.encode(name)}"
+
+// AppNavigation.kt
+navigation(startDestination = Routes.SCAN_PAY_INPUT_AMOUNT, route = Routes.SCAN_PAY_FLOW) {
+    composable(Routes.SCAN_PAY_INPUT_AMOUNT, arguments = ...) { backStackEntry ->
+        val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Routes.SCAN_PAY_FLOW)
+        }
+        val viewModel = hiltViewModel<ScanPayViewModel>(parentEntry)  // 同一個 instance
+        InputAmountScreen(viewModel = viewModel, ...)
+    }
+    composable(Routes.SCAN_PAY_CONFIRM_PAYMENT) { backStackEntry ->
+        val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Routes.SCAN_PAY_FLOW)
+        }
+        val viewModel = hiltViewModel<ScanPayViewModel>(parentEntry)  // 同一個 instance
+        ConfirmPaymentScreen(viewModel = viewModel, ...)
+    }
+}
+```
+
+#### Flow 入口的初始資料
+
+flow 入口（startDestination）可透過 **optional query param** 接收上層帶入的資料，進入後立即存入 ViewModel：
+
+```kotlin
+// 入口 Composable（AppNavigation 中）
+val username = backStackEntry.arguments?.getString("username") ?: ""
+InputAmountScreen(viewModel = viewModel, recipientUsername = username, ...)
+
+// Screen 本身用 LaunchedEffect 存入 ViewModel（只跑一次）
+LaunchedEffect(recipientUsername) {
+    viewModel.setRecipientInfo(recipientUsername, recipientName)
+}
+```
+
+Flow 內的後續頁面（如 ConfirmPaymentScreen）直接從 `viewModel.uiState.collectAsState()` 讀取，**不再透過 nav arg 傳遞**。
+
+#### 現有 Flow 對照
+| Flow | Route 常數 | ViewModel |
+|------|-----------|-----------|
+| ScanPay 付款流程 | `SCAN_PAY_FLOW` | `ScanPayViewModel` |
+
+---
+
 ### 字串管理
 - 所有 UI 顯示字串（Text、contentDescription 等）必須寫入 `app/src/main/res/values/strings.xml`
 - Composable 中使用 `stringResource(R.string.xxx)` 引用，禁止硬編碼字串

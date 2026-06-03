@@ -8,6 +8,10 @@ object Routes {
     // Profile sub-pages
     const val SECURITY_CENTER = "security_center"
 
+    // ScanPay sub-pages
+    const val SCAN_PAY_INPUT_AMOUNT = "scan_pay_input_amount"
+    const val SCAN_PAY_CONFIRM_PAYMENT = "scan_pay_confirm_payment"
+
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"
     const val ADD_NEW_CARD = "add_new_card"

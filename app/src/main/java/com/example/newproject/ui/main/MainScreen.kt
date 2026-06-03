@@ -27,10 +27,14 @@ import com.example.newproject.ui.profile.ProfileScreen
 import com.example.newproject.ui.profile.ProfileViewModel
 import com.example.newproject.ui.quests.QuestsScreen
 import com.example.newproject.ui.scanpay.ScanPayScreen
+import com.example.newproject.ui.scanpay.ScanPayViewModel
 import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
-fun MainScreen(onNavigate: (String) -> Unit = {}) {
+fun MainScreen(
+    scanPayViewModel: ScanPayViewModel,
+    onNavigate: (String) -> Unit = {}
+) {
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
     Scaffold(
@@ -70,7 +74,7 @@ fun MainScreen(onNavigate: (String) -> Unit = {}) {
                         val profileViewModel: ProfileViewModel = hiltViewModel()
                         ProfileScreen(viewModel = profileViewModel, onNavigate = onNavigate)
                     }
-                    4 -> ScanPayScreen()
+                    4 -> ScanPayScreen(viewModel = scanPayViewModel, onNavigate = onNavigate)
                 }
             }
         }

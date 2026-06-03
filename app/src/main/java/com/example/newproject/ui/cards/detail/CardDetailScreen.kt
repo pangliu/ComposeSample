@@ -24,13 +24,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -44,20 +42,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.R
 import com.example.newproject.network.model.response.CreditCardResponse
+import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
@@ -115,35 +118,17 @@ fun CardDetailContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .paint(
+                        painter = painterResource(R.mipmap.bg_sub_page),
+                        contentScale = ContentScale.FillBounds
+                    )
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
             ) {
-                // TopBar
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                ) {
-                    IconButton(
-                        onClick = onBack,
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .size(48.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.card_detail_back_desc),
-                            tint = Color.White
-                        )
-                    }
-                    Text(
-                        text = stringResource(R.string.card_detail_title),
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+                SubPageTopBar(
+                    title = stringResource(R.string.card_detail_title),
+                    onBack = onBack
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 

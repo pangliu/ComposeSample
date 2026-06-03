@@ -219,6 +219,22 @@
     <!-- SecurityCenterScreen -->
     <string name="security_center_back_desc">Back</string>
 
+    <!-- Common -->
+    <string name="common_back_desc">Back</string>
+
+    <!-- InputAmountScreen -->
+    <string name="input_amount_title">Enter Amount</string>
+    <string name="input_amount_back_desc">Back</string>
+    <string name="input_amount_currency">PHP</string>
+    <string name="input_amount_hint">0.00</string>
+    <string name="input_amount_review_details">Review Details</string>
+
+    <!-- ConfirmPaymentScreen -->
+    <string name="confirm_payment_title">Confirm Payment</string>
+    <string name="confirm_payment_back_desc">Back</string>
+    <string name="confirm_payment_cancel">CANCEL</string>
+    <string name="confirm_payment_confirm_pay">CONFIRM &amp; PAY</string>
+
     <!-- ScanPayScreen -->
     <string name="scan_pay_title">Scan / Pay</string>
     <string name="scan_pay_back_desc">Back</string>
@@ -230,7 +246,7 @@
     <string name="scan_pay_my_qr_qr_code_desc">QR Code</string>
     <string name="scan_pay_my_qr_left_qr_code_desc">left_qrcode</string>
     <string name="scan_pay_my_qr_right_qr_code_desc">right_qrcode</string>
-    <string name="scan_pay_my_qr_username">@bruceb</string>
+    <string name="scan_pay_my_qr_username">\@bruceb</string>
     <string name="scan_pay_my_qr_name">Bruce Banner</string>
     <string name="scan_pay_my_qr_balance">Current Balance:</string>
     <string name="scan_pay_my_qr_x_points">5,000 X-Points</string>
@@ -238,6 +254,7 @@
     <string name="scan_pay_my_qr_split_bill_btn">Split a Bill &amp; Request</string>
     <string name="scan_pay_my_qr_daily_quest_title">Daily P2P Collection Quests:</string>
     <string name="scan_pay_my_qr_daily_quest_progress">0/3 Scans</string>
+    <string name="scan_pay_my_qr_confirm_hint">X-Points cannot be applied to this purchase</string>
 
     <!-- Error Messages (HomeViewModel / LoginViewModel) -->
     <string name="error_fetch_user_data">無法取得使用者資料</string>

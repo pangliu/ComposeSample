@@ -4,6 +4,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,6 +18,9 @@ import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
 import com.example.newproject.ui.main.MainScreen
 import com.example.newproject.ui.profile.security.SecurityCenterScreen
+import com.example.newproject.ui.scanpay.ConfirmPaymentScreen
+import com.example.newproject.ui.scanpay.InputAmountScreen
+import com.example.newproject.ui.scanpay.ScanPayViewModel
 import com.example.newproject.ui.welcome.WelcomeScreen
 import com.example.newproject.ui.welcome.WelcomeViewModel
 
@@ -74,6 +78,7 @@ fun AppNavigation(
                     Routes.SECURITY_CENTER -> slideOutHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideOutHorizontally { -it }
                     Routes.CARD_DETAIL -> slideOutHorizontally { -it }
+                    Routes.SCAN_PAY_INPUT_AMOUNT -> slideOutHorizontally { -it }
                     else -> null
                 }
             },
@@ -82,11 +87,16 @@ fun AppNavigation(
                     Routes.SECURITY_CENTER -> slideInHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideInHorizontally { -it }
                     Routes.CARD_DETAIL -> slideInHorizontally { -it }
+                    Routes.SCAN_PAY_INPUT_AMOUNT -> slideInHorizontally { -it }
                     else -> null
                 }
             }
-        ) {
-            MainScreen(onNavigate = { navController.navigate(it) })
+        ) { backStackEntry ->
+            val scanPayViewModel = hiltViewModel<ScanPayViewModel>(backStackEntry)
+            MainScreen(
+                scanPayViewModel = scanPayViewModel,
+                onNavigate = { navController.navigate(it) }
+            )
         }
 
         // ── Profile sub-pages ──────────────────────────────────────────────
@@ -96,6 +106,40 @@ fun AppNavigation(
             popExitTransition = { slideOutHorizontally { it } }
         ) {
             SecurityCenterScreen(onBack = { navController.popBackStack() })
+        }
+
+        // ── ScanPay sub-pages (ScanPayViewModel scoped to MAIN) ──────────
+        composable(
+            route = Routes.SCAN_PAY_INPUT_AMOUNT,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } },
+            exitTransition = { slideOutHorizontally { -it } },
+            popEnterTransition = { slideInHorizontally { -it } }
+        ) { backStackEntry ->
+            val mainEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.MAIN)
+            }
+            val viewModel = hiltViewModel<ScanPayViewModel>(mainEntry)
+            InputAmountScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onNavigate = { navController.navigate(it) }
+            )
+        }
+
+        composable(
+            route = Routes.SCAN_PAY_CONFIRM_PAYMENT,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) { backStackEntry ->
+            val mainEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.MAIN)
+            }
+            val viewModel = hiltViewModel<ScanPayViewModel>(mainEntry)
+            ConfirmPaymentScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
         }
 
         // ── Cards sub-pages ────────────────────────────────────────────────

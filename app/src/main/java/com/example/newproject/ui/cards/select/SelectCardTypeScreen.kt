@@ -16,10 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.Routes
+import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.normalText
@@ -55,33 +54,10 @@ fun SelectCardTypeContent(onBack: () -> Unit = {}, onNavigate: (String) -> Unit 
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Top Bar
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-            ) {
-                IconButton(
-                    onClick = onBack,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .size(48.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.select_card_type_back_desc),
-                        tint = Color.White
-                    )
-                }
-
-                Text(
-                    text = stringResource(R.string.select_card_type_title),
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+            SubPageTopBar(
+                title = stringResource(R.string.select_card_type_title),
+                onBack = onBack
+            )
 
             // Card type options
             Column(
