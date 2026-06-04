@@ -3,8 +3,8 @@ package com.example.newproject.ui.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newproject.network.manager.SessionManager
+import com.example.newproject.network.manager.UserInfoManager
 import com.example.newproject.network.model.NetworkResult
-import com.example.newproject.network.model.response.UserInfoResponse
 import com.example.newproject.repository.AuthRepository
 import com.example.newproject.repository.UserRepository
 import com.example.newproject.ui.UiEvent
@@ -35,6 +35,7 @@ data class ProfileUiState(
 class ProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
+    private val userInfoManager: UserInfoManager,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -45,6 +46,22 @@ class ProfileViewModel @Inject constructor(
     val eventFlow: SharedFlow<UiEvent> = _eventFlow.asSharedFlow()
 
     init {
+        // 有 cache 時立即顯示，跳過 loading 狀態
+        userInfoManager.userInfoFlow.value?.let { cached ->
+            _uiState.update { it.copy(
+                isLoadingUserInfo = false,
+                userName = cached.userName,
+                xcashId = cached.userPhone
+            )}
+        }
+        // 訂閱後續更新（API 刷新後自動同步）
+        viewModelScope.launch {
+            userInfoManager.userInfoFlow.collect { userInfo ->
+                if (userInfo != null) {
+                    _uiState.update { it.copy(userName = userInfo.userName, xcashId = userInfo.userPhone) }
+                }
+            }
+        }
         fetchUserInfo()
     }
 
@@ -52,14 +69,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = userRepository.fetchUserInfo()) {
                 is NetworkResult.Success -> {
-                    val data = result.data ?: UserInfoResponse.empty()
-                    _uiState.update {
-                        it.copy(
-                            isLoadingUserInfo = false,
-                            userName = data.userName,
-                            xcashId = data.userPhone
-                        )
-                    }
+                    _uiState.update { it.copy(isLoadingUserInfo = false) }
                 }
                 is NetworkResult.Error -> {
                     _uiState.update { it.copy(isLoadingUserInfo = false) }

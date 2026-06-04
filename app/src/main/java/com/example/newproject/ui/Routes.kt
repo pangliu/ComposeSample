@@ -11,6 +11,7 @@ object Routes {
     // ScanPay sub-pages
     const val SCAN_PAY_INPUT_AMOUNT = "scan_pay_input_amount"
     const val SCAN_PAY_CONFIRM_PAYMENT = "scan_pay_confirm_payment"
+    const val SCAN_PAY_TRANSACTION_SUCCESSFUL = "scan_pay_transaction_successful"
 
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"

@@ -95,6 +95,9 @@ import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 internal fun MyQrContent(
     qrCodeUrl: String,
     selectedMode: QrMode,
+    userName: String = "",
+    nickName: String = "",
+    balance: Double = 0.0,
     onQrCodeScanned: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -167,7 +170,7 @@ internal fun MyQrContent(
                             modifier = Modifier
                                 .align(Alignment.TopCenter)
                                 .padding(top = 5.dp),
-                            text = stringResource(R.string.scan_pay_my_qr_username),
+                            text = "@$nickName",
                             color = neonCyan,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium
@@ -176,7 +179,7 @@ internal fun MyQrContent(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .padding(bottom = 5.dp),
-                            text = stringResource(R.string.scan_pay_my_qr_name),
+                            text = userName,
                             color = normalText,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold
@@ -277,7 +280,7 @@ internal fun MyQrContent(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (isBalanceVisible) "PHP 1000" else "••••",
+                        text = if (isBalanceVisible) "PHP ${balance}" else "••••",
                         color = Color.White,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold

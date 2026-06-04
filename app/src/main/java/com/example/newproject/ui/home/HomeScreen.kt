@@ -134,7 +134,8 @@ private fun HomeScreenPreview() {
                     userPhone = "0912345678",
                     userEmail = "test@example.com",
                     cashBalance = 12500.0,
-                    tokenBalance = 888.0
+                    tokenBalance = 888.0,
+                    nickName = "hankHaHa"
                 ),
                 orders = emptyList()
             )

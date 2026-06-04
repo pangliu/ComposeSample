@@ -3,6 +3,7 @@ package com.example.newproject.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newproject.network.manager.EssentialsManager
+import com.example.newproject.network.manager.UserInfoManager
 import com.example.newproject.network.model.NetworkResult
 import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.UserInfoResponse
@@ -37,6 +38,7 @@ data class HomeUiState(
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    private val userInfoManager: UserInfoManager,
     private val essentialsManager: EssentialsManager
 ) : ViewModel() {
 
@@ -50,6 +52,18 @@ class HomeViewModel @Inject constructor(
     val eventFlow: SharedFlow<UiEvent> = _eventFlow.asSharedFlow()
 
     init {
+        // 有 cache 時立即顯示，跳過 loading 狀態
+        userInfoManager.userInfoFlow.value?.let { cached ->
+            _uiState.update { it.copy(isLoadingUserInfo = false, userInfo = cached) }
+        }
+        // 訂閱後續更新（API 刷新後自動同步）
+        viewModelScope.launch {
+            userInfoManager.userInfoFlow.collect { userInfo ->
+                if (userInfo != null) {
+                    _uiState.update { it.copy(userInfo = userInfo) }
+                }
+            }
+        }
         fetchUserInfo()
         fetchOrderHistory()
     }
@@ -58,9 +72,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = userRepository.fetchUserInfo()) {
                 is NetworkResult.Success -> {
-                    val data = result.data
-                    _uiState.update { it.copy(isLoadingUserInfo = false, userInfo = data ?: UserInfoResponse.empty()) }
-                    if (data == null) _eventFlow.emit(UiEvent.ShowToast("無法取得使用者資料"))
+                    _uiState.update { it.copy(isLoadingUserInfo = false) }
+                    if (result.data == null) _eventFlow.emit(UiEvent.ShowToast("無法取得使用者資料"))
                 }
                 is NetworkResult.Error -> {
                     _uiState.update { it.copy(isLoadingUserInfo = false) }

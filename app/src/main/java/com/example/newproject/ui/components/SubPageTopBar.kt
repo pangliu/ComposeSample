@@ -32,7 +32,8 @@ import com.example.newproject.ui.theme.welcomeBackground
 @Composable
 fun SubPageTopBar(
     title: String,
-    onBack: () -> Unit,
+    onBack: () -> Unit = {},
+    showBack: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -40,21 +41,22 @@ fun SubPageTopBar(
             .fillMaxWidth()
             .height(56.dp)
     ) {
-        Icon(
-//            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            painter = painterResource(R.mipmap.ic_back),
-            contentDescription = stringResource(R.string.common_back_desc),
-            tint = Color.Unspecified,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 16.dp)
-                .size(40.dp)
-                .neonGlow(color = neonCyan, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onBack() }
-        )
+        if (showBack) {
+            Icon(
+                painter = painterResource(R.mipmap.ic_back),
+                contentDescription = stringResource(R.string.common_back_desc),
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 16.dp)
+                    .size(40.dp)
+                    .neonGlow(color = neonCyan, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { onBack() }
+            )
+        }
         Text(
             text = title,
             color = Color.White,

@@ -4,6 +4,7 @@ import com.example.newproject.network.api.PublicApiService
 import com.example.newproject.network.api.UserApiService
 import com.example.newproject.network.manager.SessionManager
 import com.example.newproject.network.manager.TokenManager
+import com.example.newproject.network.manager.UserInfoManager
 import com.example.newproject.network.model.NetworkResult
 import com.example.newproject.network.model.request.LoginRequest
 import com.example.newproject.network.model.request.VerifyOtpRequest
@@ -15,6 +16,7 @@ class AuthRepository @Inject constructor(
     private val publicApi: PublicApiService,
     private val userApi: UserApiService,
     private val tokenManager: TokenManager,
+    private val userInfoManager: UserInfoManager,
     sessionManager: SessionManager
 ) : BaseRepository(sessionManager) {
 
@@ -22,6 +24,7 @@ class AuthRepository @Inject constructor(
         val result = safeApiCall { userApi.logout() }
         if (result is NetworkResult.Success) {
             tokenManager.clearTokens()
+            userInfoManager.clear()
         }
         return result
     }

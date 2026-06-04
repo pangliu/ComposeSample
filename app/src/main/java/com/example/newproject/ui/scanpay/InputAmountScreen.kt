@@ -66,6 +66,22 @@ fun InputAmountScreen(
     onNavigate: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    InputAmountContent(
+        uiState = uiState,
+        onBack = onBack,
+        onReviewDetails = { amount ->
+            viewModel.setAmount(amount)
+            onNavigate(Routes.SCAN_PAY_CONFIRM_PAYMENT)
+        }
+    )
+}
+
+@Composable
+private fun InputAmountContent(
+    uiState: ScanPayUiState,
+    onBack: () -> Unit = {},
+    onReviewDetails: (String) -> Unit = {}
+) {
     var amount by remember { mutableStateOf("") }
     var isBalanceVisible by remember { mutableStateOf(false) }
     Scaffold(
@@ -138,7 +154,7 @@ fun InputAmountScreen(
                         }
                         Spacer(Modifier.height(5.dp))
                         Text(
-                            text = "@${uiState.recipientUsername}",
+                            text = "@${uiState.recipientNickName}",
                             color = neonPurpleLight,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
@@ -237,7 +253,7 @@ fun InputAmountScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (isBalanceVisible) "PHP 1000" else "••••",
+                        text = if (isBalanceVisible) "PHP ${uiState.balance}" else "••••",
                         color = Color.White,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
@@ -276,10 +292,7 @@ fun InputAmountScreen(
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            viewModel.setAmount(amount)
-                            onNavigate(Routes.SCAN_PAY_CONFIRM_PAYMENT)
-                        }
+                        ) { onReviewDetails(amount) }
                         .padding(horizontal = 40.dp, vertical = 12.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -301,6 +314,11 @@ fun InputAmountScreen(
 @Composable
 private fun InputAmountScreenPreview() {
     MaterialTheme {
-        InputAmountScreen()
+        InputAmountContent(
+            uiState = ScanPayUiState(
+                recipientNickName = "bruceb",
+                recipientName = "Bruce Banner"
+            )
+        )
     }
 }

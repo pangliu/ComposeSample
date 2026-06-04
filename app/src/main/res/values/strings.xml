@@ -235,6 +235,14 @@
     <string name="confirm_payment_cancel">CANCEL</string>
     <string name="confirm_payment_confirm_pay">CONFIRM &amp; PAY</string>
 
+    <!-- TransactionSuccessfulScreen -->
+    <string name="transaction_successful_title">Transaction Successful</string>
+    <string name="transaction_successful_recipient">Paid to %s</string>
+    <string name="transaction_successful_amount">PHP %s</string>
+    <string name="transaction_successful_done">DONE</string>
+    <string name="transaction_successful_share">SHARE MY EXPERIENCE</string>
+    <string name="transaction_successful_paid_to">Paid To:</string>
+
     <!-- ScanPayScreen -->
     <string name="scan_pay_title">Scan / Pay</string>
     <string name="scan_pay_back_desc">Back</string>
@@ -250,6 +258,9 @@
     <string name="scan_pay_my_qr_name">Bruce Banner</string>
     <string name="scan_pay_my_qr_balance">Current Balance:</string>
     <string name="scan_pay_my_qr_x_points">5,000 X-Points</string>
+    <string name="scan_pay_my_qr_use_points">Use points for discount</string>
+    <string name="scan_pay_my_qr_points_balance">(Balance: %1$s X-points)</string>
+    <string name="scan_pay_my_qr_available_balance">Available balance:%1$s</string>
     <string name="scan_pay_my_qr_generate_ang_pao_btn">Generate Ang Pao / Gift QR</string>
     <string name="scan_pay_my_qr_split_bill_btn">Split a Bill &amp; Request</string>
     <string name="scan_pay_my_qr_daily_quest_title">Daily P2P Collection Quests:</string>

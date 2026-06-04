@@ -21,6 +21,7 @@ import com.example.newproject.ui.profile.security.SecurityCenterScreen
 import com.example.newproject.ui.scanpay.ConfirmPaymentScreen
 import com.example.newproject.ui.scanpay.InputAmountScreen
 import com.example.newproject.ui.scanpay.ScanPayViewModel
+import com.example.newproject.ui.scanpay.TransactionSuccessfulScreen
 import com.example.newproject.ui.welcome.WelcomeScreen
 import com.example.newproject.ui.welcome.WelcomeViewModel
 
@@ -138,7 +139,27 @@ fun AppNavigation(
             val viewModel = hiltViewModel<ScanPayViewModel>(mainEntry)
             ConfirmPaymentScreen(
                 viewModel = viewModel,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onNavigate = { navController.navigate(it) }
+            )
+        }
+
+        composable(
+            route = Routes.SCAN_PAY_TRANSACTION_SUCCESSFUL,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) { backStackEntry ->
+            val mainEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.MAIN)
+            }
+            val viewModel = hiltViewModel<ScanPayViewModel>(mainEntry)
+            TransactionSuccessfulScreen(
+                viewModel = viewModel,
+                onBack = {
+                    navController.navigate(Routes.MAIN) {
+                        popUpTo(Routes.MAIN) { inclusive = true }
+                    }
+                }
             )
         }
 

@@ -17,6 +17,7 @@ class FakeUserApiService : UserApiService {
             result = UserInfoResponse(
                 userId = "U12345678",
                 userName = "Hank Liu",
+                nickName = "Hank",
                 userPhone = "0912345678",
                 userEmail = "hank.fake@gmail.com",
                 cashBalance = 12500.50,

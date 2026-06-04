@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -29,8 +30,27 @@ fun ScanPayScreen(
     viewModel: ScanPayViewModel = hiltViewModel(),
     onNavigate: (String) -> Unit = {}
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    ScanPayContent(
+        uiState = uiState,
+        onQrCodeScanned = { url ->
+            Log.e("tag", "onQrCodeScanned: $url")
+            if (url.contains("http://xcash")) {
+                val (account, nickName, name) = parseXcashQrCode(url)
+                viewModel.setRecipientInfo(account = account, nickName = nickName, name = name)
+                onNavigate(Routes.SCAN_PAY_INPUT_AMOUNT)
+            }
+        }
+    )
+}
+
+@Composable
+private fun ScanPayContent(
+    uiState: ScanPayUiState,
+    onQrCodeScanned: (String) -> Unit = {}
+) {
     var selectedMode by rememberSaveable { mutableStateOf(QrMode.MY_QR) }
-    val qrCodeUrl = "http://xcash.io/pay?to=hank&name=hank+liu"
+    val qrCodeUrl = "http://xcash.io/pay?account=hank_001&to=hank&name=hank+liu"
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,31 +67,39 @@ fun ScanPayScreen(
         MyQrContent(
             qrCodeUrl = qrCodeUrl,
             selectedMode = selectedMode,
-            onQrCodeScanned = { url ->
-                Log.e("tag", "onQrCodeScanned: $url")
-                if (url.contains("http://xcash")) {
-                    val (username, name) = parseXcashQrCode(url)
-                    viewModel.setRecipientInfo(username, name)
-                    onNavigate(Routes.SCAN_PAY_INPUT_AMOUNT)
-                }
-            }
+            userName = uiState.myUserName,
+            nickName = uiState.myNickName,
+            balance = uiState.balance,
+            onQrCodeScanned = onQrCodeScanned
         )
     }
 }
 
 /**
- * 解析 xcash QR code URL，取出收款人 username 與 name。
- * 預期格式：http://xcash.io/pay?to=bruceb&name=Bruce+Banner
- * 若 URL 不含這些參數則回傳空字串。
+ * 解析 XCash QR code URL，取出收款人資訊。
+ *
+ * URL 格式：
+ *   http://xcash.io/pay?account={account}&to={nickName}&name={name}
+ *
+ * 範例：
+ *   http://xcash.io/pay?account=bruceb_001&to=bruceb&name=Bruce+Banner
+ *
+ * Query 參數對應：
+ *   account → 收款人帳號（用於實際付款，例如 "bruceb_001"）
+ *   to      → 收款人暱稱（顯示用 @handle，例如 "bruceb"）
+ *   name    → 收款人全名（顯示用，例如 "Bruce Banner"）
+ *
+ * @return Triple(account, nickName, name)，解析失敗時三個值皆為空字串
  */
-private fun parseXcashQrCode(url: String): Pair<String, String> {
+private fun parseXcashQrCode(url: String): Triple<String, String, String> {
     return try {
         val uri = Uri.parse(url)
-        val username = uri.getQueryParameter("to") ?: ""
+        val account = uri.getQueryParameter("account") ?: ""
+        val nickName = uri.getQueryParameter("to") ?: ""
         val name = uri.getQueryParameter("name") ?: ""
-        Pair(username, name)
+        Triple(account, nickName, name)
     } catch (e: Exception) {
-        Pair("", "")
+        Triple("", "", "")
     }
 }
 
@@ -79,6 +107,6 @@ private fun parseXcashQrCode(url: String): Pair<String, String> {
 @Composable
 private fun ScanPayScreenPreview() {
     MaterialTheme {
-        ScanPayScreen()
+        ScanPayContent(uiState = ScanPayUiState(myUserName = "Hank Liu", myNickName = "Hank"))
     }
 }
