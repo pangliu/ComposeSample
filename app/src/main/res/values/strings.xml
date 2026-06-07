@@ -234,6 +234,7 @@
     <string name="confirm_payment_back_desc">Back</string>
     <string name="confirm_payment_cancel">CANCEL</string>
     <string name="confirm_payment_confirm_pay">CONFIRM &amp; PAY</string>
+    <string name="confirm_payment_try_again">TRY AGAIN / RELOAD WALLET</string>
 
     <!-- TransactionSuccessfulScreen -->
     <string name="transaction_successful_title">Transaction Successful</string>

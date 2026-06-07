@@ -30,7 +30,8 @@ data class ScanPayUiState(
     val recipientNickName: String = "",
     val recipientName: String = "",
     val amount: String = "",
-    val isConfirming: Boolean = false
+    val isConfirming: Boolean = false,
+    val confirmErrorMessage: String = ""
 )
 
 @HiltViewModel
@@ -82,16 +83,14 @@ class ScanPayViewModel @Inject constructor(
                 amount = state.amount
             )) {
                 is NetworkResult.Success -> {
-                    _uiState.update { it.copy(isConfirming = false) }
+                    _uiState.update { it.copy(isConfirming = false, confirmErrorMessage = "") }
                     _navigationEvent.emit(ScanPayNavigationEvent.PaymentSuccess)
                 }
                 is NetworkResult.Error -> {
-                    _uiState.update { it.copy(isConfirming = false) }
-                    _eventFlow.emit(UiEvent.ShowToast(result.message))
+                    _uiState.update { it.copy(isConfirming = false, confirmErrorMessage = result.message) }
                 }
                 is NetworkResult.Exception -> {
-                    _uiState.update { it.copy(isConfirming = false) }
-                    _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
+                    _uiState.update { it.copy(isConfirming = false, confirmErrorMessage = result.e.message ?: "網路異常") }
                 }
             }
         }

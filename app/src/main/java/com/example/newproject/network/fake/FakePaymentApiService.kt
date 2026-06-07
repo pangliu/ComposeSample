@@ -15,13 +15,14 @@ class FakePaymentApiService : PaymentApiService {
     override suspend fun confirmPayment(request: ConfirmPaymentRequest): BaseResponse<ConfirmPaymentResponse> {
         delay(1500)
         return BaseResponse(
-            code = 202,
-            errorMsg = "failed",
-//            result = ConfirmPaymentResponse(
-//                transactionId = "TXN${System.currentTimeMillis()}",
-//                status = "SUCCESS"
-//            )
-            result = null
+            code = 200,
+            errorMsg = "success",
+            result = ConfirmPaymentResponse(
+                transactionId = "TXN${System.currentTimeMillis()}",
+                status = "SUCCESS"
+            )
+//            errorMsg = "failed to payment，test xxxx",
+//            result = null
         )
     }
 }

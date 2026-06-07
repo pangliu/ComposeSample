@@ -1,14 +1,19 @@
 package com.example.newproject.ui.login
 
+import android.graphics.SurfaceTexture
+import android.net.Uri
+import android.view.Surface
+import android.view.TextureView
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.decode.GifDecoder
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -218,17 +223,79 @@ fun LoginScreenContent(
                     modifier = Modifier.weight(1f).fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    val gifLoader = remember(context) {
-                        ImageLoader.Builder(context)
-                            .components { add(GifDecoder.Factory()) }
-                            .build()
+                    val isPreview = androidx.compose.ui.platform.LocalInspectionMode.current
+                    if (isPreview) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_xcash_logo),
+                            contentDescription = stringResource(R.string.center_neon_logo_desc),
+                            modifier = Modifier.fillMaxWidth(0.9f)
+                        )
+                    } else {
+                        val exoPlayer = remember(context) {
+                            ExoPlayer.Builder(context).build().apply {
+                                val uri = Uri.parse("android.resource://${context.packageName}/${R.raw.logo}")
+                                setMediaItem(MediaItem.fromUri(uri))
+                                repeatMode = ExoPlayer.REPEAT_MODE_ONE
+                                volume = 0f
+                                prepare()
+                                playWhenReady = true
+                            }
+                        }
+                        var videoAspectRatio by remember { mutableStateOf(1f) }
+                        DisposableEffect(exoPlayer) {
+                            val listener = object : androidx.media3.common.Player.Listener {
+                                override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
+                                    if (videoSize.height > 0) {
+                                        videoAspectRatio = videoSize.width.toFloat() / videoSize.height.toFloat()
+                                    }
+                                }
+                            }
+                            exoPlayer.addListener(listener)
+                            onDispose {
+                                exoPlayer.removeListener(listener)
+                                exoPlayer.release()
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(0.9f)
+                                .aspectRatio(videoAspectRatio)
+                        ) {
+                            AndroidView(
+                                factory = { ctx ->
+                                    TextureView(ctx).apply {
+                                        surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                                            private var surface: Surface? = null
+                                            override fun onSurfaceTextureAvailable(st: SurfaceTexture, w: Int, h: Int) {
+                                                surface = Surface(st).also { exoPlayer.setVideoSurface(it) }
+                                            }
+                                            override fun onSurfaceTextureSizeChanged(st: SurfaceTexture, w: Int, h: Int) {}
+                                            override fun onSurfaceTextureDestroyed(st: SurfaceTexture): Boolean {
+                                                exoPlayer.setVideoSurface(null)
+                                                surface?.release()
+                                                surface = null
+                                                return true
+                                            }
+                                            override fun onSurfaceTextureUpdated(st: SurfaceTexture) {}
+                                        }
+                                    }
+                                },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        Brush.radialGradient(
+                                            colorStops = arrayOf(
+                                                0.5f to Color.Transparent,
+                                                1.0f to welcomeBackground
+                                            )
+                                        )
+                                    )
+                            )
+                        }
                     }
-                    AsyncImage(
-                        model = R.drawable.xcash_logo_type2,
-                        imageLoader = gifLoader,
-                        contentDescription = stringResource(id = R.string.center_neon_logo_desc),
-                        modifier = Modifier.fillMaxWidth(0.9f)
-                    )
                 }
 
                 // ================== Bottom Section ==================

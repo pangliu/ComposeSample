@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import android.widget.Toast
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
@@ -68,6 +69,8 @@ import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
+import com.example.newproject.ui.theme.neonPink
+import com.example.newproject.ui.theme.neonRed
 import com.example.newproject.ui.theme.normalText
 import com.example.newproject.ui.theme.qrCodeBackground
 import com.example.newproject.ui.theme.welcomeBackground
@@ -325,11 +328,24 @@ private fun ConfirmPaymentContent(
                 )
             }
 //            Spacer(Modifier.height(10.dp))
-            MyQrActionButton(
-                iconRes = R.mipmap.ic_money,
-                label = stringResource(R.string.scan_pay_my_qr_split_bill_btn),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            if (uiState.confirmErrorMessage.isNotEmpty()) {
+                Text(
+                    text = uiState.confirmErrorMessage,
+                    color = neonRed,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                )
+            } else {
+                MyQrActionButton(
+                    iconRes = R.mipmap.ic_money,
+                    label = stringResource(R.string.scan_pay_my_qr_split_bill_btn),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
             Spacer(Modifier.height(20.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -410,10 +426,11 @@ private fun ConfirmPaymentContent(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .weight(1f)
+                        .height(55.dp)
                         .border(
                             width = 1.5.dp,
                             color = neonPurple,
-                            shape = RoundedCornerShape(25.dp)
+                            shape = RoundedCornerShape(30.dp)
                         )
                         .neonGlow(
                             color = neonPurple,
@@ -425,7 +442,6 @@ private fun ConfirmPaymentContent(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) { onBack() }
-                        .padding(vertical = 10.dp, horizontal = 8.dp)
                 ) {
                     Icon(
                         modifier = Modifier.size(24.dp),
@@ -441,18 +457,21 @@ private fun ConfirmPaymentContent(
                     )
                 }
                 Spacer(Modifier.width(10.dp))
+                val hasError = uiState.confirmErrorMessage.isNotEmpty()
+                val confirmBtnColor = if (hasError) neonPink else neonCyan
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .weight(1f)
+                        .height(55.dp)
                         .border(
                             width = 1.5.dp,
                             color = neonCyan,
-                            shape = RoundedCornerShape(25.dp)
+                            shape = RoundedCornerShape(30.dp)
                         )
                         .neonGlow(
-                            color = neonCyan,
+                            color = confirmBtnColor,
                             alpha = 0.6f,
                             glowRadius = 25.dp,
                             borderRadius = 25.dp
@@ -464,22 +483,27 @@ private fun ConfirmPaymentContent(
                         ) { onConfirmPay() }
                         .padding(5.dp)
                         .background(
-                            color = if (uiState.isConfirming) neonCyan.copy(alpha = 0.4f) else neonCyan,
-                            shape = RoundedCornerShape(20.dp)
+                            color = if (uiState.isConfirming) confirmBtnColor.copy(alpha = 0.4f) else confirmBtnColor,
+                            shape = RoundedCornerShape(30.dp)
                         )
-                        .padding(vertical = 5.dp)
                 ) {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        imageVector = Icons.Default.Check,
-                        tint = Color.Black,
-                        contentDescription = null,
-                    )
+                    if(!hasError) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            imageVector = Icons.Default.Check,
+                            tint = Color.Black,
+                            contentDescription = null,
+                        )
+                    }
                     Text(
-                        text = stringResource(R.string.confirm_payment_confirm_pay),
-                        color = Color.Black,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
+                        text = if (hasError) stringResource(R.string.confirm_payment_try_again)
+                               else stringResource(R.string.confirm_payment_confirm_pay),
+                        color = if (hasError) Color.White
+                                else Color.Black,
+                        fontSize = if(hasError)12.sp
+                                else 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
                     )
                 }
             }

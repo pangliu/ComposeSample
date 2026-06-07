@@ -85,6 +85,10 @@ dependencies {
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
 
+    // Media3 (ExoPlayer)
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.ui)
+
     debugImplementation(libs.androidx.ui.tooling)
 
     // Hilt
