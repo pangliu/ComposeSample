@@ -1,0 +1,11 @@
+package com.example.newproject.network.model.response
+
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
+data class FriendResponse(
+    @Json(name = "id") val id: String,
+    @Json(name = "name") val name: String,
+    @Json(name = "nick_name") val nickName: String
+)

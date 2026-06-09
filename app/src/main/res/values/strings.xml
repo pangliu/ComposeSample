@@ -136,6 +136,24 @@
     <string name="add_new_card_cvv_notice">Your CVV is not stored</string>
     <string name="add_new_card_confirm">Confirm</string>
 
+    <!-- SplitBillDialog -->
+    <!-- SelectSplitPartnerDialog -->
+    <string name="select_partner_title">SELECT SPLIT PARTNERS</string>
+    <string name="select_partner_confirm">NEXT</string>
+    <string name="select_partner_cancel">CANCEL</string>
+    <string name="select_partner_selected_count">%d selected</string>
+    <string name="select_partner_total_to_split">Total to Split</string>
+    <string name="select_partner_assign_amounts">Assign Amounts</string>
+
+    <!-- SplitBillDialog -->
+    <string name="split_bill_title">ASSIGN AMOUNTS</string>
+    <string name="split_bill_equally">EQUALLY</string>
+    <string name="split_bill_custom">CUSTOM</string>
+    <string name="split_bill_manual_split">Manual-Split</string>
+    <string name="split_bill_you">You</string>
+    <string name="split_bill_remaining">Remaining  :  PHP</string>
+    <string name="split_bill_confirm_request">Confirm Request</string>
+
     <!-- SelectCardTypeScreen -->
     <string name="select_card_type_title">Select Card Type</string>
     <string name="select_card_type_back_desc">Back</string>

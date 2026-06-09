@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newproject.network.manager.UserInfoManager
 import com.example.newproject.network.model.NetworkResult
+import com.example.newproject.network.model.response.FriendResponse
 import com.example.newproject.repository.PaymentRepository
+import com.example.newproject.repository.UserRepository
 import com.example.newproject.ui.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,13 +33,19 @@ data class ScanPayUiState(
     val recipientName: String = "",
     val amount: String = "",
     val isConfirming: Boolean = false,
-    val confirmErrorMessage: String = ""
+    val confirmErrorMessage: String = "",
+    val friendList: List<FriendResponse> = emptyList(),
+    val selectedFriendList: List<FriendResponse> = emptyList(),
+    val isFetchingFriends: Boolean = false,
+    val showSelectPartnerDialog: Boolean = false,
+    val showSplitBillDialog: Boolean = false
 )
 
 @HiltViewModel
 class ScanPayViewModel @Inject constructor(
     private val userInfoManager: UserInfoManager,
-    private val paymentRepository: PaymentRepository
+    private val paymentRepository: PaymentRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ScanPayUiState())
     val uiState: StateFlow<ScanPayUiState> = _uiState.asStateFlow()
@@ -71,6 +79,40 @@ class ScanPayViewModel @Inject constructor(
 
     fun setAmount(amount: String) {
         _uiState.update { it.copy(amount = amount) }
+    }
+
+    fun fetchFriendListAndShowDialog() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isFetchingFriends = true) }
+            when (val result = userRepository.fetchFriendList()) {
+                is NetworkResult.Success -> _uiState.update {
+                    it.copy(
+                        isFetchingFriends = false,
+                        friendList = result.data ?: emptyList(),
+                        showSelectPartnerDialog = true
+                    )
+                }
+                else -> _uiState.update { it.copy(isFetchingFriends = false) }
+            }
+        }
+    }
+
+    fun dismissSelectPartnerDialog() {
+        _uiState.update { it.copy(showSelectPartnerDialog = false) }
+    }
+
+    fun onPartnersConfirmed(selected: List<FriendResponse>) {
+        _uiState.update {
+            it.copy(
+                showSelectPartnerDialog = false,
+                selectedFriendList = selected,
+                showSplitBillDialog = true
+            )
+        }
+    }
+
+    fun dismissSplitBillDialog() {
+        _uiState.update { it.copy(showSplitBillDialog = false) }
     }
 
     fun confirmPayment() {

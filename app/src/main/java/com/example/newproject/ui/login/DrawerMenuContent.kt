@@ -87,8 +87,7 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                 style = TextStyle(shadow = Shadow(
                     color = neonCyan.copy(alpha = 0.6f),
                     blurRadius = 25f
-                )
-                )
+                ))
             )
             
             Spacer(modifier = Modifier.height(24.dp))

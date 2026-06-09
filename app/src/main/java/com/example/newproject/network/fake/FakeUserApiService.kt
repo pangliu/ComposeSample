@@ -2,6 +2,7 @@ package com.example.newproject.network.fake
 
 import com.example.newproject.network.api.UserApiService
 import com.example.newproject.network.model.response.BaseResponse
+import com.example.newproject.network.model.response.FriendResponse
 import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.OrderStatus
 import com.example.newproject.network.model.response.OrderType
@@ -87,5 +88,16 @@ class FakeUserApiService : UserApiService {
         )
     }
 
-
+    override suspend fun getFriendList(): BaseResponse<List<FriendResponse>> {
+        delay(600)
+        return BaseResponse(
+            code = 200,
+            errorMsg = "success",
+            result = listOf(
+                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb"),
+                FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman"),
+                FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "blackwidow")
+            )
+        )
+    }
 }

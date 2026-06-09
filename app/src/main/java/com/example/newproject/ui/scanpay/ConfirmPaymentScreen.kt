@@ -100,10 +100,29 @@ fun ConfirmPaymentScreen(
             }
         }
     }
+    if (uiState.showSelectPartnerDialog) {
+        SelectSplitPartnerDialog(
+            friendList = uiState.friendList,
+            totalAmount = uiState.amount.toDoubleOrNull() ?: 0.0,
+            onDismiss = { viewModel.dismissSelectPartnerDialog() },
+            onConfirm = { selected -> viewModel.onPartnersConfirmed(selected) }
+        )
+    }
+
+    if (uiState.showSplitBillDialog) {
+        SplitBillDialog(
+            totalAmount = uiState.amount.toDoubleOrNull() ?: 0.0,
+            friendList = uiState.selectedFriendList,
+            myName = uiState.myUserName,
+            onDismiss = { viewModel.dismissSplitBillDialog() }
+        )
+    }
+
     ConfirmPaymentContent(
         uiState = uiState,
         onBack = onBack,
-        onConfirmPay = { viewModel.confirmPayment() }
+        onConfirmPay = { viewModel.confirmPayment() },
+        onSplitBill = { viewModel.fetchFriendListAndShowDialog() }
     )
 }
 
@@ -111,7 +130,8 @@ fun ConfirmPaymentScreen(
 private fun ConfirmPaymentContent(
     uiState: ScanPayUiState,
     onBack: () -> Unit = {},
-    onConfirmPay: () -> Unit = {}
+    onConfirmPay: () -> Unit = {},
+    onSplitBill: () -> Unit = {}
 ) {
     var isBalanceVisible by remember { mutableStateOf(false) }
     var useXPoints by remember { mutableStateOf(false) }
@@ -343,7 +363,8 @@ private fun ConfirmPaymentContent(
                 MyQrActionButton(
                     iconRes = R.mipmap.ic_money,
                     label = stringResource(R.string.scan_pay_my_qr_split_bill_btn),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    onClick = onSplitBill
                 )
             }
             Spacer(Modifier.height(20.dp))
