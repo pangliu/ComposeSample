@@ -1,4 +1,4 @@
-package com.example.newproject.ui.scanpay
+package com.example.newproject.ui.scanpay.confirm
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,6 +43,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.Alignment
 import com.example.newproject.ui.UiEvent
+import com.example.newproject.ui.scanpay.ScanPayNavigationEvent
+import com.example.newproject.ui.scanpay.ScanPayUiState
+import com.example.newproject.ui.scanpay.ScanPayViewModel
+import com.example.newproject.ui.scanpay.components.SelectSplitPartnerDialog
+import com.example.newproject.ui.scanpay.components.SplitBillDialog
+import com.example.newproject.ui.scanpay.components.SplitPartnersRow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
@@ -64,6 +70,7 @@ import com.example.newproject.ui.Routes
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.scanpay.components.MyQrActionButton
 import com.example.newproject.ui.theme.balanceGold
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight

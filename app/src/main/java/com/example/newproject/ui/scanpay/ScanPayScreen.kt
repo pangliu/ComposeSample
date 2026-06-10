@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.ui.Routes
 import com.example.newproject.ui.components.QrMode
 import com.example.newproject.ui.components.QrModeTabSelector
+import com.example.newproject.ui.scanpay.components.MyQrContent
 import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable

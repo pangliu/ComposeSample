@@ -8,6 +8,7 @@ object Routes {
     // Profile sub-pages
     const val PROFILE_EDIT = "profile_edit"
     const val SECURITY_CENTER = "security_center"
+    const val TRANSACTION_HISTORY = "transaction_history"
 
     // ScanPay sub-pages
     const val SCAN_PAY_INPUT_AMOUNT = "scan_pay_input_amount"

@@ -1,4 +1,4 @@
-package com.example.newproject.ui.scanpay
+package com.example.newproject.ui.scanpay.components
 
 import android.Manifest
 import android.content.pm.PackageManager

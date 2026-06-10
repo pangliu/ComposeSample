@@ -19,10 +19,11 @@ import com.example.newproject.ui.login.LoginViewModel
 import com.example.newproject.ui.main.MainScreen
 import com.example.newproject.ui.profile.edit.ProfileEditScreen
 import com.example.newproject.ui.profile.security.SecurityCenterScreen
-import com.example.newproject.ui.scanpay.ConfirmPaymentScreen
-import com.example.newproject.ui.scanpay.InputAmountScreen
+import com.example.newproject.ui.profile.transaction.TransactionHistoryScreen
 import com.example.newproject.ui.scanpay.ScanPayViewModel
-import com.example.newproject.ui.scanpay.TransactionSuccessfulScreen
+import com.example.newproject.ui.scanpay.confirm.ConfirmPaymentScreen
+import com.example.newproject.ui.scanpay.input.InputAmountScreen
+import com.example.newproject.ui.scanpay.success.TransactionSuccessfulScreen
 import com.example.newproject.ui.welcome.WelcomeScreen
 import com.example.newproject.ui.welcome.WelcomeViewModel
 
@@ -79,6 +80,7 @@ fun AppNavigation(
                 when (targetState.destination.route) {
                     Routes.PROFILE_EDIT -> slideOutHorizontally { -it }
                     Routes.SECURITY_CENTER -> slideOutHorizontally { -it }
+                    Routes.TRANSACTION_HISTORY -> slideOutHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideOutHorizontally { -it }
                     Routes.CARD_DETAIL -> slideOutHorizontally { -it }
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideOutHorizontally { -it }
@@ -89,6 +91,7 @@ fun AppNavigation(
                 when (initialState.destination.route) {
                     Routes.PROFILE_EDIT -> slideInHorizontally { -it }
                     Routes.SECURITY_CENTER -> slideInHorizontally { -it }
+                    Routes.TRANSACTION_HISTORY -> slideInHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideInHorizontally { -it }
                     Routes.CARD_DETAIL -> slideInHorizontally { -it }
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideInHorizontally { -it }
@@ -117,7 +120,23 @@ fun AppNavigation(
             enterTransition = { slideInHorizontally { it } },
             popExitTransition = { slideOutHorizontally { it } }
         ) {
-            SecurityCenterScreen(onBack = { navController.popBackStack() })
+            val viewModel = hiltViewModel<com.example.newproject.ui.profile.security.SecurityCenterViewModel>()
+            SecurityCenterScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Routes.TRANSACTION_HISTORY,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) {
+            val viewModel = hiltViewModel<com.example.newproject.ui.profile.transaction.TransactionHistoryViewModel>()
+            TransactionHistoryScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
         }
 
         // ── ScanPay sub-pages (ScanPayViewModel scoped to MAIN) ──────────

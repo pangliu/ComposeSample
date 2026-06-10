@@ -1,4 +1,4 @@
-package com.example.newproject.ui.scanpay
+package com.example.newproject.ui.scanpay.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

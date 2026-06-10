@@ -1,4 +1,4 @@
-package com.example.newproject.ui.scanpay
+package com.example.newproject.ui.scanpay.success
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.R
+import com.example.newproject.ui.scanpay.ScanPayUiState
+import com.example.newproject.ui.scanpay.ScanPayViewModel
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.balanceGold

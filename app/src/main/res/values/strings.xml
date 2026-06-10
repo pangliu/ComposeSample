@@ -258,6 +258,35 @@
     <string name="profile_edit_change">CHANGE</string>
     <!-- SecurityCenterScreen -->
     <string name="security_center_back_desc">Back</string>
+    <string name="security_section_identity">Identity &amp; Status</string>
+    <string name="security_score_label">YOUR SECURITY SCORE</string>
+    <string name="security_score_prefix">SCORE: </string>
+    <string name="security_score_max">/100</string>
+    <string name="security_checklist_title">SECURITY CHECKLIST</string>
+    <string name="security_item_pin">Security PIN</string>
+    <string name="security_item_pin_subtitle">Payday, Workday: PIN Set &amp; Confirmed</string>
+    <string name="security_item_biometric">Biometric Authentication</string>
+    <string name="security_item_biometric_subtitle">Next Payday: Fingerprint &amp; Face ID Enabled</string>
+    <string name="security_item_login_activity">Login Activity (Latest)</string>
+    <string name="security_item_login_activity_subtitle">Payday: Jan 28, 12:00 PM | MacBook Pro</string>
+    <string name="security_item_location">Quezon City, PH</string>
+    <string name="security_item_location_subtitle">Quezon City, PH</string>
+    <string name="security_item_alerts">In-App Security Alerts</string>
+    <string name="security_item_alerts_subtitle">Enable All Payouts</string>
+
+    <!-- TransactionHistoryScreen -->
+    <string name="tx_balance_label">BALANCE</string>
+    <string name="tx_x_points_label">X-Points</string>
+    <string name="tx_filter_today">Today</string>
+    <string name="tx_filter_this_week">This Week</string>
+    <string name="tx_filter_this_month">This Month</string>
+    <string name="tx_category_all">All</string>
+    <string name="tx_category_spent">Spent</string>
+    <string name="tx_category_received">Received</string>
+    <string name="tx_category_merchant">Merchant / Service</string>
+    <string name="tx_empty">No transactions found</string>
+    <string name="tx_status_failed">Failed</string>
+    <string name="tx_cop_points">Cop Points</string>
 
     <!-- Common -->
     <string name="common_back_desc">Back</string>

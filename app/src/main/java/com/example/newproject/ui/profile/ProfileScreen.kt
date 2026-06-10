@@ -159,7 +159,8 @@ fun ProfileScreenContent(
             )
             ProfileMenuItem(
                 icon = ProfileIcon.Resource(R.mipmap.ic_calendar),
-                label = stringResource(R.string.profile_transaction_history)
+                label = stringResource(R.string.profile_transaction_history),
+                onClick = { onNavigate(Routes.TRANSACTION_HISTORY) }
             )
         }
 

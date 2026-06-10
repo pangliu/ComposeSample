@@ -95,30 +95,35 @@ private fun ProfileEditContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
         ) {
             SubPageTopBar(
                 title = stringResource(R.string.profile_edit),
                 onBack = onBack
             )
 
-            PromoBanner(modifier = Modifier.padding(horizontal = 16.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                PromoBanner(modifier = Modifier.padding(horizontal = 16.dp))
 
-            Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(20.dp))
 
-            MyDeetsSection(
-                uiState = uiState,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+                MyDeetsSection(
+                    uiState = uiState,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
 
-            Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(20.dp))
 
-            SpillTheTeaSection(
-                uiState = uiState,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+                SpillTheTeaSection(
+                    uiState = uiState,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
 
-            Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(32.dp))
+            }
         }
     }
 }
