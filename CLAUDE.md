@@ -251,6 +251,27 @@ object Routes {
 
 4. **子頁面本身**：使用自己的 `Scaffold` 處理 statusBar insets，`onBack` 由外部注入
 
+5. **資料夾結構**：每個子頁面建立獨立資料夾；該頁面專屬的 Compose UI 元件放到該資料夾下的 `components/` 子資料夾
+   ```
+   ui/scanpay/
+   ├── ScanPayViewModel.kt          # 放根目錄（整個 flow 共用）
+   ├── ScanPayScreen.kt             # 放根目錄（Tab 主頁面）
+   ├── components/                  # ScanPayScreen 專屬元件
+   │   ├── MyQrContent.kt
+   │   ├── SelectSplitPartnerDialog.kt
+   │   └── SplitPartnersRow.kt
+   ├── input/
+   │   └── InputAmountScreen.kt
+   ├── confirm/
+   │   ├── ConfirmPaymentScreen.kt
+   │   └── components/              # ConfirmPaymentScreen 專屬元件
+   │       └── SomeComponent.kt
+   └── success/
+       └── TransactionSuccessfulScreen.kt
+   ```
+   - **package** 命名跟隨資料夾路徑：`com.example.newproject.ui.scanpay.confirm`
+   - 跨資料夾引用（不同 package）需補 `import`，不可依賴同 package 可見性
+
 #### 導航 callback 規則
 - `MainScreen` 只持有一個 `onNavigate: (String) -> Unit` 參數，不針對個別子頁面新增 callback
 - `onNavigate` 沿 tab → Screen 向下傳遞，各 Screen 自行決定要導向哪個路由

@@ -157,12 +157,41 @@ ProfileMenuItem(
 )
 ```
 
-### Step 5 — 建立 Screen 檔案
+### Step 5 — 建立 Screen 檔案與資料夾結構
+
+每個子頁面建立獨立資料夾，該頁面專屬的 Compose UI 元件放到該資料夾下的 `components/` 子資料夾：
+
 ```
 ui/profile/
 └── edit/
-    └── ProfileEditScreen.kt   # 有自己的 Scaffold，接受 onBack: () -> Unit
+    ├── ProfileEditScreen.kt     # 有自己的 Scaffold，接受 onBack: () -> Unit
+    └── components/              # ProfileEditScreen 專屬元件（如有）
+        └── SomeEditComponent.kt
 ```
+
+多個子頁面共用的元件（如 ViewModel 共用的 Dialog）則放在父資料夾的 `components/`：
+
+```
+ui/scanpay/
+├── ScanPayViewModel.kt          # 整個 flow 共用，放根目錄
+├── ScanPayScreen.kt             # Tab 主頁面，放根目錄
+├── components/                  # ScanPayScreen / flow 共用元件
+│   ├── MyQrContent.kt
+│   ├── SelectSplitPartnerDialog.kt
+│   └── SplitPartnersRow.kt
+├── input/
+│   └── InputAmountScreen.kt
+├── confirm/
+│   └── ConfirmPaymentScreen.kt
+└── success/
+    └── TransactionSuccessfulScreen.kt
+```
+
+**package 命名規則**：跟隨資料夾路徑
+- `ui/scanpay/confirm/ConfirmPaymentScreen.kt` → `package com.example.newproject.ui.scanpay.confirm`
+- `ui/scanpay/components/MyQrContent.kt` → `package com.example.newproject.ui.scanpay.components`
+
+**import 規則**：不同 package 間的引用必須補 `import`，不可依賴同 package 可見性
 
 ---
 

@@ -274,6 +274,25 @@
     <string name="security_item_alerts">In-App Security Alerts</string>
     <string name="security_item_alerts_subtitle">Enable All Payouts</string>
 
+    <!-- VerificationStatusScreen -->
+    <string name="verification_title">Verification Status</string>
+    <string name="verification_pending_badge">VERIFICATION PENDING</string>
+    <string name="verification_checklist_title">VERIFICATION CHECKLIST</string>
+    <string name="verification_item_id">Identity Document Verification</string>
+    <string name="verification_item_face">Facial Liveness Test</string>
+    <string name="verification_item_phone">Phone Number</string>
+    <string name="verification_item_email">Email Address</string>
+    <string name="verification_step_submit_doc">Submit Document</string>
+    <string name="verification_step_review_pending">Review Pending</string>
+    <string name="verification_step_capture">Capture</string>
+    <string name="verification_step_liveness">Liveness Check</string>
+    <string name="verification_step_otp_sent">OTP Sent</string>
+    <string name="verification_step_code_entered">Code Entered</string>
+    <string name="verification_step_link_sent">Link Sent</string>
+    <string name="verification_step_link_clicked">Link Clicked</string>
+    <string name="verification_step_verified">Verified</string>
+    <string name="verification_action_required">ACTION REQUIRED: COMPLETE YOUR ID! ⚠</string>
+
     <!-- TransactionHistoryScreen -->
     <string name="tx_balance_label">BALANCE</string>
     <string name="tx_x_points_label">X-Points</string>

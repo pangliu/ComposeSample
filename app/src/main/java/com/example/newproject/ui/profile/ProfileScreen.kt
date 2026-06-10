@@ -133,7 +133,7 @@ fun ProfileScreenContent(
         )
 
         ProfileSectionHeader(stringResource(R.string.profile_section_identity))
-        IdentityCard(uiState)
+        IdentityCard(uiState, onClick = { onNavigate(Routes.VERIFICATION_STATUS) })
 
         ProfileSectionHeader(stringResource(R.string.profile_section_social))
         SocialRewardsCard(inviteCode = uiState.inviteCode, badgeCount = uiState.badgeCount)
@@ -211,10 +211,11 @@ private fun ProfileSectionHeader(title: String) {
 }
 
 @Composable
-private fun IdentityCard(uiState: ProfileUiState) {
+private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(indication = null, interactionSource = remember { MutableInteractionSource() }) { onClick() }
             .neonGlow(neonCyan, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
             .background(CardBackground, RoundedCornerShape(16.dp))
 //            .border(2.dp, neonCyan.copy(alpha = 0.5f), RoundedCornerShape(16.dp))

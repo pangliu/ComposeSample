@@ -20,6 +20,7 @@ import com.example.newproject.ui.main.MainScreen
 import com.example.newproject.ui.profile.edit.ProfileEditScreen
 import com.example.newproject.ui.profile.security.SecurityCenterScreen
 import com.example.newproject.ui.profile.transaction.TransactionHistoryScreen
+import com.example.newproject.ui.profile.verification.VerificationStatusScreen
 import com.example.newproject.ui.scanpay.ScanPayViewModel
 import com.example.newproject.ui.scanpay.confirm.ConfirmPaymentScreen
 import com.example.newproject.ui.scanpay.input.InputAmountScreen
@@ -81,6 +82,7 @@ fun AppNavigation(
                     Routes.PROFILE_EDIT -> slideOutHorizontally { -it }
                     Routes.SECURITY_CENTER -> slideOutHorizontally { -it }
                     Routes.TRANSACTION_HISTORY -> slideOutHorizontally { -it }
+                    Routes.VERIFICATION_STATUS -> slideOutHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideOutHorizontally { -it }
                     Routes.CARD_DETAIL -> slideOutHorizontally { -it }
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideOutHorizontally { -it }
@@ -92,6 +94,7 @@ fun AppNavigation(
                     Routes.PROFILE_EDIT -> slideInHorizontally { -it }
                     Routes.SECURITY_CENTER -> slideInHorizontally { -it }
                     Routes.TRANSACTION_HISTORY -> slideInHorizontally { -it }
+                    Routes.VERIFICATION_STATUS -> slideInHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideInHorizontally { -it }
                     Routes.CARD_DETAIL -> slideInHorizontally { -it }
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideInHorizontally { -it }
@@ -134,6 +137,18 @@ fun AppNavigation(
         ) {
             val viewModel = hiltViewModel<com.example.newproject.ui.profile.transaction.TransactionHistoryViewModel>()
             TransactionHistoryScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Routes.VERIFICATION_STATUS,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) {
+            val viewModel = hiltViewModel<com.example.newproject.ui.profile.verification.VerificationStatusViewModel>()
+            VerificationStatusScreen(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() }
             )
