@@ -36,6 +36,7 @@ data class ScanPayUiState(
     val confirmErrorMessage: String = "",
     val friendList: List<FriendResponse> = emptyList(),
     val selectedFriendList: List<FriendResponse> = emptyList(),
+    val confirmedSplitPartners: List<FriendResponse> = emptyList(),
     val isFetchingFriends: Boolean = false,
     val showSelectPartnerDialog: Boolean = false,
     val showSplitBillDialog: Boolean = false
@@ -113,6 +114,31 @@ class ScanPayViewModel @Inject constructor(
 
     fun dismissSplitBillDialog() {
         _uiState.update { it.copy(showSplitBillDialog = false) }
+    }
+
+    fun confirmSplitBill() {
+        _uiState.update { it.copy(
+            confirmedSplitPartners = it.selectedFriendList,
+            showSplitBillDialog = false
+        )}
+    }
+
+    fun editSplitBill() {
+        _uiState.update { it.copy(showSplitBillDialog = true) }
+    }
+
+    fun cancelSplitBill() {
+        _uiState.update { it.copy(confirmedSplitPartners = emptyList()) }
+    }
+
+    fun clearSplitBillState() {
+        _uiState.update { it.copy(
+            friendList = emptyList(),
+            selectedFriendList = emptyList(),
+            confirmedSplitPartners = emptyList(),
+            showSelectPartnerDialog = false,
+            showSplitBillDialog = false
+        )}
     }
 
     fun confirmPayment() {

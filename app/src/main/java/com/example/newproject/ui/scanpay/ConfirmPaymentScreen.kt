@@ -84,6 +84,9 @@ fun ConfirmPaymentScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
+        viewModel.clearSplitBillState()
+    }
+    LaunchedEffect(Unit) {
         viewModel.navigationEvent.collect { event ->
             when (event) {
                 is ScanPayNavigationEvent.PaymentSuccess ->
@@ -114,7 +117,8 @@ fun ConfirmPaymentScreen(
             totalAmount = uiState.amount.toDoubleOrNull() ?: 0.0,
             friendList = uiState.selectedFriendList,
             myName = uiState.myUserName,
-            onDismiss = { viewModel.dismissSplitBillDialog() }
+            onDismiss = { viewModel.dismissSplitBillDialog() },
+            onConfirm = { viewModel.confirmSplitBill() }
         )
     }
 
@@ -122,7 +126,9 @@ fun ConfirmPaymentScreen(
         uiState = uiState,
         onBack = onBack,
         onConfirmPay = { viewModel.confirmPayment() },
-        onSplitBill = { viewModel.fetchFriendListAndShowDialog() }
+        onSplitBill = { viewModel.fetchFriendListAndShowDialog() },
+        onEditSplit = { viewModel.editSplitBill() },
+        onCancelSplit = { viewModel.cancelSplitBill() }
     )
 }
 
@@ -131,7 +137,9 @@ private fun ConfirmPaymentContent(
     uiState: ScanPayUiState,
     onBack: () -> Unit = {},
     onConfirmPay: () -> Unit = {},
-    onSplitBill: () -> Unit = {}
+    onSplitBill: () -> Unit = {},
+    onEditSplit: () -> Unit = {},
+    onCancelSplit: () -> Unit = {}
 ) {
     var isBalanceVisible by remember { mutableStateOf(false) }
     var useXPoints by remember { mutableStateOf(false) }
@@ -365,6 +373,14 @@ private fun ConfirmPaymentContent(
                     label = stringResource(R.string.scan_pay_my_qr_split_bill_btn),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = onSplitBill
+                )
+            }
+            if (uiState.confirmedSplitPartners.isNotEmpty()) {
+                Spacer(Modifier.height(12.dp))
+                SplitPartnersRow(
+                    partners = uiState.confirmedSplitPartners,
+                    onEdit = onEditSplit,
+                    onCancel = onCancelSplit
                 )
             }
             Spacer(Modifier.height(20.dp))

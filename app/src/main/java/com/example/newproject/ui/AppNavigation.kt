@@ -17,6 +17,7 @@ import com.example.newproject.ui.cards.select.SelectCardTypeScreen
 import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
 import com.example.newproject.ui.main.MainScreen
+import com.example.newproject.ui.profile.edit.ProfileEditScreen
 import com.example.newproject.ui.profile.security.SecurityCenterScreen
 import com.example.newproject.ui.scanpay.ConfirmPaymentScreen
 import com.example.newproject.ui.scanpay.InputAmountScreen
@@ -76,6 +77,7 @@ fun AppNavigation(
             route = Routes.MAIN,
             exitTransition = {
                 when (targetState.destination.route) {
+                    Routes.PROFILE_EDIT -> slideOutHorizontally { -it }
                     Routes.SECURITY_CENTER -> slideOutHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideOutHorizontally { -it }
                     Routes.CARD_DETAIL -> slideOutHorizontally { -it }
@@ -85,6 +87,7 @@ fun AppNavigation(
             },
             popEnterTransition = {
                 when (initialState.destination.route) {
+                    Routes.PROFILE_EDIT -> slideInHorizontally { -it }
                     Routes.SECURITY_CENTER -> slideInHorizontally { -it }
                     Routes.SELECT_CARD_TYPE -> slideInHorizontally { -it }
                     Routes.CARD_DETAIL -> slideInHorizontally { -it }
@@ -101,6 +104,14 @@ fun AppNavigation(
         }
 
         // ── Profile sub-pages ──────────────────────────────────────────────
+        composable(
+            route = Routes.PROFILE_EDIT,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) {
+            ProfileEditScreen(onBack = { navController.popBackStack() })
+        }
+
         composable(
             route = Routes.SECURITY_CENTER,
             enterTransition = { slideInHorizontally { it } },

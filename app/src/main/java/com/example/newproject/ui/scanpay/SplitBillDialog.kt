@@ -60,7 +60,8 @@ fun SplitBillDialog(
     totalAmount: Double,
     friendList: List<FriendResponse>,
     myName: String,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit = {}
 ) {
     var splitMode by remember { mutableStateOf(SplitMode.CUSTOM) }
 
@@ -239,7 +240,7 @@ fun SplitBillDialog(
                         enabled = isConfirmEnabled,
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ) { /* TODO: submit split request */ },
+                    ) { onConfirm() },
                 contentAlignment = Alignment.Center
             ) {
                 Text(

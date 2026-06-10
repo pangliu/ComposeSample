@@ -6,6 +6,7 @@ object Routes {
     const val MAIN = "main"
 
     // Profile sub-pages
+    const val PROFILE_EDIT = "profile_edit"
     const val SECURITY_CENTER = "security_center"
 
     // ScanPay sub-pages

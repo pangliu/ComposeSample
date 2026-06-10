@@ -1,179 +1,409 @@
-# ScanPayScreen
+# ScanPay Screen — 變更說明
 
-## 結構總覽
-
-```
-ScanPayScreen（無 ViewModel，本地管理狀態）
-  ├── selectedMode（rememberSaveable：QrMode.SCAN_QR / QrMode.MY_QR）
-  ├── QrModeTabSelector（Tab 切換列）
-  └── when (selectedMode)
-        ├── SCAN_QR → ScanQrContent
-        │     └── 正方形 Box（neonCyan 邊框 + 提示文字，相機占位）
-        └── MY_QR  → MyQrContent（verticalScroll）
-              ├── QR Code Section（bg_qrcode 背景圖）
-              │     ├── username（neonCyan，頂部）
-              │     ├── 180×180 neonBlue Box（QR 占位）
-              │     └── name（底部）
-              ├── Balance Section
-              │     ├── ic_car 圖示（neonPurple 光暈）
-              │     ├── Current Balance 文字 + 金額切換（明文 / ••••）
-              │     ├── Visibility Toggle icon
-              │     ├── X-Points 文字
-              │     └── ic_monkey 圖示（balanceGold 光暈）
-              ├── Action Buttons（兩欄 Row）
-              │     ├── MyQrActionButton（ic_gift，Generate Ang Pao / Gift QR）
-              │     └── MyQrActionButton（ic_money，Split a Bill & Request）
-              └── Daily Quests Card（neonCyan 光暈邊框卡片）
-                    ├── 標題文字 + 進度（0/3 Scans）
-                    ├── LinearProgressIndicator（neonCyan）
-                    └── ic_girl 圖示
-```
+本文件說明 `ui/scanpay/` 目錄下各畫面與元件的設計與實作，涵蓋本次開發期間所做的所有修改。
 
 ---
 
-## Composable 說明
-
-### `ScanPayScreen`
-
-目前**直接管理本地狀態**，無 ViewModel 注入。  
-`ScanPayViewModel` 已建立但為空殼，尚未接入 UiState 或 eventFlow。
-
-```kotlin
-var selectedMode by rememberSaveable { mutableStateOf(QrMode.MY_QR) }
-```
-
-- 預設顯示 `MY_QR` 分頁
-- 整個畫面結構為 `Column`，`horizontalAlignment = CenterHorizontally`
-- 無 `onNavigate` / `onBack` 參數（畫面由 `CustomBottomNavigation` 的 overlay 開關）
-
----
-
-### `ScanQrContent`（private）
-
-相機掃描 QR 的占位畫面，目前為純 UI，無實際 CameraX 整合：
-
-- 外層 `Box`：`fillMaxWidth + aspectRatio(1f)` 正方形
-- `neonCyan` 邊框（2.dp）、`RoundedCornerShape(16.dp)`
-- 中央顯示 `scan_pay_hint` 提示文字
-
-> 尚未整合相機模組，待 CameraX 或其他 QR scanner library 接入。
-
----
-
-### `MyQrContent`（private）
-
-MY QR 分頁的完整 UI，以 `Column + verticalScroll` 佈局，由上至下分為四個區塊：
-
-#### QR Code Section
-- 以 `bg_qrcode`（mipmap）作為背景圖（`ContentScale.FillWidth`）
-- 疊加 username（頂部）與 name（底部）文字
-- 中央 `180×180 neonBlue Box` 為 QR Code 占位符
-
-#### Balance Section
-- 三欄橫排：`ic_car` 圖示、中央資訊欄（`weight(1f)`）、`ic_monkey` 圖示
-- `isBalanceVisible`（`remember { mutableStateOf(false) }`）控制餘額明文 / `••••` 切換
-- Visibility toggle 使用 `indication = null` 的 `clickable`
-
-#### Action Buttons
-- 兩個等寬 `MyQrActionButton`（`weight(1f)`）橫排
-- `Generate Ang Pao / Gift QR`（ic_gift）
-- `Split a Bill & Request`（ic_money）
-
-#### Daily Quests Card
-- `neonCyan` 光暈邊框卡片（`neonGlow + border + background`）
-- `LinearProgressIndicator(progress = 0f)`（尚未接入動態進度）
-- 右側 `ic_girl` 圖示裝飾
-
----
-
-### `MyQrActionButton`（private）
-
-統一的動作按鈕元件：
-
-| 參數 | 類型 | 說明 |
-|------|------|------|
-| `iconRes` | `Int` | mipmap / drawable 資源 ID |
-| `label` | `String` | 按鈕文字（支援換行，`lineHeight = 15.sp`） |
-| `modifier` | `Modifier` | 外部尺寸控制（通常傳入 `weight(1f)`） |
-| `onClick` | `() -> Unit` | 點擊回呼，預設空 |
-
-- 外框：`neonPurple` 邊框 + 光暈
-- 圖示圓圈：`neonCyan` 邊框 + 光暈
-- 圖示使用 `tint = Color.Unspecified` 保留原色
-
----
-
-### `QrModeTabSelector`（ui/components/）
-
-共用元件，定義於 `ui/components/QrModeTabSelector.kt`：
-
-```kotlin
-enum class QrMode { SCAN_QR, MY_QR }
-
-fun QrModeTabSelector(
-    selectedMode: QrMode,
-    onModeChange: (QrMode) -> Unit,
-    modifier: Modifier = Modifier
-)
-```
-
-- 外框：`welcomeBackground` 底色 + `neonPurple/neonCyan` 漸層邊框
-- 選中 Tab：`neonCyan` 膠囊背景（文字黑色）
-- 未選 Tab：透明背景（文字 `normalText`）
-- 高度固定 `44.dp`，內部留白 `5.dp`
-
----
-
-## ScanPayUiState
-
-```kotlin
-data class ScanPayUiState(
-    val isLoading: Boolean = false
-)
-```
-
-目前為**占位結構**，尚未連接任何資料欄位。
-
----
-
-## 資料流向（目前）
-
-```
-ScanPayScreen
-  ├── selectedMode（local rememberSaveable）→ 控制 Tab 切換
-  └── isBalanceVisible（local remember）→ 控制餘額顯示 / 隱藏
-```
-
-所有資料目前為硬編碼，尚未接入 API：
-
-| 資料項目 | 目前狀態 |
-|----------|----------|
-| `qrcode_url` | 硬編碼字串（宣告但未使用） |
-| 餘額金額 | 硬編碼 `"PHP 1000"` |
-| X-Points | 硬編碼字串資源 `5,000 X-Points` |
-| Quest 進度 | 固定 `progress = 0f` / `"0/3 Scans"` |
-| 使用者名稱 / 姓名 | 硬編碼字串資源 |
-
----
-
-## 檔案結構
+## 目錄結構
 
 ```
 ui/scanpay/
-├── ScanPayScreen.kt    # 頁面入口 + ScanQrContent + MyQrContent + MyQrActionButton
-└── ScanPayViewModel.kt # ScanPayUiState（占位）/ ScanPayViewModel（空殼）
-
-ui/components/
-└── QrModeTabSelector.kt # QrMode enum + QrModeTabSelector + QrTab
+├── ScanPayScreen.kt            # 入口畫面（My QR / Scan QR 切換）
+├── MyQrContent.kt              # QR code 顯示、掃描、餘額、行動按鈕
+├── ScanPayViewModel.kt         # 共用 ViewModel
+├── InputAmountScreen.kt        # 輸入金額畫面
+├── ConfirmPaymentScreen.kt     # 確認付款畫面
+├── SelectSplitPartnerDialog.kt # 選擇分帳夥伴 Dialog
+├── SplitBillDialog.kt          # 分帳金額設定 Dialog
+├── SplitPartnersRow.kt         # 已確認分帳夥伴列表列
+└── TransactionSuccessfulScreen.kt
 ```
 
 ---
 
-## 注意事項
+## ScanPayScreen.kt
 
-- `ScanPayScreen` 目前**沒有接入 ViewModel**，所有狀態為 local，待 API 接入後需重構為標準 MVVM 分層（`ScanPayScreenContent` + `ScanPayViewModel`）
-- `ScanQrContent` 是純 UI 占位，相機功能尚未整合
-- Daily Quests Card 的 `scan_pay_my_qr_daily_quest_progress` 字串在標題行和進度條下方各出現一次（待確認是否為重複）
-- 餘額切換使用 `indication = null` 的 `clickable`，避免深色背景出現矩形 ripple
-- `bg_qrcode` 背景圖以 `ContentScale.FillWidth` 填滿寬度，QR Code 區域以 `180×180 neonBlue Box` 占位
-- `QrModeTabSelector` 為共用元件，可在其他需要雙模式切換的頁面重用
+### 功能
+掃描付款的入口畫面，包含「我的 QR Code」與「掃描 QR Code」兩個 Tab。
+
+### 主要元件
+
+| 元件 | 說明 |
+|------|------|
+| `ScanPayScreen` | Hilt entry-point composable，接收 `ScanPayViewModel` 與 `onNavigate` callback |
+| `ScanPayContent` | 無狀態版本，包含 `QrModeTabSelector` 與 `MyQrContent` |
+| `parseXcashQrCode(url)` | 解析 XCash QR URL 取出收款人資訊 |
+
+### QR Code URL 格式
+
+```
+http://xcash.io/pay?account={account}&to={nickName}&name={name}
+```
+
+| 參數 | 說明 |
+|------|------|
+| `account` | 收款人帳號（用於實際付款，例如 `hank_001`） |
+| `to` | 收款人暱稱（顯示用 @handle，例如 `hank`） |
+| `name` | 收款人全名（顯示用，例如 `hank liu`，空格以 `+` 表示） |
+
+### 掃描流程
+
+1. 使用者切換至 Scan QR Tab
+2. `CameraPreviewView`（定義於 `MyQrContent.kt`）啟動後鏡頭並以 ZXing 持續解析影格
+3. 解析到符合 `http://xcash` 前綴的 URL 後呼叫 `onQrCodeScanned`
+4. `ScanPayScreen` 呼叫 `viewModel.setRecipientInfo()` 儲存收款人，並導向 `InputAmountScreen`
+
+---
+
+## MyQrContent.kt
+
+### 功能
+顯示使用者自己的 QR Code，以及掃描他人 QR Code 的相機視圖。
+
+### QRose 函式庫整合
+
+**替換原因**：原本的 ZXing 只能產生純黑白 Bitmap，無法自訂顏色或形狀。改用 QRose 可在 Compose 中直接產生具有圓形像素、品牌色彩與中央 Logo 的風格化 QR Code。
+
+**依賴版本**（`libs.versions.toml`）：
+```toml
+[versions]
+qrose = "1.0.1"
+
+[libraries]
+qrose = { group = "io.github.alexzhirkevich", name = "qrose", version.ref = "qrose" }
+```
+
+**`app/build.gradle.kts`**：
+```kotlin
+// QR Code
+implementation(libs.qrose)
+```
+
+### QR Code 設定
+
+```kotlin
+val qrPainter = rememberQrCodePainter(
+    data = qrCodeUrl,
+    shapes = QrShapes(
+        ball = QrBallShape.circle(),
+        darkPixel = QrPixelShape.roundCorners(),
+        frame = QrFrameShape.roundCorners(.25f)
+    ),
+    colors = QrColors(
+        dark = QrBrush.solid(neonCyan),
+        light = QrBrush.solid(Color.Transparent)
+    ),
+    errorCorrectionLevel = QrErrorCorrectionLevel.High
+)
+```
+
+**設計決策說明**：
+
+- `light = QrBrush.solid(Color.Transparent)`：QR Code 淺色區域設為透明，讓容器背景色（`qrCodeBackground`）透出，避免黑色方塊問題
+- `errorCorrectionLevel = QrErrorCorrectionLevel.High`：加入 Logo 時必須使用高容錯率，否則 Logo 覆蓋資料區域後 QR Code 無法被掃描；即使目前 Logo 已移除，仍保留此設定以備未來重新啟用
+- `QrLogo` 目前被注解掉，保留設定供參考；重新啟用時需確認 `ic_qrcode_logo` 圖片為透明背景
+
+### 掃描器實作（`CameraPreviewView` + `decodeQrFromProxy`）
+
+- 使用 CameraX `ImageAnalysis` 持續分析影格
+- ZXing `MultiFormatReader` 解析 YUV luminance source
+- **反色嘗試**：若正向解碼失敗，自動嘗試 `source.invert()`，支援亮色模組 + 深色背景的 QR Code（如 neonCyan on dark）
+- 使用 `lastScannedRef` 防止重複觸發同一個 QR Code
+- `DisposableEffect` 確保離開畫面時正確釋放 Camera 資源
+
+### `MyQrActionButton`
+
+可重用的行動按鈕元件，`internal` 可見性，供 `ConfirmPaymentScreen` 共用。
+
+```kotlin
+@Composable
+internal fun MyQrActionButton(
+    iconRes: Int,
+    label: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+)
+```
+
+---
+
+## ScanPayViewModel.kt
+
+### UiState
+
+```kotlin
+data class ScanPayUiState(
+    val myUserName: String = "",
+    val myNickName: String = "",
+    val balance: Double = 0.0,
+    val tokenBalance: Double = 0.0,
+    val recipientAccount: String = "",
+    val recipientNickName: String = "",
+    val recipientName: String = "",
+    val amount: String = "",
+    val isConfirming: Boolean = false,
+    val confirmErrorMessage: String = "",
+    // ── Split Bill ─────────────────────────────────────
+    val friendList: List<FriendResponse> = emptyList(),
+    val selectedFriendList: List<FriendResponse> = emptyList(),
+    val confirmedSplitPartners: List<FriendResponse> = emptyList(),
+    val isFetchingFriends: Boolean = false,
+    val showSelectPartnerDialog: Boolean = false,
+    val showSplitBillDialog: Boolean = false
+)
+```
+
+### 注入依賴
+
+新增注入 `UserRepository` 以呼叫 `fetchFriendList()` API：
+
+```kotlin
+@HiltViewModel
+class ScanPayViewModel @Inject constructor(
+    private val userInfoManager: UserInfoManager,
+    private val paymentRepository: PaymentRepository,
+    private val userRepository: UserRepository
+) : ViewModel()
+```
+
+### Split Bill 相關方法
+
+| 方法 | 說明 |
+|------|------|
+| `fetchFriendListAndShowDialog()` | 呼叫 API 取得好友列表，成功後設定 `showSelectPartnerDialog = true` |
+| `dismissSelectPartnerDialog()` | 關閉選擇夥伴 Dialog |
+| `onPartnersConfirmed(selected)` | 儲存已選取好友，並開啟分帳金額 Dialog |
+| `dismissSplitBillDialog()` | 關閉分帳 Dialog |
+| `confirmSplitBill()` | 將 `selectedFriendList` 搬至 `confirmedSplitPartners`，關閉 Dialog |
+| `editSplitBill()` | 重新開啟分帳 Dialog（進入編輯模式） |
+| `cancelSplitBill()` | 清除 `confirmedSplitPartners` |
+| `clearSplitBillState()` | 清除所有分帳狀態，在進入 `ConfirmPaymentScreen` 時呼叫 |
+
+---
+
+## ConfirmPaymentScreen.kt
+
+### 主要變更
+
+1. **進入畫面時清除分帳狀態**：
+   ```kotlin
+   LaunchedEffect(Unit) { viewModel.clearSplitBillState() }
+   ```
+
+2. **SelectSplitPartnerDialog** 顯示條件：
+   ```kotlin
+   if (uiState.showSelectPartnerDialog) {
+       SelectSplitPartnerDialog(
+           friendList = uiState.friendList,
+           totalAmount = uiState.amount.toDoubleOrNull() ?: 0.0,
+           onDismiss = { viewModel.dismissSelectPartnerDialog() },
+           onConfirm = { selected -> viewModel.onPartnersConfirmed(selected) }
+       )
+   }
+   ```
+
+3. **SplitBillDialog** 顯示條件（使用 `selectedFriendList`，僅含已選取的好友）：
+   ```kotlin
+   if (uiState.showSplitBillDialog) {
+       SplitBillDialog(
+           totalAmount = uiState.amount.toDoubleOrNull() ?: 0.0,
+           friendList = uiState.selectedFriendList,
+           myName = uiState.myUserName,
+           onDismiss = { viewModel.dismissSplitBillDialog() },
+           onConfirm = { viewModel.confirmSplitBill() }
+       )
+   }
+   ```
+
+4. **Split a Bill & Request 按鈕**：使用 `MyQrActionButton`，`onClick = onSplitBill`；當 `confirmErrorMessage` 不為空時隱藏，改顯示錯誤訊息。
+
+5. **SplitPartnersRow** 顯示確認後的分帳夥伴：
+   ```kotlin
+   if (uiState.confirmedSplitPartners.isNotEmpty()) {
+       SplitPartnersRow(
+           partners = uiState.confirmedSplitPartners,
+           onEdit = onEditSplit,
+           onCancel = onCancelSplit
+       )
+   }
+   ```
+
+---
+
+## SelectSplitPartnerDialog.kt
+
+### 功能
+讓使用者從好友列表中勾選分帳夥伴，確認後進入金額分配 Dialog。
+
+### UI 結構
+
+```
+Dialog
+└── Column
+    ├── Title（neonPurple）
+    ├── 已選人數提示（selectedCount > 0 → neonCyan）
+    ├── LazyColumn（好友列表，每項含 Avatar、名稱、勾選圓形）
+    ├── Total to Split 資訊列（InputFieldBackground）
+    └── Assign Amounts 按鈕（至少選 1 人才啟用，neonPurple border）
+```
+
+### 狀態管理
+- `selectedIds: Set<String>` 以好友 `id` 記錄勾選狀態
+- 確認時過濾 `friendList.filter { it.id in selectedIds }` 回傳
+
+---
+
+## SplitBillDialog.kt
+
+### 功能
+顯示分帳夥伴與「你」的金額分配，支援 EQUALLY（平均分配）與 CUSTOM（自訂）兩種模式。
+
+### Split Mode 切換
+
+```
+[EQUALLY]  ──[Switch]──  [CUSTOM]
+```
+
+- Switch 開啟 → CUSTOM 模式，CUSTOM 文字亮 neonCyan
+- Switch 關閉 → EQUALLY 模式，EQUALLY 文字亮 neonCyan，未亮起使用 normalText
+
+### EQUALLY 分配邏輯
+
+```kotlin
+val n = participants.size
+val total = totalAmount.toInt()
+val share = total / n
+val remainder = total % n
+// 餘數加到 "You"（index 0）
+amounts[0] = "${share + remainder}"
+amounts[i] = "$share"  // i > 0
+```
+
+- 所有金額均為整數（無小數點）
+- 餘數放在「You」欄位
+- 切換回 CUSTOM 模式時清空所有輸入框
+
+### Remaining 計算
+
+```kotlin
+val totalAssigned = amounts.values.sumOf { it.toDoubleOrNull() ?: 0.0 }
+val remaining = totalAmount - totalAssigned
+```
+
+Confirm Request 按鈕條件：
+```kotlin
+val isConfirmEnabled = kotlin.math.abs(remaining) < 0.01
+```
+
+### UI 結構
+
+```
+Dialog
+└── Column（neonCyan border + neonGlow）
+    ├── 標題（neonPurple，有陰影）
+    ├── Toggle Row：EQUALLY Text + Switch + CUSTOM Text
+    ├── "Manual Split" 標籤（靠右）
+    ├── LazyColumn（SplitBillParticipantItem × n）
+    ├── Remaining 資訊列（InputFieldBackground，flat）
+    └── Confirm Request 按鈕（enabled 時 neonPurple glow）
+```
+
+### SplitBillParticipantItem
+
+獨立 `internal` composable，含自己的 Preview：
+
+```kotlin
+@Composable
+internal fun SplitBillParticipantItem(
+    displayName: String,   // "You" 或 "@nickName"
+    avatarLetter: String,  // 名字首字母
+    amount: String,
+    enabled: Boolean,      // CUSTOM 模式才可編輯
+    onAmountChange: (String) -> Unit
+)
+```
+
+**輸入框實作**：使用 `BasicTextField` + 自訂 `decorationBox` 達到精確 40dp 高度控制。
+Material3 `OutlinedTextField` 在 BOM 2024.11.00 中不支援 `contentPadding` 參數，因此改用此方式：
+
+```kotlin
+BasicTextField(
+    modifier = Modifier.height(40.dp).width(110.dp),
+    decorationBox = { innerTextField ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(InputFieldBackground, RoundedCornerShape(8.dp))
+                .border(1.dp, borderColor, RoundedCornerShape(8.dp))
+                .padding(horizontal = 8.dp),
+            contentAlignment = Alignment.CenterStart
+        ) { innerTextField() }
+    }
+)
+```
+
+---
+
+## SplitPartnersRow.kt
+
+### 功能
+在 `ConfirmPaymentScreen` 中顯示已確認的分帳夥伴，最多顯示 5 個 Avatar，並提供編輯／取消按鈕。
+
+### UI 結構
+
+```
+Row
+├── Row（最多 5 個 SplitPartnerAvatar，不足以 Spacer 補位）
+└── Column
+    ├── Edit 按鈕（balanceGold border）
+    └── Cancel 按鈕（neonPink border）
+```
+
+---
+
+## strings.xml 新增字串
+
+| Key | 說明 |
+|-----|------|
+| `split_bill_title` | SplitBillDialog 標題 |
+| `split_bill_equally` | EQUALLY 模式文字 |
+| `split_bill_custom` | CUSTOM 模式文字 |
+| `split_bill_manual_split` | 右上角 "Manual Split" 標籤 |
+| `split_bill_you` | 參與者列表中「你」的顯示名稱 |
+| `split_bill_remaining` | Remaining 資訊列左側文字 |
+| `split_bill_confirm_request` | Confirm Request 按鈕文字 |
+| `select_partner_title` | SelectSplitPartnerDialog 標題 |
+| `select_partner_selected_count` | 已選人數提示（含 count 參數） |
+| `select_partner_total_to_split` | 總金額列左側文字 |
+| `select_partner_assign_amounts` | Assign Amounts 按鈕文字 |
+
+---
+
+## 整體 Split Bill 流程
+
+```
+ConfirmPaymentScreen
+│
+├─ 點選「Split a Bill & Request」
+│   └─ viewModel.fetchFriendListAndShowDialog()
+│       └─ API: UserRepository.fetchFriendList()
+│           └─ showSelectPartnerDialog = true
+│
+├─ SelectSplitPartnerDialog（勾選夥伴）
+│   └─ 點選 Assign Amounts
+│       └─ viewModel.onPartnersConfirmed(selected)
+│           └─ selectedFriendList = selected
+│              showSplitBillDialog = true
+│
+├─ SplitBillDialog（設定各人金額）
+│   ├─ EQUALLY：自動平分，餘數給 You
+│   ├─ CUSTOM：手動輸入各人金額
+│   └─ Confirm Request（remaining ≈ 0 才可點）
+│       └─ viewModel.confirmSplitBill()
+│           └─ confirmedSplitPartners = selectedFriendList
+│              showSplitBillDialog = false
+│
+└─ 顯示 SplitPartnersRow（confirmedSplitPartners）
+    ├─ Edit → viewModel.editSplitBill() → 重新開啟 SplitBillDialog
+    └─ Cancel → viewModel.cancelSplitBill() → 清除 confirmedSplitPartners
+```

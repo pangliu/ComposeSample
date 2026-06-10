@@ -234,6 +234,28 @@
     <string name="profile_help_center">Help Center &amp; Chat Support</string>
     <string name="profile_terms">Terms &amp; Privacy Policy</string>
     <string name="profile_logout">LOGOUT</string>
+    <!-- ProfileEditScreen -->
+    <string name="profile_edit_banner_title">Secure the bag! 💰</string>
+    <string name="profile_edit_banner_subtitle">Complete your profile\nto cop extra points.</string>
+    <string name="profile_edit_banner_points">+50 Points</string>
+    <string name="profile_edit_section_my_deets">My Deets</string>
+    <string name="profile_edit_section_spill_tea">Spill the Tea</string>
+    <string name="profile_edit_full_name">Full Name:</string>
+    <string name="profile_edit_gender">Gender:</string>
+    <string name="profile_edit_mobile">Mobile No.:</string>
+    <string name="profile_edit_email">Email Address:</string>
+    <string name="profile_edit_password">Password:</string>
+    <string name="profile_edit_dob">Date of Birth:</string>
+    <string name="profile_edit_education">Education Level:</string>
+    <string name="profile_edit_hustle">Current Hustle:</string>
+    <string name="profile_edit_income_currency">Income Currency:</string>
+    <string name="profile_edit_yearly_bag">Yearly Bag:</string>
+    <string name="profile_edit_relationship">Relationship Status:</string>
+    <string name="profile_edit_kids">Got Kids?</string>
+    <string name="profile_edit_find_us">How\'d you find us?</string>
+    <string name="profile_edit_referral">Who put you on:</string>
+    <string name="profile_edit_referral_code">Their Code: %s</string>
+    <string name="profile_edit_change">CHANGE</string>
     <!-- SecurityCenterScreen -->
     <string name="security_center_back_desc">Back</string>
 

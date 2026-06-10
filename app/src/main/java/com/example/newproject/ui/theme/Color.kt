@@ -19,6 +19,7 @@ val neonMint = Color(0xFF94EEB5)
 val neonRed = Color(0xFFFF4C4C)
 val neonPink = Color(0xFFFF31A0)
 val neonBlue = Color(0xFF2E88FF)
+val neonBlueLight = Color(0xFF66A3CF)
 val neonDivider = Color(0xAAB0D6DF)
 // ========== 背景色 ==========
 val welcomeBackground = Color(0xFF0B1327)

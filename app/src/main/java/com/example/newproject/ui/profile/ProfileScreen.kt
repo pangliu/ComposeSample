@@ -142,7 +142,8 @@ fun ProfileScreenContent(
         ProfileMenuCard(borderColor = neonCyan) {
             ProfileMenuItem(
                 icon = ProfileIcon.Resource(R.mipmap.ic_profile_setting),
-                label = stringResource(R.string.profile_edit)
+                label = stringResource(R.string.profile_edit),
+                onClick = { onNavigate(Routes.PROFILE_EDIT) }
             )
             HorizontalDivider(
                 color = neonCyan.copy(alpha = 0.15f),
