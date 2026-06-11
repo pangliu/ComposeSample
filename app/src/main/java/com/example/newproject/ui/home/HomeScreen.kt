@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.R
 import com.example.newproject.network.model.response.UserInfoResponse
+import com.example.newproject.ui.Routes
 import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.LoadingDialogContent
@@ -52,7 +53,7 @@ import com.example.newproject.ui.home.quests.QuestCard
 import com.example.newproject.ui.home.recent.RecentActivity
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onNavigate: (String) -> Unit = {}) {
     val uiState by viewModel.uiState.collectAsState()
     val myMenuItems by viewModel.myMenuItems.collectAsState()
     val context = LocalContext.current
@@ -69,7 +70,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     HomeScreenContent(
         uiState = uiState,
         myMenuItems = myMenuItems,
-        onSaveMyMenu = viewModel::saveMyMenu
+        onSaveMyMenu = viewModel::saveMyMenu,
+        onNavigate = onNavigate
     )
 }
 
@@ -78,6 +80,7 @@ private fun HomeScreenContent(
     uiState: HomeUiState,
     myMenuItems: List<EssentialItem> = allEssentialItems.take(ESSENTIALS_DISPLAY_COUNT),
     onSaveMyMenu: (List<EssentialItem>) -> Unit = {},
+    onNavigate: (String) -> Unit = {},
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         if (uiState.isLoading) {
@@ -89,7 +92,7 @@ private fun HomeScreenContent(
                     .padding(horizontal = 16.dp)
             ) {
                 // 頂部狀態區 (Header) — 固定不滾動
-                HeaderSection(userName = uiState.userInfo.userName)
+                HeaderSection(userName = uiState.userInfo.userName, onNavigate = onNavigate)
 
                 // Header 以下的區域可滾動
                 Column(
@@ -146,7 +149,7 @@ private fun HomeScreenPreview() {
 // ── Header ──────────────────────────────────────────────────────────────────
 
 @Composable
-fun HeaderSection(userName: String) {
+fun HeaderSection(userName: String, onNavigate: (String) -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -187,7 +190,7 @@ fun HeaderSection(userName: String) {
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ) { /* TODO: 系統設定 */ }
+                    ) { onNavigate(Routes.SETTINGS) }
             )
         }
     }

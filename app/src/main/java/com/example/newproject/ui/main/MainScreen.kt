@@ -64,7 +64,7 @@ fun MainScreen(
         ) { index ->
             Box(modifier = Modifier.fillMaxSize()) {
                 when (index) {
-                    0 -> HomeScreen()
+                    0 -> HomeScreen(onNavigate = onNavigate)
                     1 -> {
                         val cardsViewModel: CardsViewModel = hiltViewModel()
                         CardsScreen(viewModel = cardsViewModel, onNavigate = onNavigate)

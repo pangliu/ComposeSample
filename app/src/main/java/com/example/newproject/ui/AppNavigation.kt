@@ -17,6 +17,7 @@ import com.example.newproject.ui.cards.select.SelectCardTypeScreen
 import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
 import com.example.newproject.ui.main.MainScreen
+import com.example.newproject.ui.home.setting.SettingScreen
 import com.example.newproject.ui.profile.edit.ProfileEditScreen
 import com.example.newproject.ui.profile.security.SecurityCenterScreen
 import com.example.newproject.ui.profile.transaction.TransactionHistoryScreen
@@ -86,6 +87,7 @@ fun AppNavigation(
                     Routes.SELECT_CARD_TYPE -> slideOutHorizontally { -it }
                     Routes.CARD_DETAIL -> slideOutHorizontally { -it }
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideOutHorizontally { -it }
+                    Routes.SETTINGS -> slideOutHorizontally { -it }
                     else -> null
                 }
             },
@@ -98,6 +100,7 @@ fun AppNavigation(
                     Routes.SELECT_CARD_TYPE -> slideInHorizontally { -it }
                     Routes.CARD_DETAIL -> slideInHorizontally { -it }
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideInHorizontally { -it }
+                    Routes.SETTINGS -> slideInHorizontally { -it }
                     else -> null
                 }
             }
@@ -152,6 +155,16 @@ fun AppNavigation(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() }
             )
+        }
+
+        // ── Home sub-pages ────────────────────────────────────────────────
+        composable(
+            route = Routes.SETTINGS,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) {
+            val viewModel = hiltViewModel<com.example.newproject.ui.home.setting.SettingViewModel>()
+            SettingScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
         }
 
         // ── ScanPay sub-pages (ScanPayViewModel scoped to MAIN) ──────────

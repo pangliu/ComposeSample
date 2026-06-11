@@ -16,6 +16,9 @@ object Routes {
     const val SCAN_PAY_CONFIRM_PAYMENT = "scan_pay_confirm_payment"
     const val SCAN_PAY_TRANSACTION_SUCCESSFUL = "scan_pay_transaction_successful"
 
+    // Home sub-pages
+    const val SETTINGS = "settings"
+
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"
     const val ADD_NEW_CARD = "add_new_card"

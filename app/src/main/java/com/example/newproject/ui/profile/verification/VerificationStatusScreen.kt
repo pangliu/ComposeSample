@@ -49,6 +49,7 @@ import com.example.newproject.R
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonDarkPurple
 import com.example.newproject.ui.theme.neonMint
 import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.normalText
@@ -217,7 +218,7 @@ private fun VerificationPendingBadge(modifier: Modifier = Modifier) {
                 .padding(start = iconSize / 2)
                 .border(
                     1.5.dp,
-                    Brush.horizontalGradient(listOf(neonOrange.copy(0.7f), neonOrange)),
+                    Brush.horizontalGradient(listOf(neonDarkPurple.copy(0.7f), neonPurple)),
                     RoundedCornerShape(50)
                 )
                 .padding(start = iconSize / 2 + 10.dp, end = 12.dp, top = 5.dp, bottom = 5.dp),
@@ -225,7 +226,7 @@ private fun VerificationPendingBadge(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = stringResource(R.string.verification_pending_badge),
-                color = neonOrange,
+                color = neonPurple,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
@@ -238,7 +239,7 @@ private fun VerificationPendingBadge(modifier: Modifier = Modifier) {
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(R.mipmap.ic_shield),
+                painter = painterResource(R.mipmap.ic_shield_check),
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier.size(iconSize)

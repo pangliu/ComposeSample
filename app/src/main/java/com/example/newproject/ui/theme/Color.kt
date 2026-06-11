@@ -15,6 +15,8 @@ val neonGreenLight = Color(0xFF88CFE9)
 val neonPurple = Color(0xFFDF4CFF)
 val neonDarkPurple = Color(0xFF4E3E83)
 val neonPurpleLight = Color(0xFFC984D0)
+val neonDarkBlue = Color(0xFF6668DB)
+
 val neonMint = Color(0xFF94EEB5)
 val neonRed = Color(0xFFFF4C4C)
 val neonPink = Color(0xFFFF31A0)
