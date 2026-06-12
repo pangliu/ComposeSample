@@ -281,17 +281,21 @@ private fun InputAmountContent(
                         .neonGlow(color = balanceGold, alpha = 0.3f, glowRadius = 30.dp)
                         .align(Alignment.TopEnd)
                 )
+                val isReviewEnabled = (amount.toDoubleOrNull() ?: 0.0) > 0.0
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .neonGlow(
-                            color = neonPurple,
-                            alpha = 0.7f,
-                            glowRadius = 12.dp,
-                            borderRadius = 15.dp
+                        .then(
+                            if (isReviewEnabled)
+                                Modifier.neonGlow(color = neonPurple, alpha = 0.7f, glowRadius = 12.dp, borderRadius = 15.dp)
+                            else Modifier
                         )
-                        .background(color = neonPurple, shape = RoundedCornerShape(30.dp))
+                        .background(
+                            color = if (isReviewEnabled) neonPurple else neonPurple.copy(alpha = 0.3f),
+                            shape = RoundedCornerShape(30.dp)
+                        )
                         .clickable(
+                            enabled = isReviewEnabled,
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) { onReviewDetails(amount) }
@@ -300,7 +304,7 @@ private fun InputAmountContent(
                 ) {
                     Text(
                         text = stringResource(R.string.input_amount_review_details),
-                        color = Color.Black,
+                        color = if (isReviewEnabled) Color.Black else Color.Black.copy(alpha = 0.35f),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
