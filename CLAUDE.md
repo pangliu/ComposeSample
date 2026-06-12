@@ -113,6 +113,49 @@ Composable → ViewModel (StateFlow) → Repository → API / Manager
 - `EssentialItem` 含 `ImageVector`，無法序列化
 - 持久化只存 `label`，讀取時從 `allEssentialItems` 反查完整物件
 
+### UI 資料夾分類規則
+
+每個頁面（Screen）建立獨立資料夾，資料夾內依內容分類放入子資料夾：
+
+| 內容 | 子資料夾 | 說明 |
+|------|----------|------|
+| 頁面專屬的自定義 Composable 元件 | `components/` | 只在該頁面使用的 UI 元件 |
+| 頁面的 Dialog / BottomSheet | `dialog/` | 彈窗類元件 |
+| 子頁面（有獨立 NavHost 路由） | `<子頁面名稱>/` | 子頁面資料夾可再遞迴套用同樣規則 |
+
+**package 命名跟隨資料夾路徑**，跨 package 引用需補 `import`，不可依賴同 package 可見性。
+
+範例結構：
+```
+ui/login/
+├── LoginScreen.kt
+├── LoginViewModel.kt
+├── components/          # LoginScreen 專屬 UI 元件
+│   ├── DrawerMenuContent.kt
+│   └── LanguageSelector.kt
+└── dialog/              # LoginScreen 的彈窗
+    ├── LoginBottomSheet.kt
+    ├── BiometricEnrollDialog.kt
+    └── VerifyMobileDialog.kt
+
+ui/scanpay/
+├── ScanPayScreen.kt
+├── ScanPayViewModel.kt
+├── components/          # ScanPayScreen 專屬 UI 元件
+│   └── SplitPartnersRow.kt
+├── dialog/              # ScanPayScreen 的彈窗
+│   ├── SelectSplitPartnerDialog.kt
+│   └── SplitBillDialog.kt
+└── confirm/             # 子頁面資料夾
+    ├── ConfirmPaymentScreen.kt
+    └── components/      # ConfirmPaymentScreen 專屬 UI 元件
+        └── SomeComponent.kt
+```
+
+跨頁面共用的元件放 `ui/components/`（全域共用），不放進任何頁面資料夾。
+
+---
+
 ### Compose
 - 避免在 Composable 內直接使用 `BoxWithConstraints`，改用 `Box + onSizeChanged`
 - `clickable` 在深色背景上需加 `indication = null` 避免長按時出現矩形 ripple 陰影
@@ -251,26 +294,7 @@ object Routes {
 
 4. **子頁面本身**：使用自己的 `Scaffold` 處理 statusBar insets，`onBack` 由外部注入
 
-5. **資料夾結構**：每個子頁面建立獨立資料夾；該頁面專屬的 Compose UI 元件放到該資料夾下的 `components/` 子資料夾
-   ```
-   ui/scanpay/
-   ├── ScanPayViewModel.kt          # 放根目錄（整個 flow 共用）
-   ├── ScanPayScreen.kt             # 放根目錄（Tab 主頁面）
-   ├── components/                  # ScanPayScreen 專屬元件
-   │   ├── MyQrContent.kt
-   │   ├── SelectSplitPartnerDialog.kt
-   │   └── SplitPartnersRow.kt
-   ├── input/
-   │   └── InputAmountScreen.kt
-   ├── confirm/
-   │   ├── ConfirmPaymentScreen.kt
-   │   └── components/              # ConfirmPaymentScreen 專屬元件
-   │       └── SomeComponent.kt
-   └── success/
-       └── TransactionSuccessfulScreen.kt
-   ```
-   - **package** 命名跟隨資料夾路徑：`com.example.newproject.ui.scanpay.confirm`
-   - 跨資料夾引用（不同 package）需補 `import`，不可依賴同 package 可見性
+5. **資料夾結構**：依「UI 資料夾分類規則」建立子資料夾（見上方專屬章節）
 
 #### 導航 callback 規則
 - `MainScreen` 只持有一個 `onNavigate: (String) -> Unit` 參數，不針對個別子頁面新增 callback

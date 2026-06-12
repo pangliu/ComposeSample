@@ -1,4 +1,4 @@
-package com.example.newproject.ui.login
+package com.example.newproject.ui.login.components
 
 import android.graphics.BlurMaskFilter
 import androidx.compose.animation.AnimatedVisibility

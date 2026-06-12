@@ -1,4 +1,4 @@
-package com.example.newproject.ui.login
+package com.example.newproject.ui.login.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -89,9 +89,9 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                     blurRadius = 25f
                 ))
             )
-            
+
             Spacer(modifier = Modifier.height(24.dp))
-            
+
             // Account Status 藍綠色區塊
             MenuCard(
                 title = stringResource(id = R.string.account_status),
@@ -112,9 +112,9 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                 ),
                 onClick = onAccountStatusClick
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Product Features 紫色區塊
             MenuCard(
                 title = stringResource(id = R.string.product_features),
@@ -125,9 +125,9 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                     MenuItem(MenuIcon.Vector(Icons.Default.Star), stringResource(id = R.string.explore_xcash_features), null)
                 )
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Help & Policies 藍色區塊
             MenuCard(
                 title = stringResource(id = R.string.help_policies),
@@ -183,9 +183,9 @@ fun MenuCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = title, 
-                    color = titleColor, 
-                    fontSize = 16.sp, 
+                    text = title,
+                    color = titleColor,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
@@ -205,7 +205,7 @@ fun MenuCard(
                             is MenuIcon.Vector -> Icon(imageVector = icon.imageVector, contentDescription = item.title, tint = titleColor, modifier = Modifier.size(35.dp))
                             is MenuIcon.Resource -> Icon(painter = painterResource(icon.resId), contentDescription = item.title, tint = if (icon.useOriginalColor) Color.Unspecified else titleColor, modifier = Modifier.size(35.dp))
                         }
-                        
+
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(text = item.title, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)
