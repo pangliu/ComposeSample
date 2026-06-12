@@ -1,4 +1,4 @@
-package com.example.newproject.ui.home.balance
+package com.example.newproject.ui.home.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image

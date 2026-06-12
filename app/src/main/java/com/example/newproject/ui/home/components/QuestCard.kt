@@ -1,4 +1,4 @@
-package com.example.newproject.ui.home.quests
+package com.example.newproject.ui.home.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

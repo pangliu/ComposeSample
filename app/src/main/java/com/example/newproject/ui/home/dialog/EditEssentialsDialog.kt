@@ -1,4 +1,4 @@
-package com.example.newproject.ui.home.essential
+package com.example.newproject.ui.home.dialog
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
@@ -58,6 +58,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
+import com.example.newproject.ui.home.essential.EssentialItem
+import com.example.newproject.ui.home.essential.allEssentialItems
 import com.example.newproject.ui.theme.cardGradientMid
 import com.example.newproject.ui.theme.cardGradientStart
 import com.example.newproject.ui.theme.cashInGreen

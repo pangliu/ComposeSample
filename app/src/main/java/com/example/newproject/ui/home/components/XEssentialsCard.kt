@@ -1,4 +1,4 @@
-package com.example.newproject.ui.home.essential
+package com.example.newproject.ui.home.components
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -29,6 +29,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
+import com.example.newproject.ui.home.dialog.EditEssentialsDialog
+import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
+import com.example.newproject.ui.home.essential.EssentialItem
+import com.example.newproject.ui.home.essential.ITEMS_PER_PAGE
+import com.example.newproject.ui.home.essential.allEssentialItems
 import com.example.newproject.ui.theme.cardBorder
 import com.example.newproject.ui.theme.cardGradientMid
 import com.example.newproject.ui.theme.cardGradientStart
@@ -70,24 +75,24 @@ fun XEssentialsCard(
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 // More 按鈕
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .border(
-                            width = 2.dp,
-                            color = essentialMore,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                        .clickable { /* TODO: More */ }
-                        .padding(horizontal = 16.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.essentials_more),
-                        color = essentialMore,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
+//                Box(
+//                    modifier = Modifier
+//                        .clip(RoundedCornerShape(10.dp))
+//                        .border(
+//                            width = 2.dp,
+//                            color = essentialMore,
+//                            shape = RoundedCornerShape(10.dp)
+//                        )
+//                        .clickable { /* TODO: More */ }
+//                        .padding(horizontal = 16.dp, vertical = 6.dp)
+//                ) {
+//                    Text(
+//                        text = stringResource(R.string.essentials_more),
+//                        color = essentialMore,
+//                        fontSize = 13.sp,
+//                        fontWeight = FontWeight.Medium
+//                    )
+//                }
 
                 // Edit 按鈕
                 Box(

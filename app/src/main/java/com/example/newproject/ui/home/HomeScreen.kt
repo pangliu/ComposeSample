@@ -42,15 +42,14 @@ import com.example.newproject.R
 import com.example.newproject.network.model.response.UserInfoResponse
 import com.example.newproject.ui.Routes
 import com.example.newproject.ui.UiEvent
-import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.LoadingDialogContent
-import com.example.newproject.ui.home.balance.BalanceCard
+import com.example.newproject.ui.home.components.BalanceCard
+import com.example.newproject.ui.home.components.XEssentialsCard
+import com.example.newproject.ui.home.components.QuestCard
+import com.example.newproject.ui.home.components.RecentActivity
 import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import com.example.newproject.ui.home.essential.EssentialItem
-import com.example.newproject.ui.home.essential.XEssentialsCard
 import com.example.newproject.ui.home.essential.allEssentialItems
-import com.example.newproject.ui.home.quests.QuestCard
-import com.example.newproject.ui.home.recent.RecentActivity
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onNavigate: (String) -> Unit = {}) {

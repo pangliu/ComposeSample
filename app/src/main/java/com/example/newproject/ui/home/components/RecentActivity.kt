@@ -1,4 +1,4 @@
-package com.example.newproject.ui.home.recent
+package com.example.newproject.ui.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
