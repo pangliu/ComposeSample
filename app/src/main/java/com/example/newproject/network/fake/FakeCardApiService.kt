@@ -22,6 +22,7 @@ class FakeCardApiService : CardApiService {
             code = 200,
             errorMsg = "success",
             result = sampleCards
+//            result = emptyList()
         )
     }
 

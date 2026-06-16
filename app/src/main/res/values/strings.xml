@@ -336,6 +336,12 @@
     <string name="setting_logout">Logout</string>
     <string name="setting_theme_neon_cyber">Neon Cyber</string>
 
+    <!-- LogoutConfirmDialog -->
+    <string name="logout_dialog_title">Log Out?</string>
+    <string name="logout_dialog_message">Are you sure you want to log out of your account?</string>
+    <string name="logout_dialog_confirm">Yes，I\'want to log out！</string>
+    <string name="logout_dialog_cancel">No，I don\'t want to！</string>
+
     <!-- Common -->
     <string name="common_back_desc">Back</string>
 

@@ -44,7 +44,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,6 +68,7 @@ import com.example.newproject.ui.Routes
 import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.profile.components.LogoutConfirmDialog
 import com.example.newproject.ui.theme.essentialCardTitle
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
@@ -115,6 +118,18 @@ fun ProfileScreenContent(
     onLogout: () -> Unit = {},
     onNavigate: (String) -> Unit = {}
 ) {
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    if (showLogoutDialog) {
+        LogoutConfirmDialog(
+            onConfirm = {
+                showLogoutDialog = false
+                onLogout()
+            },
+            onDismiss = { showLogoutDialog = false }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -193,7 +208,7 @@ fun ProfileScreenContent(
 
         LogoutButton(
             enabled = !uiState.isLoggingOut,
-            onClick = onLogout
+            onClick = { showLogoutDialog = true }
         )
 
         Spacer(Modifier.height(8.dp))
@@ -527,6 +542,7 @@ private fun LogoutButton(enabled: Boolean, onClick: () -> Unit) {
         )
     }
 }
+
 
 @Preview(showBackground = true, backgroundColor = 0xFF0E1422)
 @Composable
