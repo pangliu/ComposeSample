@@ -33,9 +33,10 @@ import com.example.newproject.ui.theme.welcomeBackground
 @Composable
 fun MainScreen(
     scanPayViewModel: ScanPayViewModel,
+    initialTab: Int = 0,
     onNavigate: (String) -> Unit = {}
 ) {
-    var selectedIndex by rememberSaveable { mutableStateOf(0) }
+    var selectedIndex by rememberSaveable { mutableStateOf(initialTab) }
 
     Scaffold(
         containerColor = welcomeBackground,

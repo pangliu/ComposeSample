@@ -45,6 +45,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.newproject.ui.cards.CardsNavigationEvent
 import com.example.newproject.ui.cards.CardsViewModel
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.SubPageTopBar
@@ -64,6 +65,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
+import com.example.newproject.ui.Routes
 import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonPurple
@@ -76,7 +78,11 @@ private val InputFieldBackground = Color(0xFF0D1525)
 private val InputMethodSelectedBg = Color(0xFF1A2A40)
 
 @Composable
-fun AddNewCardScreen(onBack: () -> Unit, viewModel: CardsViewModel = hiltViewModel()) {
+fun AddNewCardScreen(
+    onBack: () -> Unit,
+    onNavigate: (String) -> Unit = {},
+    viewModel: CardsViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
@@ -85,6 +91,14 @@ fun AddNewCardScreen(onBack: () -> Unit, viewModel: CardsViewModel = hiltViewMod
             when (event) {
                 is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is CardsNavigationEvent.CardLinkedSuccess -> onNavigate(Routes.CARD_LINKED_SUCCESS)
             }
         }
     }

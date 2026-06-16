@@ -235,7 +235,7 @@ fun LoginScreenContent(
                     } else {
                         val exoPlayer = remember(context) {
                             ExoPlayer.Builder(context).build().apply {
-                                val uri = Uri.parse("android.resource://${context.packageName}/${R.raw.logo}")
+                                val uri = Uri.parse("android.resource://${context.packageName}/${R.raw.bg_type3}")
                                 setMediaItem(MediaItem.fromUri(uri))
                                 repeatMode = ExoPlayer.REPEAT_MODE_ONE
                                 volume = 0f

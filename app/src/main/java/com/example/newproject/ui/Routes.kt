@@ -3,7 +3,9 @@ package com.example.newproject.ui
 object Routes {
     const val WELCOME = "welcome"
     const val LOGIN = "login"
-    const val MAIN = "main"
+    const val MAIN = "main?tab={tab}"
+
+    fun mainAtTab(tab: Int) = "main?tab=$tab"
 
     // Profile sub-pages
     const val PROFILE_EDIT = "profile_edit"
@@ -22,6 +24,7 @@ object Routes {
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"
     const val ADD_NEW_CARD = "add_new_card"
+    const val CARD_LINKED_SUCCESS = "card_linked_success"
     const val CARD_DETAIL = "card_detail/{cardId}"
 
     fun cardDetail(cardId: Int) = "card_detail/$cardId"

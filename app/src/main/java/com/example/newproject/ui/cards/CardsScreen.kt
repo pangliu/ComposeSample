@@ -26,15 +26,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,10 +43,12 @@ import com.example.newproject.network.model.response.CreditCardResponse
 import com.example.newproject.ui.Routes
 import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.components.LoadingDialog
+import com.example.newproject.ui.cards.components.VoucherTicket
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonGreen
+import com.example.newproject.ui.theme.neonPink
 import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
 import com.example.newproject.ui.theme.normalText
@@ -463,79 +462,6 @@ private fun PromoBannerCard(page: Int) {
     }
 }
 
-@Composable
-private fun VoucherTicket(amount: String) {
-    // 用 drawWithContent 畫出左右有缺口的票券形狀
-    val ticketColor = neonPurple
-    Box(
-        modifier = Modifier
-            .width(80.dp)
-            .height(56.dp)
-            .drawWithContent {
-                val notchRadius = 10.dp.toPx()
-                val cornerRadius = 8.dp.toPx()
-                val strokeWidth = 2.dp.toPx()
-
-                val path = Path().apply {
-                    // 從左上角開始，順時針
-                    moveTo(cornerRadius, 0f)
-                    lineTo(size.width - cornerRadius, 0f)
-                    arcTo(
-                        rect = androidx.compose.ui.geometry.Rect(size.width - cornerRadius * 2, 0f, size.width, cornerRadius * 2),
-                        startAngleDegrees = -90f, sweepAngleDegrees = 90f, forceMoveTo = false
-                    )
-                    // 右側缺口（往內弧）
-                    lineTo(size.width, size.height / 2 - notchRadius)
-                    arcTo(
-                        rect = androidx.compose.ui.geometry.Rect(size.width - notchRadius, size.height / 2 - notchRadius, size.width + notchRadius, size.height / 2 + notchRadius),
-                        startAngleDegrees = -90f, sweepAngleDegrees = -180f, forceMoveTo = false
-                    )
-                    lineTo(size.width, size.height - cornerRadius)
-                    arcTo(
-                        rect = androidx.compose.ui.geometry.Rect(size.width - cornerRadius * 2, size.height - cornerRadius * 2, size.width, size.height),
-                        startAngleDegrees = 0f, sweepAngleDegrees = 90f, forceMoveTo = false
-                    )
-                    lineTo(cornerRadius, size.height)
-                    arcTo(
-                        rect = androidx.compose.ui.geometry.Rect(0f, size.height - cornerRadius * 2, cornerRadius * 2, size.height),
-                        startAngleDegrees = 90f, sweepAngleDegrees = 90f, forceMoveTo = false
-                    )
-                    // 左側缺口（往內弧）
-                    lineTo(0f, size.height / 2 + notchRadius)
-                    arcTo(
-                        rect = androidx.compose.ui.geometry.Rect(-notchRadius, size.height / 2 - notchRadius, notchRadius, size.height / 2 + notchRadius),
-                        startAngleDegrees = 90f, sweepAngleDegrees = -180f, forceMoveTo = false
-                    )
-                    lineTo(0f, cornerRadius)
-                    arcTo(
-                        rect = androidx.compose.ui.geometry.Rect(0f, 0f, cornerRadius * 2, cornerRadius * 2),
-                        startAngleDegrees = 180f, sweepAngleDegrees = 90f, forceMoveTo = false
-                    )
-                    close()
-                }
-
-                drawPath(
-                    path = path,
-                    color = ticketColor.copy(alpha = 0.12f)
-                )
-                drawPath(
-                    path = path,
-                    color = ticketColor,
-                    style = Stroke(width = strokeWidth)
-                )
-                drawContent()
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = amount,
-            color = neonPurple,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.ExtraBold,
-            letterSpacing = 1.sp
-        )
-    }
-}
 
 @Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
 @Composable
@@ -544,11 +470,11 @@ fun CardsScreenPreview() {
         CardsScreenContent(
             uiState = CardsUiState(
                 isLoadingCards = false,
-                cards = listOf(
-                    CreditCardResponse(1, "Visa", "Text / Caption", "1234", "bank"),
-                    CreditCardResponse(2, "Mastercard", "Text / Caption", "1234", "bank")
-                )
-//                cards = emptyList()
+//                cards = listOf(
+//                    CreditCardResponse(1, "Visa", "Text / Caption", "1234", "bank"),
+//                    CreditCardResponse(2, "Mastercard", "Text / Caption", "1234", "bank")
+//                )
+                cards = emptyList()
             )
         )
     }

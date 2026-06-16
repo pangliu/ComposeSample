@@ -17,6 +17,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed class CardsNavigationEvent {
+    object CardLinkedSuccess : CardsNavigationEvent()
+}
+
 data class CardsUiState(
     val isLoadingCards: Boolean = true,
     val isRefreshing: Boolean = false,
@@ -36,6 +40,9 @@ class CardsViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
     val eventFlow: SharedFlow<UiEvent> = _eventFlow.asSharedFlow()
+
+    private val _navigationEvent = MutableSharedFlow<CardsNavigationEvent>(extraBufferCapacity = 1)
+    val navigationEvent: SharedFlow<CardsNavigationEvent> = _navigationEvent.asSharedFlow()
 
     fun fetchCards() {
         viewModelScope.launch {
@@ -85,7 +92,7 @@ class CardsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isAddingCard = true) }
             when (val result = cardRepository.addNewCard(cardNumber, cardholderName, expiryDate, cvv, billingZip)) {
-                is NetworkResult.Success -> Unit
+                is NetworkResult.Success -> _navigationEvent.emit(CardsNavigationEvent.CardLinkedSuccess)
                 is NetworkResult.Error -> _eventFlow.emit(UiEvent.ShowToast(result.message))
                 is NetworkResult.Exception -> _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "Unknown error"))
             }

@@ -13,6 +13,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.newproject.ui.cards.add.AddNewCardScreen
 import com.example.newproject.ui.cards.detail.CardDetailScreen
+import com.example.newproject.ui.cards.linked_success.LinkedSuccessScreen
 import com.example.newproject.ui.cards.select.SelectCardTypeScreen
 import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
@@ -52,7 +53,7 @@ fun AppNavigation(
             WelcomeScreen(
                 viewModel = welcomeViewModel,
                 onNavigateToHome = {
-                    navController.navigate(Routes.MAIN) {
+                    navController.navigate(Routes.mainAtTab(0)) {
                         popUpTo(Routes.WELCOME) { inclusive = true }
                     }
                 },
@@ -69,7 +70,7 @@ fun AppNavigation(
             LoginScreen(
                 viewModel = loginViewModel,
                 onNavigateToHome = {
-                    navController.navigate(Routes.MAIN) {
+                    navController.navigate(Routes.mainAtTab(0)) {
                         popUpTo(Routes.LOGIN) { inclusive = true }
                     }
                 }
@@ -78,6 +79,7 @@ fun AppNavigation(
 
         composable(
             route = Routes.MAIN,
+            arguments = listOf(navArgument("tab") { type = NavType.IntType; defaultValue = 0 }),
             exitTransition = {
                 when (targetState.destination.route) {
                     Routes.PROFILE_EDIT -> slideOutHorizontally { -it }
@@ -88,6 +90,7 @@ fun AppNavigation(
                     Routes.CARD_DETAIL -> slideOutHorizontally { -it }
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideOutHorizontally { -it }
                     Routes.SETTINGS -> slideOutHorizontally { -it }
+                    Routes.CARD_LINKED_SUCCESS -> slideOutHorizontally { -it }
                     else -> null
                 }
             },
@@ -101,13 +104,16 @@ fun AppNavigation(
                     Routes.CARD_DETAIL -> slideInHorizontally { -it }
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideInHorizontally { -it }
                     Routes.SETTINGS -> slideInHorizontally { -it }
+                    Routes.CARD_LINKED_SUCCESS -> slideInHorizontally { -it }
                     else -> null
                 }
             }
         ) { backStackEntry ->
             val scanPayViewModel = hiltViewModel<ScanPayViewModel>(backStackEntry)
+            val initialTab = backStackEntry.arguments?.getInt("tab") ?: 0
             MainScreen(
                 scanPayViewModel = scanPayViewModel,
+                initialTab = initialTab,
                 onNavigate = { navController.navigate(it) }
             )
         }
@@ -214,7 +220,7 @@ fun AppNavigation(
             TransactionSuccessfulScreen(
                 viewModel = viewModel,
                 onBack = {
-                    navController.navigate(Routes.MAIN) {
+                    navController.navigate(Routes.mainAtTab(0)) {
                         popUpTo(Routes.MAIN) { inclusive = true }
                     }
                 }
@@ -238,9 +244,32 @@ fun AppNavigation(
         composable(
             route = Routes.ADD_NEW_CARD,
             enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } },
+            exitTransition = { slideOutHorizontally { -it } }
+        ) {
+            AddNewCardScreen(
+                onBack = { navController.popBackStack() },
+                onNavigate = { navController.navigate(it) }
+            )
+        }
+
+        composable(
+            route = Routes.CARD_LINKED_SUCCESS,
+            enterTransition = { slideInHorizontally { it } },
             popExitTransition = { slideOutHorizontally { it } }
         ) {
-            AddNewCardScreen(onBack = { navController.popBackStack() })
+            LinkedSuccessScreen(
+                onSetupPrimary = {
+                    navController.navigate(Routes.mainAtTab(0)) {
+                        popUpTo(Routes.MAIN) { inclusive = true }
+                    }
+                },
+                onNotNow = {
+                    navController.navigate(Routes.mainAtTab(1)) {
+                        popUpTo(Routes.MAIN) { inclusive = true }
+                    }
+                }
+            )
         }
 
         composable(
