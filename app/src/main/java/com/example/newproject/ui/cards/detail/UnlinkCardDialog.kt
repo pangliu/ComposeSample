@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -87,24 +88,12 @@ fun UnlinkCardDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Warning icon
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .background(warningRed.copy(alpha = 0.15f), RoundedCornerShape(12.dp))
-                        .border(1.5.dp, warningRed.copy(alpha = 0.6f), RoundedCornerShape(12.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = null,
-                        tint = warningRed,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
+                Icon(
+                    painter = painterResource(R.mipmap.ic_warning),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(80.dp)
+                )
                 // Title
                 Text(
                     text = stringResource(R.string.card_detail_unlink_dialog_title),
@@ -117,7 +106,7 @@ fun UnlinkCardDialog(
                 // 卡號後四碼
                 Text(
                     text = "**** $last4",
-                    color = warningRed,
+                    color = Color.White,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 2.sp

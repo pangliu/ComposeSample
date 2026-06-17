@@ -46,6 +46,7 @@ import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.utils.BiometricHelper
 import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.loginBackground
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonGreen
 import com.example.newproject.ui.theme.neonGreenLight
@@ -179,7 +180,7 @@ fun LoginScreenContent(
         }
     ) {
         Scaffold(
-            containerColor = welcomeBackground,
+            containerColor = loginBackground,
             contentColor = Color.White
         ) { paddingValues ->
             LoadingDialog(isShowing = uiState.isLoading)
@@ -237,7 +238,7 @@ fun LoginScreenContent(
                             ExoPlayer.Builder(context).build().apply {
                                 val uri = Uri.parse("android.resource://${context.packageName}/${R.raw.bg_type3}")
                                 setMediaItem(MediaItem.fromUri(uri))
-                                repeatMode = ExoPlayer.REPEAT_MODE_ONE
+                                repeatMode = ExoPlayer.REPEAT_MODE_OFF
                                 volume = 0f
                                 prepare()
                                 playWhenReady = true
@@ -287,14 +288,14 @@ fun LoginScreenContent(
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .background(
-                                        Brush.radialGradient(
-                                            colorStops = arrayOf(
-                                                0.5f to Color.Transparent,
-                                                1.0f to welcomeBackground
-                                            )
-                                        )
-                                    )
+//                                    .background(
+//                                        Brush.radialGradient(
+//                                            colorStops = arrayOf(
+//                                                0.5f to Color.Transparent,
+//                                                1.0f to welcomeBackground
+//                                            )
+//                                        )
+//                                    )
                             )
                         }
                     }

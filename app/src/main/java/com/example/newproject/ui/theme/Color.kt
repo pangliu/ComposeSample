@@ -24,6 +24,7 @@ val neonBlue = Color(0xFF2E88FF)
 val neonBlueLight = Color(0xFF66A3CF)
 val neonDivider = Color(0xAAB0D6DF)
 // ========== 背景色 ==========
+val loginBackground = Color(0xFF030F1B)
 val welcomeBackground = Color(0xFF0B1327)
 val qrCodeBackground = Color(0xFF333C55)
 val darkBackground = Color(0xFF0A0E1A)       // 深色背景（Preview / ScanPay 圓圈）
