@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.R
+import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.UserInfoResponse
 import com.example.newproject.ui.Routes
 import com.example.newproject.ui.UiEvent
@@ -70,6 +71,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onNavigate: (String) 
         uiState = uiState,
         myMenuItems = myMenuItems,
         onSaveMyMenu = viewModel::saveMyMenu,
+        onSelectOrder = viewModel::selectOrder,
         onNavigate = onNavigate
     )
 }
@@ -79,6 +81,7 @@ private fun HomeScreenContent(
     uiState: HomeUiState,
     myMenuItems: List<EssentialItem> = allEssentialItems.take(ESSENTIALS_DISPLAY_COUNT),
     onSaveMyMenu: (List<EssentialItem>) -> Unit = {},
+    onSelectOrder: (OrderHistoryResponse) -> Unit = {},
     onNavigate: (String) -> Unit = {},
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -114,7 +117,13 @@ private fun HomeScreenContent(
                     // TODO: D. 任務與行銷橫幅
                     QuestCard()
                     Spacer(modifier = Modifier.height(10.dp))
-                    RecentActivity(orders = uiState.orders)
+                    RecentActivity(
+                        orders = uiState.orders,
+                        onItemClick = { order ->
+                            onSelectOrder(order)
+                            onNavigate(Routes.transactionDetail(order.orderId))
+                        }
+                    )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
             }

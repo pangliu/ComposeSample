@@ -49,7 +49,7 @@ import com.example.newproject.ui.theme.welcomeBackground
  * @param orders null → loading；emptyList → 無資料；否則顯示列表
  */
 @Composable
-fun RecentActivity(orders: List<OrderHistoryResponse>) {
+fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistoryResponse) -> Unit = {}) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.recent_activity_title),
@@ -79,7 +79,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>) {
                 else -> {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         orders.forEachIndexed { index, order ->
-                            TransactionRow(order = order, onClick = { /* TODO: 跳至交易詳細頁 */ })
+                            TransactionRow(order = order, onClick = { onItemClick(order) })
                             if (index < orders.lastIndex) {
                                 Box(
                                     modifier = Modifier

@@ -15,6 +15,8 @@ import com.example.newproject.ui.cards.add.AddNewCardScreen
 import com.example.newproject.ui.cards.detail.CardDetailScreen
 import com.example.newproject.ui.cards.linked_success.LinkedSuccessScreen
 import com.example.newproject.ui.cards.select.SelectCardTypeScreen
+import com.example.newproject.ui.home.transaction_detail.TransactionDetailScreen
+import com.example.newproject.ui.home.transaction_detail.TransactionDetailViewModel
 import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
 import com.example.newproject.ui.main.MainScreen
@@ -91,6 +93,7 @@ fun AppNavigation(
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideOutHorizontally { -it }
                     Routes.SETTINGS -> slideOutHorizontally { -it }
                     Routes.CARD_LINKED_SUCCESS -> slideOutHorizontally { -it }
+                    Routes.TRANSACTION_DETAIL -> slideOutHorizontally { -it }
                     else -> null
                 }
             },
@@ -105,6 +108,7 @@ fun AppNavigation(
                     Routes.SCAN_PAY_INPUT_AMOUNT -> slideInHorizontally { -it }
                     Routes.SETTINGS -> slideInHorizontally { -it }
                     Routes.CARD_LINKED_SUCCESS -> slideInHorizontally { -it }
+                    Routes.TRANSACTION_DETAIL -> slideInHorizontally { -it }
                     else -> null
                 }
             }
@@ -279,6 +283,19 @@ fun AppNavigation(
             popExitTransition = { slideOutHorizontally { it } }
         ) {
             CardDetailScreen(onBack = { navController.popBackStack() })
+        }
+
+        composable(
+            route = Routes.TRANSACTION_DETAIL,
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType }),
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) {
+            val viewModel = hiltViewModel<TransactionDetailViewModel>()
+            TransactionDetailScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
         }
 
     }

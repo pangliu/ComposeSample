@@ -3,6 +3,7 @@ package com.example.newproject.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newproject.network.manager.EssentialsManager
+import com.example.newproject.network.manager.TransactionPreviewHolder
 import com.example.newproject.network.manager.UserInfoManager
 import com.example.newproject.network.model.NetworkResult
 import com.example.newproject.network.model.response.OrderHistoryResponse
@@ -39,7 +40,8 @@ data class HomeUiState(
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val userInfoManager: UserInfoManager,
-    private val essentialsManager: EssentialsManager
+    private val essentialsManager: EssentialsManager,
+    private val transactionPreviewHolder: TransactionPreviewHolder
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -103,6 +105,10 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun selectOrder(order: OrderHistoryResponse) {
+        transactionPreviewHolder.set(order)
     }
 
     fun saveMyMenu(items: List<EssentialItem>) {

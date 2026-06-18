@@ -26,6 +26,8 @@ object Routes {
     const val ADD_NEW_CARD = "add_new_card"
     const val CARD_LINKED_SUCCESS = "card_linked_success"
     const val CARD_DETAIL = "card_detail/{cardId}"
+    const val TRANSACTION_DETAIL = "transaction_detail/{orderId}"
 
     fun cardDetail(cardId: Int) = "card_detail/$cardId"
+    fun transactionDetail(orderId: String) = "transaction_detail/$orderId"
 }
