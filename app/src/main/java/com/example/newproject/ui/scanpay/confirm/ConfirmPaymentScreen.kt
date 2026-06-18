@@ -385,6 +385,7 @@ private fun ConfirmPaymentContent(
             if (uiState.confirmedSplitPartners.isNotEmpty()) {
                 Spacer(Modifier.height(12.dp))
                 SplitPartnersRow(
+                    myName = uiState.myUserName,
                     partners = uiState.confirmedSplitPartners,
                     onEdit = onEditSplit,
                     onCancel = onCancelSplit
