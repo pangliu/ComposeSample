@@ -6,6 +6,7 @@ import com.example.newproject.network.manager.UserInfoManager
 import com.example.newproject.network.model.NetworkResult
 import com.example.newproject.network.model.response.FriendResponse
 import com.example.newproject.network.model.response.OrderHistoryResponse
+import com.example.newproject.network.model.response.UpdateLogResponse
 import com.example.newproject.network.model.response.UserInfoResponse
 import javax.inject.Inject
 
@@ -46,6 +47,12 @@ class UserRepository @Inject constructor(
     suspend fun fetchFriendList(): NetworkResult<List<FriendResponse>> {
         return safeApiCall {
             apiService.getFriendList()
+        }
+    }
+
+    suspend fun fetchUpdateLog(): NetworkResult<List<UpdateLogResponse>> {
+        return safeApiCall {
+            apiService.getUpdateLog()
         }
     }
 }

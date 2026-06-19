@@ -1,5 +1,6 @@
 package com.example.newproject.ui.home.setting
 
+import com.example.newproject.ui.Routes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -37,6 +38,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +58,8 @@ import com.example.newproject.ui.components.NeonSwitch
 import com.example.newproject.ui.components.RowIcon
 import com.example.newproject.ui.components.RowIconImage
 import com.example.newproject.ui.components.SubPageTopBar
+import com.example.newproject.ui.home.dialog.DeleteAccountDialog
+import com.example.newproject.ui.home.dialog.LogoutDialog
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonDarkBlue
@@ -72,17 +76,54 @@ private val CardBg = Color(0xFF0E1A2E)
 @Composable
 fun SettingScreen(
     viewModel: SettingViewModel = hiltViewModel(),
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onNavigate: (String) -> Unit = {}
 ) {
-    SettingScreenContent(onBack = onBack)
+    val uiState by viewModel.uiState.collectAsState()
+    SettingScreenContent(
+        userEmail = uiState.userEmail,
+        onBack = onBack,
+        onNavigate = onNavigate,
+        onLogout = { viewModel.logout() },
+        onDeleteAccount = { viewModel.deleteAccount() }
+    )
 }
 
 @Composable
-private fun SettingScreenContent(onBack: () -> Unit = {}) {
+private fun SettingScreenContent(
+    userEmail: String = "",
+    onBack: () -> Unit = {},
+    onNavigate: (String) -> Unit = {},
+    onLogout: () -> Unit = {},
+    onDeleteAccount: () -> Unit = {}
+) {
     var systemAlertsOn  by remember { mutableStateOf(true) }
-    var promoNotiOn     by remember { mutableStateOf(false) }
+    var promoNoteOn     by remember { mutableStateOf(false) }
     var txAlertsOn      by remember { mutableStateOf(true) }
     var hideBalanceOn   by remember { mutableStateOf(true) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showLogoutDialog) {
+        LogoutDialog(
+            onConfirm = {
+                showLogoutDialog = false
+                onLogout()
+            },
+            onDismiss = { showLogoutDialog = false }
+        )
+    }
+
+    if (showDeleteDialog) {
+        DeleteAccountDialog(
+            userEmail = userEmail,
+            onConfirm = {
+                showDeleteDialog = false
+                onDeleteAccount()
+            },
+            onDismiss = { showDeleteDialog = false }
+        )
+    }
 
     Scaffold(
         containerColor = welcomeBackground,
@@ -146,8 +187,8 @@ private fun SettingScreenContent(onBack: () -> Unit = {}) {
                     ToggleRow(
                         icon = RowIcon.Vector(Icons.Outlined.CardGiftcard),
                         label = stringResource(R.string.setting_promo_notifications),
-                        checked = systemAlertsOn,
-                        onCheckedChange = { promoNotiOn = it },
+                        checked = promoNoteOn,
+                        onCheckedChange = { promoNoteOn = it },
                         activeColor = neonDarkBlue
                     )
                     SectionDivider(neonPurple)
@@ -168,7 +209,8 @@ private fun SettingScreenContent(onBack: () -> Unit = {}) {
                     NavRow(
                         icon = RowIcon.Vector(Icons.Outlined.Description),
                         label = stringResource(R.string.setting_update_log),
-                        iconTint = neonCyan
+                        iconTint = neonCyan,
+                        onClick = { onNavigate(Routes.UPDATE_LOG) }
                     )
                     SectionDivider(neonCyan)
                     NavRow(
@@ -188,14 +230,16 @@ private fun SettingScreenContent(onBack: () -> Unit = {}) {
                         icon = RowIcon.Vector(Icons.Outlined.Delete),
                         label = stringResource(R.string.setting_delete_account),
                         iconTint = neonRed,
-                        labelColor = neonRed
+                        labelColor = neonRed,
+                        onClick = { showDeleteDialog = true }
                     )
                     SectionDivider(neonRed)
                     NavRow(
                         icon = RowIcon.Vector(Icons.AutoMirrored.Outlined.ExitToApp),
                         label = stringResource(R.string.setting_logout),
                         iconTint = neonRed,
-                        labelColor = neonRed
+                        labelColor = neonRed,
+                        onClick = { showLogoutDialog = true }
                     )
                 }
 
@@ -220,7 +264,7 @@ private fun SectionCard(
             .neonGlow(borderColor, alpha = 0.25f, glowRadius = 8.dp, borderRadius = 14.dp)
             .background(CardBg, RoundedCornerShape(14.dp))
             .border(1.5.dp, borderColor.copy(0.5f), RoundedCornerShape(14.dp))
-            .padding(top = 12.dp)
+            .padding(top = 12.dp, bottom = 5.dp)
     ) {
         Text(
             text = title,
@@ -265,7 +309,8 @@ private fun DropdownRow(
         Text(label, color = Color.White, fontSize = 14.sp, modifier = Modifier.weight(1f))
         Row(
             modifier = Modifier
-                .border(1.dp, borderColor.copy(0.6f), RoundedCornerShape(8.dp))
+                .background(color = borderColor.copy(0.2f))
+                .border(1.dp, borderColor.copy(0.6f), RoundedCornerShape(5.dp))
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(3.dp)
@@ -301,7 +346,8 @@ private fun ToggleRow(
         NeonSwitch(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            activeColor = activeColor
+            activeColor = activeColor,
+            showLabel = true
         )
     }
 }

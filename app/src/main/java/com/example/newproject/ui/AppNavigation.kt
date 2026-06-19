@@ -17,6 +17,8 @@ import com.example.newproject.ui.cards.linked_success.LinkedSuccessScreen
 import com.example.newproject.ui.cards.select.SelectCardTypeScreen
 import com.example.newproject.ui.home.transaction_detail.TransactionDetailScreen
 import com.example.newproject.ui.home.transaction_detail.TransactionDetailViewModel
+import com.example.newproject.ui.home.update_log.UpdateLogScreen
+import com.example.newproject.ui.home.update_log.UpdateLogViewModel
 import com.example.newproject.ui.login.LoginScreen
 import com.example.newproject.ui.login.LoginViewModel
 import com.example.newproject.ui.main.MainScreen
@@ -94,6 +96,7 @@ fun AppNavigation(
                     Routes.SETTINGS -> slideOutHorizontally { -it }
                     Routes.CARD_LINKED_SUCCESS -> slideOutHorizontally { -it }
                     Routes.TRANSACTION_DETAIL -> slideOutHorizontally { -it }
+                    Routes.UPDATE_LOG -> slideOutHorizontally { -it }
                     else -> null
                 }
             },
@@ -109,6 +112,7 @@ fun AppNavigation(
                     Routes.SETTINGS -> slideInHorizontally { -it }
                     Routes.CARD_LINKED_SUCCESS -> slideInHorizontally { -it }
                     Routes.TRANSACTION_DETAIL -> slideInHorizontally { -it }
+                    Routes.UPDATE_LOG -> slideInHorizontally { -it }
                     else -> null
                 }
             }
@@ -174,7 +178,23 @@ fun AppNavigation(
             popExitTransition = { slideOutHorizontally { it } }
         ) {
             val viewModel = hiltViewModel<com.example.newproject.ui.home.setting.SettingViewModel>()
-            SettingScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
+            SettingScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onNavigate = { navController.navigate(it) }
+            )
+        }
+
+        composable(
+            route = Routes.UPDATE_LOG,
+            enterTransition = { slideInHorizontally { it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) {
+            val viewModel = hiltViewModel<UpdateLogViewModel>()
+            UpdateLogScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
         }
 
         // ── ScanPay sub-pages (ScanPayViewModel scoped to MAIN) ──────────

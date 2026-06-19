@@ -345,10 +345,18 @@
     <string name="linked_success_not_now">Not Now</string>
 
     <!-- LogoutConfirmDialog -->
-    <string name="logout_dialog_title">Log Out?</string>
+    <string name="logout_dialog_title">Logout?</string>
     <string name="logout_dialog_message">Are you sure you want to log out of your account?</string>
     <string name="logout_dialog_confirm">Yes，I\'want to log out！</string>
     <string name="logout_dialog_cancel">No，I don\'t want to！</string>
+
+    <!-- Delete Account Dialog -->
+    <string name="delete_account_dialog_title">Delete Account Permanently?</string>
+    <string name="delete_account_dialog_warning_label">Warning:</string>
+    <string name="delete_account_dialog_warning_body">This action is irreversible. Deleting your account will permanently erase all your personal profiles, transaction histories, and any remaining balances. You will immediately lose access to all services associated with this account.</string>
+    <string name="delete_account_dialog_email_hint">To confirm deletion, please type your full registered email address below:</string>
+    <string name="delete_account_dialog_confirm">Delete Account</string>
+    <string name="delete_account_dialog_cancel">Cancel</string>
 
     <!-- Common -->
     <string name="common_back_desc">Back</string>

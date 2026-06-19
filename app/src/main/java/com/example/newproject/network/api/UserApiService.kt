@@ -6,6 +6,7 @@ import retrofit2.http.POST
 
 import com.example.newproject.network.model.response.FriendResponse
 import com.example.newproject.network.model.response.OrderHistoryResponse
+import com.example.newproject.network.model.response.UpdateLogResponse
 import com.example.newproject.network.model.response.UserInfoResponse
 
 interface UserApiService {
@@ -26,4 +27,7 @@ interface UserApiService {
 
     @GET("/api/user/friend_list")
     suspend fun getFriendList(): BaseResponse<List<FriendResponse>>
+
+    @GET("/api/update_log")
+    suspend fun getUpdateLog(): BaseResponse<List<UpdateLogResponse>>
 }

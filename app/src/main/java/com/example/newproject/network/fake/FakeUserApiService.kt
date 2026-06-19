@@ -6,6 +6,7 @@ import com.example.newproject.network.model.response.FriendResponse
 import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.OrderStatus
 import com.example.newproject.network.model.response.OrderType
+import com.example.newproject.network.model.response.UpdateLogResponse
 import com.example.newproject.network.model.response.UserInfoResponse
 import kotlinx.coroutines.delay
 
@@ -97,6 +98,31 @@ class FakeUserApiService : UserApiService {
                 FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb"),
                 FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman"),
                 FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "blackwidow")
+            )
+        )
+    }
+
+    override suspend fun getUpdateLog(): BaseResponse<List<UpdateLogResponse>> {
+        delay(500)
+        return BaseResponse(
+            code = 200,
+            errorMsg = "success",
+            result = listOf(
+                UpdateLogResponse(
+                    date = "2026-06-18",
+                    title = "v2.3.0 Release",
+                    message = "New split bill feature, improved QR scan performance, and various bug fixes."
+                ),
+                UpdateLogResponse(
+                    date = "2026-05-01",
+                    title = "v2.2.0 Release",
+                    message = "Added transaction history export, fixed login crash on Android 12."
+                ),
+                UpdateLogResponse(
+                    date = "2026-03-15",
+                    title = "v2.1.0 Release",
+                    message = "Introduced neon theme, biometric login support, and QR code sharing."
+                )
             )
         )
     }
