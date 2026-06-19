@@ -59,6 +59,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.R
+import com.example.newproject.ui.components.RowIcon
+import com.example.newproject.ui.components.RowIconImage
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.balanceGold
@@ -180,25 +182,29 @@ private fun MyDeetsSection(uiState: ProfileEditUiState, modifier: Modifier = Mod
         modifier = modifier
     ) {
         LockedFieldRow(
-            icon = Icons.Default.Person,
+//            icon = RowIcon.Vector(Icons.Default.Person),
+            icon = RowIcon.Resource(R.mipmap.ic_profile_edit_person),
             label = stringResource(R.string.profile_edit_full_name),
             value = uiState.fullName.ifEmpty { "---" }
         )
         FieldDivider()
         PlainFieldRow(
-            icon = Icons.Default.Wc,
+//            icon = RowIcon.Vector(Icons.Default.Wc),
+            icon = RowIcon.Resource(R.mipmap.ic_profile_edit_sex),
             label = stringResource(R.string.profile_edit_gender),
             value = uiState.gender
         )
         FieldDivider()
         PlainFieldRow(
-            icon = Icons.Default.Phone,
+//            icon = RowIcon.Vector(Icons.Default.Phone),
+            icon = RowIcon.Resource(R.mipmap.ic_profile_edit_phone),
             label = stringResource(R.string.profile_edit_mobile),
             value = uiState.mobile.ifEmpty { "---" }
         )
         FieldDivider()
         ChangeableFieldRow(
-            icon = Icons.Default.Email,
+//            icon = RowIcon.Vector(Icons.Default.Email),
+            icon = RowIcon.Resource(R.mipmap.ic_profile_edit_mail),
             label = stringResource(R.string.profile_edit_email),
             value = uiState.email.ifEmpty { "---" }
         )
@@ -206,7 +212,8 @@ private fun MyDeetsSection(uiState: ProfileEditUiState, modifier: Modifier = Mod
         PasswordFieldRow()
         FieldDivider()
         LockedFieldRow(
-            icon = Icons.Default.CalendarToday,
+//            icon = RowIcon.Vector(Icons.Default.CalendarToday),
+            icon = RowIcon.Resource(R.mipmap.ic_profile_edit_calander),
             label = stringResource(R.string.profile_edit_dob),
             value = uiState.dob
         )
@@ -329,14 +336,14 @@ private fun FieldDivider() {
 }
 
 @Composable
-private fun LockedFieldRow(icon: ImageVector, label: String, value: String) {
+private fun LockedFieldRow(icon: RowIcon, label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, tint = neonCyan, modifier = Modifier.size(20.dp))
+        RowIconImage(icon = icon, tint = neonCyan)
         Spacer(Modifier.width(10.dp))
         Text(label, color = normalText, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Icon(
@@ -351,14 +358,14 @@ private fun LockedFieldRow(icon: ImageVector, label: String, value: String) {
 }
 
 @Composable
-private fun PlainFieldRow(icon: ImageVector, label: String, value: String) {
+private fun PlainFieldRow(icon: RowIcon, label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, tint = neonCyan, modifier = Modifier.size(20.dp))
+        RowIconImage(icon = icon, tint = neonCyan)
         Spacer(Modifier.width(10.dp))
         Text(label, color = normalText, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Text(value, color = Color.White, fontSize = 13.sp)
@@ -367,7 +374,7 @@ private fun PlainFieldRow(icon: ImageVector, label: String, value: String) {
 
 @Composable
 private fun ChangeableFieldRow(
-    icon: ImageVector,
+    icon: RowIcon,
     label: String,
     value: String,
     onChangeTap: () -> Unit = {}
@@ -378,7 +385,7 @@ private fun ChangeableFieldRow(
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, tint = neonCyan, modifier = Modifier.size(20.dp))
+        RowIconImage(icon = icon, tint = neonCyan)
         Spacer(Modifier.width(10.dp))
         Text(label, color = normalText, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Text(value, color = normalText, fontSize = 12.sp)
@@ -419,12 +426,7 @@ private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = Icons.Outlined.Lock,
-            contentDescription = null,
-            tint = neonCyan,
-            modifier = Modifier.size(20.dp)
-        )
+        RowIconImage(icon = RowIcon.Resource(R.mipmap.ic_profile_edit_lock), tint = neonCyan)
         Spacer(Modifier.width(10.dp))
         Text(
             text = stringResource(R.string.profile_edit_password),

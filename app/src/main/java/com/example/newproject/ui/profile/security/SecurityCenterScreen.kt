@@ -48,11 +48,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.R
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.profile.components.FullyVerifiedBadge
 import com.example.newproject.ui.theme.balanceGold
 import com.example.newproject.ui.theme.neonBlueLight
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonMint
-import com.example.newproject.ui.theme.neonPink
 import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
 import com.example.newproject.ui.theme.normalText
@@ -199,55 +199,8 @@ private fun IdentityCard(
                 fontSize = 13.sp
             )
             if (isVerified) {
-                FullyVerifiedBadge()
+                FullyVerifiedBadge(text = stringResource(R.string.profile_fully_verified))
             }
-        }
-    }
-}
-
-@Composable
-private fun FullyVerifiedBadge(modifier: Modifier = Modifier) {
-    val iconSize = 32.dp
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.CenterStart
-    ) {
-        // 1. Badge 先畫（z-order 低）：往右偏移 iconSize/2，讓 icon 左半段在 badge 外面
-        Row(
-            modifier = Modifier
-                .padding(start = iconSize / 2)
-                .border(
-                    width = 1.5.dp,
-                    brush = Brush.horizontalGradient(
-                        listOf(neonPurple.copy(alpha = 0.7f), neonPink.copy(alpha = 0.9f))
-                    ),
-                    shape = RoundedCornerShape(50)
-                )
-                // start padding 讓內容清開 icon 右半段 + 間距
-                .padding(start = iconSize / 2 + 10.dp, end = 12.dp, top = 5.dp, bottom = 5.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.profile_fully_verified),
-                color = neonPurple,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp
-            )
-        }
-        // 2. Icon 後畫（z-order 高）：定位在 CenterStart（x=0），其背景蓋住 badge 左側邊框
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(CardBackground, androidx.compose.foundation.shape.CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(R.mipmap.ic_shield_check),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier.size(iconSize)
-            )
         }
     }
 }

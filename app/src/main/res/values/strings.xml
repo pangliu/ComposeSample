@@ -213,7 +213,7 @@
     <!-- ProfileScreen -->
     <string name="profile_title">Profile</string>
     <string name="profile_section_identity">Identity &amp; Status</string>
-    <string name="profile_hi_name">Hi, %s 👋</string>
+    <string name="profile_hi_name">Hi, %s</string>
     <string name="profile_xcash_id">Xcash ID: %s</string>
     <string name="profile_fully_verified">FULLY VERIFIED</string>
     <string name="profile_avatar_desc">User Avatar</string>

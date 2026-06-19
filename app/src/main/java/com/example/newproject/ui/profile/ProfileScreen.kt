@@ -25,7 +25,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.CardGiftcard
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Person
@@ -68,6 +67,7 @@ import com.example.newproject.ui.Routes
 import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.profile.components.FullyVerifiedBadge
 import com.example.newproject.ui.profile.components.LogoutConfirmDialog
 import com.example.newproject.ui.theme.essentialCardTitle
 import com.example.newproject.ui.theme.neonCyan
@@ -248,19 +248,26 @@ private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
     ) {
         Box(
             modifier = Modifier
-                .size(72.dp)
-                .clip(CircleShape)
-                .background(
-                    Brush.radialGradient(listOf(neonPurple.copy(alpha = 0.7f), neonCyan.copy(alpha = 0.4f)))
-                )
-                .border(1.5.dp, neonCyan, CircleShape),
+                .size(90.dp),
+//                .clip(CircleShape)
+//                .background(
+//                    Brush.radialGradient(listOf(neonPurple.copy(alpha = 0.7f), neonCyan.copy(alpha = 0.4f)))
+//                )
+//                .border(1.5.dp, neonCyan, CircleShape),
             contentAlignment = Alignment.Center
         ) {
+//            Icon(
+//                imageVector = Icons.Default.Person,
+//                contentDescription = stringResource(R.string.profile_avatar_desc),
+//                tint = Color.White,
+//                modifier = Modifier.size(42.dp)
+//            )
             Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = stringResource(R.string.profile_avatar_desc),
-                tint = Color.White,
-                modifier = Modifier.size(42.dp)
+                modifier = Modifier
+                    .size(90.dp),
+                tint = Color.Unspecified,
+                contentDescription = null,
+                painter = painterResource(R.mipmap.ic_female),
             )
         }
 
@@ -279,42 +286,9 @@ private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
                 fontSize = 13.sp
             )
             if (uiState.isVerified) {
-                VerifiedBadge()
+                FullyVerifiedBadge(text = stringResource(R.string.profile_fully_verified))
             }
         }
-    }
-}
-
-@Composable
-private fun VerifiedBadge() {
-    Row(
-        modifier = Modifier
-            .border(
-                width = 1.5.dp,
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        neonCyan.copy(alpha = 0.4f),
-                        neonPurple.copy(alpha = 0.8f)
-                    )
-                ),
-                shape = RoundedCornerShape(16.dp))
-            .padding(horizontal = 10.dp, vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Default.CheckCircle,
-            contentDescription = null,
-            tint = neonPurple,
-            modifier = Modifier.size(13.dp)
-        )
-        Text(
-            text = stringResource(R.string.profile_fully_verified),
-            color = neonPurple,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp
-        )
     }
 }
 
@@ -376,9 +350,9 @@ private fun SocialRewardsCard(inviteCode: String, badgeCount: Int) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(32.dp)
-                    .neonGlow(neonCyan, alpha = 0.3f, glowRadius = 8.dp, borderRadius = 14.dp)
+                    .neonGlow(neonCyan, alpha = 0.2f, glowRadius = 8.dp, borderRadius = 14.dp)
                     .background(
-                        color = CardBackground,
+                        color = neonCyan.copy(alpha = 0.1f),
                         shape = RoundedCornerShape(15.dp))
                     .border(
                         width = 1.5.dp,
@@ -399,11 +373,11 @@ private fun SocialRewardsCard(inviteCode: String, badgeCount: Int) {
                     fontWeight = FontWeight.Bold
                 )
             }
-            Text(
-                text = stringResource(R.string.profile_invite_channels),
-                color = normalText,
-                fontSize = 10.sp
-            )
+//            Text(
+//                text = stringResource(R.string.profile_invite_channels),
+//                color = normalText,
+//                fontSize = 10.sp
+//            )
         }
 
         // 分隔線
