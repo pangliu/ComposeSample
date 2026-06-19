@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -132,16 +133,17 @@ private fun SplitAvatarItem(
     ) {
         Box(
             modifier = Modifier
-                .size(40.dp)
-                .background(avatarColor.copy(alpha = 0.15f), CircleShape)
-                .border(1.dp, avatarColor.copy(alpha = 0.5f), CircleShape),
+                .size(40.dp),
+//                .background(avatarColor.copy(alpha = 0.15f), CircleShape)
+//                .border(1.dp, avatarColor.copy(alpha = 0.5f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = avatarLetter,
-                color = avatarColor,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+            Icon(
+                modifier = Modifier
+                    .size(40.dp),
+                tint = Color.Unspecified,
+                contentDescription = null,
+                painter = painterResource(R.mipmap.ic_male),
             )
         }
         Spacer(Modifier.height(4.dp))

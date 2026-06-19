@@ -22,8 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,7 +39,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
@@ -48,6 +49,7 @@ import com.example.newproject.R
 import com.example.newproject.network.model.response.FriendResponse
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.neonMint
 import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.normalText
 import com.example.newproject.ui.theme.welcomeBackground
@@ -122,37 +124,54 @@ fun SplitBillDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(horizontal = 24.dp)
+                    .border(
+                        width = 1.5.dp,
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                neonCyan.copy(alpha = 0.4f),
+                                neonPurple.copy(alpha = 0.8f)
+                            )
+                        ),
+                        shape = RoundedCornerShape(50.dp))
+
+                    .background(Color(0xFF0D1525), RoundedCornerShape(50.dp))
+                    .padding(4.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = stringResource(R.string.split_bill_equally),
-                    color = if (splitMode == SplitMode.EQUALLY) neonCyan else normalText,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Switch(
-                    checked = splitMode == SplitMode.CUSTOM,
-                    onCheckedChange = { isCustom ->
-                        splitMode = if (isCustom) SplitMode.CUSTOM else SplitMode.EQUALLY
-                        initAmounts(if (isCustom) SplitMode.CUSTOM else SplitMode.EQUALLY)
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = neonCyan.copy(alpha = 0.6f),
-                        checkedBorderColor = neonCyan,
-                        uncheckedThumbColor = Color.White,
-                        uncheckedTrackColor = neonCyan.copy(alpha = 0.3f),
-                        uncheckedBorderColor = neonCyan.copy(alpha = 0.5f)
+                listOf(SplitMode.EQUALLY, SplitMode.CUSTOM).forEach { mode ->
+                    val isSelected = splitMode == mode
+                    val label = stringResource(
+                        if (mode == SplitMode.EQUALLY) R.string.split_bill_equally
+                        else R.string.split_bill_custom
                     )
-                )
-                Text(
-                    text = stringResource(R.string.split_bill_custom),
-                    color = if (splitMode == SplitMode.CUSTOM) neonCyan else normalText,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(36.dp)
+                            .then(
+                                if (isSelected)
+                                    Modifier.background(neonCyan, RoundedCornerShape(50.dp))
+                                else Modifier
+                            )
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) {
+                                splitMode = mode
+                                initAmounts(mode)
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = label,
+                            color = if (isSelected) Color(0xFF0A0E1A) else normalText,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
             }
 
             Spacer(Modifier.height(8.dp))
@@ -200,7 +219,8 @@ fun SplitBillDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(InputFieldBackground)
-                    .border(width = 1.dp, color = neonCyan.copy(alpha = 0.4f), shape = RoundedCornerShape(0))
+                    .padding(horizontal = 15.dp)
+                    .border(width = 1.dp, color = neonCyan.copy(alpha = 0.4f), shape = RoundedCornerShape(8.dp))
                     .padding(horizontal = 24.dp, vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -213,29 +233,28 @@ fun SplitBillDialog(
                 )
                 Text(
                     text = "PHP %.2f".format(remaining),
-                    color = neonCyan,
+                    color = neonMint,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
-
+            Spacer(Modifier.height(20.dp))
             // Confirm Request button
             val isConfirmEnabled = kotlin.math.abs(remaining) < 0.01
             val confirmBorderColor = if (isConfirmEnabled) neonPurple else neonPurple.copy(alpha = 0.3f)
-            val confirmTextColor = if (isConfirmEnabled) Color.White else Color.White.copy(alpha = 0.35f)
-
+            val confirmTextColor = if (isConfirmEnabled) neonPurple else neonPurple.copy(alpha = 0.35f)
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .height(48.dp)
-                    .then(
-                        if (isConfirmEnabled)
-                            Modifier.neonGlow(neonPurple, alpha = 0.45f, glowRadius = 10.dp, borderRadius = 12.dp)
-                        else Modifier
-                    )
-                    .border(1.5.dp, confirmBorderColor, RoundedCornerShape(12.dp))
+                    .align(Alignment.CenterHorizontally)
+                    .height(40.dp)
+//                    .then(
+//                        if (isConfirmEnabled)
+//                            Modifier.neonGlow(neonPurple, alpha = 0.45f, glowRadius = 10.dp, borderRadius = 12.dp)
+//                        else Modifier
+//                    )
+                    .border(1.5.dp, confirmBorderColor, RoundedCornerShape(50.dp))
                     .background(neonPurple.copy(alpha = if (isConfirmEnabled) 0.15f else 0.05f), RoundedCornerShape(12.dp))
+                    .padding(horizontal = 30.dp)
                     .clickable(
                         enabled = isConfirmEnabled,
                         indication = null,
@@ -250,6 +269,7 @@ fun SplitBillDialog(
                     fontWeight = FontWeight.Bold
                 )
             }
+            Spacer(Modifier.height(20.dp))
         }
     }
 }
@@ -270,17 +290,15 @@ internal fun SplitBillParticipantItem(
     ) {
         // Avatar
         Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(neonCyan.copy(alpha = 0.15f), CircleShape)
-                .border(1.dp, neonCyan.copy(alpha = 0.5f), CircleShape),
+            modifier = Modifier.size(40.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = avatarLetter,
-                color = neonCyan,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+            Icon(
+                modifier = Modifier
+                    .size(40.dp),
+                tint = Color.Unspecified,
+                contentDescription = null,
+                painter = painterResource(R.mipmap.ic_male),
             )
         }
 

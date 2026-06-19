@@ -332,7 +332,7 @@ internal fun MyQrContent(
             )
             MyQrActionButton(
                 iconRes = R.mipmap.ic_money,
-                label = stringResource(R.string.scan_pay_my_qr_split_bill_btn),
+                label = stringResource(R.string.scan_pay_my_qr_payment_history_btn),
                 modifier = Modifier.weight(1f)
             )
         }

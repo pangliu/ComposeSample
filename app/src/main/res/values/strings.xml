@@ -403,6 +403,7 @@
     <string name="scan_pay_my_qr_available_balance">Available balance:%1$s</string>
     <string name="scan_pay_my_qr_generate_ang_pao_btn">Generate Ang Pao / Gift QR</string>
     <string name="scan_pay_my_qr_split_bill_btn">Split a Bill &amp; Request</string>
+    <string name="scan_pay_my_qr_payment_history_btn">Payment History</string>
     <string name="scan_pay_my_qr_daily_quest_title">Daily P2P Collection Quests:</string>
     <string name="scan_pay_my_qr_daily_quest_progress">0/3 Scans</string>
     <string name="scan_pay_my_qr_confirm_hint">X-Points cannot be applied to this purchase</string>

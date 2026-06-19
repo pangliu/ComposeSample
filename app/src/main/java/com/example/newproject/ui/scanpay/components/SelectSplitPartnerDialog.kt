@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -121,8 +122,12 @@ fun SelectSplitPartnerDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(InputFieldBackground)
-                    .border(width = 1.dp, color = neonCyan.copy(alpha = 0.4f), shape = RoundedCornerShape(0.dp))
+                    .padding(horizontal = 15.dp)
+                    .neonGlow(color = neonCyan, alpha = 0.5f, glowRadius = 8.dp, borderRadius = 8.dp)
+                    .background(
+                        color = welcomeBackground,
+                        shape = RoundedCornerShape(8.dp))
+                    .border(width = 1.5.dp, color = neonCyan.copy(alpha = 0.7f), shape = RoundedCornerShape(8.dp))
                     .padding(horizontal = 24.dp, vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -145,9 +150,10 @@ fun SelectSplitPartnerDialog(
             val isConfirmEnabled = selectedCount > 0
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+//                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
                     .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .height(48.dp)
+                    .height(40.dp)
                     .then(
                         if (isConfirmEnabled)
                             Modifier.neonGlow(neonPurple, alpha = 0.45f, glowRadius = 10.dp, borderRadius = 12.dp)
@@ -156,12 +162,13 @@ fun SelectSplitPartnerDialog(
                     .border(
                         1.5.dp,
                         if (isConfirmEnabled) neonPurple else neonPurple.copy(alpha = 0.3f),
-                        RoundedCornerShape(12.dp)
+                        RoundedCornerShape(50.dp)
                     )
                     .background(
                         neonPurple.copy(alpha = if (isConfirmEnabled) 0.15f else 0.05f),
                         RoundedCornerShape(12.dp)
                     )
+                    .padding(horizontal = 30.dp)
                     .clickable(
                         enabled = isConfirmEnabled,
                         indication = null,
@@ -200,17 +207,15 @@ private fun SelectPartnerItem(
     ) {
         // Avatar
         Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(neonCyan.copy(alpha = 0.15f), CircleShape)
-                .border(1.dp, neonCyan.copy(alpha = 0.5f), CircleShape),
+            modifier = Modifier.size(40.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = friend.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
-                color = neonCyan,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+            Icon(
+                modifier = Modifier
+                    .size(40.dp),
+                tint = Color.Unspecified,
+                contentDescription = null,
+                painter = painterResource(R.mipmap.ic_male),
             )
         }
 

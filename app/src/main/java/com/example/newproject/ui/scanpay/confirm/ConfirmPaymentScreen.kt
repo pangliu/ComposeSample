@@ -68,6 +68,7 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.Routes
 import com.example.newproject.ui.components.LoadingDialog
+import com.example.newproject.ui.components.NeonSwitch
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.scanpay.components.MyQrActionButton
@@ -164,6 +165,7 @@ private fun ConfirmPaymentContent(
                 title = stringResource(R.string.confirm_payment_title),
                 onBack = onBack
             )
+
             Row(
                 modifier =
                     Modifier.fillMaxWidth(),
@@ -445,17 +447,23 @@ private fun ConfirmPaymentContent(
                         fontSize = 14.sp
                     )
                 }
-                Switch(
-                    modifier = Modifier.scale(0.8f),
+//                Switch(
+//                    modifier = Modifier.scale(0.8f),
+//                    checked = useXPoints,
+//                    onCheckedChange = { useXPoints = it },
+//                    colors = SwitchDefaults.colors(
+//                        checkedThumbColor = Color.White,
+//                        checkedTrackColor = Color.Gray,
+//                        checkedBorderColor = neonCyan,
+//                        uncheckedThumbColor = Color.White,
+//                        uncheckedTrackColor = Color.White.copy(alpha = 0.3f)
+//                    )
+//                )
+                NeonSwitch(
                     checked = useXPoints,
                     onCheckedChange = { useXPoints = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = Color.Gray,
-                        checkedBorderColor = neonCyan,
-                        uncheckedThumbColor = Color.White,
-                        uncheckedTrackColor = Color.White.copy(alpha = 0.3f)
-                    )
+                    activeColor = neonCyan,
+                    showLabel = true
                 )
             }
             Spacer(Modifier.height(20.dp))

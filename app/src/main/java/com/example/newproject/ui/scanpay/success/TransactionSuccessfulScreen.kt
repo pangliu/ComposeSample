@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
@@ -85,120 +87,160 @@ private fun TransactionSuccessfulContent(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            SubPageTopBar(
-                title = stringResource(R.string.transaction_successful_title),
-                onBack = onBack,
-                showBack = false
-            )
-
-            // ── QR card ───────────────────────────────────────────────────────
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
                 Image(
-                    modifier = Modifier.weight(0.2f),
-                    painter = painterResource(R.mipmap.bg_left_qrcode),
-                    contentScale = ContentScale.Crop,
-                    alignment = Alignment.CenterEnd,
-                    contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc)
+                    modifier = Modifier.matchParentSize(),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
+                    painter = painterResource(R.mipmap.bg_success_payment),
+                    alignment = Alignment.TopCenter
                 )
-                Column(
-                    modifier = Modifier
-                        .testTag("transaction_successful")
-                        .border(width = 1.5.dp, color = neonCyan, shape = RoundedCornerShape(15.dp))
-                        .neonGlow(color = neonCyan, alpha = 0.6f, glowRadius = 8.dp, borderRadius = 8.dp)
-                        .background(color = qrCodeBackground, shape = RoundedCornerShape(15.dp))
-                        .align(Alignment.CenterVertically)
-                        .weight(0.65f)
-                        .aspectRatio(1f)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 20.dp, horizontal = 15.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
+                Column {
+                    SubPageTopBar(
+                        title = stringResource(R.string.transaction_successful_title),
+                        onBack = onBack,
+                        showBack = false
+                    )
+                    Spacer(Modifier.height(40.dp))
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Row(
                             modifier = Modifier
-                                .size(60.dp)
-                                .neonGlow(color = neonCyan, alpha = 0.6f, glowRadius = 8.dp, borderRadius = 8.dp)
-                                .background(color = welcomeBackground, shape = RoundedCornerShape(12.dp))
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                text = stringResource(R.string.transaction_successful_paid_to),
-                                color = Color.White,
-                                fontSize = 14.sp
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                modifier = Modifier.weight(0.2f),
+                                painter = painterResource(R.mipmap.bg_left_qrcode),
+                                contentScale = ContentScale.Crop,
+                                alignment = Alignment.CenterEnd,
+                                contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc)
                             )
-                            Text(
-                                text = "@${uiState.recipientNickName}",
-                                color = neonCyanLight,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = uiState.recipientName,
-                                color = neonPurpleLight,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal
+                            Column(
+                                modifier = Modifier
+                                    .testTag("transaction_successful")
+        //                        .border(width = 1.5.dp, color = neonCyan, shape = RoundedCornerShape(15.dp))
+                                    .neonGlow(
+                                        color = neonCyan,
+                                        alpha = 0.6f,
+                                        glowRadius = 15.dp,
+                                        borderRadius = 15.dp
+                                    )
+        //                        .background(color = qrCodeBackground, shape = RoundedCornerShape(15.dp))
+                                    .paint(
+                                        painter = painterResource(R.mipmap.bg_success_payment_border),
+                                        contentScale = ContentScale.FillBounds
+                                    )
+                                    .align(Alignment.CenterVertically)
+                                    .weight(0.65f)
+                                    .aspectRatio(1f)
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 20.dp, horizontal = 20.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(60.dp)
+                                            .neonGlow(
+                                                color = neonCyan,
+                                                alpha = 0.6f,
+                                                glowRadius = 8.dp,
+                                                borderRadius = 8.dp
+                                            )
+                                            .background(
+                                                color = welcomeBackground,
+                                                shape = RoundedCornerShape(12.dp)
+                                            )
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Column(modifier = Modifier.fillMaxWidth()) {
+                                        Text(
+                                            text = stringResource(R.string.transaction_successful_paid_to),
+                                            color = Color.White,
+                                            fontSize = 14.sp
+                                        )
+                                        Text(
+                                            text = "@${uiState.recipientNickName}",
+                                            color = neonCyanLight,
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = uiState.recipientName,
+                                            color = neonPurpleLight,
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Normal
+                                        )
+                                    }
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 10.dp),
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.input_amount_currency),
+                                        color = neonCyan,
+                                        fontSize = 32.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        style = TextStyle(
+                                            shadow = Shadow(
+                                                color = neonCyan,
+                                                blurRadius = 15f
+                                            )
+                                        )
+                                    )
+                                    Spacer(Modifier.width(10.dp))
+                                    Text(
+                                        text = uiState.amount.ifEmpty { "0.00" },
+                                        color = neonCyan,
+                                        fontSize = 32.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        style = TextStyle(
+                                            shadow = Shadow(
+                                                color = neonCyan,
+                                                blurRadius = 15f
+                                            )
+                                        )
+                                    )
+                                }
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 15.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                                        text = stringResource(R.string.scan_pay_my_qr_x_points),
+                                        color = normalText,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center,
+                                        text = stringResource(R.string.scan_pay_my_qr_confirm_hint),
+                                        color = normalText,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                            Image(
+                                modifier = Modifier.weight(0.2f),
+                                painter = painterResource(R.mipmap.bg_right_qrcode),
+                                contentScale = ContentScale.Crop,
+                                alignment = Alignment.CenterStart,
+                                contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
                             )
                         }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 10.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.input_amount_currency),
-                            color = neonCyan,
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.Bold,
-                            style = TextStyle(shadow = Shadow(color = neonCyan, blurRadius = 15f))
-                        )
-                        Spacer(Modifier.width(10.dp))
-                        Text(
-                            text = uiState.amount.ifEmpty { "0.00" },
-                            color = neonCyan,
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.Bold,
-                            style = TextStyle(shadow = Shadow(color = neonCyan, blurRadius = 15f))
-                        )
-                    }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 15.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            text = stringResource(R.string.scan_pay_my_qr_x_points),
-                            color = normalText,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            text = stringResource(R.string.scan_pay_my_qr_confirm_hint),
-                            color = normalText,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-                Image(
-                    modifier = Modifier.weight(0.2f),
-                    painter = painterResource(R.mipmap.bg_right_qrcode),
-                    contentScale = ContentScale.Crop,
-                    alignment = Alignment.CenterStart,
-                    contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
-                )
-            }
+                    }  // inner Box
+                }  // Column
+            }  // outer Box
 
             // ── Balance row ───────────────────────────────────────────────────
             Row(
