@@ -28,7 +28,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Brush
@@ -47,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.R
 import com.example.newproject.ui.components.SubPageTopBar
+import com.example.newproject.ui.profile.security.dialog.SecurityPinDialog
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.profile.components.FullyVerifiedBadge
 import com.example.newproject.ui.theme.balanceGold
@@ -79,6 +82,12 @@ fun SecurityCenterContent(
     uiState: SecurityCenterUiState = SecurityCenterUiState(),
     onBack: () -> Unit = {}
 ) {
+    var showPinDialog by remember { mutableStateOf(false) }
+
+    if (showPinDialog) {
+        SecurityPinDialog(onDismiss = { showPinDialog = false })
+    }
+
     Scaffold(
         containerColor = welcomeBackground,
         contentColor = Color.White
@@ -123,7 +132,10 @@ fun SecurityCenterContent(
             Spacer(Modifier.height(20.dp))
 
             // ── Security Checklist ────────────────────────────────────────
-            ChecklistCard(modifier = Modifier.padding(horizontal = 16.dp))
+            ChecklistCard(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                onPinClick = { showPinDialog = true }
+            )
         }
     }
 }
@@ -234,12 +246,14 @@ private fun SecurityScoreCard(score: Int, modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
             )
+            Spacer(Modifier.height(5.dp))
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
                     text = stringResource(R.string.security_score_prefix),
                     color = Color.White,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(end = 5.dp)
                 )
                 Text(
                     text = "$score",
@@ -249,8 +263,8 @@ private fun SecurityScoreCard(score: Int, modifier: Modifier = Modifier) {
                 )
                 Text(
                     text = stringResource(R.string.security_score_max),
-                    color = normalText,
-                    fontSize = 18.sp,
+                    color = Color.White,
+                    fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -260,10 +274,10 @@ private fun SecurityScoreCard(score: Int, modifier: Modifier = Modifier) {
 //            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                painter = painterResource(R.mipmap.ic_trophy),
+                painter = painterResource(R.mipmap.ic_gold_coin),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(24.dp)
             )
             Spacer(Modifier.width(8.dp))
             Icon(
@@ -277,7 +291,7 @@ private fun SecurityScoreCard(score: Int, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ChecklistCard(modifier: Modifier = Modifier) {
+private fun ChecklistCard(modifier: Modifier = Modifier, onPinClick: () -> Unit = {}) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -306,7 +320,8 @@ private fun ChecklistCard(modifier: Modifier = Modifier) {
             icon = ChecklistIcon.Resource(R.mipmap.ic_lock),
             title = stringResource(R.string.security_item_pin),
             subtitle = stringResource(R.string.security_item_pin_subtitle),
-            statusSteps = listOf("Set", "Confirmed", "Active")
+            statusSteps = listOf("Set", "Confirmed", "Active"),
+            onClick = onPinClick
         )
         ChecklistDivider()
         ChecklistItem(

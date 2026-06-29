@@ -274,6 +274,15 @@
     <string name="security_score_prefix">SCORE: </string>
     <string name="security_score_max">/100</string>
     <string name="security_checklist_title">SECURITY CHECKLIST</string>
+    <!-- SecurityPinDialog -->
+    <string name="pin_dialog_title">Security PIN Settings</string>
+    <string name="pin_dialog_banner">BIOMETRIC AUTH SETTINGS, COP POINTS FOR EXTRA SECURITY!</string>
+    <string name="pin_dialog_biometric">Enable Biometric Authentication</string>
+    <string name="pin_dialog_enter_pin">Enter PIN</string>
+    <string name="pin_dialog_confirm_pin">Confirm PIN</string>
+    <string name="pin_dialog_alerts">In App Security Alerts</string>
+    <string name="pin_dialog_confirm_desc">Confirm</string>
+    <string name="pin_dialog_close_desc">Close</string>
     <string name="security_item_pin">Security PIN</string>
     <string name="security_item_pin_subtitle">Payday, Workday: PIN Set &amp; Confirmed</string>
     <string name="security_item_biometric">Biometric Authentication</string>
