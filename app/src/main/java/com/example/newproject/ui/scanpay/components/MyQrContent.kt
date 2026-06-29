@@ -117,11 +117,6 @@ internal fun MyQrContent(
             dark = QrBrush.solid(neonCyan),
             light = QrBrush.solid(Color.Transparent)
         ),
-//        logo = QrLogo(
-//            painter = painterResource(R.mipmap.ic_qrcode_logo),
-//            size = 0.2f,
-//            padding = QrLogoPadding.Empty
-//        ),
         errorCorrectionLevel = QrErrorCorrectionLevel.High
     )
 

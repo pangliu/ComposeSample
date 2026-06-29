@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -50,6 +51,7 @@ import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonDarkPurple
+import com.example.newproject.ui.theme.neonMellowPeach
 import com.example.newproject.ui.theme.neonMint
 import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.normalText
@@ -71,7 +73,10 @@ private data class VerifyItem(
     val steps: List<String>,
     val totalSegments: Int = 3,
     val completedSegments: Int,
-    val status: VerifyStatus
+    val status: VerifyStatus,
+    val iconTint: Color = Color.Unspecified,
+    val barColor: Color,
+    val statusColor: Color
 )
 
 @Composable
@@ -291,7 +296,7 @@ private fun FullyVerifiedBadge(modifier: Modifier = Modifier) {
 private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
     val items = listOf(
         VerifyItem(
-            icon = VerifyIcon.Resource(R.mipmap.ic_verify_id),
+            icon = VerifyIcon.Resource(R.mipmap.ic_passport),
             title = stringResource(R.string.verification_item_id),
             steps = listOf(
                 stringResource(R.string.verification_step_submit_doc),
@@ -299,10 +304,13 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
             ),
             totalSegments = 3,
             completedSegments = 2,
-            status = VerifyStatus.PENDING
+            status = VerifyStatus.PENDING,
+            iconTint = neonMellowPeach,
+            barColor = neonMellowPeach,
+            statusColor = neonMellowPeach
         ),
         VerifyItem(
-            icon = VerifyIcon.Vector(Icons.Outlined.Face),
+            icon = VerifyIcon.Resource(R.mipmap.ic_scan_passport),
             title = stringResource(R.string.verification_item_face),
             steps = listOf(
                 stringResource(R.string.verification_step_capture),
@@ -310,10 +318,13 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
                 stringResource(R.string.verification_step_verified)
             ),
             completedSegments = 3,
-            status = VerifyStatus.VERIFIED
+            status = VerifyStatus.VERIFIED,
+            iconTint = neonCyan,
+            barColor = neonCyan,
+            statusColor = neonCyan
         ),
         VerifyItem(
-            icon = VerifyIcon.Resource(R.mipmap.ic_phone),
+            icon = VerifyIcon.Resource(R.mipmap.ic_profile_edit_phone),
             title = stringResource(R.string.verification_item_phone),
             steps = listOf(
                 stringResource(R.string.verification_step_otp_sent),
@@ -321,10 +332,13 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
                 stringResource(R.string.verification_step_verified)
             ),
             completedSegments = 3,
-            status = VerifyStatus.VERIFIED
+            status = VerifyStatus.VERIFIED,
+            iconTint = neonCyan,
+            barColor = neonCyan,
+            statusColor = neonCyan
         ),
         VerifyItem(
-            icon = VerifyIcon.Vector(Icons.Outlined.Email),
+            icon = VerifyIcon.Resource(R.mipmap.ic_profile_edit_mail),
             title = stringResource(R.string.verification_item_email),
             steps = listOf(
                 stringResource(R.string.verification_step_link_sent),
@@ -332,7 +346,10 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
                 stringResource(R.string.verification_step_verified)
             ),
             completedSegments = 3,
-            status = VerifyStatus.VERIFIED
+            status = VerifyStatus.VERIFIED,
+            iconTint = neonCyan,
+            barColor = neonCyan,
+            statusColor = neonCyan,
         )
     )
 
@@ -362,17 +379,6 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
 
 @Composable
 private fun VerifyItemRow(item: VerifyItem) {
-    val statusColor = when (item.status) {
-        VerifyStatus.VERIFIED -> neonMint
-        VerifyStatus.PENDING -> neonOrange
-        VerifyStatus.ACTION_REQUIRED -> neonOrange
-    }
-    val barColor = when (item.status) {
-        VerifyStatus.VERIFIED -> neonCyan
-        VerifyStatus.PENDING -> neonOrange
-        VerifyStatus.ACTION_REQUIRED -> neonOrange
-    }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -387,13 +393,13 @@ private fun VerifyItemRow(item: VerifyItem) {
                 is VerifyIcon.Vector -> Icon(
                     imageVector = icon.imageVector,
                     contentDescription = null,
-                    tint = neonCyan,
+                    tint = item.iconTint.takeIf { it != Color.Unspecified } ?: neonCyan,
                     modifier = Modifier.size(32.dp)
                 )
                 is VerifyIcon.Resource -> Icon(
                     painter = painterResource(icon.resId),
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = item.iconTint,
                     modifier = Modifier.size(36.dp)
                 )
             }
@@ -404,7 +410,7 @@ private fun VerifyItemRow(item: VerifyItem) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = item.title,
-                color = Color.White,
+                color = item.statusColor,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -412,10 +418,10 @@ private fun VerifyItemRow(item: VerifyItem) {
             SegmentedProgressBar(
                 totalSegments = item.totalSegments,
                 completedSegments = item.completedSegments,
-                activeColor = barColor
+                activeColor = item.barColor
             )
             Spacer(Modifier.height(4.dp))
-            StepsText(steps = item.steps, statusColor = statusColor)
+            StepsText(steps = item.steps, statusColor = item.statusColor)
         }
     }
 }
@@ -427,20 +433,28 @@ private fun SegmentedProgressBar(
     activeColor: Color,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(18.dp)
+            .border(1.5.dp, activeColor.copy(alpha = 0.8f), RoundedCornerShape(50))
+            .padding(5.dp)
     ) {
-        repeat(totalSegments) { index ->
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(7.dp)
-                    .background(
-                        if (index < completedSegments) activeColor else activeColor.copy(0.12f),
-                        RoundedCornerShape(4.dp)
-                    )
-            )
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.spacedBy(3.dp)
+        ) {
+            repeat(totalSegments) { index ->
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .background(
+                            if (index < completedSegments) activeColor else Color.Transparent,
+                            RoundedCornerShape(50)
+                        )
+                )
+            }
         }
     }
 }
@@ -450,14 +464,14 @@ private fun StepsText(steps: List<String>, statusColor: Color) {
     val annotated = buildAnnotatedString {
         steps.forEachIndexed { idx, step ->
             if (idx > 0) {
-                withStyle(SpanStyle(color = normalText)) { append(" > ") }
+                withStyle(SpanStyle(color = statusColor)) { append(" > ") }
             }
             if (idx == steps.lastIndex) {
                 withStyle(SpanStyle(color = statusColor, fontWeight = FontWeight.Bold)) {
                     append(step)
                 }
             } else {
-                withStyle(SpanStyle(color = normalText)) { append(step) }
+                withStyle(SpanStyle(color = statusColor.copy(0.7f))) { append(step) }
             }
         }
     }
@@ -469,9 +483,9 @@ private fun ActionRequiredButton(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(neonOrange, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 12.dp)
+//            .neonGlow(neonMellowPeach, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 12.dp)
             .background(Color.Transparent, RoundedCornerShape(12.dp))
-            .border(2.dp, neonOrange, RoundedCornerShape(12.dp))
+            .border(2.dp, neonMellowPeach, RoundedCornerShape(12.dp))
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
@@ -481,7 +495,7 @@ private fun ActionRequiredButton(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = stringResource(R.string.verification_action_required),
-            color = neonOrange,
+            color = neonMellowPeach,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp

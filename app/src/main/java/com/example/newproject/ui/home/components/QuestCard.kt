@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,7 +47,7 @@ fun QuestCard() {
             fontWeight = FontWeight.Bold
         )
         // 1. 底層的紫色邊框卡片 (Row 所在的容器)
-        Row(
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .fillMaxWidth()
@@ -70,9 +71,15 @@ fun QuestCard() {
                 .padding(horizontal = 16.dp, vertical = 8.dp) // 內部元件距離邊框的距離
         ) {
             Text(
-                text = "wording here",
-                color = LightGray,
-                modifier = Modifier.weight(1f) // 佔滿左側剩餘空間
+                text = "Stack your points now",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+            Text(
+                text = "with breathing cyan light effect",
+                color = Color.White,
+                fontSize = 10.sp,
             )
         }
         Image(

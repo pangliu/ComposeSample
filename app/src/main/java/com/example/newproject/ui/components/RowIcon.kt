@@ -20,20 +20,21 @@ sealed class RowIcon {
 fun RowIconImage(
     icon: RowIcon,
     tint: Color,
-    size: Dp = 20.dp
+    size: Dp = 20.dp,
+    modifier: Modifier = Modifier
 ) {
     when (icon) {
         is RowIcon.Vector -> Icon(
             imageVector = icon.imageVector,
             contentDescription = null,
             tint = tint,
-            modifier = Modifier.size(size)
+            modifier = modifier.size(size)
         )
         is RowIcon.Resource -> Icon(
             painter = painterResource(icon.resId),
             contentDescription = null,
             tint = tint,
-            modifier = Modifier.size(size)
+            modifier = modifier.size(size)
         )
     }
 }

@@ -69,6 +69,7 @@ import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.profile.components.FullyVerifiedBadge
 import com.example.newproject.ui.profile.components.LogoutConfirmDialog
+import com.example.newproject.ui.profile.dialog.InviteFriendsDialog
 import com.example.newproject.ui.theme.essentialCardTitle
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
@@ -119,6 +120,11 @@ fun ProfileScreenContent(
     onNavigate: (String) -> Unit = {}
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
+    var showInviteDialog by remember { mutableStateOf(false) }
+
+    if (showInviteDialog) {
+        InviteFriendsDialog(onDismiss = { showInviteDialog = false })
+    }
 
     if (showLogoutDialog) {
         LogoutConfirmDialog(
@@ -143,7 +149,7 @@ fun ProfileScreenContent(
             color = Color.White,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 0.dp),
             textAlign = TextAlign.Center
         )
 
@@ -151,7 +157,11 @@ fun ProfileScreenContent(
         IdentityCard(uiState, onClick = { onNavigate(Routes.VERIFICATION_STATUS) })
 
         ProfileSectionHeader(stringResource(R.string.profile_section_social))
-        SocialRewardsCard(inviteCode = uiState.inviteCode, badgeCount = uiState.badgeCount)
+        SocialRewardsCard(
+            inviteCode = uiState.inviteCode,
+            badgeCount = uiState.badgeCount,
+            onInviteFriends = { showInviteDialog = true }
+        )
 
         ProfileSectionHeader(stringResource(R.string.profile_section_account))
         ProfileMenuCard(borderColor = neonCyan) {
@@ -293,7 +303,7 @@ private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
 }
 
 @Composable
-private fun SocialRewardsCard(inviteCode: String, badgeCount: Int) {
+private fun SocialRewardsCard(inviteCode: String, badgeCount: Int, onInviteFriends: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -362,7 +372,7 @@ private fun SocialRewardsCard(inviteCode: String, badgeCount: Int) {
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
-                        onClick = {}
+                        onClick = onInviteFriends
                     ),
                 contentAlignment = Alignment.Center
             ) {

@@ -222,6 +222,17 @@
     <string name="profile_g_code">G! Code: %s</string>
     <string name="profile_invite_friends">Invite Friends</string>
     <string name="profile_invite_channels">Messenger / WhatsApp</string>
+    <!-- InviteFriendsDialog -->
+    <string name="invite_dialog_title">SHARE &amp; COP EXTRA POINTS</string>
+    <string name="invite_dialog_qr_desc">QR Code</string>
+    <string name="invite_dialog_scan_to_invite">Scan to invite</string>
+    <string name="invite_dialog_share_link">Share Link via System</string>
+    <string name="invite_dialog_whatsapp">WhatsApp</string>
+    <string name="invite_dialog_telegram">Telegram</string>
+    <string name="invite_dialog_messenger">Messenger</string>
+    <string name="invite_dialog_system_share">Call System Share</string>
+    <string name="invite_dialog_tagline">Points for them, points for you!</string>
+    <string name="invite_dialog_close_desc">Close</string>
     <string name="profile_my_badges">My Badges</string>
     <string name="profile_earned_badges">Earned %d Badges</string>
     <string name="profile_section_account">Account Management</string>
