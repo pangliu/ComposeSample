@@ -33,7 +33,7 @@ import com.example.newproject.R
 import com.example.newproject.ui.theme.LocalAppColors
 
 // 外框漸層
-private val outerBorderBrush
+private val outerBorderBrush: Brush
     @Composable get() {
         val colors = LocalAppColors.current
         return Brush.linearGradient(
