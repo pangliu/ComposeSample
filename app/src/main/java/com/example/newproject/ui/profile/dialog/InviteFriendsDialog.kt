@@ -43,7 +43,6 @@ import com.example.newproject.ui.theme.neonCyan
 import io.github.alexzhirkevich.qrose.options.QrBallShape
 import io.github.alexzhirkevich.qrose.options.QrBrush
 import io.github.alexzhirkevich.qrose.options.QrColors
-import io.github.alexzhirkevich.qrose.options.QrErrorCorrectionLevel
 import io.github.alexzhirkevich.qrose.options.QrFrameShape
 import io.github.alexzhirkevich.qrose.options.QrPixelShape
 import io.github.alexzhirkevich.qrose.options.QrShapes
@@ -101,8 +100,7 @@ fun InviteFriendsDialog(
                     colors = QrColors(
                         dark = QrBrush.solid(neonCyan),
                         light = QrBrush.solid(Color.Transparent)
-                    ),
-                    errorCorrectionLevel = QrErrorCorrectionLevel.High
+                    )
                 )
                 Box(
                     modifier = Modifier
