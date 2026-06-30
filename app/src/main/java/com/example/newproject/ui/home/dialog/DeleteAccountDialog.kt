@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonPink
 import com.example.newproject.ui.theme.neonRed
 
@@ -57,13 +57,14 @@ fun DeleteAccountDialog(
     var emailInput by remember { mutableStateOf("") }
     val confirmEnabled = emailInput.trim().equals(userEmail.trim(), ignoreCase = true)
 
+    val colors = LocalAppColors.current
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .neonGlow(neonPink, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
                 .background(DialogBg, RoundedCornerShape(20.dp))
-                .border(1.5.dp, neonCyan.copy(0.5f), RoundedCornerShape(20.dp))
+                .border(1.5.dp, colors.primary.copy(0.5f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {

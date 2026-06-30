@@ -34,9 +34,7 @@ import com.example.newproject.R
 import com.example.newproject.ui.Routes
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
+import com.example.newproject.ui.theme.LocalAppColors
 
 @Composable
 fun SelectCardTypeScreen(onBack: () -> Unit, onNavigate: (String) -> Unit = {}) {
@@ -45,8 +43,9 @@ fun SelectCardTypeScreen(onBack: () -> Unit, onNavigate: (String) -> Unit = {}) 
 
 @Composable
 fun SelectCardTypeContent(onBack: () -> Unit = {}, onNavigate: (String) -> Unit = {}) {
+    val colors = LocalAppColors.current
     Scaffold(
-        containerColor = welcomeBackground,
+        containerColor = colors.background,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -99,6 +98,7 @@ private val cardTypeOptions = listOf(
 
 @Composable
 private fun CardTypeItem(option: CardTypeOption, onClick: () -> Unit) {
+    val colors = LocalAppColors.current
     // Outer Box: glow breathing room — prevents glow clipping
     Box(
         modifier = Modifier
@@ -109,9 +109,9 @@ private fun CardTypeItem(option: CardTypeOption, onClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(color = neonCyan, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 12.dp)
-                .background(welcomeBackground, RoundedCornerShape(12.dp))
-                .border(1.5.dp, neonCyan.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+                .neonGlow(color = colors.primary, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 12.dp)
+                .background(colors.background, RoundedCornerShape(12.dp))
+                .border(1.5.dp, colors.primary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
                 .clickable(onClick = onClick)
                 .padding(16.dp)
         ) {
@@ -119,7 +119,7 @@ private fun CardTypeItem(option: CardTypeOption, onClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.CreditCard,
                     contentDescription = null,
-                    tint = neonCyan,
+                    tint = colors.primary,
                     modifier = Modifier.size(32.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
@@ -132,7 +132,7 @@ private fun CardTypeItem(option: CardTypeOption, onClick: () -> Unit) {
                     )
                     Text(
                         text = stringResource(option.subtitleRes),
-                        color = normalText,
+                        color = colors.onBackground,
                         fontSize = 13.sp
                     )
                 }

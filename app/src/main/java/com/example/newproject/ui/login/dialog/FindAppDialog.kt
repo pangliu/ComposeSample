@@ -37,18 +37,17 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.inputFieldDark
-import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonMint
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun FindAppDialog(
     onDismiss: () -> Unit,
     onSubmit: (idNumber: String, mobile: String, email: String) -> Unit
 ) {
+    val colors = LocalAppColors.current
     var idNumber by remember { mutableStateOf("") }
     var mobile by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -72,7 +71,7 @@ fun FindAppDialog(
                     glowRadius = 16.dp,
                     borderRadius = 20.dp
                 )
-                .background(welcomeBackground, RoundedCornerShape(20.dp))
+                .background(colors.background, RoundedCornerShape(20.dp))
                 .border(2.dp, neonCyanLight, RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp)
         ) {
@@ -83,7 +82,7 @@ fun FindAppDialog(
                 // Title
                 Text(
                     text = stringResource(R.string.find_app_title),
-                    color = neonCyan,
+                    color = colors.primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -95,7 +94,7 @@ fun FindAppDialog(
                 // Subtitle
                 Text(
                     text = stringResource(R.string.find_app_subtitle),
-                    color = normalText,
+                    color = colors.onBackground,
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -159,7 +158,7 @@ fun FindAppDialog(
                                 glowRadius = 16.dp,
                                 borderRadius = 24.dp
                             )
-                            .background(welcomeBackground, CircleShape)
+                            .background(colors.background, CircleShape)
                             .border(2.dp, neonMint, CircleShape)
                             .clickable { onSubmit(idNumber, mobile, email) },
                         contentAlignment = Alignment.Center

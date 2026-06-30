@@ -25,8 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.tabActiveColor
-import com.example.newproject.ui.theme.welcomeBackground
 
 private val NavBarHeight = 60.dp
 
@@ -36,6 +36,7 @@ private val NavBarHeight = 60.dp
     onTabSelected: (Int) -> Unit,
     onScanPayClick: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,7 +48,7 @@ private val NavBarHeight = 60.dp
             modifier = Modifier
                 .fillMaxWidth()
                 .height(NavBarHeight)
-                .background(welcomeBackground),
+                .background(colors.background),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {

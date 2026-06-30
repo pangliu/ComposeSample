@@ -21,11 +21,8 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.alpha
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.darkBackground
-import com.example.newproject.ui.theme.neonDivider
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun LoadingDialog(
@@ -48,6 +45,7 @@ fun LoadingDialog(
 
 @Composable
 fun LoadingDialogContent() {
+    val colors = LocalAppColors.current
     Box(
         modifier = Modifier
             .alpha(0.8f)
@@ -68,12 +66,12 @@ fun LoadingDialogContent() {
             modifier = Modifier
                 .size(100.dp)
                 .background(
-                    color = welcomeBackground,
+                    color = colors.background,
                     shape = RoundedCornerShape(12.dp)
                 )
         ) {
             CircularProgressIndicator(
-                color = neonPurple
+                color = colors.secondary
             )
         }
     }

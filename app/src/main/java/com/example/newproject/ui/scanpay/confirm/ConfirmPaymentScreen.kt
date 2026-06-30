@@ -72,16 +72,13 @@ import com.example.newproject.ui.components.NeonSwitch
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.scanpay.components.MyQrActionButton
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.balanceGold
-import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
-import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
 import com.example.newproject.ui.theme.neonPink
 import com.example.newproject.ui.theme.neonRed
-import com.example.newproject.ui.theme.normalText
 import com.example.newproject.ui.theme.qrCodeBackground
-import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun ConfirmPaymentScreen(
@@ -149,11 +146,12 @@ private fun ConfirmPaymentContent(
     onEditSplit: () -> Unit = {},
     onCancelSplit: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     var isBalanceVisible by remember { mutableStateOf(false) }
     var useXPoints by remember { mutableStateOf(false) }
     LoadingDialog(isShowing = uiState.isConfirming)
     Scaffold(
-        containerColor = welcomeBackground,
+        containerColor = colors.background,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -185,11 +183,11 @@ private fun ConfirmPaymentContent(
                         .testTag("confirm_payment")
                         .border(
                             width = 1.5.dp,
-                            color = neonCyan,
+                            color = colors.primary,
                             shape = RoundedCornerShape(15.dp)
                         )
                         .neonGlow(
-                            color = neonCyan,
+                            color = colors.primary,
                             alpha = 0.6f,
                             glowRadius = 8.dp,
                             borderRadius = 8.dp
@@ -212,13 +210,13 @@ private fun ConfirmPaymentContent(
                             modifier = Modifier
                                 .size(60.dp)
                                 .neonGlow(
-                                    color = neonCyan,
+                                    color = colors.primary,
                                     alpha = 0.6f,
                                     glowRadius = 8.dp,
                                     borderRadius = 8.dp
                                 )
                                 .background(
-                                    color = welcomeBackground,
+                                    color = colors.background,
                                     shape = RoundedCornerShape(12.dp)
                                 )
                         )
@@ -257,21 +255,21 @@ private fun ConfirmPaymentContent(
                     ) {
                         Text(
                             text = stringResource(R.string.input_amount_currency),
-                            color = neonCyan,
+                            color = colors.primary,
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             style = TextStyle(
-                                shadow = Shadow(color = neonCyan, blurRadius = 15f)
+                                shadow = Shadow(color = colors.primary, blurRadius = 15f)
                             )
                         )
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = uiState.amount.ifEmpty { "0.00" },
-                            color = neonCyan,
+                            color = colors.primary,
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             style = TextStyle(
-                                shadow = Shadow(color = neonCyan, blurRadius = 15f)
+                                shadow = Shadow(color = colors.primary, blurRadius = 15f)
                             )
                         )
                     }
@@ -284,7 +282,7 @@ private fun ConfirmPaymentContent(
                         Text(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             text = stringResource(R.string.scan_pay_my_qr_x_points),
-                            color = normalText,
+                            color = colors.onBackground,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -293,7 +291,7 @@ private fun ConfirmPaymentContent(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             text = stringResource(R.string.scan_pay_my_qr_confirm_hint),
-                            color = normalText,
+                            color = colors.onBackground,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -320,7 +318,7 @@ private fun ConfirmPaymentContent(
                     contentDescription = null,
                     modifier = Modifier
                         .size(80.dp)
-                        .neonGlow(color = neonPurple, alpha = 0.25f, glowRadius = 30.dp)
+                        .neonGlow(color = colors.secondary, alpha = 0.25f, glowRadius = 30.dp)
                 )
                 Column(
                     modifier = Modifier
@@ -335,7 +333,7 @@ private fun ConfirmPaymentContent(
                     ) {
                         Text(
                             text = "PAYING FROM:",
-                            color = normalText,
+                            color = colors.onBackground,
                             fontSize = 14.sp,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -350,7 +348,7 @@ private fun ConfirmPaymentContent(
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         text = stringResource(R.string.scan_pay_my_qr_available_balance, uiState.balance),
-                        color = normalText,
+                        color = colors.onBackground,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -401,15 +399,15 @@ private fun ConfirmPaymentContent(
                     .padding(horizontal = 50.dp)
                     .border(
                         width = 1.5.dp,
-                        color = neonCyan.copy(alpha = 0.7f),
+                        color = colors.primary.copy(alpha = 0.7f),
                         shape = RoundedCornerShape(12.dp))
                     .neonGlow(
-                        color = neonCyan,
+                        color = colors.primary,
                         alpha = 0.5f,
                         glowRadius = 8.dp,
                         borderRadius = 8.dp)
                     .background(
-                        color = welcomeBackground,
+                        color = colors.background,
                         shape = RoundedCornerShape(15.dp))
                     .padding(10.dp)
             ) {
@@ -442,7 +440,7 @@ private fun ConfirmPaymentContent(
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         text = stringResource(R.string.scan_pay_my_qr_points_balance, uiState.tokenBalance),
-                        color = normalText,
+                        color = colors.onBackground,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
                     )
@@ -462,7 +460,7 @@ private fun ConfirmPaymentContent(
                 NeonSwitch(
                     checked = useXPoints,
                     onCheckedChange = { useXPoints = it },
-                    activeColor = neonCyan,
+                    activeColor = colors.primary,
                     showLabel = true
                 )
             }
@@ -482,11 +480,11 @@ private fun ConfirmPaymentContent(
                         .height(55.dp)
                         .border(
                             width = 1.5.dp,
-                            color = neonPurple,
+                            color = colors.secondary,
                             shape = RoundedCornerShape(30.dp)
                         )
                         .neonGlow(
-                            color = neonPurple,
+                            color = colors.secondary,
                             alpha = 0.4f,
                             glowRadius = 25.dp,
                             borderRadius = 25.dp
@@ -499,7 +497,7 @@ private fun ConfirmPaymentContent(
                     Icon(
                         modifier = Modifier.size(24.dp),
                         imageVector = Icons.Default.Close,
-                        tint = neonPurple,
+                        tint = colors.secondary,
                         contentDescription = null,
                     )
                     Text(
@@ -511,7 +509,7 @@ private fun ConfirmPaymentContent(
                 }
                 Spacer(Modifier.width(10.dp))
                 val hasError = uiState.confirmErrorMessage.isNotEmpty()
-                val confirmBtnColor = if (hasError) neonPink else neonCyan
+                val confirmBtnColor = if (hasError) neonPink else colors.primary
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -520,7 +518,7 @@ private fun ConfirmPaymentContent(
                         .height(55.dp)
                         .border(
                             width = 1.5.dp,
-                            color = neonCyan,
+                            color = colors.primary,
                             shape = RoundedCornerShape(30.dp)
                         )
                         .neonGlow(

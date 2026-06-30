@@ -33,6 +33,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.darkBackground
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonPurple
@@ -49,6 +50,7 @@ fun LanguageSelector(
     onLanguageSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = LocalAppColors.current
     var expanded by remember { mutableStateOf(false) }
     var popupVisible by remember { mutableStateOf(false) }
     // AnimatedVisibility 用這個 state 控制動畫，與 popupVisible 分離
@@ -84,10 +86,10 @@ fun LanguageSelector(
             Icon(
                 painter = painterResource(R.mipmap.ic_global),
                 contentDescription = stringResource(R.string.language_desc),
-                tint = neonPurple,
+                tint = colors.secondary,
                 modifier = Modifier
                     .size(20.dp)
-                    .neonGlow(color = neonPurple, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 10.dp)
+                    .neonGlow(color = colors.secondary, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 10.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(

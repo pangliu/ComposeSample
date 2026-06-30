@@ -39,10 +39,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.cashInGreen
 import com.example.newproject.ui.theme.darkBackground
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.normalText
 import com.example.newproject.ui.theme.sendPink
 
 private val balanceGold = Color(0xFFFEF27C)
@@ -54,6 +53,7 @@ private val cardStringLight = Color(0xFFF7F9F9)
 @SuppressLint("DefaultLocale")
 @Composable
 fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
+    val colors = LocalAppColors.current
     var isBalanceHidden by remember { mutableStateOf(false) }
 
     Box(
@@ -106,7 +106,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         Icon(
                             imageVector = Icons.Default.Visibility,
                             contentDescription = stringResource(R.string.balance_toggle_desc),
-                            tint = if (isBalanceHidden) neonCyan else Color.Companion.Gray,
+                            tint = if (isBalanceHidden) colors.primary else Color.Companion.Gray,
                             modifier = Modifier.Companion
                                 .size(18.dp)
                                 .clickable { isBalanceHidden = !isBalanceHidden }
@@ -241,14 +241,14 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Row(verticalAlignment = Alignment.Companion.CenterVertically) {
                         Icon(
                             painter = painterResource(R.mipmap.ic_switch_balance),
-                            tint = normalText,
+                            tint = colors.onBackground,
                             contentDescription = stringResource(R.string.balance_switch),
                             modifier = Modifier.Companion.size(18.dp)
                         )
                         Spacer(modifier = Modifier.Companion.width(4.dp))
                         Text(
                             text = stringResource(R.string.balance_switch),
-                            color = normalText,
+                            color = colors.onBackground,
                             fontSize = 14.sp
                         )
                     }

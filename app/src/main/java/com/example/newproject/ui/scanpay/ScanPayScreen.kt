@@ -24,7 +24,7 @@ import com.example.newproject.ui.Routes
 import com.example.newproject.ui.components.QrMode
 import com.example.newproject.ui.components.QrModeTabSelector
 import com.example.newproject.ui.scanpay.components.MyQrContent
-import com.example.newproject.ui.theme.welcomeBackground
+import com.example.newproject.ui.theme.LocalAppColors
 
 @Composable
 fun ScanPayScreen(
@@ -50,12 +50,13 @@ private fun ScanPayContent(
     uiState: ScanPayUiState,
     onQrCodeScanned: (String) -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     var selectedMode by rememberSaveable { mutableStateOf(QrMode.MY_QR) }
     val qrCodeUrl = "http://xcash.io/pay?account=hank_001&to=hank&name=hank+liu"
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(welcomeBackground),
+            .background(colors.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(24.dp))

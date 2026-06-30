@@ -31,14 +31,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonBlue
-import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun AccountStatusDialog(onDismiss: () -> Unit) {
+    val colors = LocalAppColors.current
     var showFindAppDialog by remember { mutableStateOf(false) }
 
     if (showFindAppDialog) {
@@ -65,7 +65,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                     glowRadius = 16.dp,
                     borderRadius = 24.dp
                 )
-                .background(welcomeBackground, RoundedCornerShape(24.dp))
+                .background(colors.background, RoundedCornerShape(24.dp))
                 .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
                 .padding(24.dp)
         ) {
@@ -80,7 +80,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(
-                        shadow = Shadow(color = neonCyan, blurRadius = 15f)
+                        shadow = Shadow(color = colors.primary, blurRadius = 15f)
                     )
                 )
                 
@@ -121,7 +121,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                         )
                         .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
                         .background(
-                            color = welcomeBackground,
+                            color = colors.background,
                             shape = RoundedCornerShape(24.dp)
                         )
                         .clickable { onDismiss() },
@@ -140,6 +140,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
 
 @Composable
 fun ActionDialogButton(icon: Int, text: String, borderColor: Color, onClick: () -> Unit) {
+    val colors = LocalAppColors.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -150,7 +151,7 @@ fun ActionDialogButton(icon: Int, text: String, borderColor: Color, onClick: () 
                 glowRadius = 16.dp,
                 borderRadius = 16.dp
             )
-            .background(welcomeBackground, RoundedCornerShape(16.dp))
+            .background(colors.background, RoundedCornerShape(16.dp))
             .border(2.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(start = 10.dp, top = 20.dp, end = 3.dp, bottom = 20.dp)

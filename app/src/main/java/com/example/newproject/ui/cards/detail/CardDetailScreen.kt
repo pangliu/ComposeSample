@@ -62,13 +62,10 @@ import com.example.newproject.R
 import com.example.newproject.network.model.response.CreditCardResponse
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonCyanLight
-import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.normalText
 import com.example.newproject.ui.theme.sendPink
-import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun CardDetailScreen(
@@ -111,8 +108,9 @@ fun CardDetailContent(
         ?: ""
 
     Box(modifier = Modifier.fillMaxSize()) {
+    val colors = LocalAppColors.current
         Scaffold(
-            containerColor = welcomeBackground,
+            containerColor = colors.background,
             contentColor = Color.White
         ) { paddingValues ->
             Column(
@@ -148,7 +146,7 @@ fun CardDetailContent(
                     ) {
                         Text(
                             text = stringResource(R.string.cards_card_nickname),
-                            color = normalText,
+                            color = colors.onBackground,
                             fontSize = 14.sp
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -187,7 +185,7 @@ fun CardDetailContent(
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
                                 checkedTrackColor = Color.Gray,
-                                checkedBorderColor = neonCyan,
+                                checkedBorderColor = colors.primary,
                                 uncheckedThumbColor = Color.White,
                                 uncheckedTrackColor = Color.White.copy(alpha = 0.3f)
                             )
@@ -213,7 +211,7 @@ fun CardDetailContent(
                                 borderRadius = 24.dp
                             )
                             .background(
-                                color = welcomeBackground,
+                                color = colors.background,
                                 shape = RoundedCornerShape(24.dp)
                             )
                             .clickable(
@@ -248,6 +246,7 @@ fun CardDetailContent(
 
 @Composable
 private fun CardFaceView(card: CreditCardResponse, onEdit: () -> Unit) {
+    val colors = LocalAppColors.current
     val cleanNumber = card.cardNumber.replace(" ", "").replace("-", "")
     val last4 = if (cleanNumber.length >= 4) cleanNumber.takeLast(4) else cleanNumber
 
@@ -263,7 +262,7 @@ private fun CardFaceView(card: CreditCardResponse, onEdit: () -> Unit) {
             )
             .border(
                 1.5.dp,
-                Brush.linearGradient(listOf(neonPurple, neonCyanLight, neonPurple)),
+                Brush.linearGradient(listOf(colors.secondary, neonCyanLight, colors.secondary)),
                 RoundedCornerShape(16.dp)
             )
             .padding(20.dp)

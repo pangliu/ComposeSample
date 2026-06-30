@@ -28,7 +28,7 @@ import com.example.newproject.ui.profile.ProfileViewModel
 import com.example.newproject.ui.quests.QuestsScreen
 import com.example.newproject.ui.scanpay.ScanPayScreen
 import com.example.newproject.ui.scanpay.ScanPayViewModel
-import com.example.newproject.ui.theme.welcomeBackground
+import com.example.newproject.ui.theme.LocalAppColors
 
 @Composable
 fun MainScreen(
@@ -36,10 +36,11 @@ fun MainScreen(
     initialTab: Int = 0,
     onNavigate: (String) -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     var selectedIndex by rememberSaveable { mutableStateOf(initialTab) }
 
     Scaffold(
-        containerColor = welcomeBackground,
+        containerColor = colors.background,
         contentColor = Color.White,
         bottomBar = {
             CustomBottomNavigation(
@@ -88,7 +89,7 @@ private fun MainScreenPreview() {
     var selectedIndex by remember { mutableStateOf(0) }
     MaterialTheme {
         Scaffold(
-            containerColor = welcomeBackground,
+            containerColor = Color(0xFF0B1327),
             contentColor = Color.White,
             bottomBar = {
                 CustomBottomNavigation(

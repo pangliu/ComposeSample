@@ -31,11 +31,10 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
 import kotlinx.coroutines.delay
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.inputFieldDark
 import com.example.newproject.ui.theme.neonCyanLight
-import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun VerifyMobileDialog(
@@ -43,6 +42,7 @@ fun VerifyMobileDialog(
     onDismiss: () -> Unit,
     onSubmit: (String) -> Unit
 ) {
+    val colors = LocalAppColors.current
     var phone by remember { mutableStateOf(initialPhone) }
     var otpCode by remember { mutableStateOf("") }
     var timeLeft by remember { mutableIntStateOf(60) }
@@ -84,7 +84,7 @@ fun VerifyMobileDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neonGlow(color = neonPurpleLight, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp)
-                    .background(welcomeBackground, RoundedCornerShape(20.dp))
+                    .background(colors.background, RoundedCornerShape(20.dp))
                     .border(2.dp, neonPurpleLight, RoundedCornerShape(20.dp))
                     .padding(horizontal = 25.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -153,7 +153,7 @@ fun VerifyMobileDialog(
 
                 Text(
                     text = stringResource(R.string.verify_mobile_resend_timer, timerText),
-                    color = neonPurple,
+                    color = colors.secondary,
                     fontSize = 12.sp,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -228,7 +228,7 @@ fun VerifyMobileDialog(
                     modifier = Modifier
                         .size(50.dp)
                         .neonGlow(color = neonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
-                        .background(welcomeBackground, CircleShape)
+                        .background(colors.background, CircleShape)
                         .border(2.dp, neonCyanLight, CircleShape)
                         .clickable { onDismiss() },
                     contentAlignment = Alignment.Center

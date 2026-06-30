@@ -4,9 +4,12 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
+import com.example.newproject.ui.theme.AppTheme
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavType
@@ -39,6 +42,7 @@ fun AppNavigation(
     appViewModel: AppViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
+    val currentColors by appViewModel.currentColors.collectAsState()
 
     LaunchedEffect(Unit) {
         appViewModel.logoutEvent.collect {
@@ -50,6 +54,7 @@ fun AppNavigation(
         }
     }
 
+    AppTheme(colors = currentColors) {
     NavHost(navController = navController, startDestination = Routes.WELCOME) {
 
         composable(Routes.WELCOME) {
@@ -319,4 +324,5 @@ fun AppNavigation(
         }
 
     }
+    } // AppTheme
 }

@@ -61,15 +61,11 @@ import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.home.dialog.DeleteAccountDialog
 import com.example.newproject.ui.home.dialog.LogoutDialog
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonDarkBlue
-import com.example.newproject.ui.theme.neonDarkPurple
-import com.example.newproject.ui.theme.neonPink
-import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
 import com.example.newproject.ui.theme.neonRed
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
 
 private val CardBg = Color(0xFF0E1A2E)
 
@@ -125,8 +121,9 @@ private fun SettingScreenContent(
         )
     }
 
+    val colors = LocalAppColors.current
     Scaffold(
-        containerColor = welcomeBackground,
+        containerColor = colors.background,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -146,15 +143,15 @@ private fun SettingScreenContent(
                 // ── Appearance & Display ──────────────────────────────────
                 SectionCard(
                     title = stringResource(R.string.setting_section_appearance),
-                    borderColor = neonCyan
+                    borderColor = colors.primary
                 ) {
                     DropdownRow(
                         icon = RowIcon.Vector(Icons.Outlined.Palette),
                         label = stringResource(R.string.setting_app_theme),
                         value = stringResource(R.string.setting_theme_neon_cyber),
-                        borderColor = neonCyan
+                        borderColor = colors.primary
                     )
-                    SectionDivider(neonCyan)
+                    SectionDivider(colors.primary)
                     ToggleRow(
                         icon = RowIcon.Vector(Icons.Outlined.VisibilityOff),
                         label = stringResource(R.string.setting_hide_balance),
@@ -162,7 +159,7 @@ private fun SettingScreenContent(
                         onCheckedChange = { hideBalanceOn = it },
                         activeColor = neonPurpleLight
                     )
-                    SectionDivider(neonCyan)
+                    SectionDivider(colors.primary)
                     DropdownRow(
                         icon = RowIcon.Vector(Icons.Outlined.Language),
                         label = stringResource(R.string.setting_language),
@@ -181,9 +178,9 @@ private fun SettingScreenContent(
                         label = stringResource(R.string.setting_system_alerts),
                         checked = systemAlertsOn,
                         onCheckedChange = { systemAlertsOn = it },
-                        activeColor = neonCyan
+                        activeColor = colors.primary
                     )
-                    SectionDivider(neonPurple)
+                    SectionDivider(colors.secondary)
                     ToggleRow(
                         icon = RowIcon.Vector(Icons.Outlined.CardGiftcard),
                         label = stringResource(R.string.setting_promo_notifications),
@@ -191,7 +188,7 @@ private fun SettingScreenContent(
                         onCheckedChange = { promoNoteOn = it },
                         activeColor = neonDarkBlue
                     )
-                    SectionDivider(neonPurple)
+                    SectionDivider(colors.secondary)
                     ToggleRow(
                         icon = RowIcon.Vector(Icons.AutoMirrored.Outlined.List),
                         label = stringResource(R.string.setting_transaction_alerts),
@@ -204,20 +201,20 @@ private fun SettingScreenContent(
                 // ── App Info & Support ────────────────────────────────────
                 SectionCard(
                     title = stringResource(R.string.setting_section_app_info),
-                    borderColor = neonCyan
+                    borderColor = colors.primary
                 ) {
                     NavRow(
                         icon = RowIcon.Vector(Icons.Outlined.Description),
                         label = stringResource(R.string.setting_update_log),
-                        iconTint = neonCyan,
+                        iconTint = colors.primary,
                         onClick = { onNavigate(Routes.UPDATE_LOG) }
                     )
-                    SectionDivider(neonCyan)
+                    SectionDivider(colors.primary)
                     NavRow(
                         icon = RowIcon.Vector(Icons.Outlined.Storage),
                         label = stringResource(R.string.setting_clear_cache),
                         subtitle = stringResource(R.string.setting_cache_size),
-                        iconTint = neonCyan
+                        iconTint = colors.primary
                     )
                 }
 
@@ -361,6 +358,7 @@ private fun NavRow(
     labelColor: Color = Color.White,
     onClick: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -372,7 +370,7 @@ private fun NavRow(
         Spacer(Modifier.width(12.dp))
         Text(label, color = labelColor, fontSize = 14.sp, modifier = Modifier.weight(1f))
         if (subtitle != null) {
-            Text(subtitle, color = normalText, fontSize = 13.sp)
+            Text(subtitle, color = colors.onBackground, fontSize = 13.sp)
             Spacer(Modifier.width(4.dp))
         }
         Icon(

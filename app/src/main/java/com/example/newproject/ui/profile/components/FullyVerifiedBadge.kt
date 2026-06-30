@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonPink
-import com.example.newproject.ui.theme.neonPurple
 
 private val CardBackground = Color(0xFF0E1A2E)
 
@@ -32,6 +32,7 @@ fun FullyVerifiedBadge(
     text: String,
     modifier: Modifier = Modifier
 ) {
+    val colors = LocalAppColors.current
     val iconSize = 32.dp
     Box(
         modifier = modifier,
@@ -43,7 +44,7 @@ fun FullyVerifiedBadge(
                 .border(
                     width = 1.5.dp,
                     brush = Brush.horizontalGradient(
-                        listOf(neonPurple.copy(alpha = 0.7f), neonPink.copy(alpha = 0.9f))
+                        listOf(colors.secondary.copy(alpha = 0.7f), neonPink.copy(alpha = 0.9f))
                     ),
                     shape = RoundedCornerShape(50)
                 )
@@ -52,7 +53,7 @@ fun FullyVerifiedBadge(
         ) {
             Text(
                 text = text,
-                color = neonPurple,
+                color = colors.secondary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp

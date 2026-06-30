@@ -45,9 +45,7 @@ import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
+import com.example.newproject.ui.theme.LocalAppColors
 
 private val CardBg = Color(0xFF0A1628)
 
@@ -68,8 +66,9 @@ fun UpdateLogScreen(
         }
     }
 
+    val colors = LocalAppColors.current
     Scaffold(
-        containerColor = welcomeBackground,
+        containerColor = colors.background,
         contentColor = Color.White
     ) { paddingValues ->
         LoadingDialog(isShowing = uiState.isLoading)
@@ -111,25 +110,26 @@ private fun UpdateLogContent(
 
 @Composable
 private fun UpdateLogCard(log: UpdateLogResponse) {
+    val colors = LocalAppColors.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(neonCyan, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
+            .neonGlow(colors.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
             .background(CardBg, RoundedCornerShape(12.dp))
-            .border(1.5.dp, neonCyan.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+            .border(1.5.dp, colors.primary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
             .padding(horizontal = 16.dp, vertical = 14.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = log.date,
-                color = neonCyan,
+                color = colors.primary,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.size(12.dp))
             Text(
                 text = log.title,
-                color = neonCyan,
+                color = colors.primary,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
@@ -138,7 +138,7 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
 
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 10.dp),
-            color = neonCyan.copy(alpha = 0.9f),
+            color = colors.primary.copy(alpha = 0.9f),
             thickness = 0.5.dp
         )
 
@@ -162,7 +162,7 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = normalText,
+                tint = colors.onBackground,
                 modifier = Modifier.size(20.dp)
             )
         }

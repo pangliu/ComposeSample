@@ -30,20 +30,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
-import com.example.newproject.ui.theme.cardGradientMid
-import com.example.newproject.ui.theme.cardGradientStart
-import com.example.newproject.ui.theme.darkBackground
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
+import com.example.newproject.ui.theme.LocalAppColors
 
-// 外框漸層：cardGradientMid → cardGradientStart
+// 外框漸層
 private val outerBorderBrush
-    @Composable get() = Brush.linearGradient(
-        colors = listOf(
-            neonPurple.copy(alpha = 0.8f),
-            neonCyan.copy(alpha = 0.4f)))
+    @Composable get() {
+        val colors = LocalAppColors.current
+        return Brush.linearGradient(
+            colors = listOf(
+                colors.secondary.copy(alpha = 0.8f),
+                colors.primary.copy(alpha = 0.4f)))
+    }
 
 // 內圈膠囊形狀（左右全圓角）
 private val innerCapsuleShape = RoundedCornerShape(50)
@@ -62,17 +59,18 @@ fun QrModeTabSelector(
     onModeChange: (QrMode) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = LocalAppColors.current
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(44.dp)
             .neonGlow(
-                color = neonPurple,
+                color = colors.secondary,
                 alpha = 0.55f,
                 glowRadius = 12.dp,
                 borderRadius = 22.dp)
             .background(
-                color = welcomeBackground,
+                color = colors.background,
                 shape = RoundedCornerShape(22.dp))
             .border(
                 width = 1.5.dp,
@@ -101,6 +99,7 @@ private fun RowScope.QrTab(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
+    val colors = LocalAppColors.current
     Box(
         modifier = Modifier
             .weight(1f)
@@ -108,10 +107,10 @@ private fun RowScope.QrTab(
             .then(
                 if (isSelected) Modifier
                     // neonGlow 在 border/background 之前，光暈才能延伸到外框之外
-                    .neonGlow(neonCyan, alpha = 0.55f, glowRadius = 12.dp, borderRadius = 22.dp)
+                    .neonGlow(colors.primary, alpha = 0.55f, glowRadius = 12.dp, borderRadius = 22.dp)
                     .background(
-                        color = neonCyan, innerCapsuleShape)
-//                    .border(1.dp, neonCyan, innerCapsuleShape)
+                        color = colors.primary, innerCapsuleShape)
+//                    .border(1.dp, colors.primary, innerCapsuleShape)
                 else Modifier
             )
             .clickable(
@@ -122,7 +121,7 @@ private fun RowScope.QrTab(
     ) {
         Text(
             text = label,
-            color = if (isSelected) Color.Black else normalText,
+            color = if (isSelected) Color.Black else colors.onBackground,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp

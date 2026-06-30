@@ -39,7 +39,7 @@ import com.example.newproject.R
 import com.example.newproject.ui.components.RowIcon
 import com.example.newproject.ui.components.RowIconImage
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.LocalAppColors
 import io.github.alexzhirkevich.qrose.options.QrBallShape
 import io.github.alexzhirkevich.qrose.options.QrBrush
 import io.github.alexzhirkevich.qrose.options.QrColors
@@ -50,9 +50,7 @@ import io.github.alexzhirkevich.qrose.options.circle
 import io.github.alexzhirkevich.qrose.options.roundCorners
 import io.github.alexzhirkevich.qrose.options.solid
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
-import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.normalText
 
 private val DialogBg = Color(0xFF0D1B2E)
 private val qrCodeUrl = "http://xcash.io/pay?account=hank_001&to=hank&name=hank+liu"
@@ -64,6 +62,7 @@ fun InviteFriendsDialog(
     onShareMessenger: () -> Unit = {},
     onSystemShare: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     Dialog(onDismissRequest = onDismiss) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,9 +72,9 @@ fun InviteFriendsDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .neonGlow(neonCyan, alpha = 0.35f, glowRadius = 12.dp, borderRadius = 20.dp)
+                    .neonGlow(colors.primary, alpha = 0.35f, glowRadius = 12.dp, borderRadius = 20.dp)
                     .background(DialogBg, RoundedCornerShape(20.dp))
-                    .border(1.5.dp, neonCyan.copy(alpha = 0.6f), RoundedCornerShape(20.dp))
+                    .border(1.5.dp, colors.primary.copy(alpha = 0.6f), RoundedCornerShape(20.dp))
                     .padding(horizontal = 24.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -83,7 +82,7 @@ fun InviteFriendsDialog(
                 // Title
                 Text(
                     text = stringResource(R.string.invite_dialog_title),
-                    color = neonCyan,
+                    color = colors.primary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -98,14 +97,14 @@ fun InviteFriendsDialog(
                         frame = QrFrameShape.roundCorners(.25f)
                     ),
                     colors = QrColors(
-                        dark = QrBrush.solid(neonCyan),
+                        dark = QrBrush.solid(colors.primary),
                         light = QrBrush.solid(Color.Transparent)
                     )
                 )
                 Box(
                     modifier = Modifier
                         .size(140.dp)
-                        .border(2.dp, neonPurple.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
+                        .border(2.dp, colors.secondary.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
                         .padding(6.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -118,11 +117,11 @@ fun InviteFriendsDialog(
 
                 Text(
                     text = stringResource(R.string.invite_dialog_scan_to_invite),
-                    color = normalText,
+                    color = colors.onBackground,
                     fontSize = 12.sp
                 )
 
-                HorizontalDivider(color = neonCyan.copy(alpha = 0.2f))
+                HorizontalDivider(color = colors.primary.copy(alpha = 0.2f))
 
                 // Share via messengers
                 Text(
@@ -168,7 +167,7 @@ fun InviteFriendsDialog(
                     )
                 }
 
-                HorizontalDivider(color = neonCyan.copy(alpha = 0.2f))
+                HorizontalDivider(color = colors.primary.copy(alpha = 0.2f))
 
                 // System share button
                 Row(
@@ -201,7 +200,7 @@ fun InviteFriendsDialog(
                 // Tagline
                 Text(
                     text = stringResource(R.string.invite_dialog_tagline),
-                    color = neonPurple,
+                    color = colors.secondary,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center

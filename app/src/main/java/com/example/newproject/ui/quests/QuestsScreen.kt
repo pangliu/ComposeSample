@@ -15,10 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
-import com.example.newproject.ui.theme.neonPurple
+import com.example.newproject.ui.theme.LocalAppColors
 
 @Composable
 fun QuestsScreen() {
+    val colors = LocalAppColors.current
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = stringResource(R.string.quests_coming_soon_title),
@@ -41,7 +42,7 @@ fun QuestsScreen() {
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
-                    tint = neonPurple.copy(alpha = 0.4f),
+                    tint = colors.secondary.copy(alpha = 0.4f),
                     modifier = Modifier.size(64.dp)
                 )
                 Text(

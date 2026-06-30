@@ -26,8 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.welcomeBackground
+import com.example.newproject.ui.theme.LocalAppColors
 
 @Composable
 fun SubPageTopBar(
@@ -36,6 +35,7 @@ fun SubPageTopBar(
     showBack: Boolean = true,
     modifier: Modifier = Modifier
 ) {
+    val colors = LocalAppColors.current
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -50,7 +50,7 @@ fun SubPageTopBar(
                     .align(Alignment.CenterStart)
                     .padding(start = 16.dp)
                     .size(40.dp)
-                    .neonGlow(color = neonCyan, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
+                    .neonGlow(color = colors.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }

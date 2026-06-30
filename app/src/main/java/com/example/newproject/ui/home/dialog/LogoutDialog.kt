@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonPink
 
 private val DialogBg = Color(0xFF0D1B2E)
@@ -45,13 +45,14 @@ fun LogoutDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    val colors = LocalAppColors.current
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(neonCyan, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
+                .neonGlow(colors.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
                 .background(DialogBg, RoundedCornerShape(20.dp))
-                .border(1.5.dp, neonCyan.copy(0.5f), RoundedCornerShape(20.dp))
+                .border(1.5.dp, colors.primary.copy(0.5f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -65,7 +66,7 @@ fun LogoutDialog(
             )
 
             HorizontalDivider(
-                color = neonCyan.copy(alpha = 0.3f),
+                color = colors.primary.copy(alpha = 0.3f),
                 thickness = 0.5.dp
             )
 
@@ -108,9 +109,9 @@ fun LogoutDialog(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .size(48.dp)
-                        .neonGlow(neonCyan, alpha = 0.25f, glowRadius = 8.dp, borderRadius = 28.dp)
+                        .neonGlow(colors.primary, alpha = 0.25f, glowRadius = 8.dp, borderRadius = 28.dp)
                         .background(DialogBg, CircleShape)
-                        .border(1.5.dp, neonCyan.copy(0.7f), CircleShape)
+                        .border(1.5.dp, colors.primary.copy(0.7f), CircleShape)
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() },
@@ -121,7 +122,7 @@ fun LogoutDialog(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
-                        tint = neonCyan,
+                        tint = colors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                 }

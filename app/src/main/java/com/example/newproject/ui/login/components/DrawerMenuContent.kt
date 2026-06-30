@@ -34,10 +34,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.newproject.R
-import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonBlue
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.welcomeBackground
 
 private val drawerAccountLight = Color(0xFF9BFBFD)
 private val drawerAccountDark = Color(0xFF31C8CD)
@@ -48,7 +46,7 @@ private val drawerHelpDark = Color(0xFF1E5BD1)
 
 @Composable
 fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}) {
-
+    val colors = LocalAppColors.current
     // 置中外層 Box，佔滿可用空間但背景透明
     Box(
         modifier = Modifier
@@ -85,7 +83,7 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 style = TextStyle(shadow = Shadow(
-                    color = neonCyan.copy(alpha = 0.6f),
+                    color = colors.primary.copy(alpha = 0.6f),
                     blurRadius = 25f
                 ))
             )
@@ -163,6 +161,7 @@ fun MenuCard(
     items: List<MenuItem>,
     onClick: (() -> Unit)? = null
 ) {
+    val colors = LocalAppColors.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -173,7 +172,7 @@ fun MenuCard(
                 borderRadius = 16.dp
             )
             .let { if (onClick != null) it.clickable { onClick() } else it },
-        colors = CardDefaults.cardColors(containerColor = welcomeBackground),
+        colors = CardDefaults.cardColors(containerColor = colors.background),
         border = BorderStroke(1.5.dp, borderColor),
         shape = RoundedCornerShape(16.dp)
     ) {

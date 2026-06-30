@@ -44,9 +44,8 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.cards.components.VoucherTicket
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonPink
-import com.example.newproject.ui.theme.welcomeBackground
 
 private val CardBg = Color(0xFF0A1628)
 
@@ -56,10 +55,11 @@ fun LinkedSuccessScreen(
     onEditNickname: () -> Unit = {},
     onNotNow: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(welcomeBackground)
+            .background(colors.background)
             .paint(
                 painter = painterResource(R.mipmap.bg_sub_page),
                 contentScale = ContentScale.FillBounds
@@ -77,18 +77,18 @@ fun LinkedSuccessScreen(
             Box(
                 modifier = Modifier
                     .size(100.dp)
-                    .neonGlow(neonCyan, alpha = 0.5f, glowRadius = 20.dp, borderRadius = 50.dp)
+                    .neonGlow(colors.primary, alpha = 0.5f, glowRadius = 20.dp, borderRadius = 50.dp)
                     .background(
-                        color = welcomeBackground,
+                        color = colors.background,
                         shape = RoundedCornerShape(50.dp)
                     )
-                    .border(2.dp, neonCyan, CircleShape),
+                    .border(2.dp, colors.primary, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Check,
                     contentDescription = null,
-                    tint = neonCyan,
+                    tint = colors.primary,
                     modifier = Modifier.size(52.dp)
                 )
             }
@@ -97,7 +97,7 @@ fun LinkedSuccessScreen(
 
             Text(
                 text = "Card Linked\nSuccessfully!",
-                color = neonCyan,
+                color = colors.primary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -110,9 +110,9 @@ fun LinkedSuccessScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .neonGlow(neonCyan, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 16.dp)
+                    .neonGlow(colors.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 16.dp)
                     .background(CardBg, RoundedCornerShape(16.dp))
-                    .border(1.5.dp, neonCyan.copy(0.5f), RoundedCornerShape(16.dp))
+                    .border(1.5.dp, colors.primary.copy(0.5f), RoundedCornerShape(16.dp))
                     .padding(horizontal = 24.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -128,7 +128,7 @@ fun LinkedSuccessScreen(
                     lineHeight = 24.sp
                 )
 
-                HorizontalDivider(color = neonCyan.copy(0.15f), thickness = 0.5.dp)
+                HorizontalDivider(color = colors.primary.copy(0.15f), thickness = 0.5.dp)
 
                 ActionButton(
                     label = stringResource(R.string.linked_success_setup_primary),
@@ -147,11 +147,12 @@ fun LinkedSuccessScreen(
 
 @Composable
 private fun ActionButton(label: String, onClick: () -> Unit) {
+    val colors = LocalAppColors.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
-            .border(1.5.dp, neonCyan.copy(0.7f), RoundedCornerShape(24.dp))
+            .border(1.5.dp, colors.primary.copy(0.7f), RoundedCornerShape(24.dp))
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
@@ -161,7 +162,7 @@ private fun ActionButton(label: String, onClick: () -> Unit) {
     ) {
         Text(
             text = label,
-            color = neonCyan,
+            color = colors.primary,
             fontSize = 15.sp,
             fontWeight = FontWeight.Medium
         )

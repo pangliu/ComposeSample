@@ -56,14 +56,13 @@ import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.RowIcon
 import com.example.newproject.ui.components.RowIconImage
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.cyberPurple
 import com.example.newproject.ui.theme.neonBlushPink
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonMint
 import com.example.newproject.ui.theme.neonPink
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
 
 private val CardBg = Color(0xFF0A1628)
 
@@ -84,8 +83,9 @@ fun TransactionDetailScreen(
         }
     }
 
+    val colors = LocalAppColors.current
     Scaffold(
-        containerColor = welcomeBackground,
+        containerColor = colors.background,
         contentColor = Color.White
     ) { paddingValues ->
         if (uiState.isLoading) {
@@ -115,8 +115,9 @@ private fun TransactionDetailContent(
     paddingValues: PaddingValues,
     onBack: () -> Unit
 ) {
+    val colors = LocalAppColors.current
     val isSuccess = detail.status == OrderStatus.SUCCESS
-    val statusColor = if (isSuccess) neonCyan else neonPink
+    val statusColor = if (isSuccess) colors.primary else neonPink
     val statusText = if (isSuccess) stringResource(R.string.tx_detail_successful) else stringResource(R.string.tx_detail_failed)
 
     Column(
@@ -190,7 +191,7 @@ private fun TransactionDetailContent(
 
             // Pay To / Pay From card
             InfoCard(
-                borderColor = neonCyan
+                borderColor = colors.primary
             ) {
                 PartyRow(
                     label = stringResource(R.string.tx_detail_pay_to),
@@ -201,7 +202,7 @@ private fun TransactionDetailContent(
                 )
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 12.dp),
-                    color = neonCyan.copy(alpha = 0.15f),
+                    color = colors.primary.copy(alpha = 0.15f),
                     thickness = 0.5.dp
                 )
                 PartyRow(
@@ -230,7 +231,7 @@ private fun TransactionDetailContent(
 
             // Reference card
             InfoCard(
-                borderColor = neonCyan
+                borderColor = colors.primary
             ) {
                 LabelValueRow(label = stringResource(R.string.tx_detail_reference_no), value = detail.referenceNo)
                 Spacer(Modifier.height(10.dp))
@@ -244,7 +245,7 @@ private fun TransactionDetailContent(
                 modifier = Modifier
                     .size(52.dp)
                     .neonGlow(neonPurpleLight, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 26.dp)
-                    .background(welcomeBackground, CircleShape)
+                    .background(colors.background, CircleShape)
                     .border(1.5.dp, neonPurpleLight, CircleShape)
                     .clickable(
                         indication = null,
@@ -313,15 +314,16 @@ private fun AmountRow(label: String, value: String) {
 
 @Composable
 private fun LabelValueRow(label: String, value: String) {
+    val colors = LocalAppColors.current
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = label, color = neonCyan, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+        Text(text = label, color = colors.primary, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         Text(
             text = value,
-            color = normalText,
+            color = colors.onBackground,
             fontSize = 13.sp,
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1f).padding(start = 12.dp)

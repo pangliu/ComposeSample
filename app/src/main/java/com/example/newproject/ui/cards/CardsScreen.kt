@@ -45,14 +45,11 @@ import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.cards.components.VoucherTicket
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonGreen
 import com.example.newproject.ui.theme.neonPink
-import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
 
 private val tokenOrange = Color(0xFFFF8C00)
 private val promoBannerCount = 4
@@ -89,6 +86,7 @@ fun CardsScreen(viewModel: CardsViewModel, onNavigate: (String) -> Unit = {}) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardsScreenContent(uiState: CardsUiState, onRefresh: () -> Unit = {}, onNavigate: (String) -> Unit = {}, onCardClick: (CreditCardResponse) -> Unit = {}) {
+    val colors = LocalAppColors.current
     val pullRefreshState = rememberPullToRefreshState()
 
     LoadingDialog(isShowing = uiState.isLoading)
@@ -96,7 +94,7 @@ fun CardsScreenContent(uiState: CardsUiState, onRefresh: () -> Unit = {}, onNavi
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(welcomeBackground)
+            .background(colors.background)
     ) {
         Text(
             text = stringResource(R.string.cards_management_title),
@@ -120,7 +118,7 @@ fun CardsScreenContent(uiState: CardsUiState, onRefresh: () -> Unit = {}, onNavi
                     isRefreshing = uiState.isRefreshing,
                     modifier = Modifier.align(Alignment.TopCenter),
                     color = neonCyanLight,
-                    containerColor = welcomeBackground
+                    containerColor = colors.background
                 )
             }
         ) {
@@ -159,12 +157,13 @@ fun CardsScreenContent(uiState: CardsUiState, onRefresh: () -> Unit = {}, onNavi
 
 @Composable
 fun InfoCard() {
+    val colors = LocalAppColors.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .neonGlow(color = neonCyanLight, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 12.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(welcomeBackground)
+            .background(colors.background)
             .border(2.dp, neonCyanLight.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
@@ -193,6 +192,7 @@ fun InfoCard() {
 
 @Composable
 fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> Unit = {}) {
+    val colors = LocalAppColors.current
     val glowColor = if (isPrimary) neonPurpleLight else neonCyanLight
     val borderColor = if (isPrimary) neonPurpleLight else neonCyanLight
 
@@ -201,7 +201,7 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> 
             .fillMaxWidth()
             .neonGlow(color = glowColor, alpha = 0.6f, glowRadius = 15.dp, borderRadius = 16.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(welcomeBackground)
+            .background(colors.background)
             .border(1.5.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable(
                 indication = null,
@@ -314,13 +314,14 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> 
 
 @Composable
 fun AddNewCardButton(onNavigate: (String) -> Unit = {}) {
+    val colors = LocalAppColors.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp)
             .neonGlow(color = neonCyanLight, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 24.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(welcomeBackground)
+            .background(colors.background)
             .border(1.5.dp, neonCyanLight, RoundedCornerShape(24.dp))
             .clickable { onNavigate(Routes.SELECT_CARD_TYPE) }
             .padding(vertical = 12.dp),
@@ -346,6 +347,7 @@ fun AddNewCardButton(onNavigate: (String) -> Unit = {}) {
 
 @Composable
 private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
+    val colors = LocalAppColors.current
     val pagerState = rememberPagerState(pageCount = { promoBannerCount })
 
     Column(
@@ -372,7 +374,7 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
                     modifier = Modifier
                         .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                         .background(
-                            if (pagerState.currentPage == index) neonCyan else Color.White.copy(alpha = 0.3f),
+                            if (pagerState.currentPage == index) colors.primary else Color.White.copy(alpha = 0.3f),
                             CircleShape
                         )
                 )
@@ -389,9 +391,9 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
-                    .neonGlow(neonCyan, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 26.dp)
-                    .background(welcomeBackground, RoundedCornerShape(26.dp))
-                    .border(1.5.dp, neonCyan, RoundedCornerShape(26.dp))
+                    .neonGlow(colors.primary, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 26.dp)
+                    .background(colors.background, RoundedCornerShape(26.dp))
+                    .border(1.5.dp, colors.primary, RoundedCornerShape(26.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
@@ -410,7 +412,7 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
 
         Text(
             text = stringResource(R.string.cards_protected),
-            color = normalText,
+            color = colors.onBackground,
             fontSize = 12.sp,
             textAlign = TextAlign.Center
         )
@@ -419,6 +421,7 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
 
 @Composable
 private fun PromoBannerCard(page: Int) {
+    val colors = LocalAppColors.current
     // 外層 Box：padding 為光暈預留空間，光暈永遠在此範圍內，不依賴父容器允許 overflow
     Box(
         modifier = Modifier
@@ -430,14 +433,14 @@ private fun PromoBannerCard(page: Int) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp)
-                .neonGlow(neonCyan, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 16.dp)
+                .neonGlow(colors.primary, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 16.dp)
                 .background(
                     Brush.verticalGradient(listOf(Color(0xFF1A1050), Color(0xFF0B1030))),
                     RoundedCornerShape(16.dp)
                 )
                 .border(
                     width = 1.5.dp,
-                    brush = Brush.linearGradient(listOf(neonCyan, neonPurple, neonCyan)),
+                    brush = Brush.linearGradient(listOf(colors.primary, colors.secondary, colors.primary)),
                     shape = RoundedCornerShape(16.dp)
                 ),
             contentAlignment = Alignment.Center

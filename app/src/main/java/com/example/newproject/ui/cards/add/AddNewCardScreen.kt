@@ -67,10 +67,7 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.Routes
 import com.example.newproject.ui.UiEvent
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
+import com.example.newproject.ui.theme.LocalAppColors
 
 private enum class CardInputMethod { OCR, GALLERY }
 
@@ -125,10 +122,12 @@ fun AddNewCardContent(
     var cvv by rememberSaveable { mutableStateOf("") }
     var billingZip by rememberSaveable { mutableStateOf("") }
 
+    val colors = LocalAppColors.current
+
     LoadingDialog(isShowing = isLoading)
 
     Scaffold(
-        containerColor = welcomeBackground,
+        containerColor = colors.background,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -162,7 +161,7 @@ fun AddNewCardContent(
                         Spacer(Modifier.height(6.dp))
                         Text(
                             text = stringResource(R.string.add_new_card_ocr_label),
-                            color = neonCyan,
+                            color = colors.primary,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -175,7 +174,7 @@ fun AddNewCardContent(
                         Icon(
                             imageVector = Icons.Outlined.Image,
                             contentDescription = stringResource(R.string.add_new_card_gallery_desc),
-                            tint = if (selectedMethod == CardInputMethod.GALLERY) neonCyan else neonCyan.copy(alpha = 0.5f),
+                            tint = if (selectedMethod == CardInputMethod.GALLERY) colors.primary else colors.primary.copy(alpha = 0.5f),
                             modifier = Modifier.size(44.dp)
                         )
                     }
@@ -239,12 +238,12 @@ fun AddNewCardContent(
                     Icon(
                         imageVector = Icons.Outlined.Lock,
                         contentDescription = null,
-                        tint = normalText,
+                        tint = colors.onBackground,
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
                         text = stringResource(R.string.add_new_card_cvv_notice),
-                        color = normalText,
+                        color = colors.onBackground,
                         fontSize = 13.sp
                     )
                 }
@@ -258,7 +257,7 @@ fun AddNewCardContent(
                         .height(45.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = neonCyan,
+                        containerColor = colors.primary,
                         contentColor = Color(0xFF0B1327)
                     )
                 ) {
@@ -282,7 +281,8 @@ private fun InputMethodButton(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit = {}
 ) {
-    val borderColor = if (selected) neonCyan else neonCyan.copy(alpha = 0.2f)
+    val colors = LocalAppColors.current
+    val borderColor = if (selected) colors.primary else colors.primary.copy(alpha = 0.2f)
     val bgColor = if (selected) InputMethodSelectedBg else InputFieldBackground
 
     Box(
@@ -307,7 +307,8 @@ private fun InputMethodButton(
 
 @Composable
 private fun ScanFrameIcon(modifier: Modifier = Modifier) {
-    val color = neonCyan
+    val colors = LocalAppColors.current
+    val color = colors.primary
     Canvas(modifier = modifier) {
         val cornerLen = size.width * 0.28f
         val stroke = 2.5.dp.toPx()
@@ -339,10 +340,11 @@ private fun CardFormField(
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
+    val colors = LocalAppColors.current
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
-    
-    val borderColor = if (isFocused) neonCyan else neonCyan.copy(alpha = 0.4f)
+
+    val borderColor = if (isFocused) colors.primary else colors.primary.copy(alpha = 0.4f)
     val borderWidth = 1.5.dp
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -361,7 +363,7 @@ private fun CardFormField(
             visualTransformation = visualTransformation,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             interactionSource = interactionSource,
-            cursorBrush = SolidColor(neonCyan),
+            cursorBrush = SolidColor(colors.primary),
             modifier = Modifier.fillMaxWidth(),
             decorationBox = { innerTextField ->
                 Box(
@@ -375,7 +377,7 @@ private fun CardFormField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = normalText,
+                            color = colors.onBackground,
                             fontSize = 14.sp
                         )
                     }

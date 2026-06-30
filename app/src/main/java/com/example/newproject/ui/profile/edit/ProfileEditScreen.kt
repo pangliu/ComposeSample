@@ -63,15 +63,12 @@ import com.example.newproject.ui.components.RowIcon
 import com.example.newproject.ui.components.RowIconImage
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.balanceGold
 import com.example.newproject.ui.theme.neonBlue
 import com.example.newproject.ui.theme.neonBlueLight
-import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonDarkPurple
 import com.example.newproject.ui.theme.neonMint
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
 
 private val CardBackground = Color(0xFF0E1A2E)
 
@@ -89,8 +86,9 @@ private fun ProfileEditContent(
     uiState: ProfileEditUiState = ProfileEditUiState(),
     onBack: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     Scaffold(
-        containerColor = welcomeBackground,
+        containerColor = colors.background,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -282,7 +280,7 @@ private fun SpillTheTeaSection(uiState: ProfileEditUiState, modifier: Modifier =
 @Composable
 private fun SectionCard(
     title: String,
-    borderColor: Color = neonCyan,
+    borderColor: Color,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -328,28 +326,30 @@ private fun SectionCard(
 
 @Composable
 private fun FieldDivider() {
+    val colors = LocalAppColors.current
     HorizontalDivider(
         modifier = Modifier.padding(horizontal = 16.dp),
-        color = neonCyan.copy(alpha = 0.12f),
+        color = colors.primary.copy(alpha = 0.12f),
         thickness = 0.5.dp
     )
 }
 
 @Composable
 private fun LockedFieldRow(icon: RowIcon, label: String, value: String) {
+    val colors = LocalAppColors.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = icon, tint = neonCyan)
+        RowIconImage(icon = icon, tint = colors.primary)
         Spacer(Modifier.width(10.dp))
-        Text(label, color = normalText, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(label, color = colors.onBackground, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Icon(
             imageVector = Icons.Outlined.Lock,
             contentDescription = null,
-            tint = normalText.copy(alpha = 0.6f),
+            tint = colors.onBackground.copy(alpha = 0.6f),
             modifier = Modifier.size(13.dp)
         )
         Spacer(Modifier.width(4.dp))
@@ -359,15 +359,16 @@ private fun LockedFieldRow(icon: RowIcon, label: String, value: String) {
 
 @Composable
 private fun PlainFieldRow(icon: RowIcon, label: String, value: String) {
+    val colors = LocalAppColors.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = icon, tint = neonCyan)
+        RowIconImage(icon = icon, tint = colors.primary)
         Spacer(Modifier.width(10.dp))
-        Text(label, color = normalText, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(label, color = colors.onBackground, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Text(value, color = Color.White, fontSize = 13.sp)
     }
 }
@@ -379,16 +380,17 @@ private fun ChangeableFieldRow(
     value: String,
     onChangeTap: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = icon, tint = neonCyan)
+        RowIconImage(icon = icon, tint = colors.primary)
         Spacer(Modifier.width(10.dp))
-        Text(label, color = normalText, fontSize = 13.sp, modifier = Modifier.weight(1f))
-        Text(value, color = normalText, fontSize = 12.sp)
+        Text(label, color = colors.onBackground, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(value, color = colors.onBackground, fontSize = 12.sp)
         Spacer(Modifier.width(8.dp))
         Box(
             modifier = Modifier
@@ -396,8 +398,8 @@ private fun ChangeableFieldRow(
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            neonCyan.copy(alpha = 0.4f),
-                            neonPurple.copy(alpha = 0.8f)
+                            colors.primary.copy(alpha = 0.4f),
+                            colors.secondary.copy(alpha = 0.8f)
                         )),
                     shape = RoundedCornerShape(6.dp))
                 .clickable(
@@ -409,7 +411,7 @@ private fun ChangeableFieldRow(
         ) {
             Text(
                 text = stringResource(R.string.profile_edit_change),
-                color = neonCyan,
+                color = colors.primary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -419,6 +421,7 @@ private fun ChangeableFieldRow(
 
 @Composable
 private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
+    val colors = LocalAppColors.current
     var isVisible by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
@@ -426,11 +429,11 @@ private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = RowIcon.Resource(R.mipmap.ic_profile_edit_lock), tint = neonCyan)
+        RowIconImage(icon = RowIcon.Resource(R.mipmap.ic_profile_edit_lock), tint = colors.primary)
         Spacer(Modifier.width(10.dp))
         Text(
             text = stringResource(R.string.profile_edit_password),
-            color = normalText,
+            color = colors.onBackground,
             fontSize = 13.sp,
             modifier = Modifier.weight(1f)
         )
@@ -458,8 +461,8 @@ private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            neonCyan.copy(alpha = 0.4f),
-                            neonPurple.copy(alpha = 0.8f)
+                            colors.primary.copy(alpha = 0.4f),
+                            colors.secondary.copy(alpha = 0.8f)
                         )),
                     shape = RoundedCornerShape(6.dp))
                 .clickable(
@@ -471,7 +474,7 @@ private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
         ) {
             Text(
                 text = stringResource(R.string.profile_edit_change),
-                color = neonCyan,
+                color = colors.primary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -487,6 +490,7 @@ private fun DropdownFieldRow(
     subtitle: String? = null,
     onClick: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -497,12 +501,12 @@ private fun DropdownFieldRow(
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, tint = neonCyan, modifier = Modifier.size(20.dp))
+        Icon(imageVector = icon, contentDescription = null, tint = colors.primary, modifier = Modifier.size(20.dp))
         Spacer(Modifier.width(10.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(label, color = Color.White, fontSize = 13.sp)
             if (subtitle != null) {
-                Text(subtitle, color = normalText, fontSize = 11.sp)
+                Text(subtitle, color = colors.onBackground, fontSize = 11.sp)
             }
         }
         Row(
@@ -511,11 +515,11 @@ private fun DropdownFieldRow(
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            neonCyan.copy(alpha = 0.4f),
-                            neonPurple.copy(alpha = 0.8f)
+                            colors.primary.copy(alpha = 0.4f),
+                            colors.secondary.copy(alpha = 0.8f)
                         )),
                     shape = RoundedCornerShape(6.dp))
-//                .border(1.dp, neonCyan.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
+//                .border(1.dp, colors.primary.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -524,7 +528,7 @@ private fun DropdownFieldRow(
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = null,
-                tint = neonCyan,
+                tint = colors.primary,
                 modifier = Modifier.size(16.dp)
             )
         }

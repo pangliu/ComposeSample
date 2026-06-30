@@ -54,12 +54,9 @@ import com.example.newproject.ui.scanpay.ScanPayUiState
 import com.example.newproject.ui.scanpay.ScanPayViewModel
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.balanceGold
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.normalText
-import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun InputAmountScreen(
@@ -84,10 +81,11 @@ private fun InputAmountContent(
     onBack: () -> Unit = {},
     onReviewDetails: (String) -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     var amount by remember { mutableStateOf("") }
     var isBalanceVisible by remember { mutableStateOf(false) }
     Scaffold(
-        containerColor = welcomeBackground,
+        containerColor = colors.background,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -104,15 +102,15 @@ private fun InputAmountContent(
                     .fillMaxWidth()
                     .padding(horizontal = 50.dp)
                     .neonGlow(
-                        color = neonCyan,
+                        color = colors.primary,
                         alpha = 0.4f,
                         glowRadius = 12.dp,
                         borderRadius = 12.dp
                     )
-                    .background(color = welcomeBackground, shape = RoundedCornerShape(12.dp))
+                    .background(color = colors.background, shape = RoundedCornerShape(12.dp))
                     .border(
                         width = 1.5.dp,
-                        color = neonCyan.copy(alpha = 0.8f),
+                        color = colors.primary.copy(alpha = 0.8f),
                         shape = RoundedCornerShape(12.dp)
                     )
             ) {
@@ -121,14 +119,14 @@ private fun InputAmountContent(
                         .fillMaxWidth()
 
                         .neonGlow(
-                            color = neonPurple,
+                            color = colors.secondary,
                             alpha = 0.25f,
                             glowRadius = 12.dp,
                             borderRadius = 12.dp
                         )
                         .padding(10.dp)
-//                        .background(welcomeBackground, RoundedCornerShape(12.dp))
-                        .border(1.5.dp, neonPurple.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+//                        .background(colors.background, RoundedCornerShape(12.dp))
+                        .border(1.5.dp, colors.secondary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -139,13 +137,13 @@ private fun InputAmountContent(
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(color = welcomeBackground)
+                                .background(color = colors.background)
                                 .border(
                                     width = 1.5.dp,
                                     brush = Brush.linearGradient(
                                         colors = listOf(
-                                            neonCyan.copy(alpha = 0.7f),
-                                            neonPurple.copy(alpha = 0.7f)
+                                            colors.primary.copy(alpha = 0.7f),
+                                            colors.secondary.copy(alpha = 0.7f)
                                         )
                                     ),
                                     shape = RoundedCornerShape(10.dp)
@@ -182,11 +180,11 @@ private fun InputAmountContent(
             ) {
                 Text(
                     text = stringResource(R.string.input_amount_currency),
-                    color = neonCyan,
+                    color = colors.primary,
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(
-                        shadow = Shadow(color = neonCyan, blurRadius = 15f)
+                        shadow = Shadow(color = colors.primary, blurRadius = 15f)
                     )
                 )
                 Spacer(Modifier.width(12.dp))
@@ -195,24 +193,24 @@ private fun InputAmountContent(
                         value = amount,
                         onValueChange = { amount = it },
                         textStyle = TextStyle(
-                            color = neonCyan,
+                            color = colors.primary,
                             fontSize = 40.sp,
                             fontWeight = FontWeight.Bold,
-                            shadow = Shadow(color = neonCyan, blurRadius = 15f)
+                            shadow = Shadow(color = colors.primary, blurRadius = 15f)
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        cursorBrush = SolidColor(neonCyan),
+                        cursorBrush = SolidColor(colors.primary),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         decorationBox = { innerTextField ->
                             if (amount.isEmpty()) {
                                 Text(
                                     text = stringResource(R.string.input_amount_hint),
-                                    color = neonCyan.copy(alpha = 0.3f),
+                                    color = colors.primary.copy(alpha = 0.3f),
                                     fontSize = 40.sp,
                                     fontWeight = FontWeight.Bold,
                                     style = TextStyle(
-                                        shadow = Shadow(color = neonCyan, blurRadius = 15f)
+                                        shadow = Shadow(color = colors.primary, blurRadius = 15f)
                                     )
                                 )
                             }
@@ -225,7 +223,7 @@ private fun InputAmountContent(
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.input_amount_title),
-                color = neonCyan.copy(alpha = 0.6f)
+                color = colors.primary.copy(alpha = 0.6f)
             )
             Spacer(Modifier.height(10.dp))
             Box(
@@ -240,7 +238,7 @@ private fun InputAmountContent(
                         .align(Alignment.TopStart)
                         .padding(vertical = 15.dp)
                         .size(80.dp)
-                        .neonGlow(color = neonPurple, alpha = 0.25f, glowRadius = 30.dp)
+                        .neonGlow(color = colors.secondary, alpha = 0.25f, glowRadius = 30.dp)
 
                 )
                 Row(
@@ -250,7 +248,7 @@ private fun InputAmountContent(
                 ) {
                     Text(
                         text = stringResource(R.string.scan_pay_my_qr_balance),
-                        color = normalText,
+                        color = colors.onBackground,
                         fontSize = 14.sp,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -287,11 +285,11 @@ private fun InputAmountContent(
                         .align(Alignment.BottomCenter)
                         .then(
                             if (isReviewEnabled)
-                                Modifier.neonGlow(color = neonPurple, alpha = 0.7f, glowRadius = 12.dp, borderRadius = 15.dp)
+                                Modifier.neonGlow(color = colors.secondary, alpha = 0.7f, glowRadius = 12.dp, borderRadius = 15.dp)
                             else Modifier
                         )
                         .background(
-                            color = if (isReviewEnabled) neonPurple else neonPurple.copy(alpha = 0.3f),
+                            color = if (isReviewEnabled) colors.secondary else colors.secondary.copy(alpha = 0.3f),
                             shape = RoundedCornerShape(30.dp)
                         )
                         .clickable(

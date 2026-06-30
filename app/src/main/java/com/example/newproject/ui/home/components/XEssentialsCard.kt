@@ -34,14 +34,12 @@ import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import com.example.newproject.ui.home.essential.EssentialItem
 import com.example.newproject.ui.home.essential.ITEMS_PER_PAGE
 import com.example.newproject.ui.home.essential.allEssentialItems
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.cardBorder
 import com.example.newproject.ui.theme.cardGradientMid
 import com.example.newproject.ui.theme.cardGradientStart
 import com.example.newproject.ui.theme.darkBackground
 import com.example.newproject.ui.theme.essentialCardTitle
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.normalText
 
 private val cardGradientEnd = Color(0xFF0A1228)
 private val essentialEdit = Color(0xFF3E4155)
@@ -54,7 +52,7 @@ fun XEssentialsCard(
     myMenuItems: List<EssentialItem>,
     onSaveMyMenu: (List<EssentialItem>) -> Unit,
 ) {
-
+    val colors = LocalAppColors.current
     // 將 myMenuItems 依照每頁 8 個分頁
     val pages = myMenuItems.chunked(ITEMS_PER_PAGE)
     val pagerState = rememberPagerState(pageCount = { pages.size })
@@ -104,7 +102,7 @@ fun XEssentialsCard(
                 ) {
                     Text(
                         text = stringResource(R.string.essentials_edit),
-                        color = normalText,
+                        color = colors.onBackground,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -190,7 +188,7 @@ fun XEssentialsCard(
                             .size(if (isSelected) 8.dp else 6.dp)
                             .clip(CircleShape)
                             .background(
-                                if (isSelected) neonCyan
+                                if (isSelected) colors.primary
                                 else Color.White.copy(alpha = 0.3f)
                             )
                     )
@@ -217,6 +215,7 @@ fun XEssentialsCard(
 
 @Composable
 fun EssentialItemView(item: EssentialItem) {
+    val colors = LocalAppColors.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -241,8 +240,8 @@ fun EssentialItemView(item: EssentialItem) {
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            neonCyan.copy(alpha = 0.4f),
-                            neonPurple.copy(alpha = 0.8f)
+                            colors.primary.copy(alpha = 0.4f),
+                            colors.secondary.copy(alpha = 0.8f)
                         )
                     ),
                     shape = RoundedCornerShape(16.dp)
@@ -253,11 +252,11 @@ fun EssentialItemView(item: EssentialItem) {
                 Icon(
                     imageVector = item.iconVector,
                     contentDescription = item.label,
-                    tint = neonCyan,
+                    tint = colors.primary,
                     modifier = Modifier.size(30.dp)
                 )
             } else if (item.iconRes != null) {
-                val tint = if (item.useOriginalColor) Color.Unspecified else neonCyan
+                val tint = if (item.useOriginalColor) Color.Unspecified else colors.primary
                 Icon(
                     painter = painterResource(id = item.iconRes),
                     contentDescription = item.label,
@@ -272,7 +271,7 @@ fun EssentialItemView(item: EssentialItem) {
         // 標籤文字
         Text(
             text = item.label,
-            color = normalText,
+            color = colors.onBackground,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium
         )

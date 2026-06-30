@@ -37,19 +37,19 @@ import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.OrderStatus
 import com.example.newproject.network.model.response.OrderType
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.cashInGreen
 import com.example.newproject.ui.theme.darkBackground
 import com.example.newproject.ui.theme.neonCyanLight
-import com.example.newproject.ui.theme.normalText
 import com.example.newproject.ui.theme.sendPink
 import com.example.newproject.ui.theme.themeWhite
-import com.example.newproject.ui.theme.welcomeBackground
 
 /**
  * @param orders null → loading；emptyList → 無資料；否則顯示列表
  */
 @Composable
 fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistoryResponse) -> Unit = {}) {
+    val colors = LocalAppColors.current
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.recent_activity_title),
@@ -63,7 +63,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
                 .fillMaxWidth()
                 .neonGlow(color = neonCyanLight, alpha = 0.6f, glowRadius = 18.dp, borderRadius = 18.dp)
                 .border(width = 2.dp, color = neonCyanLight, shape = RoundedCornerShape(18.dp))
-                .background(color = welcomeBackground, shape = RoundedCornerShape(18.dp))
+                .background(color = colors.background, shape = RoundedCornerShape(18.dp))
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -71,7 +71,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
                 orders.isEmpty() -> {
                     Text(
                         text = stringResource(R.string.recent_empty),
-                        color = normalText,
+                        color = colors.onBackground,
                         fontSize = 13.sp,
                         modifier = Modifier.padding(vertical = 24.dp)
                     )
@@ -85,7 +85,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(1.dp)
-                                        .background(normalText.copy(alpha = 0.15f))
+                                        .background(colors.onBackground.copy(alpha = 0.15f))
                                 )
                             }
                         }
@@ -98,6 +98,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
 
 @Composable
 private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
+    val colors = LocalAppColors.current
     val isCashIn = order.type == OrderType.INCOMING
     val iconColor = if (isCashIn) cashInGreen else sendPink
     val icon = if (isCashIn) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward
@@ -135,14 +136,14 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
 
         Text(
             text = stringResource(descRes),
-            color = normalText,
+            color = colors.onBackground,
             fontSize = 14.sp,
             modifier = Modifier.weight(1f)
         )
 
         Text(
             text = amountText,
-            color = normalText,
+            color = colors.onBackground,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium
         )
@@ -152,7 +153,7 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
-            tint = normalText,
+            tint = colors.onBackground,
             modifier = Modifier.size(20.dp)
         )
     }

@@ -71,12 +71,9 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.newproject.R
 import com.example.newproject.ui.components.QrMode
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.balanceGold
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.normalText
 import com.example.newproject.ui.theme.qrCodeBackground
-import com.example.newproject.ui.theme.welcomeBackground
 import io.github.alexzhirkevich.qrose.options.QrBallShape
 import io.github.alexzhirkevich.qrose.options.QrBrush
 import io.github.alexzhirkevich.qrose.options.QrColors
@@ -100,6 +97,7 @@ internal fun MyQrContent(
     balance: Double = 0.0,
     onQrCodeScanned: (String) -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     val context = LocalContext.current
     val hasCameraPermission = remember {
         ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
@@ -114,7 +112,7 @@ internal fun MyQrContent(
             frame = QrFrameShape.roundCorners(.25f)
         ),
         colors = QrColors(
-            dark = QrBrush.solid(neonCyan),
+            dark = QrBrush.solid(colors.primary),
             light = QrBrush.solid(Color.Transparent)
         ),
         errorCorrectionLevel = QrErrorCorrectionLevel.High
@@ -166,7 +164,7 @@ internal fun MyQrContent(
                                 .align(Alignment.TopCenter)
                                 .padding(top = 5.dp),
                             text = "@$nickName",
-                            color = neonCyan,
+                            color = colors.primary,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -175,7 +173,7 @@ internal fun MyQrContent(
                                 .align(Alignment.BottomCenter)
                                 .padding(bottom = 5.dp),
                             text = userName,
-                            color = normalText,
+                            color = colors.onBackground,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -212,7 +210,7 @@ internal fun MyQrContent(
                             ) {
                                 Text(
                                     text = stringResource(R.string.scan_pay_camera_permission_required),
-                                    color = normalText,
+                                    color = colors.onBackground,
                                     fontSize = 12.sp,
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier.padding(horizontal = 12.dp)
@@ -257,7 +255,7 @@ internal fun MyQrContent(
                 contentDescription = null,
                 modifier = Modifier
                     .size(80.dp)
-                    .neonGlow(color = neonPurple, alpha = 0.25f, glowRadius = 30.dp)
+                    .neonGlow(color = colors.secondary, alpha = 0.25f, glowRadius = 30.dp)
             )
             Column(
                 modifier = Modifier
@@ -270,7 +268,7 @@ internal fun MyQrContent(
                 ) {
                     Text(
                         text = stringResource(R.string.scan_pay_my_qr_balance),
-                        color = normalText,
+                        color = colors.onBackground,
                         fontSize = 14.sp,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -296,7 +294,7 @@ internal fun MyQrContent(
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = stringResource(R.string.scan_pay_my_qr_x_points),
-                    color = normalText,
+                    color = colors.onBackground,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -339,10 +337,10 @@ internal fun MyQrContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
-                .neonGlow(color = neonCyan, alpha = 0.5f, glowRadius = 8.dp, borderRadius = 12.dp)
+                .neonGlow(color = colors.primary, alpha = 0.5f, glowRadius = 8.dp, borderRadius = 12.dp)
                 .border(
                     width = 1.5.dp,
-                    color = neonCyan.copy(alpha = 0.7f),
+                    color = colors.primary.copy(alpha = 0.7f),
                     shape = RoundedCornerShape(12.dp))
                 .background(
                     color = Color.Black.copy(alpha = 0.5f),
@@ -361,7 +359,7 @@ internal fun MyQrContent(
                     Spacer(Modifier.width(5.dp))
                     Text(
                         text = stringResource(R.string.scan_pay_my_qr_daily_quest_progress),
-                        color = normalText,
+                        color = colors.onBackground,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -373,13 +371,13 @@ internal fun MyQrContent(
                         .fillMaxWidth()
                         .height(4.dp)
                         .clip(RoundedCornerShape(50)),
-                    color = neonCyan,
+                    color = colors.primary,
                     trackColor = Color.White.copy(alpha = 0.2f)
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = stringResource(R.string.scan_pay_my_qr_daily_quest_progress),
-                    color = normalText,
+                    color = colors.onBackground,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -490,16 +488,17 @@ internal fun MyQrActionButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .border(
                 width = 1.5.dp,
-                color = neonPurple.copy(alpha = 0.6f),
+                color = colors.secondary.copy(alpha = 0.6f),
                 shape = RoundedCornerShape(12.dp))
-            .neonGlow(color = neonPurple, alpha = 0.3f, glowRadius = 8.dp, borderRadius = 12.dp)
+            .neonGlow(color = colors.secondary, alpha = 0.3f, glowRadius = 8.dp, borderRadius = 12.dp)
             .background(
-                color = welcomeBackground.copy(alpha = 0.7f),
+                color = colors.background.copy(alpha = 0.7f),
                 shape = RoundedCornerShape(12.dp))
             .padding(vertical = 8.dp, horizontal = 8.dp)
             .clickable(
@@ -509,10 +508,10 @@ internal fun MyQrActionButton(
     ) {
         Box(
             modifier = Modifier
-                .border(color = neonCyan, width = 1.5.dp, shape = RoundedCornerShape(50.dp))
-                .neonGlow(color = neonCyan, alpha = 0.7f, glowRadius = 50.dp, borderRadius = 50.dp)
+                .border(color = colors.primary, width = 1.5.dp, shape = RoundedCornerShape(50.dp))
+                .neonGlow(color = colors.primary, alpha = 0.7f, glowRadius = 50.dp, borderRadius = 50.dp)
                 .background(
-                    color = welcomeBackground.copy(alpha = 0.3f),
+                    color = colors.background.copy(alpha = 0.3f),
                     shape = RoundedCornerShape(50.dp))
                 .padding(10.dp)
         ) {
@@ -526,7 +525,7 @@ internal fun MyQrActionButton(
         Spacer(Modifier.width(5.dp))
         Text(
             text = label,
-            color = normalText,
+            color = colors.onBackground,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
             lineHeight = 15.sp

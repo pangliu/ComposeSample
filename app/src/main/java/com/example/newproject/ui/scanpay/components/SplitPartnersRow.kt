@@ -37,10 +37,9 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.network.model.response.FriendResponse
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.balanceGold
-import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonPink
-import com.example.newproject.ui.theme.neonPurple
 
 // "You" 固定佔第 1 格，其餘 4 格給好友，合計 5 格
 private const val MAX_SPLIT_FRIENDS = 4
@@ -53,6 +52,7 @@ fun SplitPartnersRow(
     onCancel: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val colors = LocalAppColors.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -67,7 +67,7 @@ fun SplitPartnersRow(
             SplitAvatarItem(
                 avatarLetter = myName.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
                 displayName = stringResource(R.string.split_bill_you),
-                avatarColor = neonPurple,
+                avatarColor = colors.secondary,
                 modifier = Modifier.weight(1f)
             )
 
@@ -78,7 +78,7 @@ fun SplitPartnersRow(
                     SplitAvatarItem(
                         avatarLetter = friend.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
                         displayName = friend.name,
-                        avatarColor = neonCyan,
+                        avatarColor = colors.primary,
                         modifier = Modifier.weight(1f)
                     )
                 } else {

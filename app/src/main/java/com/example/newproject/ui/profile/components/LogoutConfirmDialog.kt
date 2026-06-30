@@ -32,10 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
-import com.example.newproject.ui.theme.neonCyan
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonPink
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.normalText
 
 private val DialogBg = Color(0xFF0D1B2E)
 
@@ -44,13 +42,14 @@ fun LogoutConfirmDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    val colors = LocalAppColors.current
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(neonCyan, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
+                .neonGlow(colors.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
                 .background(DialogBg, RoundedCornerShape(20.dp))
-                .border(1.5.dp, neonCyan.copy(0.6f), RoundedCornerShape(20.dp))
+                .border(1.5.dp, colors.primary.copy(0.6f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -64,13 +63,13 @@ fun LogoutConfirmDialog(
             )
             Text(
                 text = stringResource(R.string.logout_dialog_title),
-                color = neonCyan,
+                color = colors.primary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = stringResource(R.string.logout_dialog_message),
-                color = normalText,
+                color = colors.onBackground,
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center
             )
@@ -99,7 +98,7 @@ fun LogoutConfirmDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .border(1.5.dp, neonPurple.copy(0.8f), RoundedCornerShape(24.dp))
+                    .border(1.5.dp, colors.secondary.copy(0.8f), RoundedCornerShape(24.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },

@@ -26,12 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.darkBackground
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.welcomeBackground
 
 @Composable
 fun QuestCard() {
+    val colors = LocalAppColors.current
     Box(
         modifier = Modifier
 //            .padding(top = 20.dp) // 給上方預留一點空間讓人物露出來
@@ -53,19 +53,19 @@ fun QuestCard() {
                 .fillMaxWidth()
                 .height(120.dp) // 固定高度
                 .neonGlow(
-                    color = neonPurple, 
-                    alpha = 0.6f, 
-                    glowRadius = 15.dp, 
+                    color = colors.secondary,
+                    alpha = 0.6f,
+                    glowRadius = 15.dp,
                     borderRadius = 18.dp,
                     blurStyle = android.graphics.BlurMaskFilter.Blur.OUTER
                 )
                 .background(
-                    color = welcomeBackground,
+                    color = colors.background,
                     shape = RoundedCornerShape(18.dp)
                 )
                 .border(
                     width = 2.dp,
-                    color = neonPurple, // 你剛才轉好的洋紅色
+                    color = colors.secondary, // 你剛才轉好的洋紅色
                     shape = RoundedCornerShape(18.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 8.dp) // 內部元件距離邊框的距離

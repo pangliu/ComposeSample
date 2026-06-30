@@ -44,14 +44,13 @@ import com.example.newproject.ui.login.dialog.LoginBottomSheet
 import com.example.newproject.ui.login.dialog.VerifyMobileDialog
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.utils.BiometricHelper
 import com.example.newproject.ui.theme.darkBackground
 import com.example.newproject.ui.theme.loginBackground
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonGreen
 import com.example.newproject.ui.theme.neonGreenLight
-import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.welcomeBackground
 import kotlinx.coroutines.launch
 
 @Composable
@@ -142,6 +141,7 @@ fun LoginScreenContent(
     onShowBiometricPromptForLogin: () -> Unit = {},
     onShowBiometricPromptForEnroll: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
     val context = LocalContext.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -198,13 +198,13 @@ fun LoginScreenContent(
                     Icon(
                         imageVector = Icons.Default.Menu,
                         contentDescription = stringResource(id = R.string.menu_desc),
-                        tint = neonPurple,
+                        tint = colors.secondary,
                         modifier = Modifier
                             .size(28.dp)
                             .align(Alignment.CenterStart)
                             .clickable { scope.launch { drawerState.open() } }
-                            .neonGlow(color = neonPurple, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 15.dp)
-//                            .neonGlow(color = neonPurple, alpha = 0.7f, glowRadius = 20.dp),
+                            .neonGlow(color = colors.secondary, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 15.dp)
+//                            .neonGlow(color = colors.secondary, alpha = 0.7f, glowRadius = 20.dp),
                     )
                     
                     Image(
@@ -316,8 +316,8 @@ fun LoginScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .neonGlow(color = neonPurple, alpha = 0.7f, glowRadius = 20.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = neonPurple, contentColor = Color.White),
+                            .neonGlow(color = colors.secondary, alpha = 0.7f, glowRadius = 20.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = colors.secondary, contentColor = Color.White),
                         shape = RoundedCornerShape(25.dp)
                     ) {
                         Text(if (uiState.isLoading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.login_btn), fontSize = 16.sp)
@@ -343,7 +343,7 @@ fun LoginScreenContent(
                     Text(
                         text = buildAnnotatedString {
                             append(stringResource(id = R.string.dont_have_account))
-                            withStyle(SpanStyle(color = neonPurple)) { append(stringResource(id = R.string.sign_up)) }
+                            withStyle(SpanStyle(color = colors.secondary)) { append(stringResource(id = R.string.sign_up)) }
                         },
                         fontSize = 14.sp
                     )

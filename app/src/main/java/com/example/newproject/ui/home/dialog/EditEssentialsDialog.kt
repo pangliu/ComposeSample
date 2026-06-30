@@ -61,14 +61,12 @@ import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import com.example.newproject.ui.home.essential.EssentialItem
 import com.example.newproject.ui.home.essential.allEssentialItems
+import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.cardGradientMid
 import com.example.newproject.ui.theme.cardGradientStart
 import com.example.newproject.ui.theme.cashInGreen
 import com.example.newproject.ui.theme.darkBackground
-import com.example.newproject.ui.theme.neonCyan
-import com.example.newproject.ui.theme.neonPurple
 import com.example.newproject.ui.theme.sendPink
-import com.example.newproject.ui.theme.welcomeBackground
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -150,6 +148,7 @@ fun EditEssentialsContent(
     onClose: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val colors = LocalAppColors.current
     Column(
         modifier = modifier
             .padding(horizontal = 12.dp, vertical = 12.dp)
@@ -159,13 +158,13 @@ fun EditEssentialsContent(
                 onClick = {}
             )
             .neonGlow(
-                color = neonPurple,
+                color = colors.secondary,
                 alpha = 0.6f,
                 glowRadius = 15.dp,
                 borderRadius = 28.dp
             )
-            .background(welcomeBackground, RoundedCornerShape(28.dp))
-            .border(2.dp, neonPurple, RoundedCornerShape(28.dp))
+            .background(colors.background, RoundedCornerShape(28.dp))
+            .border(2.dp, colors.secondary, RoundedCornerShape(28.dp))
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -272,6 +271,7 @@ private fun ReorderableEssentialGrid(
     onReorder: (from: Int, to: Int) -> Unit,
     onRemove: (EssentialItem) -> Unit,
 ) {
+    val colors = LocalAppColors.current
     val density = LocalDensity.current
     val cellHeightDp = 90.dp
 
@@ -416,8 +416,8 @@ private fun ReorderableEssentialGrid(
                                         width = 1.5.dp,
                                         brush = Brush.linearGradient(
                                             colors = listOf(
-                                                neonCyan.copy(alpha = 0.4f),
-                                                neonPurple.copy(alpha = 0.8f)
+                                                colors.primary.copy(alpha = 0.4f),
+                                                colors.secondary.copy(alpha = 0.8f)
                                             )
                                         ),
                                         shape = RoundedCornerShape(16.dp)
@@ -428,11 +428,11 @@ private fun ReorderableEssentialGrid(
                                     Icon(
                                         imageVector = item.iconVector,
                                         contentDescription = item.label,
-                                        tint = neonCyan,
+                                        tint = colors.primary,
                                         modifier = Modifier.size(30.dp)
                                     )
                                 } else if (item.iconRes != null) {
-                                    val tint = if (item.useOriginalColor) Color.Unspecified else neonCyan
+                                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.primary
                                     Icon(
                                         painter = painterResource(id = item.iconRes),
                                         contentDescription = item.label,
@@ -487,6 +487,7 @@ fun DraggableEssentialItem(
     onClick: () -> Unit,
     onDragMoved: () -> Unit
 ) {
+    val colors = LocalAppColors.current
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
     var isDragging by remember { mutableStateOf(false) }
@@ -572,8 +573,8 @@ fun DraggableEssentialItem(
                         width = 1.5.dp,
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                neonCyan.copy(alpha = 0.4f),
-                                neonPurple.copy(alpha = 0.8f)
+                                colors.primary.copy(alpha = 0.4f),
+                                colors.secondary.copy(alpha = 0.8f)
                             )
                         ),
                         shape = RoundedCornerShape(16.dp)
@@ -584,11 +585,11 @@ fun DraggableEssentialItem(
                     Icon(
                         imageVector = item.iconVector,
                         contentDescription = item.label,
-                        tint = neonCyan,
+                        tint = colors.primary,
                         modifier = Modifier.size(30.dp)
                     )
                 } else if (item.iconRes != null) {
-                    val tint = if (item.useOriginalColor) Color.Unspecified else neonCyan
+                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.primary
                     Icon(
                         painter = painterResource(id = item.iconRes),
                         contentDescription = item.label,
@@ -646,6 +647,7 @@ fun SectionHeader(
     count: Int,
     modifier: Modifier = Modifier
 ) {
+    val colors = LocalAppColors.current
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -653,7 +655,7 @@ fun SectionHeader(
     ) {
         Text(
             text = title,
-            color = neonCyan,
+            color = colors.primary,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
