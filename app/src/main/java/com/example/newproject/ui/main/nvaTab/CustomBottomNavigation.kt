@@ -48,7 +48,7 @@ private val NavBarHeight = 60.dp
             modifier = Modifier
                 .fillMaxWidth()
                 .height(NavBarHeight)
-                .background(colors.background),
+                .background(colors.bg.page),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {

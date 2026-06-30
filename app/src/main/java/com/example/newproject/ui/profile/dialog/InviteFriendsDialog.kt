@@ -72,9 +72,9 @@ fun InviteFriendsDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .neonGlow(colors.primary, alpha = 0.35f, glowRadius = 12.dp, borderRadius = 20.dp)
+                    .neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 12.dp, borderRadius = 20.dp)
                     .background(DialogBg, RoundedCornerShape(20.dp))
-                    .border(1.5.dp, colors.primary.copy(alpha = 0.6f), RoundedCornerShape(20.dp))
+                    .border(1.5.dp, colors.accent.primary.copy(alpha = 0.6f), RoundedCornerShape(20.dp))
                     .padding(horizontal = 24.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -82,7 +82,7 @@ fun InviteFriendsDialog(
                 // Title
                 Text(
                     text = stringResource(R.string.invite_dialog_title),
-                    color = colors.primary,
+                    color = colors.accent.primary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -97,14 +97,14 @@ fun InviteFriendsDialog(
                         frame = QrFrameShape.roundCorners(.25f)
                     ),
                     colors = QrColors(
-                        dark = QrBrush.solid(colors.primary),
+                        dark = QrBrush.solid(colors.accent.primary),
                         light = QrBrush.solid(Color.Transparent)
                     )
                 )
                 Box(
                     modifier = Modifier
                         .size(140.dp)
-                        .border(2.dp, colors.secondary.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
+                        .border(2.dp, colors.accent.secondary.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
                         .padding(6.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -117,11 +117,11 @@ fun InviteFriendsDialog(
 
                 Text(
                     text = stringResource(R.string.invite_dialog_scan_to_invite),
-                    color = colors.onBackground,
+                    color = colors.text.body,
                     fontSize = 12.sp
                 )
 
-                HorizontalDivider(color = colors.primary.copy(alpha = 0.2f))
+                HorizontalDivider(color = colors.accent.primary.copy(alpha = 0.2f))
 
                 // Share via messengers
                 Text(
@@ -167,7 +167,7 @@ fun InviteFriendsDialog(
                     )
                 }
 
-                HorizontalDivider(color = colors.primary.copy(alpha = 0.2f))
+                HorizontalDivider(color = colors.accent.primary.copy(alpha = 0.2f))
 
                 // System share button
                 Row(
@@ -200,7 +200,7 @@ fun InviteFriendsDialog(
                 // Tagline
                 Text(
                     text = stringResource(R.string.invite_dialog_tagline),
-                    color = colors.secondary,
+                    color = colors.accent.secondary,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center

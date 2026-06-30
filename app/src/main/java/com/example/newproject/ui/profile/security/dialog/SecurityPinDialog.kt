@@ -64,16 +64,16 @@ fun SecurityPinDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(colors.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
+                .neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
                 .background(DialogBg, RoundedCornerShape(20.dp))
-                .border(1.5.dp, colors.primary.copy(alpha = 0.7f), RoundedCornerShape(20.dp))
+                .border(1.5.dp, colors.accent.primary.copy(alpha = 0.7f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 20.dp, vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Title
             Text(
                 text = stringResource(R.string.pin_dialog_title),
-                color = colors.primary,
+                color = colors.accent.primary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -84,16 +84,16 @@ fun SecurityPinDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .neonGlow(colors.secondary, alpha = 0.3f, glowRadius = 6.dp, borderRadius = 10.dp)
-                    .background(colors.secondary.copy(alpha = 0.08f), RoundedCornerShape(10.dp))
-                    .border(1.5.dp, colors.secondary.copy(alpha = 0.7f), RoundedCornerShape(10.dp))
+//                    .neonGlow(colors.accent.secondary, alpha = 0.3f, glowRadius = 6.dp, borderRadius = 10.dp)
+                    .background(colors.accent.secondary.copy(alpha = 0.08f), RoundedCornerShape(10.dp))
+                    .border(1.5.dp, colors.accent.secondary.copy(alpha = 0.7f), RoundedCornerShape(10.dp))
                     .padding(horizontal = 10.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
                     text = stringResource(R.string.pin_dialog_banner),
-                    color = colors.secondary,
+                    color = colors.accent.secondary,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f),
@@ -142,8 +142,8 @@ fun SecurityPinDialog(
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-//                        .neonGlow(colors.primary, alpha = 0.4f, glowRadius = 8.dp, borderRadius = 26.dp)
-                        .border(1.5.dp, colors.primary, CircleShape)
+//                        .neonGlow(colors.accent.primary, alpha = 0.4f, glowRadius = 8.dp, borderRadius = 26.dp)
+                        .border(1.5.dp, colors.accent.primary, CircleShape)
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() },
@@ -158,7 +158,7 @@ fun SecurityPinDialog(
                     Icon(
                         imageVector = Icons.Default.Save,
                         contentDescription = stringResource(R.string.pin_dialog_confirm_desc),
-                        tint = colors.primary,
+                        tint = colors.accent.primary,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -217,12 +217,12 @@ private fun PinSection(
                             modifier = Modifier
                                 .size(40.dp)
                                 .background(
-                                    if (filled) colors.primary.copy(alpha = 0.15f) else Color.Transparent,
+                                    if (filled) colors.accent.primary.copy(alpha = 0.15f) else Color.Transparent,
                                     RoundedCornerShape(8.dp)
                                 )
                                 .border(
                                     1.5.dp,
-                                    if (filled) colors.primary else colors.primary.copy(alpha = 0.4f),
+                                    if (filled) colors.accent.primary else colors.accent.primary.copy(alpha = 0.4f),
                                     RoundedCornerShape(8.dp)
                                 ),
                             contentAlignment = Alignment.Center
@@ -231,7 +231,7 @@ private fun PinSection(
                                 Box(
                                     modifier = Modifier
                                         .size(8.dp)
-                                        .background(colors.primary, CircleShape)
+                                        .background(colors.accent.primary, CircleShape)
                                 )
                             }
                         }
@@ -254,7 +254,7 @@ private fun DisabledRow(label: String) {
     ) {
         Text(
             text = label,
-            color = colors.onBackground.copy(alpha = 0.5f),
+            color = colors.text.body.copy(alpha = 0.5f),
             fontSize = 12.sp,
             modifier = Modifier.weight(1f)
         )

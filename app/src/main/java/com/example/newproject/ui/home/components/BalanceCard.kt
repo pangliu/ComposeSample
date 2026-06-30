@@ -106,7 +106,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         Icon(
                             imageVector = Icons.Default.Visibility,
                             contentDescription = stringResource(R.string.balance_toggle_desc),
-                            tint = if (isBalanceHidden) colors.primary else Color.Companion.Gray,
+                            tint = if (isBalanceHidden) colors.accent.primary else Color.Companion.Gray,
                             modifier = Modifier.Companion
                                 .size(18.dp)
                                 .clickable { isBalanceHidden = !isBalanceHidden }
@@ -241,14 +241,14 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Row(verticalAlignment = Alignment.Companion.CenterVertically) {
                         Icon(
                             painter = painterResource(R.mipmap.ic_switch_balance),
-                            tint = colors.onBackground,
+                            tint = colors.text.body,
                             contentDescription = stringResource(R.string.balance_switch),
                             modifier = Modifier.Companion.size(18.dp)
                         )
                         Spacer(modifier = Modifier.Companion.width(4.dp))
                         Text(
                             text = stringResource(R.string.balance_switch),
-                            color = colors.onBackground,
+                            color = colors.text.body,
                             fontSize = 14.sp
                         )
                     }

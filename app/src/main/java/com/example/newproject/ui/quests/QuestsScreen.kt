@@ -42,7 +42,7 @@ fun QuestsScreen() {
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
-                    tint = colors.secondary.copy(alpha = 0.4f),
+                    tint = colors.accent.secondary.copy(alpha = 0.4f),
                     modifier = Modifier.size(64.dp)
                 )
                 Text(

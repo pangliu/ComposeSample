@@ -94,7 +94,7 @@ fun CardsScreenContent(uiState: CardsUiState, onRefresh: () -> Unit = {}, onNavi
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colors.background)
+            .background(colors.bg.page)
     ) {
         Text(
             text = stringResource(R.string.cards_management_title),
@@ -118,7 +118,7 @@ fun CardsScreenContent(uiState: CardsUiState, onRefresh: () -> Unit = {}, onNavi
                     isRefreshing = uiState.isRefreshing,
                     modifier = Modifier.align(Alignment.TopCenter),
                     color = neonCyanLight,
-                    containerColor = colors.background
+                    containerColor = colors.bg.page
                 )
             }
         ) {
@@ -163,7 +163,7 @@ fun InfoCard() {
             .fillMaxWidth()
             .neonGlow(color = neonCyanLight, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 12.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(colors.background)
+            .background(colors.bg.page)
             .border(2.dp, neonCyanLight.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
@@ -201,7 +201,7 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> 
             .fillMaxWidth()
             .neonGlow(color = glowColor, alpha = 0.6f, glowRadius = 15.dp, borderRadius = 16.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(colors.background)
+            .background(colors.bg.page)
             .border(1.5.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable(
                 indication = null,
@@ -321,7 +321,7 @@ fun AddNewCardButton(onNavigate: (String) -> Unit = {}) {
             .padding(horizontal = 32.dp)
             .neonGlow(color = neonCyanLight, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 24.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(colors.background)
+            .background(colors.bg.page)
             .border(1.5.dp, neonCyanLight, RoundedCornerShape(24.dp))
             .clickable { onNavigate(Routes.SELECT_CARD_TYPE) }
             .padding(vertical = 12.dp),
@@ -374,7 +374,7 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
                     modifier = Modifier
                         .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                         .background(
-                            if (pagerState.currentPage == index) colors.primary else Color.White.copy(alpha = 0.3f),
+                            if (pagerState.currentPage == index) colors.accent.primary else Color.White.copy(alpha = 0.3f),
                             CircleShape
                         )
                 )
@@ -391,9 +391,9 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
-                    .neonGlow(colors.primary, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 26.dp)
-                    .background(colors.background, RoundedCornerShape(26.dp))
-                    .border(1.5.dp, colors.primary, RoundedCornerShape(26.dp))
+                    .neonGlow(colors.accent.primary, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 26.dp)
+                    .background(colors.bg.page, RoundedCornerShape(26.dp))
+                    .border(1.5.dp, colors.accent.primary, RoundedCornerShape(26.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
@@ -412,7 +412,7 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
 
         Text(
             text = stringResource(R.string.cards_protected),
-            color = colors.onBackground,
+            color = colors.text.body,
             fontSize = 12.sp,
             textAlign = TextAlign.Center
         )
@@ -433,14 +433,14 @@ private fun PromoBannerCard(page: Int) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp)
-                .neonGlow(colors.primary, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 16.dp)
+                .neonGlow(colors.accent.primary, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 16.dp)
                 .background(
                     Brush.verticalGradient(listOf(Color(0xFF1A1050), Color(0xFF0B1030))),
                     RoundedCornerShape(16.dp)
                 )
                 .border(
                     width = 1.5.dp,
-                    brush = Brush.linearGradient(listOf(colors.primary, colors.secondary, colors.primary)),
+                    brush = Brush.linearGradient(listOf(colors.accent.primary, colors.accent.secondary, colors.accent.primary)),
                     shape = RoundedCornerShape(16.dp)
                 ),
             contentAlignment = Alignment.Center

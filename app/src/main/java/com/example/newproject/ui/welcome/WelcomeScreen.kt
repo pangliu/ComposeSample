@@ -50,7 +50,7 @@ fun WelcomeScreenContent() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colors.background),
+            .background(colors.bg.page),
         contentAlignment = Alignment.Center
     ) {
         val brandX = stringResource(R.string.welcome_brand_x)
@@ -64,16 +64,16 @@ fun WelcomeScreenContent() {
                 text = buildAnnotatedString {
                     withStyle(
                         SpanStyle(
-                            color = colors.primary,
-                            shadow = Shadow(color = colors.primary, blurRadius = 20f)
+                            color = colors.accent.primary,
+                            shadow = Shadow(color = colors.accent.primary, blurRadius = 20f)
                         )
                     ) {
                         append(brandX)
                     }
                     withStyle(
                         SpanStyle(
-                            color = colors.secondary,
-                            shadow = Shadow(color = colors.secondary, blurRadius = 20f)
+                            color = colors.accent.secondary,
+                            shadow = Shadow(color = colors.accent.secondary, blurRadius = 20f)
                         )
                     ) {
                         append(brandCash)
@@ -103,7 +103,7 @@ fun WelcomeScreenContent() {
                 fontSize = 42.sp,
                 fontWeight = FontWeight.Bold,
                 style = TextStyle(
-                    shadow = Shadow(color = colors.primary.copy(alpha = 0.53f), blurRadius = 25f)
+                    shadow = Shadow(color = colors.accent.primary.copy(alpha = 0.53f), blurRadius = 25f)
                 ),
                 letterSpacing = 1.sp
             )

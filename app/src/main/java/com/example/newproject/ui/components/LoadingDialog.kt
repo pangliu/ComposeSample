@@ -66,12 +66,12 @@ fun LoadingDialogContent() {
             modifier = Modifier
                 .size(100.dp)
                 .background(
-                    color = colors.background,
+                    color = colors.bg.page,
                     shape = RoundedCornerShape(12.dp)
                 )
         ) {
             CircularProgressIndicator(
-                color = colors.secondary
+                color = colors.accent.secondary
             )
         }
     }

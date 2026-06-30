@@ -50,7 +50,7 @@ fun SubPageTopBar(
                     .align(Alignment.CenterStart)
                     .padding(start = 16.dp)
                     .size(40.dp)
-                    .neonGlow(color = colors.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
+                    .neonGlow(color = colors.accent.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }

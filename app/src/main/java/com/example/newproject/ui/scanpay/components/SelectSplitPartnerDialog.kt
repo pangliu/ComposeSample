@@ -63,28 +63,28 @@ fun SelectSplitPartnerDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(color = colors.primary, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 16.dp)
-                .background(colors.background, RoundedCornerShape(16.dp))
-                .border(1.5.dp, colors.primary.copy(alpha = 0.7f), RoundedCornerShape(16.dp))
+                .neonGlow(color = colors.accent.primary, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 16.dp)
+                .background(colors.bg.page, RoundedCornerShape(16.dp))
+                .border(1.5.dp, colors.accent.primary.copy(alpha = 0.7f), RoundedCornerShape(16.dp))
         ) {
             // Title
             Text(
                 text = stringResource(R.string.select_partner_title),
-                color = colors.secondary,
+                color = colors.accent.secondary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 16.dp),
                 style = TextStyle(
-                    shadow = Shadow(color = colors.secondary.copy(alpha = 0.6f), blurRadius = 25f)
+                    shadow = Shadow(color = colors.accent.secondary.copy(alpha = 0.6f), blurRadius = 25f)
                 )
             )
 
             // Selected count hint
             Text(
                 text = stringResource(R.string.select_partner_selected_count, selectedCount),
-                color = if (selectedCount > 0) colors.primary else colors.onBackground,
+                color = if (selectedCount > 0) colors.accent.primary else colors.text.body,
                 fontSize = 12.sp,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -121,11 +121,11 @@ fun SelectSplitPartnerDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 15.dp)
-                    .neonGlow(color = colors.primary, alpha = 0.5f, glowRadius = 8.dp, borderRadius = 8.dp)
+                    .neonGlow(color = colors.accent.primary, alpha = 0.5f, glowRadius = 8.dp, borderRadius = 8.dp)
                     .background(
-                        color = colors.background,
+                        color = colors.bg.page,
                         shape = RoundedCornerShape(8.dp))
-                    .border(width = 1.5.dp, color = colors.primary.copy(alpha = 0.7f), shape = RoundedCornerShape(8.dp))
+                    .border(width = 1.5.dp, color = colors.accent.primary.copy(alpha = 0.7f), shape = RoundedCornerShape(8.dp))
                     .padding(horizontal = 24.dp, vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -138,7 +138,7 @@ fun SelectSplitPartnerDialog(
                 )
                 Text(
                     text = "PHP %.2f".format(totalAmount),
-                    color = colors.primary,
+                    color = colors.accent.primary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -154,16 +154,16 @@ fun SelectSplitPartnerDialog(
                     .height(40.dp)
                     .then(
                         if (isConfirmEnabled)
-                            Modifier.neonGlow(colors.secondary, alpha = 0.45f, glowRadius = 10.dp, borderRadius = 12.dp)
+                            Modifier.neonGlow(colors.accent.secondary, alpha = 0.45f, glowRadius = 10.dp, borderRadius = 12.dp)
                         else Modifier
                     )
                     .border(
                         1.5.dp,
-                        if (isConfirmEnabled) colors.secondary else colors.secondary.copy(alpha = 0.3f),
+                        if (isConfirmEnabled) colors.accent.secondary else colors.accent.secondary.copy(alpha = 0.3f),
                         RoundedCornerShape(50.dp)
                     )
                     .background(
-                        colors.secondary.copy(alpha = if (isConfirmEnabled) 0.15f else 0.05f),
+                        colors.accent.secondary.copy(alpha = if (isConfirmEnabled) 0.15f else 0.05f),
                         RoundedCornerShape(12.dp)
                     )
                     .padding(horizontal = 30.dp)
@@ -230,7 +230,7 @@ private fun SelectPartnerItem(
             )
             Text(
                 text = "@${friend.nickName}",
-                color = colors.onBackground,
+                color = colors.text.body,
                 fontSize = 12.sp
             )
         }
@@ -240,12 +240,12 @@ private fun SelectPartnerItem(
             modifier = Modifier
                 .size(24.dp)
                 .background(
-                    if (isSelected) colors.secondary.copy(alpha = 0.8f) else Color.Transparent,
+                    if (isSelected) colors.accent.secondary.copy(alpha = 0.8f) else Color.Transparent,
                     CircleShape
                 )
                 .border(
                     1.5.dp,
-                    if (isSelected) colors.secondary else colors.onBackground.copy(alpha = 0.5f),
+                    if (isSelected) colors.accent.secondary else colors.text.body.copy(alpha = 0.5f),
                     CircleShape
                 ),
             contentAlignment = Alignment.Center

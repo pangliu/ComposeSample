@@ -44,7 +44,7 @@ fun FullyVerifiedBadge(
                 .border(
                     width = 1.5.dp,
                     brush = Brush.horizontalGradient(
-                        listOf(colors.secondary.copy(alpha = 0.7f), neonPink.copy(alpha = 0.9f))
+                        listOf(colors.accent.secondary.copy(alpha = 0.7f), neonPink.copy(alpha = 0.9f))
                     ),
                     shape = RoundedCornerShape(50)
                 )
@@ -53,7 +53,7 @@ fun FullyVerifiedBadge(
         ) {
             Text(
                 text = text,
-                color = colors.secondary,
+                color = colors.accent.secondary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp

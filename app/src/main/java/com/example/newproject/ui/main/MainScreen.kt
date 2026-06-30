@@ -40,7 +40,7 @@ fun MainScreen(
     var selectedIndex by rememberSaveable { mutableStateOf(initialTab) }
 
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White,
         bottomBar = {
             CustomBottomNavigation(

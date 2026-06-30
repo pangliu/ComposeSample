@@ -65,7 +65,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                     glowRadius = 16.dp,
                     borderRadius = 24.dp
                 )
-                .background(colors.background, RoundedCornerShape(24.dp))
+                .background(colors.bg.page, RoundedCornerShape(24.dp))
                 .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
                 .padding(24.dp)
         ) {
@@ -80,7 +80,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(
-                        shadow = Shadow(color = colors.primary, blurRadius = 15f)
+                        shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
                     )
                 )
                 
@@ -121,7 +121,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                         )
                         .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
                         .background(
-                            color = colors.background,
+                            color = colors.bg.page,
                             shape = RoundedCornerShape(24.dp)
                         )
                         .clickable { onDismiss() },
@@ -151,7 +151,7 @@ fun ActionDialogButton(icon: Int, text: String, borderColor: Color, onClick: () 
                 glowRadius = 16.dp,
                 borderRadius = 16.dp
             )
-            .background(colors.background, RoundedCornerShape(16.dp))
+            .background(colors.bg.page, RoundedCornerShape(16.dp))
             .border(2.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(start = 10.dp, top = 20.dp, end = 3.dp, bottom = 20.dp)

@@ -50,9 +50,9 @@ fun LogoutDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(colors.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
+                .neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
                 .background(DialogBg, RoundedCornerShape(20.dp))
-                .border(1.5.dp, colors.primary.copy(0.5f), RoundedCornerShape(20.dp))
+                .border(1.5.dp, colors.accent.primary.copy(0.5f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -66,7 +66,7 @@ fun LogoutDialog(
             )
 
             HorizontalDivider(
-                color = colors.primary.copy(alpha = 0.3f),
+                color = colors.accent.primary.copy(alpha = 0.3f),
                 thickness = 0.5.dp
             )
 
@@ -109,9 +109,9 @@ fun LogoutDialog(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .size(48.dp)
-                        .neonGlow(colors.primary, alpha = 0.25f, glowRadius = 8.dp, borderRadius = 28.dp)
+                        .neonGlow(colors.accent.primary, alpha = 0.25f, glowRadius = 8.dp, borderRadius = 28.dp)
                         .background(DialogBg, CircleShape)
-                        .border(1.5.dp, colors.primary.copy(0.7f), CircleShape)
+                        .border(1.5.dp, colors.accent.primary.copy(0.7f), CircleShape)
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() },
@@ -122,7 +122,7 @@ fun LogoutDialog(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
-                        tint = colors.primary,
+                        tint = colors.accent.primary,
                         modifier = Modifier.size(24.dp)
                     )
                 }

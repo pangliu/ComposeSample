@@ -110,7 +110,7 @@ fun CardDetailContent(
     Box(modifier = Modifier.fillMaxSize()) {
     val colors = LocalAppColors.current
         Scaffold(
-            containerColor = colors.background,
+            containerColor = colors.bg.page,
             contentColor = Color.White
         ) { paddingValues ->
             Column(
@@ -146,7 +146,7 @@ fun CardDetailContent(
                     ) {
                         Text(
                             text = stringResource(R.string.cards_card_nickname),
-                            color = colors.onBackground,
+                            color = colors.text.body,
                             fontSize = 14.sp
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -185,7 +185,7 @@ fun CardDetailContent(
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
                                 checkedTrackColor = Color.Gray,
-                                checkedBorderColor = colors.primary,
+                                checkedBorderColor = colors.accent.primary,
                                 uncheckedThumbColor = Color.White,
                                 uncheckedTrackColor = Color.White.copy(alpha = 0.3f)
                             )
@@ -211,7 +211,7 @@ fun CardDetailContent(
                                 borderRadius = 24.dp
                             )
                             .background(
-                                color = colors.background,
+                                color = colors.bg.page,
                                 shape = RoundedCornerShape(24.dp)
                             )
                             .clickable(
@@ -262,7 +262,7 @@ private fun CardFaceView(card: CreditCardResponse, onEdit: () -> Unit) {
             )
             .border(
                 1.5.dp,
-                Brush.linearGradient(listOf(colors.secondary, neonCyanLight, colors.secondary)),
+                Brush.linearGradient(listOf(colors.accent.secondary, neonCyanLight, colors.accent.secondary)),
                 RoundedCornerShape(16.dp)
             )
             .padding(20.dp)

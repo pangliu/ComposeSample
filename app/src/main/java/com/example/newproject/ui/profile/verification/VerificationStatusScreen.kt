@@ -92,7 +92,7 @@ private fun VerificationStatusContent(
 ) {
     val colors = LocalAppColors.current
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -168,12 +168,12 @@ private fun IdentityCard(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(colors.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
+            .neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
             .background(CardBg, RoundedCornerShape(16.dp))
             .border(
                 1.5.dp,
                 Brush.linearGradient(
-                    listOf(colors.primary.copy(0.4f), colors.secondary.copy(0.8f))
+                    listOf(colors.accent.primary.copy(0.4f), colors.accent.secondary.copy(0.8f))
                 ),
                 RoundedCornerShape(16.dp)
             )
@@ -198,7 +198,7 @@ private fun IdentityCard(
             )
             Text(
                 text = stringResource(R.string.profile_xcash_id, xcashId),
-                color = colors.onBackground,
+                color = colors.text.body,
                 fontSize = 13.sp
             )
             if (isVerified) {
@@ -223,7 +223,7 @@ private fun VerificationPendingBadge(modifier: Modifier = Modifier) {
                 .padding(start = iconSize / 2)
                 .border(
                     1.5.dp,
-                    Brush.horizontalGradient(listOf(neonDarkPurple.copy(0.7f), colors.secondary)),
+                    Brush.horizontalGradient(listOf(neonDarkPurple.copy(0.7f), colors.accent.secondary)),
                     RoundedCornerShape(50)
                 )
                 .padding(start = iconSize / 2 + 10.dp, end = 12.dp, top = 5.dp, bottom = 5.dp),
@@ -231,7 +231,7 @@ private fun VerificationPendingBadge(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = stringResource(R.string.verification_pending_badge),
-                color = colors.secondary,
+                color = colors.accent.secondary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
@@ -263,7 +263,7 @@ private fun FullyVerifiedBadge(modifier: Modifier = Modifier) {
                 .padding(start = iconSize / 2)
                 .border(
                     1.5.dp,
-                    Brush.horizontalGradient(listOf(colors.secondary.copy(0.7f), colors.primary.copy(0.9f))),
+                    Brush.horizontalGradient(listOf(colors.accent.secondary.copy(0.7f), colors.accent.primary.copy(0.9f))),
                     RoundedCornerShape(50)
                 )
                 .padding(start = iconSize / 2 + 10.dp, end = 12.dp, top = 5.dp, bottom = 5.dp),
@@ -271,7 +271,7 @@ private fun FullyVerifiedBadge(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = stringResource(R.string.profile_fully_verified),
-                color = colors.secondary,
+                color = colors.accent.secondary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
@@ -321,9 +321,9 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
             ),
             completedSegments = 3,
             status = VerifyStatus.VERIFIED,
-            iconTint = colors.primary,
-            barColor = colors.primary,
-            statusColor = colors.primary
+            iconTint = colors.accent.primary,
+            barColor = colors.accent.primary,
+            statusColor = colors.accent.primary
         ),
         VerifyItem(
             icon = VerifyIcon.Resource(R.mipmap.ic_profile_edit_phone),
@@ -335,9 +335,9 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
             ),
             completedSegments = 3,
             status = VerifyStatus.VERIFIED,
-            iconTint = colors.primary,
-            barColor = colors.primary,
-            statusColor = colors.primary
+            iconTint = colors.accent.primary,
+            barColor = colors.accent.primary,
+            statusColor = colors.accent.primary
         ),
         VerifyItem(
             icon = VerifyIcon.Resource(R.mipmap.ic_profile_edit_mail),
@@ -349,20 +349,20 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
             ),
             completedSegments = 3,
             status = VerifyStatus.VERIFIED,
-            iconTint = colors.primary,
-            barColor = colors.primary,
-            statusColor = colors.primary,
+            iconTint = colors.accent.primary,
+            barColor = colors.accent.primary,
+            statusColor = colors.accent.primary,
         )
     )
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(colors.primary, alpha = 0.2f, glowRadius = 8.dp, borderRadius = 16.dp)
+            .neonGlow(colors.accent.primary, alpha = 0.2f, glowRadius = 8.dp, borderRadius = 16.dp)
             .background(CardBg, RoundedCornerShape(16.dp))
             .border(
                 1.5.dp,
-                Brush.linearGradient(listOf(colors.primary.copy(0.3f), colors.secondary.copy(0.4f))),
+                Brush.linearGradient(listOf(colors.accent.primary.copy(0.3f), colors.accent.secondary.copy(0.4f))),
                 RoundedCornerShape(16.dp)
             )
     ) {
@@ -371,7 +371,7 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
             if (index < items.lastIndex) {
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    color = colors.primary.copy(0.08f),
+                    color = colors.accent.primary.copy(0.08f),
                     thickness = 0.5.dp
                 )
             }
@@ -396,7 +396,7 @@ private fun VerifyItemRow(item: VerifyItem) {
                 is VerifyIcon.Vector -> Icon(
                     imageVector = icon.imageVector,
                     contentDescription = null,
-                    tint = item.iconTint.takeIf { it != Color.Unspecified } ?: colors.primary,
+                    tint = item.iconTint.takeIf { it != Color.Unspecified } ?: colors.accent.primary,
                     modifier = Modifier.size(32.dp)
                 )
                 is VerifyIcon.Resource -> Icon(

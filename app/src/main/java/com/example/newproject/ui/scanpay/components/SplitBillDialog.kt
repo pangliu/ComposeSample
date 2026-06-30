@@ -97,21 +97,21 @@ fun SplitBillDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(color = colors.primary, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 16.dp)
-                .background(colors.background, RoundedCornerShape(16.dp))
-                .border(1.5.dp, colors.primary.copy(alpha = 0.7f), RoundedCornerShape(16.dp))
+                .neonGlow(color = colors.accent.primary, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 16.dp)
+                .background(colors.bg.page, RoundedCornerShape(16.dp))
+                .border(1.5.dp, colors.accent.primary.copy(alpha = 0.7f), RoundedCornerShape(16.dp))
         ) {
             // Title
             Text(
                 text = stringResource(R.string.split_bill_title),
-                color = colors.secondary,
+                color = colors.accent.secondary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 16.dp),
                 style = TextStyle(shadow = Shadow(
-                    color = colors.secondary.copy(alpha = 0.6f),
+                    color = colors.accent.secondary.copy(alpha = 0.6f),
                     blurRadius = 25f
                 ))
             )
@@ -127,8 +127,8 @@ fun SplitBillDialog(
                         width = 1.5.dp,
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                colors.primary.copy(alpha = 0.4f),
-                                colors.secondary.copy(alpha = 0.8f)
+                                colors.accent.primary.copy(alpha = 0.4f),
+                                colors.accent.secondary.copy(alpha = 0.8f)
                             )
                         ),
                         shape = RoundedCornerShape(50.dp))
@@ -149,7 +149,7 @@ fun SplitBillDialog(
                             .height(36.dp)
                             .then(
                                 if (isSelected)
-                                    Modifier.background(colors.primary, RoundedCornerShape(50.dp))
+                                    Modifier.background(colors.accent.primary, RoundedCornerShape(50.dp))
                                 else Modifier
                             )
                             .clickable(
@@ -163,7 +163,7 @@ fun SplitBillDialog(
                     ) {
                         Text(
                             text = label,
-                            color = if (isSelected) Color(0xFF0A0E1A) else colors.onBackground,
+                            color = if (isSelected) Color(0xFF0A0E1A) else colors.text.body,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.5.sp
@@ -177,13 +177,13 @@ fun SplitBillDialog(
             // Manual-Split header
             Text(
                 text = stringResource(R.string.split_bill_manual_split),
-                color = colors.primary,
+                color = colors.accent.primary,
                 fontSize = 12.sp,
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(end = 24.dp),
                 style = TextStyle(shadow = Shadow(
-                    color = colors.primary.copy(alpha = 0.6f),
+                    color = colors.accent.primary.copy(alpha = 0.6f),
                     blurRadius = 25f
                 ))
             )
@@ -218,7 +218,7 @@ fun SplitBillDialog(
                     .fillMaxWidth()
                     .background(InputFieldBackground)
                     .padding(horizontal = 15.dp)
-                    .border(width = 1.dp, color = colors.primary.copy(alpha = 0.4f), shape = RoundedCornerShape(8.dp))
+                    .border(width = 1.dp, color = colors.accent.primary.copy(alpha = 0.4f), shape = RoundedCornerShape(8.dp))
                     .padding(horizontal = 24.dp, vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -239,19 +239,19 @@ fun SplitBillDialog(
             Spacer(Modifier.height(20.dp))
             // Confirm Request button
             val isConfirmEnabled = kotlin.math.abs(remaining) < 0.01
-            val confirmBorderColor = if (isConfirmEnabled) colors.secondary else colors.secondary.copy(alpha = 0.3f)
-            val confirmTextColor = if (isConfirmEnabled) colors.secondary else colors.secondary.copy(alpha = 0.35f)
+            val confirmBorderColor = if (isConfirmEnabled) colors.accent.secondary else colors.accent.secondary.copy(alpha = 0.3f)
+            val confirmTextColor = if (isConfirmEnabled) colors.accent.secondary else colors.accent.secondary.copy(alpha = 0.35f)
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .height(40.dp)
 //                    .then(
 //                        if (isConfirmEnabled)
-//                            Modifier.neonGlow(colors.secondary, alpha = 0.45f, glowRadius = 10.dp, borderRadius = 12.dp)
+//                            Modifier.neonGlow(colors.accent.secondary, alpha = 0.45f, glowRadius = 10.dp, borderRadius = 12.dp)
 //                        else Modifier
 //                    )
                     .border(1.5.dp, confirmBorderColor, RoundedCornerShape(50.dp))
-                    .background(colors.secondary.copy(alpha = if (isConfirmEnabled) 0.15f else 0.05f), RoundedCornerShape(12.dp))
+                    .background(colors.accent.secondary.copy(alpha = if (isConfirmEnabled) 0.15f else 0.05f), RoundedCornerShape(12.dp))
                     .padding(horizontal = 30.dp)
                     .clickable(
                         enabled = isConfirmEnabled,
@@ -312,8 +312,8 @@ internal fun SplitBillParticipantItem(
 
         // Amount input
         val borderColor = when {
-            !enabled -> colors.primary.copy(alpha = 0.25f)
-            else     -> colors.primary.copy(alpha = 0.4f)
+            !enabled -> colors.accent.primary.copy(alpha = 0.25f)
+            else     -> colors.accent.primary.copy(alpha = 0.4f)
         }
         val textColor = if (enabled) Color.White else Color.White.copy(alpha = 0.7f)
         BasicTextField(
@@ -329,7 +329,7 @@ internal fun SplitBillParticipantItem(
                 color = textColor,
                 fontSize = 14.sp
             ),
-            cursorBrush = androidx.compose.ui.graphics.SolidColor(colors.primary),
+            cursorBrush = androidx.compose.ui.graphics.SolidColor(colors.accent.primary),
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier

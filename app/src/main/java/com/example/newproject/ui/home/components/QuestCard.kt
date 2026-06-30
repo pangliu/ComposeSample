@@ -53,19 +53,19 @@ fun QuestCard() {
                 .fillMaxWidth()
                 .height(120.dp) // 固定高度
                 .neonGlow(
-                    color = colors.secondary,
+                    color = colors.accent.secondary,
                     alpha = 0.6f,
                     glowRadius = 15.dp,
                     borderRadius = 18.dp,
                     blurStyle = android.graphics.BlurMaskFilter.Blur.OUTER
                 )
                 .background(
-                    color = colors.background,
+                    color = colors.bg.page,
                     shape = RoundedCornerShape(18.dp)
                 )
                 .border(
                     width = 2.dp,
-                    color = colors.secondary, // 你剛才轉好的洋紅色
+                    color = colors.accent.secondary, // 你剛才轉好的洋紅色
                     shape = RoundedCornerShape(18.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 8.dp) // 內部元件距離邊框的距離

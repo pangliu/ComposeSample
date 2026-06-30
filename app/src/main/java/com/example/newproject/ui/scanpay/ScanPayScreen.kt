@@ -56,7 +56,7 @@ private fun ScanPayContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colors.background),
+            .background(colors.bg.page),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(24.dp))

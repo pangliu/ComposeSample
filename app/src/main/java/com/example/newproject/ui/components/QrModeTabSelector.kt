@@ -38,8 +38,8 @@ private val outerBorderBrush: Brush
         val colors = LocalAppColors.current
         return Brush.linearGradient(
             colors = listOf(
-                colors.secondary.copy(alpha = 0.8f),
-                colors.primary.copy(alpha = 0.4f)))
+                colors.accent.secondary.copy(alpha = 0.8f),
+                colors.accent.primary.copy(alpha = 0.4f)))
     }
 
 // 內圈膠囊形狀（左右全圓角）
@@ -65,12 +65,12 @@ fun QrModeTabSelector(
             .fillMaxWidth()
             .height(44.dp)
             .neonGlow(
-                color = colors.secondary,
+                color = colors.accent.secondary,
                 alpha = 0.55f,
                 glowRadius = 12.dp,
                 borderRadius = 22.dp)
             .background(
-                color = colors.background,
+                color = colors.bg.page,
                 shape = RoundedCornerShape(22.dp))
             .border(
                 width = 1.5.dp,
@@ -107,10 +107,10 @@ private fun RowScope.QrTab(
             .then(
                 if (isSelected) Modifier
                     // neonGlow 在 border/background 之前，光暈才能延伸到外框之外
-                    .neonGlow(colors.primary, alpha = 0.55f, glowRadius = 12.dp, borderRadius = 22.dp)
+                    .neonGlow(colors.accent.primary, alpha = 0.55f, glowRadius = 12.dp, borderRadius = 22.dp)
                     .background(
-                        color = colors.primary, innerCapsuleShape)
-//                    .border(1.dp, colors.primary, innerCapsuleShape)
+                        color = colors.accent.primary, innerCapsuleShape)
+//                    .border(1.dp, colors.accent.primary, innerCapsuleShape)
                 else Modifier
             )
             .clickable(
@@ -121,7 +121,7 @@ private fun RowScope.QrTab(
     ) {
         Text(
             text = label,
-            color = if (isSelected) Color.Black else colors.onBackground,
+            color = if (isSelected) Color.Black else colors.text.body,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp

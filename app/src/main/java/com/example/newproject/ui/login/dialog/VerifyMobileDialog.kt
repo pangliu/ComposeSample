@@ -84,7 +84,7 @@ fun VerifyMobileDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .neonGlow(color = neonPurpleLight, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp)
-                    .background(colors.background, RoundedCornerShape(20.dp))
+                    .background(colors.bg.page, RoundedCornerShape(20.dp))
                     .border(2.dp, neonPurpleLight, RoundedCornerShape(20.dp))
                     .padding(horizontal = 25.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -153,7 +153,7 @@ fun VerifyMobileDialog(
 
                 Text(
                     text = stringResource(R.string.verify_mobile_resend_timer, timerText),
-                    color = colors.secondary,
+                    color = colors.accent.secondary,
                     fontSize = 12.sp,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -228,7 +228,7 @@ fun VerifyMobileDialog(
                     modifier = Modifier
                         .size(50.dp)
                         .neonGlow(color = neonCyanLight, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
-                        .background(colors.background, CircleShape)
+                        .background(colors.bg.page, CircleShape)
                         .border(2.dp, neonCyanLight, CircleShape)
                         .clickable { onDismiss() },
                     contentAlignment = Alignment.Center

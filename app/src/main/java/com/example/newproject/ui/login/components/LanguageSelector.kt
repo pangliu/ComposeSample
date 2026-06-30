@@ -33,6 +33,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.AppTheme
 import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.darkBackground
 import com.example.newproject.ui.theme.neonCyanLight
@@ -86,10 +87,10 @@ fun LanguageSelector(
             Icon(
                 painter = painterResource(R.mipmap.ic_global),
                 contentDescription = stringResource(R.string.language_desc),
-                tint = colors.secondary,
+                tint = colors.accent.secondary,
                 modifier = Modifier
                     .size(20.dp)
-                    .neonGlow(color = colors.secondary, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 10.dp)
+                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.accent.secondary, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 10.dp) else Modifier)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
@@ -124,12 +125,12 @@ fun LanguageSelector(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .width(72.dp)
-                            .neonGlow(
+                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(
                                 color = neonCyanLight,
                                 alpha = 0.65f,
                                 glowRadius = 18.dp,
                                 borderRadius = 8.dp,
-                                blurStyle = BlurMaskFilter.Blur.OUTER)
+                                blurStyle = BlurMaskFilter.Blur.OUTER) else Modifier)
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color.Transparent)
                             .border(1.5.dp, neonCyanLight, RoundedCornerShape(8.dp))
@@ -193,7 +194,8 @@ fun LanguageSelectorCollapsedPreview() {
 @Composable
 fun LanguageSelectorExpandedPreview() {
     val languages = listOf("EN", "CN", "JP", "AU")
-    MaterialTheme {
+    AppTheme {
+        val colors = LocalAppColors.current
         Box(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             contentAlignment = Alignment.TopEnd
@@ -216,7 +218,7 @@ fun LanguageSelectorExpandedPreview() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .width(72.dp)
-                        .neonGlow(color = neonCyanLight, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 20.dp)
+                        .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = neonCyanLight, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 20.dp) else Modifier)
                         .clip(RoundedCornerShape(5.dp))
                         .background(darkBackground)
                         .border(1.5.dp, neonCyanLight, RoundedCornerShape(8.dp))

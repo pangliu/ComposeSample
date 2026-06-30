@@ -135,7 +135,7 @@ fun ProfileScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colors.background)
+            .background(colors.bg.page)
             .verticalScroll(rememberScrollState())
             .padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -160,14 +160,14 @@ fun ProfileScreenContent(
         )
 
         ProfileSectionHeader(stringResource(R.string.profile_section_account))
-        ProfileMenuCard(borderColor = colors.primary) {
+        ProfileMenuCard(borderColor = colors.accent.primary) {
             ProfileMenuItem(
                 icon = ProfileIcon.Resource(R.mipmap.ic_profile_setting),
                 label = stringResource(R.string.profile_edit),
                 onClick = { onNavigate(Routes.PROFILE_EDIT) }
             )
             HorizontalDivider(
-                color = colors.primary.copy(alpha = 0.15f),
+                color = colors.accent.primary.copy(alpha = 0.15f),
                 thickness = 0.5.dp
             )
             ProfileMenuItem(
@@ -175,7 +175,7 @@ fun ProfileScreenContent(
                 label = stringResource(R.string.profile_recurring)
             )
             HorizontalDivider(
-                color = colors.primary.copy(alpha = 0.15f),
+                color = colors.accent.primary.copy(alpha = 0.15f),
                 thickness = 0.5.dp
             )
             ProfileMenuItem(
@@ -186,26 +186,26 @@ fun ProfileScreenContent(
         }
 
         ProfileSectionHeader(stringResource(R.string.profile_section_security))
-        ProfileMenuCard(borderColor = colors.secondary) {
+        ProfileMenuCard(borderColor = colors.accent.secondary) {
             ProfileMenuItem(
                 icon = ProfileIcon.Vector(Icons.Outlined.Lock),
                 label = stringResource(R.string.profile_security_center),
-                iconTint = colors.secondary,
+                iconTint = colors.accent.secondary,
                 onClick = { onNavigate(Routes.SECURITY_CENTER) }
             )
         }
 
         ProfileSectionHeader(stringResource(R.string.profile_section_support))
-        ProfileMenuCard(borderColor = colors.secondaryDark) {
+        ProfileMenuCard(borderColor = colors.accent.secondaryDark) {
             ProfileMenuItem(
                 icon = ProfileIcon.Vector(Icons.AutoMirrored.Outlined.HelpOutline),
-                iconTint = colors.secondaryDark,
+                iconTint = colors.accent.secondaryDark,
                 label = stringResource(R.string.profile_help_center)
             )
-            HorizontalDivider(color = colors.secondaryDark.copy(alpha = 0.15f), thickness = 0.5.dp)
+            HorizontalDivider(color = colors.accent.secondaryDark.copy(alpha = 0.15f), thickness = 0.5.dp)
             ProfileMenuItem(
                 icon = ProfileIcon.Vector(Icons.Outlined.Security),
-                iconTint = colors.secondaryDark,
+                iconTint = colors.accent.secondaryDark,
                 label = stringResource(R.string.profile_terms)
             )
         }
@@ -238,15 +238,15 @@ private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(indication = null, interactionSource = remember { MutableInteractionSource() }) { onClick() }
-            .neonGlow(colors.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
-            .background(colors.background, RoundedCornerShape(16.dp))
-//            .border(2.dp, colors.primary.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+            .neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
+            .background(colors.bg.page, RoundedCornerShape(16.dp))
+//            .border(2.dp, colors.accent.primary.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
             .border(
                 width = 1.5.dp,
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        colors.primary.copy(alpha = 0.4f),
-                        colors.secondary.copy(alpha = 0.8f)
+                        colors.accent.primary.copy(alpha = 0.4f),
+                        colors.accent.secondary.copy(alpha = 0.8f)
                     )
                 ),
                 shape = RoundedCornerShape(16.dp))
@@ -306,12 +306,12 @@ private fun SocialRewardsCard(inviteCode: String, badgeCount: Int, onInviteFrien
         modifier = Modifier
             .fillMaxWidth()
             .neonGlow(
-                color = colors.primary,
+                color = colors.accent.primary,
                 alpha = 0.3f,
                 glowRadius = 8.dp,
                 borderRadius = 14.dp)
-            .background(colors.background, RoundedCornerShape(14.dp))
-            .border(1.5.dp, colors.primary.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+            .background(colors.bg.page, RoundedCornerShape(14.dp))
+            .border(1.5.dp, colors.accent.primary.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
             .padding(12.dp)
     ) {
         // 左側：Invite & Earn
@@ -352,13 +352,13 @@ private fun SocialRewardsCard(inviteCode: String, badgeCount: Int, onInviteFrien
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(32.dp)
-                    .neonGlow(colors.primary, alpha = 0.2f, glowRadius = 8.dp, borderRadius = 14.dp)
+                    .neonGlow(colors.accent.primary, alpha = 0.2f, glowRadius = 8.dp, borderRadius = 14.dp)
                     .background(
-                        color = colors.primary.copy(alpha = 0.1f),
+                        color = colors.accent.primary.copy(alpha = 0.1f),
                         shape = RoundedCornerShape(15.dp))
                     .border(
                         width = 1.5.dp,
-                        color = colors.primary.copy(alpha = 0.5f),
+                        color = colors.accent.primary.copy(alpha = 0.5f),
                         shape = RoundedCornerShape(15.dp)
                     )
                     .clickable(
@@ -384,7 +384,7 @@ private fun SocialRewardsCard(inviteCode: String, badgeCount: Int, onInviteFrien
                 .width(1.dp)
                 .height(100.dp)
                 .align(Alignment.CenterVertically)
-                .background(colors.primary.copy(alpha = 0.25f))
+                .background(colors.accent.primary.copy(alpha = 0.25f))
         )
 
         // 右側：My Badges
@@ -420,7 +420,7 @@ private fun SocialRewardsCard(inviteCode: String, badgeCount: Int, onInviteFrien
             }
             Text(
                 text = stringResource(R.string.profile_earned_badges, badgeCount),
-                color = colors.onBackground,
+                color = colors.text.body,
                 fontSize = 12.sp
             )
         }
@@ -437,7 +437,7 @@ private fun ProfileMenuCard(
         modifier = Modifier
             .fillMaxWidth()
             .neonGlow(borderColor, alpha = 0.3f, glowRadius = 8.dp, borderRadius = 14.dp)
-            .background(colors.background, RoundedCornerShape(14.dp))
+            .background(colors.bg.page, RoundedCornerShape(14.dp))
             .border(1.5.dp, borderColor.copy(alpha = 0.5f), RoundedCornerShape(14.dp)),
         content = content
     )
@@ -493,9 +493,9 @@ private fun LogoutButton(enabled: Boolean, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
-            .neonGlow(color = colors.secondary, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 26.dp)
+            .neonGlow(color = colors.accent.secondary, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 26.dp)
             .background(
-                color = colors.secondary,
+                color = colors.accent.secondary,
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable(

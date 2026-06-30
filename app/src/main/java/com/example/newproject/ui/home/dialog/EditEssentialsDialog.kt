@@ -158,13 +158,13 @@ fun EditEssentialsContent(
                 onClick = {}
             )
             .neonGlow(
-                color = colors.secondary,
+                color = colors.accent.secondary,
                 alpha = 0.6f,
                 glowRadius = 15.dp,
                 borderRadius = 28.dp
             )
-            .background(colors.background, RoundedCornerShape(28.dp))
-            .border(2.dp, colors.secondary, RoundedCornerShape(28.dp))
+            .background(colors.bg.page, RoundedCornerShape(28.dp))
+            .border(2.dp, colors.accent.secondary, RoundedCornerShape(28.dp))
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -416,8 +416,8 @@ private fun ReorderableEssentialGrid(
                                         width = 1.5.dp,
                                         brush = Brush.linearGradient(
                                             colors = listOf(
-                                                colors.primary.copy(alpha = 0.4f),
-                                                colors.secondary.copy(alpha = 0.8f)
+                                                colors.accent.primary.copy(alpha = 0.4f),
+                                                colors.accent.secondary.copy(alpha = 0.8f)
                                             )
                                         ),
                                         shape = RoundedCornerShape(16.dp)
@@ -428,11 +428,11 @@ private fun ReorderableEssentialGrid(
                                     Icon(
                                         imageVector = item.iconVector,
                                         contentDescription = item.label,
-                                        tint = colors.primary,
+                                        tint = colors.accent.primary,
                                         modifier = Modifier.size(30.dp)
                                     )
                                 } else if (item.iconRes != null) {
-                                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.primary
+                                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.accent.primary
                                     Icon(
                                         painter = painterResource(id = item.iconRes),
                                         contentDescription = item.label,
@@ -573,8 +573,8 @@ fun DraggableEssentialItem(
                         width = 1.5.dp,
                         brush = Brush.linearGradient(
                             colors = listOf(
-                                colors.primary.copy(alpha = 0.4f),
-                                colors.secondary.copy(alpha = 0.8f)
+                                colors.accent.primary.copy(alpha = 0.4f),
+                                colors.accent.secondary.copy(alpha = 0.8f)
                             )
                         ),
                         shape = RoundedCornerShape(16.dp)
@@ -585,11 +585,11 @@ fun DraggableEssentialItem(
                     Icon(
                         imageVector = item.iconVector,
                         contentDescription = item.label,
-                        tint = colors.primary,
+                        tint = colors.accent.primary,
                         modifier = Modifier.size(30.dp)
                     )
                 } else if (item.iconRes != null) {
-                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.primary
+                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.accent.primary
                     Icon(
                         painter = painterResource(id = item.iconRes),
                         contentDescription = item.label,
@@ -655,7 +655,7 @@ fun SectionHeader(
     ) {
         Text(
             text = title,
-            color = colors.primary,
+            color = colors.accent.primary,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )

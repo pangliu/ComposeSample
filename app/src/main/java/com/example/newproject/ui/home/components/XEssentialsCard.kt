@@ -102,7 +102,7 @@ fun XEssentialsCard(
                 ) {
                     Text(
                         text = stringResource(R.string.essentials_edit),
-                        color = colors.onBackground,
+                        color = colors.text.body,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -188,7 +188,7 @@ fun XEssentialsCard(
                             .size(if (isSelected) 8.dp else 6.dp)
                             .clip(CircleShape)
                             .background(
-                                if (isSelected) colors.primary
+                                if (isSelected) colors.accent.primary
                                 else Color.White.copy(alpha = 0.3f)
                             )
                     )
@@ -240,8 +240,8 @@ fun EssentialItemView(item: EssentialItem) {
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            colors.primary.copy(alpha = 0.4f),
-                            colors.secondary.copy(alpha = 0.8f)
+                            colors.accent.primary.copy(alpha = 0.4f),
+                            colors.accent.secondary.copy(alpha = 0.8f)
                         )
                     ),
                     shape = RoundedCornerShape(16.dp)
@@ -252,11 +252,11 @@ fun EssentialItemView(item: EssentialItem) {
                 Icon(
                     imageVector = item.iconVector,
                     contentDescription = item.label,
-                    tint = colors.primary,
+                    tint = colors.accent.primary,
                     modifier = Modifier.size(30.dp)
                 )
             } else if (item.iconRes != null) {
-                val tint = if (item.useOriginalColor) Color.Unspecified else colors.primary
+                val tint = if (item.useOriginalColor) Color.Unspecified else colors.accent.primary
                 Icon(
                     painter = painterResource(id = item.iconRes),
                     contentDescription = item.label,
@@ -271,7 +271,7 @@ fun EssentialItemView(item: EssentialItem) {
         // 標籤文字
         Text(
             text = item.label,
-            color = colors.onBackground,
+            color = colors.text.body,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium
         )

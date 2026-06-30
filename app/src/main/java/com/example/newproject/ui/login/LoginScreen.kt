@@ -44,13 +44,11 @@ import com.example.newproject.ui.login.dialog.LoginBottomSheet
 import com.example.newproject.ui.login.dialog.VerifyMobileDialog
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.AppTheme
+import com.example.newproject.ui.theme.BlackGoldColors
 import com.example.newproject.ui.theme.LocalAppColors
+import com.example.newproject.ui.theme.NeonColors
 import com.example.newproject.utils.BiometricHelper
-import com.example.newproject.ui.theme.darkBackground
-import com.example.newproject.ui.theme.loginBackground
-import com.example.newproject.ui.theme.neonCyanLight
-import com.example.newproject.ui.theme.neonGreen
-import com.example.newproject.ui.theme.neonGreenLight
 import kotlinx.coroutines.launch
 
 @Composable
@@ -180,7 +178,7 @@ fun LoginScreenContent(
         }
     ) {
         Scaffold(
-            containerColor = loginBackground,
+            containerColor = colors.bg.page,
             contentColor = Color.White
         ) { paddingValues ->
             LoadingDialog(isShowing = uiState.isLoading)
@@ -198,13 +196,12 @@ fun LoginScreenContent(
                     Icon(
                         imageVector = Icons.Default.Menu,
                         contentDescription = stringResource(id = R.string.menu_desc),
-                        tint = colors.secondary,
+                        tint = colors.accent.secondary,
                         modifier = Modifier
                             .size(28.dp)
                             .align(Alignment.CenterStart)
                             .clickable { scope.launch { drawerState.open() } }
-                            .neonGlow(color = colors.secondary, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 15.dp)
-//                            .neonGlow(color = colors.secondary, alpha = 0.7f, glowRadius = 20.dp),
+                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.accent.secondary, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 15.dp) else Modifier)
                     )
                     
                     Image(
@@ -316,8 +313,15 @@ fun LoginScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .neonGlow(color = colors.secondary, alpha = 0.7f, glowRadius = 20.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = colors.secondary, contentColor = Color.White),
+                            .then(if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = colors.button.loginBorder.takeIf { it != Color.Transparent }
+                                    ?: colors.button.loginBackground, alpha = 0.9f, glowRadius = 20.dp)
+                            else Modifier),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colors.button.loginBackground,
+                            contentColor = colors.button.loginText
+                        ),
+                        border = BorderStroke(width = 1.5.dp, color = colors.button.loginBorder),
                         shape = RoundedCornerShape(25.dp)
                     ) {
                         Text(if (uiState.isLoading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.login_btn), fontSize = 16.sp)
@@ -329,9 +333,12 @@ fun LoginScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .neonGlow(color = neonGreen, alpha = 0.7f, glowRadius = 20.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = neonGreen, contentColor = Color.White),
-                        border = BorderStroke(width = 1.dp, color = neonGreenLight),
+                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.button.telegramBorder, alpha = 0.7f, glowRadius = 20.dp) else Modifier),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colors.button.telegramBackground,
+                            contentColor = colors.button.telegramText
+                        ),
+                        border = BorderStroke(width = 1.dp, color = colors.button.telegramBorder),
                         shape = RoundedCornerShape(25.dp)
                     ){
                         Text(if (uiState.isLoading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.sign_up_with_telegram), fontSize = 16.sp)
@@ -343,7 +350,7 @@ fun LoginScreenContent(
                     Text(
                         text = buildAnnotatedString {
                             append(stringResource(id = R.string.dont_have_account))
-                            withStyle(SpanStyle(color = colors.secondary)) { append(stringResource(id = R.string.sign_up)) }
+                            withStyle(SpanStyle(color = colors.accent.secondary)) { append(stringResource(id = R.string.sign_up)) }
                         },
                         fontSize = 14.sp
                     )
@@ -400,10 +407,18 @@ fun LoginScreenContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-fun LoginScreenPreview() {
-    MaterialTheme {
+private fun LoginPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        LoginScreenContent(uiState = LoginUiState(), onLoginClick = { _, _ -> })
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun LoginPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
         LoginScreenContent(uiState = LoginUiState(), onLoginClick = { _, _ -> })
     }
 }

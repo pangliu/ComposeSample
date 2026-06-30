@@ -50,4 +50,23 @@ val tabActiveColor = Color(0xFF61C8E4)
 // ========== Essential card ==========
 val essentialCardTitle = Color(0xFFBEE3EE)
 val balanceGold = Color(0xFFFEF27C)
-//
+
+// ========== Drawer Menu 卡片顏色 ==========
+val aquaLight = Color(0xFF9BFBFD)        // Account Status 卡片邊框（淺水藍）
+val tealMedium = Color(0xFF31C8CD)       // Account Status 卡片標題（中青綠）
+val orchidLight = Color(0xFFF7A5F9)      // Product Features 卡片邊框（淺蘭花紫）
+val orchidDark = Color(0xFFA82CC5)       // Product Features 卡片標題（深蘭花紫）
+val cornflowerBlue = Color(0xFF5B80C4)   // Help & Policies 卡片邊框（矢車菊藍）
+val royalBlue = Color(0xFF1E5BD1)        // Help & Policies 卡片標題（寶藍）
+
+// ========== Black Gold 主題顏色 ==========
+val goldPrimary = Color(0xFFE0BC77)          // 主要強調色（邊框、文字、glow）
+val goldDark = Color(0xFF3D2B00)             // 深色版（pressed / variant）
+val goldText = Color(0xFFC8B89A)             // body 文字
+val goldBackground = Color(0xFF050505)       // 頁面底色
+val goldSurface = Color(0xFF0F0F0F)          // Card / Dialog 底色
+val goldLoginButtonBackground = Color.Transparent   // Login 按鈕填色
+val goldTelegramButtonColor = Color(0xFF85D6EE)     // Telegram 按鈕邊框 & 文字
+val goldDrawerAccount = Color(0xFFDFB77E)           // Drawer Account Status 卡片（暖金）
+val goldDrawerProduct = Color(0xFFB47765)           // Drawer Product Features 卡片（赭紅金）
+val goldDrawerHelp = Color(0xFF5B80C4)              // Drawer Help & Policies 卡片（鋼藍，同 Neon）

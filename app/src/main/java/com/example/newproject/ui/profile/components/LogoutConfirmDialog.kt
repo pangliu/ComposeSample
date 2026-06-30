@@ -47,9 +47,9 @@ fun LogoutConfirmDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(colors.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
+                .neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
                 .background(DialogBg, RoundedCornerShape(20.dp))
-                .border(1.5.dp, colors.primary.copy(0.6f), RoundedCornerShape(20.dp))
+                .border(1.5.dp, colors.accent.primary.copy(0.6f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -63,13 +63,13 @@ fun LogoutConfirmDialog(
             )
             Text(
                 text = stringResource(R.string.logout_dialog_title),
-                color = colors.primary,
+                color = colors.accent.primary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = stringResource(R.string.logout_dialog_message),
-                color = colors.onBackground,
+                color = colors.text.body,
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center
             )
@@ -98,7 +98,7 @@ fun LogoutConfirmDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .border(1.5.dp, colors.secondary.copy(0.8f), RoundedCornerShape(24.dp))
+                    .border(1.5.dp, colors.accent.secondary.copy(0.8f), RoundedCornerShape(24.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },

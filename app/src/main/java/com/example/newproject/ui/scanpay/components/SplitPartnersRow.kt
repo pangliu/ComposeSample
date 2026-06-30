@@ -67,7 +67,7 @@ fun SplitPartnersRow(
             SplitAvatarItem(
                 avatarLetter = myName.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
                 displayName = stringResource(R.string.split_bill_you),
-                avatarColor = colors.secondary,
+                avatarColor = colors.accent.secondary,
                 modifier = Modifier.weight(1f)
             )
 
@@ -78,7 +78,7 @@ fun SplitPartnersRow(
                     SplitAvatarItem(
                         avatarLetter = friend.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
                         displayName = friend.name,
-                        avatarColor = colors.primary,
+                        avatarColor = colors.accent.primary,
                         modifier = Modifier.weight(1f)
                     )
                 } else {

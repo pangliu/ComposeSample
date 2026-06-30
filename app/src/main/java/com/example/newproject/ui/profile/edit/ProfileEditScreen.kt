@@ -88,7 +88,7 @@ private fun ProfileEditContent(
 ) {
     val colors = LocalAppColors.current
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -329,7 +329,7 @@ private fun FieldDivider() {
     val colors = LocalAppColors.current
     HorizontalDivider(
         modifier = Modifier.padding(horizontal = 16.dp),
-        color = colors.primary.copy(alpha = 0.12f),
+        color = colors.accent.primary.copy(alpha = 0.12f),
         thickness = 0.5.dp
     )
 }
@@ -343,13 +343,13 @@ private fun LockedFieldRow(icon: RowIcon, label: String, value: String) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = icon, tint = colors.primary)
+        RowIconImage(icon = icon, tint = colors.accent.primary)
         Spacer(Modifier.width(10.dp))
-        Text(label, color = colors.onBackground, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(label, color = colors.text.body, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Icon(
             imageVector = Icons.Outlined.Lock,
             contentDescription = null,
-            tint = colors.onBackground.copy(alpha = 0.6f),
+            tint = colors.text.body.copy(alpha = 0.6f),
             modifier = Modifier.size(13.dp)
         )
         Spacer(Modifier.width(4.dp))
@@ -366,9 +366,9 @@ private fun PlainFieldRow(icon: RowIcon, label: String, value: String) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = icon, tint = colors.primary)
+        RowIconImage(icon = icon, tint = colors.accent.primary)
         Spacer(Modifier.width(10.dp))
-        Text(label, color = colors.onBackground, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(label, color = colors.text.body, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Text(value, color = Color.White, fontSize = 13.sp)
     }
 }
@@ -387,10 +387,10 @@ private fun ChangeableFieldRow(
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = icon, tint = colors.primary)
+        RowIconImage(icon = icon, tint = colors.accent.primary)
         Spacer(Modifier.width(10.dp))
-        Text(label, color = colors.onBackground, fontSize = 13.sp, modifier = Modifier.weight(1f))
-        Text(value, color = colors.onBackground, fontSize = 12.sp)
+        Text(label, color = colors.text.body, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(value, color = colors.text.body, fontSize = 12.sp)
         Spacer(Modifier.width(8.dp))
         Box(
             modifier = Modifier
@@ -398,8 +398,8 @@ private fun ChangeableFieldRow(
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            colors.primary.copy(alpha = 0.4f),
-                            colors.secondary.copy(alpha = 0.8f)
+                            colors.accent.primary.copy(alpha = 0.4f),
+                            colors.accent.secondary.copy(alpha = 0.8f)
                         )),
                     shape = RoundedCornerShape(6.dp))
                 .clickable(
@@ -411,7 +411,7 @@ private fun ChangeableFieldRow(
         ) {
             Text(
                 text = stringResource(R.string.profile_edit_change),
-                color = colors.primary,
+                color = colors.accent.primary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -429,11 +429,11 @@ private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = RowIcon.Resource(R.mipmap.ic_profile_edit_lock), tint = colors.primary)
+        RowIconImage(icon = RowIcon.Resource(R.mipmap.ic_profile_edit_lock), tint = colors.accent.primary)
         Spacer(Modifier.width(10.dp))
         Text(
             text = stringResource(R.string.profile_edit_password),
-            color = colors.onBackground,
+            color = colors.text.body,
             fontSize = 13.sp,
             modifier = Modifier.weight(1f)
         )
@@ -461,8 +461,8 @@ private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            colors.primary.copy(alpha = 0.4f),
-                            colors.secondary.copy(alpha = 0.8f)
+                            colors.accent.primary.copy(alpha = 0.4f),
+                            colors.accent.secondary.copy(alpha = 0.8f)
                         )),
                     shape = RoundedCornerShape(6.dp))
                 .clickable(
@@ -474,7 +474,7 @@ private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
         ) {
             Text(
                 text = stringResource(R.string.profile_edit_change),
-                color = colors.primary,
+                color = colors.accent.primary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -501,12 +501,12 @@ private fun DropdownFieldRow(
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, tint = colors.primary, modifier = Modifier.size(20.dp))
+        Icon(imageVector = icon, contentDescription = null, tint = colors.accent.primary, modifier = Modifier.size(20.dp))
         Spacer(Modifier.width(10.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(label, color = Color.White, fontSize = 13.sp)
             if (subtitle != null) {
-                Text(subtitle, color = colors.onBackground, fontSize = 11.sp)
+                Text(subtitle, color = colors.text.body, fontSize = 11.sp)
             }
         }
         Row(
@@ -515,11 +515,11 @@ private fun DropdownFieldRow(
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            colors.primary.copy(alpha = 0.4f),
-                            colors.secondary.copy(alpha = 0.8f)
+                            colors.accent.primary.copy(alpha = 0.4f),
+                            colors.accent.secondary.copy(alpha = 0.8f)
                         )),
                     shape = RoundedCornerShape(6.dp))
-//                .border(1.dp, colors.primary.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
+//                .border(1.dp, colors.accent.primary.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -528,7 +528,7 @@ private fun DropdownFieldRow(
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = null,
-                tint = colors.primary,
+                tint = colors.accent.primary,
                 modifier = Modifier.size(16.dp)
             )
         }

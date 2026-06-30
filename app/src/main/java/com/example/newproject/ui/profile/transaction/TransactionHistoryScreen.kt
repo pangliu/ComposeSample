@@ -113,7 +113,7 @@ private fun TransactionHistoryContent(
     var balanceVisible by remember { mutableStateOf(true) }
 
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -164,11 +164,11 @@ private fun BalanceCard(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(colors.primary, alpha = 0.3f, glowRadius = 10.dp, borderRadius = 16.dp)
+            .neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 10.dp, borderRadius = 16.dp)
             .background(CardBg, RoundedCornerShape(16.dp))
             .border(
                 1.5.dp,
-                Brush.linearGradient(listOf(colors.primary.copy(0.5f), colors.secondary.copy(0.7f))),
+                Brush.linearGradient(listOf(colors.accent.primary.copy(0.5f), colors.accent.secondary.copy(0.7f))),
                 RoundedCornerShape(16.dp)
             )
             .padding(16.dp),
@@ -181,7 +181,7 @@ private fun BalanceCard(
             ) {
                 Text(
                     text = stringResource(R.string.tx_balance_label),
-                    color = colors.onBackground,
+                    color = colors.text.body,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp
@@ -189,7 +189,7 @@ private fun BalanceCard(
                 Icon(
                     imageVector = if (balanceVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                     contentDescription = null,
-                    tint = colors.onBackground,
+                    tint = colors.text.body,
                     modifier = Modifier
                         .size(16.dp)
                         .clickable(
@@ -213,10 +213,10 @@ private fun BalanceCard(
             modifier = Modifier
                 .size(76.dp)
                 .background(
-                    Brush.radialGradient(listOf(colors.secondary.copy(0.35f), colors.primary.copy(0.15f))),
+                    Brush.radialGradient(listOf(colors.accent.secondary.copy(0.35f), colors.accent.primary.copy(0.15f))),
                     CircleShape
                 )
-                .border(1.5.dp, colors.primary.copy(0.5f), CircleShape),
+                .border(1.5.dp, colors.accent.primary.copy(0.5f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -228,7 +228,7 @@ private fun BalanceCard(
                 )
                 Text(
                     text = stringResource(R.string.tx_x_points_label),
-                    color = colors.onBackground,
+                    color = colors.text.body,
                     fontSize = 8.sp,
                     letterSpacing = 0.5.sp
                 )
@@ -257,11 +257,11 @@ private fun TimeFilterRow(selected: TimeFilter, onSelect: (TimeFilter) -> Unit) 
                 modifier = Modifier
                     .border(
                         1.dp,
-                        if (isSelected) colors.primary else colors.primary.copy(0.3f),
+                        if (isSelected) colors.accent.primary else colors.accent.primary.copy(0.3f),
                         RoundedCornerShape(50)
                     )
                     .background(
-                        if (isSelected) colors.primary.copy(0.12f) else Color.Transparent,
+                        if (isSelected) colors.accent.primary.copy(0.12f) else Color.Transparent,
                         RoundedCornerShape(50)
                     )
                     .clickable(
@@ -273,7 +273,7 @@ private fun TimeFilterRow(selected: TimeFilter, onSelect: (TimeFilter) -> Unit) 
             ) {
                 Text(
                     text = label,
-                    color = if (isSelected) colors.primary else colors.onBackground,
+                    color = if (isSelected) colors.accent.primary else colors.text.body,
                     fontSize = 12.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                 )
@@ -302,12 +302,12 @@ private fun CategoryFilterRow(selected: CategoryFilter, onSelect: (CategoryFilte
             Box(
                 modifier = Modifier
                     .background(
-                        if (isSelected) colors.secondary.copy(0.25f) else CardBg,
+                        if (isSelected) colors.accent.secondary.copy(0.25f) else CardBg,
                         RoundedCornerShape(8.dp)
                     )
                     .border(
                         1.dp,
-                        if (isSelected) colors.secondary.copy(0.8f) else colors.secondary.copy(0.2f),
+                        if (isSelected) colors.accent.secondary.copy(0.8f) else colors.accent.secondary.copy(0.2f),
                         RoundedCornerShape(8.dp)
                     )
                     .clickable(
@@ -319,7 +319,7 @@ private fun CategoryFilterRow(selected: CategoryFilter, onSelect: (CategoryFilte
             ) {
                 Text(
                     text = label,
-                    color = if (isSelected) Color.White else colors.onBackground,
+                    color = if (isSelected) Color.White else colors.text.body,
                     fontSize = 12.sp,
                     fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
                 )
@@ -337,11 +337,11 @@ private fun TransactionListCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(colors.primary, alpha = 0.15f, glowRadius = 8.dp, borderRadius = 16.dp)
+            .neonGlow(colors.accent.primary, alpha = 0.15f, glowRadius = 8.dp, borderRadius = 16.dp)
             .background(CardBg, RoundedCornerShape(16.dp))
             .border(
                 1.dp,
-                Brush.linearGradient(listOf(colors.primary.copy(0.25f), colors.secondary.copy(0.3f))),
+                Brush.linearGradient(listOf(colors.accent.primary.copy(0.25f), colors.accent.secondary.copy(0.3f))),
                 RoundedCornerShape(16.dp)
             )
     ) {
@@ -353,7 +353,7 @@ private fun TransactionListCard(
                         .padding(40.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = colors.primary, modifier = Modifier.size(32.dp))
+                    CircularProgressIndicator(color = colors.accent.primary, modifier = Modifier.size(32.dp))
                 }
             }
             transactions.isEmpty() -> {
@@ -365,7 +365,7 @@ private fun TransactionListCard(
                 ) {
                     Text(
                         text = stringResource(R.string.tx_empty),
-                        color = colors.onBackground,
+                        color = colors.text.body,
                         fontSize = 14.sp
                     )
                 }
@@ -376,7 +376,7 @@ private fun TransactionListCard(
                     if (index < transactions.lastIndex) {
                         HorizontalDivider(
                             modifier = Modifier.padding(horizontal = 16.dp),
-                            color = colors.primary.copy(0.08f),
+                            color = colors.accent.primary.copy(0.08f),
                             thickness = 0.5.dp
                         )
                     }
@@ -426,7 +426,7 @@ private fun TransactionItem(tx: OrderHistoryResponse) {
             Spacer(Modifier.height(2.dp))
             Text(
                 text = "${tx.account} · $formattedDate",
-                color = colors.onBackground,
+                color = colors.text.body,
                 fontSize = 11.sp
             )
             if (isIncoming && tx.status == OrderStatus.SUCCESS) {
@@ -461,13 +461,13 @@ private fun CopPointsChip() {
     val colors = LocalAppColors.current
     Box(
         modifier = Modifier
-            .background(colors.secondary.copy(0.2f), RoundedCornerShape(50))
-            .border(1.dp, colors.secondary.copy(0.6f), RoundedCornerShape(50))
+            .background(colors.accent.secondary.copy(0.2f), RoundedCornerShape(50))
+            .border(1.dp, colors.accent.secondary.copy(0.6f), RoundedCornerShape(50))
             .padding(horizontal = 8.dp, vertical = 2.dp)
     ) {
         Text(
             text = stringResource(R.string.tx_cop_points),
-            color = colors.secondary,
+            color = colors.accent.secondary,
             fontSize = 9.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 0.5.sp

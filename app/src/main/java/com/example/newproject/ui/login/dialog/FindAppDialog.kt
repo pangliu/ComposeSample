@@ -71,7 +71,7 @@ fun FindAppDialog(
                     glowRadius = 16.dp,
                     borderRadius = 20.dp
                 )
-                .background(colors.background, RoundedCornerShape(20.dp))
+                .background(colors.bg.page, RoundedCornerShape(20.dp))
                 .border(2.dp, neonCyanLight, RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp)
         ) {
@@ -82,7 +82,7 @@ fun FindAppDialog(
                 // Title
                 Text(
                     text = stringResource(R.string.find_app_title),
-                    color = colors.primary,
+                    color = colors.accent.primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -94,7 +94,7 @@ fun FindAppDialog(
                 // Subtitle
                 Text(
                     text = stringResource(R.string.find_app_subtitle),
-                    color = colors.onBackground,
+                    color = colors.text.body,
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -158,7 +158,7 @@ fun FindAppDialog(
                                 glowRadius = 16.dp,
                                 borderRadius = 24.dp
                             )
-                            .background(colors.background, CircleShape)
+                            .background(colors.bg.page, CircleShape)
                             .border(2.dp, neonMint, CircleShape)
                             .clickable { onSubmit(idNumber, mobile, email) },
                         contentAlignment = Alignment.Center

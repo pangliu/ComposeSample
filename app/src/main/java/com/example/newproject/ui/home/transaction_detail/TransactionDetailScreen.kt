@@ -85,7 +85,7 @@ fun TransactionDetailScreen(
 
     val colors = LocalAppColors.current
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
         if (uiState.isLoading) {
@@ -117,7 +117,7 @@ private fun TransactionDetailContent(
 ) {
     val colors = LocalAppColors.current
     val isSuccess = detail.status == OrderStatus.SUCCESS
-    val statusColor = if (isSuccess) colors.primary else neonPink
+    val statusColor = if (isSuccess) colors.accent.primary else neonPink
     val statusText = if (isSuccess) stringResource(R.string.tx_detail_successful) else stringResource(R.string.tx_detail_failed)
 
     Column(
@@ -191,7 +191,7 @@ private fun TransactionDetailContent(
 
             // Pay To / Pay From card
             InfoCard(
-                borderColor = colors.primary
+                borderColor = colors.accent.primary
             ) {
                 PartyRow(
                     label = stringResource(R.string.tx_detail_pay_to),
@@ -202,7 +202,7 @@ private fun TransactionDetailContent(
                 )
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 12.dp),
-                    color = colors.primary.copy(alpha = 0.15f),
+                    color = colors.accent.primary.copy(alpha = 0.15f),
                     thickness = 0.5.dp
                 )
                 PartyRow(
@@ -231,7 +231,7 @@ private fun TransactionDetailContent(
 
             // Reference card
             InfoCard(
-                borderColor = colors.primary
+                borderColor = colors.accent.primary
             ) {
                 LabelValueRow(label = stringResource(R.string.tx_detail_reference_no), value = detail.referenceNo)
                 Spacer(Modifier.height(10.dp))
@@ -245,7 +245,7 @@ private fun TransactionDetailContent(
                 modifier = Modifier
                     .size(52.dp)
                     .neonGlow(neonPurpleLight, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 26.dp)
-                    .background(colors.background, CircleShape)
+                    .background(colors.bg.page, CircleShape)
                     .border(1.5.dp, neonPurpleLight, CircleShape)
                     .clickable(
                         indication = null,
@@ -320,10 +320,10 @@ private fun LabelValueRow(label: String, value: String) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = label, color = colors.primary, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+        Text(text = label, color = colors.accent.primary, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         Text(
             text = value,
-            color = colors.onBackground,
+            color = colors.text.body,
             fontSize = 13.sp,
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1f).padding(start = 12.dp)

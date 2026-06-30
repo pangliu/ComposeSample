@@ -150,7 +150,7 @@ fun LoginBottomSheetContent(
                     indication = null,
                     onClick = {} // 攔截點擊，避免關閉對話框
                 )
-                .background(colors.background, RoundedCornerShape(32.dp))
+                .background(colors.bg.page, RoundedCornerShape(32.dp))
                 .border(2.dp, neonPurpleLight, RoundedCornerShape(32.dp))
                 .padding(horizontal = 32.dp, vertical = 25.dp)
                 .verticalScroll(rememberScrollState()),
@@ -174,7 +174,7 @@ fun LoginBottomSheetContent(
                         .weight(1f)
                         .height(35.dp)
                         .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
-                        .background(colors.background, RoundedCornerShape(25.dp))
+                        .background(colors.bg.page, RoundedCornerShape(25.dp))
                         .border(2.dp, inputBorderColor, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart
@@ -183,7 +183,7 @@ fun LoginBottomSheetContent(
                         value = mobileNumber,
                         onValueChange = { mobileNumber = it },
                         textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-                        cursorBrush = SolidColor(colors.primary),
+                        cursorBrush = SolidColor(colors.accent.primary),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth()
@@ -235,7 +235,7 @@ fun LoginBottomSheetContent(
                         .weight(1f)
                         .height(35.dp)
                         .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
-                        .background(colors.background, RoundedCornerShape(25.dp))
+                        .background(colors.bg.page, RoundedCornerShape(25.dp))
                         .border(2.dp, inputBorderColor, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart
@@ -244,7 +244,7 @@ fun LoginBottomSheetContent(
                         value = password,
                         onValueChange = { password = it },
                         textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
-                        cursorBrush = SolidColor(colors.primary),
+                        cursorBrush = SolidColor(colors.accent.primary),
                         singleLine = true,
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth()
@@ -335,13 +335,13 @@ fun LoginBottomSheetContent(
                     Icon(
                         imageVector = Icons.Default.Fingerprint,
                         contentDescription = null,
-                        tint = colors.primary,
+                        tint = colors.accent.primary,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(id = R.string.biometric_login_btn),
-                        color = colors.primary,
+                        color = colors.accent.primary,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     )

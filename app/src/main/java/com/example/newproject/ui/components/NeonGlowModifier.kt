@@ -1,11 +1,14 @@
 package com.example.newproject.ui.components
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.newproject.ui.theme.LocalAppColors
 
 fun Modifier.neonGlow(
     color: Color,
@@ -32,3 +35,8 @@ fun Modifier.neonGlow(
         )
     }
 }
+
+// Theme-aware 版本：Black Gold 模式下自動跳過 glow 效果
+@Composable
+@ReadOnlyComposable
+fun glowEnabled(): Boolean = LocalAppColors.current.effect.enableGlow

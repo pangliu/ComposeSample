@@ -63,7 +63,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
                 .fillMaxWidth()
                 .neonGlow(color = neonCyanLight, alpha = 0.6f, glowRadius = 18.dp, borderRadius = 18.dp)
                 .border(width = 2.dp, color = neonCyanLight, shape = RoundedCornerShape(18.dp))
-                .background(color = colors.background, shape = RoundedCornerShape(18.dp))
+                .background(color = colors.bg.page, shape = RoundedCornerShape(18.dp))
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -71,7 +71,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
                 orders.isEmpty() -> {
                     Text(
                         text = stringResource(R.string.recent_empty),
-                        color = colors.onBackground,
+                        color = colors.text.body,
                         fontSize = 13.sp,
                         modifier = Modifier.padding(vertical = 24.dp)
                     )
@@ -85,7 +85,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(1.dp)
-                                        .background(colors.onBackground.copy(alpha = 0.15f))
+                                        .background(colors.text.body.copy(alpha = 0.15f))
                                 )
                             }
                         }
@@ -136,14 +136,14 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
 
         Text(
             text = stringResource(descRes),
-            color = colors.onBackground,
+            color = colors.text.body,
             fontSize = 14.sp,
             modifier = Modifier.weight(1f)
         )
 
         Text(
             text = amountText,
-            color = colors.onBackground,
+            color = colors.text.body,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium
         )
@@ -153,7 +153,7 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
-            tint = colors.onBackground,
+            tint = colors.text.body,
             modifier = Modifier.size(20.dp)
         )
     }

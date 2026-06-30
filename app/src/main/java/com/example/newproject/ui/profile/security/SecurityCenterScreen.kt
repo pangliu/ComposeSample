@@ -87,7 +87,7 @@ fun SecurityCenterContent(
 
     val colors = LocalAppColors.current
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -160,12 +160,12 @@ private fun IdentityCard(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(colors.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
+            .neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
             .background(CardBackground, RoundedCornerShape(16.dp))
             .border(
                 width = 1.5.dp,
                 brush = Brush.linearGradient(
-                    listOf(colors.primary.copy(alpha = 0.4f), colors.secondary.copy(alpha = 0.8f))
+                    listOf(colors.accent.primary.copy(alpha = 0.4f), colors.accent.secondary.copy(alpha = 0.8f))
                 ),
                 shape = RoundedCornerShape(16.dp)
             )
@@ -206,7 +206,7 @@ private fun IdentityCard(
             )
             Text(
                 text = stringResource(R.string.profile_xcash_id, xcashId),
-                color = colors.onBackground,
+                color = colors.text.body,
                 fontSize = 13.sp
             )
             if (isVerified) {
@@ -222,9 +222,9 @@ private fun SecurityScoreCard(score: Int, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(colors.secondary, alpha = 0.4f, glowRadius = 10.dp, borderRadius = 16.dp)
+            .neonGlow(colors.accent.secondary, alpha = 0.4f, glowRadius = 10.dp, borderRadius = 16.dp)
             .background(CardBackground, RoundedCornerShape(16.dp))
-            .border(1.5.dp, colors.secondary.copy(alpha = 0.7f), RoundedCornerShape(16.dp))
+            .border(1.5.dp, colors.accent.secondary.copy(alpha = 0.7f), RoundedCornerShape(16.dp))
             .padding(horizontal = 16.dp, vertical = 14.dp),
 //        verticalAlignment = Alignment.CenterVertically
     ) {
@@ -241,7 +241,7 @@ private fun SecurityScoreCard(score: Int, modifier: Modifier = Modifier) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = stringResource(R.string.security_score_label),
-                color = colors.secondary,
+                color = colors.accent.secondary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
@@ -310,12 +310,12 @@ private fun ChecklistCard(modifier: Modifier = Modifier, onPinClick: () -> Unit 
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    colors.primary.copy(alpha = 0.08f),
+                    colors.accent.primary.copy(alpha = 0.08f),
                     RoundedCornerShape(topStart = 13.dp, topEnd = 13.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         )
-        HorizontalDivider(color = colors.primary.copy(alpha = 0.2f), thickness = 0.5.dp)
+        HorizontalDivider(color = colors.accent.primary.copy(alpha = 0.2f), thickness = 0.5.dp)
 
         ChecklistItem(
             icon = ChecklistIcon.Resource(R.mipmap.ic_lock),
@@ -358,7 +358,7 @@ private fun ChecklistDivider() {
     val colors = LocalAppColors.current
     HorizontalDivider(
         modifier = Modifier.padding(horizontal = 16.dp),
-        color = colors.primary.copy(alpha = 0.1f),
+        color = colors.accent.primary.copy(alpha = 0.1f),
         thickness = 0.5.dp
     )
 }
@@ -394,7 +394,7 @@ private fun ChecklistItem(
                 is ChecklistIcon.Vector -> Icon(
                     imageVector = icon.imageVector,
                     contentDescription = null,
-                    tint = colors.primary,
+                    tint = colors.accent.primary,
                     modifier = Modifier.size(22.dp)
                 )
                 is ChecklistIcon.Resource -> Icon(
@@ -418,7 +418,7 @@ private fun ChecklistItem(
             )
             Text(
                 text = subtitle,
-                color = colors.onBackground,
+                color = colors.text.body,
                 fontSize = 11.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -447,14 +447,14 @@ private fun StatusStepsRow(steps: List<String>) {
             if (index > 0) {
                 Text(
                     text = " > ",
-                    color = colors.onBackground,
+                    color = colors.text.body,
                     fontSize = 11.sp
                 )
             }
             val isLast = index == steps.lastIndex
             Text(
                 text = step,
-                color = if (isLast) neonBlueLight else colors.onBackground,
+                color = if (isLast) neonBlueLight else colors.text.body,
                 fontSize = 11.sp,
                 fontWeight = if (isLast) FontWeight.Bold else FontWeight.Normal
             )

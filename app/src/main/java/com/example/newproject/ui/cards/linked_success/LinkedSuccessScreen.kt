@@ -59,7 +59,7 @@ fun LinkedSuccessScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colors.background)
+            .background(colors.bg.page)
             .paint(
                 painter = painterResource(R.mipmap.bg_sub_page),
                 contentScale = ContentScale.FillBounds
@@ -77,18 +77,18 @@ fun LinkedSuccessScreen(
             Box(
                 modifier = Modifier
                     .size(100.dp)
-                    .neonGlow(colors.primary, alpha = 0.5f, glowRadius = 20.dp, borderRadius = 50.dp)
+                    .neonGlow(colors.accent.primary, alpha = 0.5f, glowRadius = 20.dp, borderRadius = 50.dp)
                     .background(
-                        color = colors.background,
+                        color = colors.bg.page,
                         shape = RoundedCornerShape(50.dp)
                     )
-                    .border(2.dp, colors.primary, CircleShape),
+                    .border(2.dp, colors.accent.primary, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Check,
                     contentDescription = null,
-                    tint = colors.primary,
+                    tint = colors.accent.primary,
                     modifier = Modifier.size(52.dp)
                 )
             }
@@ -97,7 +97,7 @@ fun LinkedSuccessScreen(
 
             Text(
                 text = "Card Linked\nSuccessfully!",
-                color = colors.primary,
+                color = colors.accent.primary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -110,9 +110,9 @@ fun LinkedSuccessScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .neonGlow(colors.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 16.dp)
+                    .neonGlow(colors.accent.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 16.dp)
                     .background(CardBg, RoundedCornerShape(16.dp))
-                    .border(1.5.dp, colors.primary.copy(0.5f), RoundedCornerShape(16.dp))
+                    .border(1.5.dp, colors.accent.primary.copy(0.5f), RoundedCornerShape(16.dp))
                     .padding(horizontal = 24.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -128,7 +128,7 @@ fun LinkedSuccessScreen(
                     lineHeight = 24.sp
                 )
 
-                HorizontalDivider(color = colors.primary.copy(0.15f), thickness = 0.5.dp)
+                HorizontalDivider(color = colors.accent.primary.copy(0.15f), thickness = 0.5.dp)
 
                 ActionButton(
                     label = stringResource(R.string.linked_success_setup_primary),
@@ -152,7 +152,7 @@ private fun ActionButton(label: String, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
-            .border(1.5.dp, colors.primary.copy(0.7f), RoundedCornerShape(24.dp))
+            .border(1.5.dp, colors.accent.primary.copy(0.7f), RoundedCornerShape(24.dp))
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
@@ -162,7 +162,7 @@ private fun ActionButton(label: String, onClick: () -> Unit) {
     ) {
         Text(
             text = label,
-            color = colors.primary,
+            color = colors.accent.primary,
             fontSize = 15.sp,
             fontWeight = FontWeight.Medium
         )

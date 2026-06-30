@@ -68,7 +68,7 @@ fun UpdateLogScreen(
 
     val colors = LocalAppColors.current
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
         LoadingDialog(isShowing = uiState.isLoading)
@@ -114,22 +114,22 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(colors.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
+            .neonGlow(colors.accent.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
             .background(CardBg, RoundedCornerShape(12.dp))
-            .border(1.5.dp, colors.primary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+            .border(1.5.dp, colors.accent.primary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
             .padding(horizontal = 16.dp, vertical = 14.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = log.date,
-                color = colors.primary,
+                color = colors.accent.primary,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.size(12.dp))
             Text(
                 text = log.title,
-                color = colors.primary,
+                color = colors.accent.primary,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
@@ -138,7 +138,7 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
 
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 10.dp),
-            color = colors.primary.copy(alpha = 0.9f),
+            color = colors.accent.primary.copy(alpha = 0.9f),
             thickness = 0.5.dp
         )
 
@@ -162,7 +162,7 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = colors.onBackground,
+                tint = colors.text.body,
                 modifier = Modifier.size(20.dp)
             )
         }

@@ -34,15 +34,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.newproject.R
+import com.example.newproject.ui.theme.AppTheme
+import com.example.newproject.ui.theme.BlackGoldColors
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.neonBlue
-
-private val drawerAccountLight = Color(0xFF9BFBFD)
-private val drawerAccountDark = Color(0xFF31C8CD)
-private val drawerProductLight = Color(0xFFF7A5F9)
-private val drawerProductDark = Color(0xFFA82CC5)
-private val drawerHelpLight = Color(0xFF5B80C4)
-private val drawerHelpDark = Color(0xFF1E5BD1)
+import com.example.newproject.ui.theme.NeonColors
 
 @Composable
 fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}) {
@@ -83,7 +78,7 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 style = TextStyle(shadow = Shadow(
-                    color = colors.primary.copy(alpha = 0.6f),
+                    color = colors.accent.primary.copy(alpha = 0.6f),
                     blurRadius = 25f
                 ))
             )
@@ -93,8 +88,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
             // Account Status 藍綠色區塊
             MenuCard(
                 title = stringResource(id = R.string.account_status),
-                titleColor = drawerAccountDark,
-                borderColor = drawerAccountLight,
+                titleColor = colors.drawer.accountCard.title,
+                borderColor = colors.drawer.accountCard.border,
                 items = listOf(
                     MenuItem(
                         icon = MenuIcon.Resource(R.mipmap.ic_check_progress),
@@ -116,8 +111,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
             // Product Features 紫色區塊
             MenuCard(
                 title = stringResource(id = R.string.product_features),
-                titleColor = drawerProductDark,
-                borderColor = drawerProductLight,
+                titleColor = colors.drawer.productCard.title,
+                borderColor = colors.drawer.productCard.border,
                 items = listOf(
                     MenuItem(MenuIcon.Vector(Icons.Default.Refresh), stringResource(id = R.string.real_time_fx_rates), null),
                     MenuItem(MenuIcon.Vector(Icons.Default.Star), stringResource(id = R.string.explore_xcash_features), null)
@@ -129,8 +124,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
             // Help & Policies 藍色區塊
             MenuCard(
                 title = stringResource(id = R.string.help_policies),
-                titleColor = drawerHelpDark,
-                borderColor = drawerHelpLight,
+                titleColor = colors.drawer.helpCard.title,
+                borderColor = colors.drawer.helpCard.border,
                 items = listOf(
                     MenuItem(MenuIcon.Vector(Icons.Default.Email), stringResource(id = R.string.help_center), stringResource(id = R.string.help_center)),
                     MenuItem(MenuIcon.Vector(Icons.Default.Lock), stringResource(id = R.string.user_terms_policies), stringResource(id = R.string.security_privacy))
@@ -165,14 +160,9 @@ fun MenuCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(
-                color = borderColor,
-                alpha = 0.5f,
-                glowRadius = 15.dp,
-                borderRadius = 16.dp
-            )
+            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = borderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 16.dp) else Modifier)
             .let { if (onClick != null) it.clickable { onClick() } else it },
-        colors = CardDefaults.cardColors(containerColor = colors.background),
+        colors = CardDefaults.cardColors(containerColor = colors.bg.page),
         border = BorderStroke(1.5.dp, borderColor),
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -222,10 +212,18 @@ fun MenuCard(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-fun DrawerMenuContentPreview() {
-    MaterialTheme {
+private fun DrawerMenuContentPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        DrawerMenuContent(onClose = {})
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun DrawerMenuContentPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
         DrawerMenuContent(onClose = {})
     }
 }

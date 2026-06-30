@@ -45,7 +45,7 @@ fun SelectCardTypeScreen(onBack: () -> Unit, onNavigate: (String) -> Unit = {}) 
 fun SelectCardTypeContent(onBack: () -> Unit = {}, onNavigate: (String) -> Unit = {}) {
     val colors = LocalAppColors.current
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -109,9 +109,9 @@ private fun CardTypeItem(option: CardTypeOption, onClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(color = colors.primary, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 12.dp)
-                .background(colors.background, RoundedCornerShape(12.dp))
-                .border(1.5.dp, colors.primary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+                .neonGlow(color = colors.accent.primary, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 12.dp)
+                .background(colors.bg.page, RoundedCornerShape(12.dp))
+                .border(1.5.dp, colors.accent.primary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
                 .clickable(onClick = onClick)
                 .padding(16.dp)
         ) {
@@ -119,7 +119,7 @@ private fun CardTypeItem(option: CardTypeOption, onClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.CreditCard,
                     contentDescription = null,
-                    tint = colors.primary,
+                    tint = colors.accent.primary,
                     modifier = Modifier.size(32.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
@@ -132,7 +132,7 @@ private fun CardTypeItem(option: CardTypeOption, onClick: () -> Unit) {
                     )
                     Text(
                         text = stringResource(option.subtitleRes),
-                        color = colors.onBackground,
+                        color = colors.text.body,
                         fontSize = 13.sp
                     )
                 }

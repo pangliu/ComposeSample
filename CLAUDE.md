@@ -72,7 +72,10 @@ app/src/main/java/com/example/newproject/
 │   ├── welcome/
 │   ├── components/
 │   └── theme/
-│       └── Color.kt           # 專案色彩定義
+│       ├── Color.kt           # 色票定義（依主題分區塊）
+│       ├── AppColors.kt       # 語意映射（AppColors 巢狀結構）
+│       ├── AppTheme.kt        # LocalAppColors CompositionLocal
+│       └── PreviewAnnotations.kt  # @ThemePreview、PreviewThemeWrapper
 └── utils/
     └── DeviceInfoProvider.kt
 ```
@@ -384,14 +387,109 @@ Flow 內的後續頁面（如 ConfirmPaymentScreen）直接從 `viewModel.uiStat
 
 ---
 
-## Color Palette（主要色彩）
+## 主題系統（Theme System）
+
+本專案支援兩種主題：**THEME_NEON**（霓虹）與 **THEME_BLACK_GOLD**（黑金）。  
+主題偏好由 `ThemeManager`（`network/manager/ThemeManager.kt`）讀寫至 SharedPreferences `"app_prefs"`。
+
+---
+
+### 顏色分層架構
+
+```
+Color.kt          ← 色票（What）：純色值常數，依主題分區塊
+AppColors.kt      ← 語意映射（What for）：巢狀 data class，描述顏色用途
+AppTheme.kt       ← CompositionLocal：LocalAppColors provides AppColors
+```
+
+**Color.kt 區塊結構**
+
+```
+// ========== 基礎畫面通用顏色 ==========   → 兩個主題共用
+// ========== 霓虹主題顏色 ==========       → THEME_NEON 專屬色票
+// ========== Drawer Menu 卡片顏色 ==========
+// ========== Black Gold 主題顏色 ==========  → THEME_BLACK_GOLD 專屬色票
+```
+
+- **新增 Neon 顏色**：加在「霓虹主題顏色」區塊，以 `neon` 開頭命名
+- **新增 Black Gold 顏色**：加在「Black Gold 主題顏色」區塊，以 `gold` 開頭命名
+- **兩主題共用的語意色**（`cashInGreen`、`sendPink`、`neonRed` 等）直接放通用區塊，**不進 `AppColors`**
+
+---
+
+### AppColors 巢狀結構
+
+```kotlin
+AppColors
+├── accent   (AccentColors)    primary / secondary / secondaryDark
+├── bg       (BgColors)        page / surface
+├── text     (TextColors)      body / onPrimary
+├── button   (ButtonColors)    loginBackground/Border/Text + telegramBackground/Border/Text
+├── effect   (EffectColors)    enableGlow: Boolean
+└── drawer   (DrawerColors)    accountCard / productCard / helpCard (各含 title + border)
+```
+
+Composable 中透過 `val colors = LocalAppColors.current` 取得，再以 `colors.accent.primary` 等路徑存取。
+
+---
+
+### neonGlow 規則
+
+- `neonGlow` 是純 `Modifier` extension（`NeonGlowModifier.kt`），**不含 Composable context**
+- Black Gold 模式不需要 glow 效果，呼叫時統一用以下寫法：
+
+```kotlin
+// 正確寫法
+.then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.accent.primary, ...) else Modifier)
+
+// 禁止直接呼叫（Black Gold 下會出現不需要的效果）
+.neonGlow(color = colors.accent.primary, ...)
+```
+
+---
+
+### 顏色遷移對照表
+
+新增或遷移頁面時，hardcoded 色值對照如下：
+
+| 原本 hardcode | 換成 |
+|---------------|------|
+| `welcomeBackground` / `loginBackground` | `colors.bg.page` |
+| `Color(0xFF0D1B2E)`（card 底色） | `colors.bg.surface` |
+| `neonCyan`（border / glow） | `colors.accent.primary` |
+| `neonPurple`（button / highlight） | `colors.accent.secondary` |
+| `normalText` | `colors.text.body` |
+
+---
+
+### 雙主題 Preview 標準寫法
+
+```kotlin
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
+@Composable
+private fun XxxPreviewNeon() {
+    AppTheme(colors = NeonColors) { XxxScreenContent() }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun XxxPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) { XxxScreenContent() }
+}
+```
+
+Preview 函式內如需讀取 `colors`，需在 `AppTheme { }` 內宣告 `val colors = LocalAppColors.current`。
+
+---
+
+## Color Palette（固定語意色）
+
+兩主題共用、不隨主題切換的語意色：
 
 | 名稱 | 用途 |
 |------|------|
-| `WelcomeBackground` | 主背景色 |
-| `DarkBackground` | 深色背景 |
-| `NeonCyan` | 主要強調色 |
-| `NeonPurple` | 次要強調色 |
-| `CashInGreen` | 入帳 / 確認操作 |
-| `SendPink` | 出帳 / 移除操作 |
-| `CardGradientStart/Mid/End` | 卡片漸層 |
+| `cashInGreen` | 入帳 / 確認操作 |
+| `sendPink` | 出帳 / 移除操作 |
+| `neonRed` | 錯誤 / 警示 |
+| `cardGradientStart/Mid` | 卡片漸層 |
+| `darkBackground` | ScanPay 等深色圓圈背景 |

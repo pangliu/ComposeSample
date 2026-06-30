@@ -42,7 +42,7 @@ fun BiometricEnrollDialog(
             modifier = Modifier
                 .fillMaxWidth(0.88f)
                 .neonGlow(color = neonPurpleLight, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp)
-                .background(colors.background, RoundedCornerShape(20.dp))
+                .background(colors.bg.page, RoundedCornerShape(20.dp))
                 .border(2.dp, neonPurpleLight, RoundedCornerShape(20.dp))
                 .padding(horizontal = 28.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -50,7 +50,7 @@ fun BiometricEnrollDialog(
             Icon(
                 imageVector = Icons.Default.Fingerprint,
                 contentDescription = null,
-                tint = colors.primary,
+                tint = colors.accent.primary,
                 modifier = Modifier.size(64.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -75,12 +75,12 @@ fun BiometricEnrollDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(46.dp)
-                    .neonGlow(color = colors.primary, alpha = 0.5f, glowRadius = 15.dp),
+                    .neonGlow(color = colors.accent.primary, alpha = 0.5f, glowRadius = 15.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colors.primary.copy(alpha = 0.15f),
-                    contentColor = colors.primary
+                    containerColor = colors.accent.primary.copy(alpha = 0.15f),
+                    contentColor = colors.accent.primary
                 ),
-                border = BorderStroke(1.5.dp, colors.primary),
+                border = BorderStroke(1.5.dp, colors.accent.primary),
                 shape = RoundedCornerShape(25.dp)
             ) {
                 Icon(

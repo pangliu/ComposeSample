@@ -64,7 +64,7 @@ fun DeleteAccountDialog(
                 .fillMaxWidth()
                 .neonGlow(neonPink, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
                 .background(DialogBg, RoundedCornerShape(20.dp))
-                .border(1.5.dp, colors.primary.copy(0.5f), RoundedCornerShape(20.dp))
+                .border(1.5.dp, colors.accent.primary.copy(0.5f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {

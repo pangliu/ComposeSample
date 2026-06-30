@@ -151,7 +151,7 @@ private fun ConfirmPaymentContent(
     var useXPoints by remember { mutableStateOf(false) }
     LoadingDialog(isShowing = uiState.isConfirming)
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -183,11 +183,11 @@ private fun ConfirmPaymentContent(
                         .testTag("confirm_payment")
                         .border(
                             width = 1.5.dp,
-                            color = colors.primary,
+                            color = colors.accent.primary,
                             shape = RoundedCornerShape(15.dp)
                         )
                         .neonGlow(
-                            color = colors.primary,
+                            color = colors.accent.primary,
                             alpha = 0.6f,
                             glowRadius = 8.dp,
                             borderRadius = 8.dp
@@ -210,13 +210,13 @@ private fun ConfirmPaymentContent(
                             modifier = Modifier
                                 .size(60.dp)
                                 .neonGlow(
-                                    color = colors.primary,
+                                    color = colors.accent.primary,
                                     alpha = 0.6f,
                                     glowRadius = 8.dp,
                                     borderRadius = 8.dp
                                 )
                                 .background(
-                                    color = colors.background,
+                                    color = colors.bg.page,
                                     shape = RoundedCornerShape(12.dp)
                                 )
                         )
@@ -255,21 +255,21 @@ private fun ConfirmPaymentContent(
                     ) {
                         Text(
                             text = stringResource(R.string.input_amount_currency),
-                            color = colors.primary,
+                            color = colors.accent.primary,
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             style = TextStyle(
-                                shadow = Shadow(color = colors.primary, blurRadius = 15f)
+                                shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
                             )
                         )
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = uiState.amount.ifEmpty { "0.00" },
-                            color = colors.primary,
+                            color = colors.accent.primary,
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             style = TextStyle(
-                                shadow = Shadow(color = colors.primary, blurRadius = 15f)
+                                shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
                             )
                         )
                     }
@@ -282,7 +282,7 @@ private fun ConfirmPaymentContent(
                         Text(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             text = stringResource(R.string.scan_pay_my_qr_x_points),
-                            color = colors.onBackground,
+                            color = colors.text.body,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -291,7 +291,7 @@ private fun ConfirmPaymentContent(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             text = stringResource(R.string.scan_pay_my_qr_confirm_hint),
-                            color = colors.onBackground,
+                            color = colors.text.body,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -318,7 +318,7 @@ private fun ConfirmPaymentContent(
                     contentDescription = null,
                     modifier = Modifier
                         .size(80.dp)
-                        .neonGlow(color = colors.secondary, alpha = 0.25f, glowRadius = 30.dp)
+                        .neonGlow(color = colors.accent.secondary, alpha = 0.25f, glowRadius = 30.dp)
                 )
                 Column(
                     modifier = Modifier
@@ -333,7 +333,7 @@ private fun ConfirmPaymentContent(
                     ) {
                         Text(
                             text = "PAYING FROM:",
-                            color = colors.onBackground,
+                            color = colors.text.body,
                             fontSize = 14.sp,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -348,7 +348,7 @@ private fun ConfirmPaymentContent(
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         text = stringResource(R.string.scan_pay_my_qr_available_balance, uiState.balance),
-                        color = colors.onBackground,
+                        color = colors.text.body,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -399,15 +399,15 @@ private fun ConfirmPaymentContent(
                     .padding(horizontal = 50.dp)
                     .border(
                         width = 1.5.dp,
-                        color = colors.primary.copy(alpha = 0.7f),
+                        color = colors.accent.primary.copy(alpha = 0.7f),
                         shape = RoundedCornerShape(12.dp))
                     .neonGlow(
-                        color = colors.primary,
+                        color = colors.accent.primary,
                         alpha = 0.5f,
                         glowRadius = 8.dp,
                         borderRadius = 8.dp)
                     .background(
-                        color = colors.background,
+                        color = colors.bg.page,
                         shape = RoundedCornerShape(15.dp))
                     .padding(10.dp)
             ) {
@@ -440,7 +440,7 @@ private fun ConfirmPaymentContent(
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         text = stringResource(R.string.scan_pay_my_qr_points_balance, uiState.tokenBalance),
-                        color = colors.onBackground,
+                        color = colors.text.body,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
                     )
@@ -460,7 +460,7 @@ private fun ConfirmPaymentContent(
                 NeonSwitch(
                     checked = useXPoints,
                     onCheckedChange = { useXPoints = it },
-                    activeColor = colors.primary,
+                    activeColor = colors.accent.primary,
                     showLabel = true
                 )
             }
@@ -480,11 +480,11 @@ private fun ConfirmPaymentContent(
                         .height(55.dp)
                         .border(
                             width = 1.5.dp,
-                            color = colors.secondary,
+                            color = colors.accent.secondary,
                             shape = RoundedCornerShape(30.dp)
                         )
                         .neonGlow(
-                            color = colors.secondary,
+                            color = colors.accent.secondary,
                             alpha = 0.4f,
                             glowRadius = 25.dp,
                             borderRadius = 25.dp
@@ -497,7 +497,7 @@ private fun ConfirmPaymentContent(
                     Icon(
                         modifier = Modifier.size(24.dp),
                         imageVector = Icons.Default.Close,
-                        tint = colors.secondary,
+                        tint = colors.accent.secondary,
                         contentDescription = null,
                     )
                     Text(
@@ -509,7 +509,7 @@ private fun ConfirmPaymentContent(
                 }
                 Spacer(Modifier.width(10.dp))
                 val hasError = uiState.confirmErrorMessage.isNotEmpty()
-                val confirmBtnColor = if (hasError) neonPink else colors.primary
+                val confirmBtnColor = if (hasError) neonPink else colors.accent.primary
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -518,7 +518,7 @@ private fun ConfirmPaymentContent(
                         .height(55.dp)
                         .border(
                             width = 1.5.dp,
-                            color = colors.primary,
+                            color = colors.accent.primary,
                             shape = RoundedCornerShape(30.dp)
                         )
                         .neonGlow(

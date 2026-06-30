@@ -28,7 +28,7 @@ class ThemeManager @Inject constructor(
     }
 
     fun load(): AppColors {
-        return when (prefs.getString(KEY_THEME, THEME_NEON)) {
+        return when (prefs.getString(KEY_THEME, THEME_BLACK_GOLD)) {
             THEME_BLACK_GOLD -> BlackGoldColors
             else -> NeonColors
         }

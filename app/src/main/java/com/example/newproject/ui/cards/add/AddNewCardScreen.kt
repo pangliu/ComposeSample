@@ -127,7 +127,7 @@ fun AddNewCardContent(
     LoadingDialog(isShowing = isLoading)
 
     Scaffold(
-        containerColor = colors.background,
+        containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
         Column(
@@ -161,7 +161,7 @@ fun AddNewCardContent(
                         Spacer(Modifier.height(6.dp))
                         Text(
                             text = stringResource(R.string.add_new_card_ocr_label),
-                            color = colors.primary,
+                            color = colors.accent.primary,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -174,7 +174,7 @@ fun AddNewCardContent(
                         Icon(
                             imageVector = Icons.Outlined.Image,
                             contentDescription = stringResource(R.string.add_new_card_gallery_desc),
-                            tint = if (selectedMethod == CardInputMethod.GALLERY) colors.primary else colors.primary.copy(alpha = 0.5f),
+                            tint = if (selectedMethod == CardInputMethod.GALLERY) colors.accent.primary else colors.accent.primary.copy(alpha = 0.5f),
                             modifier = Modifier.size(44.dp)
                         )
                     }
@@ -238,12 +238,12 @@ fun AddNewCardContent(
                     Icon(
                         imageVector = Icons.Outlined.Lock,
                         contentDescription = null,
-                        tint = colors.onBackground,
+                        tint = colors.text.body,
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
                         text = stringResource(R.string.add_new_card_cvv_notice),
-                        color = colors.onBackground,
+                        color = colors.text.body,
                         fontSize = 13.sp
                     )
                 }
@@ -257,7 +257,7 @@ fun AddNewCardContent(
                         .height(45.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = colors.primary,
+                        containerColor = colors.accent.primary,
                         contentColor = Color(0xFF0B1327)
                     )
                 ) {
@@ -282,7 +282,7 @@ private fun InputMethodButton(
     content: @Composable ColumnScope.() -> Unit = {}
 ) {
     val colors = LocalAppColors.current
-    val borderColor = if (selected) colors.primary else colors.primary.copy(alpha = 0.2f)
+    val borderColor = if (selected) colors.accent.primary else colors.accent.primary.copy(alpha = 0.2f)
     val bgColor = if (selected) InputMethodSelectedBg else InputFieldBackground
 
     Box(
@@ -308,7 +308,7 @@ private fun InputMethodButton(
 @Composable
 private fun ScanFrameIcon(modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
-    val color = colors.primary
+    val color = colors.accent.primary
     Canvas(modifier = modifier) {
         val cornerLen = size.width * 0.28f
         val stroke = 2.5.dp.toPx()
@@ -344,7 +344,7 @@ private fun CardFormField(
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
 
-    val borderColor = if (isFocused) colors.primary else colors.primary.copy(alpha = 0.4f)
+    val borderColor = if (isFocused) colors.accent.primary else colors.accent.primary.copy(alpha = 0.4f)
     val borderWidth = 1.5.dp
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -363,7 +363,7 @@ private fun CardFormField(
             visualTransformation = visualTransformation,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             interactionSource = interactionSource,
-            cursorBrush = SolidColor(colors.primary),
+            cursorBrush = SolidColor(colors.accent.primary),
             modifier = Modifier.fillMaxWidth(),
             decorationBox = { innerTextField ->
                 Box(
@@ -377,7 +377,7 @@ private fun CardFormField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = colors.onBackground,
+                            color = colors.text.body,
                             fontSize = 14.sp
                         )
                     }
