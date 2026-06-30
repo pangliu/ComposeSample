@@ -42,6 +42,11 @@ data class DrawerColors(
     val helpCard: DrawerCardColors,      // Help & Policies 卡片
 )
 
+data class SelectorColors(
+    val border: Color,                  // 下拉框邊框色
+    val selectedBackground: Color,      // 選中項目背景色
+)
+
 data class AppColors(
     val accent: AccentColors,
     val bg: BgColors,
@@ -49,6 +54,7 @@ data class AppColors(
     val button: ButtonColors,
     val effect: EffectColors,
     val drawer: DrawerColors,
+    val selector: SelectorColors,
 )
 
 val NeonColors = AppColors(
@@ -81,6 +87,10 @@ val NeonColors = AppColors(
         productCard = DrawerCardColors(title = orchidDark, border = orchidLight),
         helpCard = DrawerCardColors(title = royalBlue, border = cornflowerBlue),
     ),
+    selector = SelectorColors(
+        border = neonCyanLight,
+        selectedBackground = Color(0xFF1E3A58),
+    ),
 )
 
 val BlackGoldColors = AppColors(
@@ -112,5 +122,9 @@ val BlackGoldColors = AppColors(
         accountCard = DrawerCardColors(title = goldDrawerAccount, border = goldDrawerAccount),
         productCard = DrawerCardColors(title = goldDrawerProduct, border = goldDrawerProduct),
         helpCard = DrawerCardColors(title = goldDrawerHelp, border = goldDrawerHelp),
+    ),
+    selector = SelectorColors(
+        border = goldSelectorBorder,
+        selectedBackground = goldSelectorSelectedBg,
     ),
 )

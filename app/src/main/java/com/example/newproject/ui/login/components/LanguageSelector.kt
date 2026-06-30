@@ -34,6 +34,7 @@ import androidx.compose.ui.window.PopupProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.AppTheme
+import com.example.newproject.ui.theme.BlackGoldColors
 import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.darkBackground
 import com.example.newproject.ui.theme.neonCyanLight
@@ -126,14 +127,14 @@ fun LanguageSelector(
                         modifier = Modifier
                             .width(72.dp)
                             .then(if (colors.effect.enableGlow) Modifier.neonGlow(
-                                color = neonCyanLight,
+                                color = colors.selector.border,
                                 alpha = 0.65f,
                                 glowRadius = 18.dp,
                                 borderRadius = 8.dp,
                                 blurStyle = BlurMaskFilter.Blur.OUTER) else Modifier)
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color.Transparent)
-                            .border(1.5.dp, neonCyanLight, RoundedCornerShape(8.dp))
+                            .border(1.5.dp, colors.selector.border, RoundedCornerShape(8.dp))
                             .padding(vertical = 6.dp, horizontal = 6.dp)
                     ) {
                         languages.forEach { lang ->
@@ -144,7 +145,7 @@ fun LanguageSelector(
                                     .fillMaxWidth()
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(
-                                        if (isSelected) Color(0xFF1E3A58) else Color.Transparent
+                                        if (isSelected) colors.selector.selectedBackground else Color.Transparent
                                     )
                                     .clickable(
                                         interactionSource = remember { MutableInteractionSource() },
@@ -157,7 +158,7 @@ fun LanguageSelector(
                             ) {
                                 Text(
                                     text = lang,
-                                    color = if (isSelected) Color.White else neonCyanLight,
+                                    color = if (isSelected) Color.White else colors.selector.border,
                                     fontSize = 14.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                 )
@@ -172,10 +173,27 @@ fun LanguageSelector(
 
 // ── Previews ─────────────────────────────────────────────────────────────────
 
-@Preview(showBackground = true, backgroundColor = 0xFF0E1422)
+@Preview(name = "Collapsed Neon", showBackground = true, backgroundColor = 0xFF0E1422)
 @Composable
 fun LanguageSelectorCollapsedPreview() {
-    MaterialTheme {
+    AppTheme {
+        Box(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            LanguageSelector(
+                selectedLanguage = "EN",
+                languages = listOf("EN", "CN", "JP", "AU"),
+                onLanguageSelected = {}
+            )
+        }
+    }
+}
+
+@Preview(name = "Collapsed Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+fun LanguageSelectorCollapsedBlackGoldPreview() {
+    AppTheme(colors = BlackGoldColors) {
         Box(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             contentAlignment = Alignment.TopEnd
@@ -190,7 +208,7 @@ fun LanguageSelectorCollapsedPreview() {
 }
 
 // Popup 無法在 Preview 中渲染，以靜態方式呈現展開外觀
-@Preview(showBackground = true, backgroundColor = 0xFF0E1422)
+@Preview(name = "Expanded Neon", showBackground = true, backgroundColor = 0xFF0E1422)
 @Composable
 fun LanguageSelectorExpandedPreview() {
     val languages = listOf("EN", "CN", "JP", "AU")
@@ -218,10 +236,10 @@ fun LanguageSelectorExpandedPreview() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .width(72.dp)
-                        .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = neonCyanLight, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 20.dp) else Modifier)
+                        .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.selector.border, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 20.dp) else Modifier)
                         .clip(RoundedCornerShape(5.dp))
                         .background(darkBackground)
-                        .border(1.5.dp, neonCyanLight, RoundedCornerShape(8.dp))
+                        .border(1.5.dp, colors.selector.border, RoundedCornerShape(8.dp))
                         .padding(vertical = 0.dp, horizontal = 50.dp)
                 ) {
                     languages.forEach { lang ->
@@ -232,13 +250,72 @@ fun LanguageSelectorExpandedPreview() {
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(
-                                    if (isSelected) Color(0xFF1E3A58) else Color.Transparent
+                                    if (isSelected) colors.selector.selectedBackground else Color.Transparent
                                 )
                                 .padding(vertical = 5.dp)
                         ) {
                             Text(
                                 text = lang,
-                                color = if (isSelected) Color.White else neonCyanLight,
+                                color = if (isSelected) Color.White else colors.selector.border,
+                                fontSize = 14.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(name = "Expanded Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+fun LanguageSelectorExpandedBlackGoldPreview() {
+    val languages = listOf("EN", "CN", "JP", "AU")
+    AppTheme(colors = BlackGoldColors) {
+        val colors = LocalAppColors.current
+        Box(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            Column(horizontalAlignment = Alignment.End) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.height(40.dp).padding(horizontal = 8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.mipmap.ic_global),
+                        contentDescription = null,
+                        tint = colors.accent.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("EN", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .width(72.dp)
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(darkBackground)
+                        .border(1.5.dp, colors.selector.border, RoundedCornerShape(8.dp))
+                        .padding(vertical = 0.dp, horizontal = 50.dp)
+                ) {
+                    languages.forEach { lang ->
+                        val isSelected = lang == "EN"
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(
+                                    if (isSelected) colors.selector.selectedBackground else Color.Transparent
+                                )
+                                .padding(vertical = 5.dp)
+                        ) {
+                            Text(
+                                text = lang,
+                                color = if (isSelected) Color.White else colors.selector.border,
                                 fontSize = 14.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )

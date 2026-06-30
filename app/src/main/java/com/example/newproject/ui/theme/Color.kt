@@ -70,3 +70,5 @@ val goldTelegramButtonColor = Color(0xFF85D6EE)     // Telegram 按鈕邊框 & �
 val goldDrawerAccount = Color(0xFFDFB77E)           // Drawer Account Status 卡片（暖金）
 val goldDrawerProduct = Color(0xFFB47765)           // Drawer Product Features 卡片（赭紅金）
 val goldDrawerHelp = Color(0xFF5B80C4)              // Drawer Help & Policies 卡片（鋼藍，同 Neon）
+val goldSelectorBorder = Color(0xFFDFB77E)          // LanguageSelector 邊框
+val goldSelectorSelectedBg = Color(0xFFB28860)      // LanguageSelector 選中項目背景

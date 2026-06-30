@@ -9,9 +9,13 @@ val LocalAppColors = staticCompositionLocalOf { NeonColors }
 @Composable
 fun AppTheme(
     colors: AppColors = NeonColors,
+    assets: AppAssets = NeonAssets,
     content: @Composable () -> Unit
 ) {
-    CompositionLocalProvider(LocalAppColors provides colors) {
+    CompositionLocalProvider(
+        LocalAppColors provides colors,
+        LocalAppAssets provides assets,
+    ) {
         content()
     }
 }

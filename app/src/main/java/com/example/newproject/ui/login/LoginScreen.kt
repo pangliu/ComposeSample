@@ -7,6 +7,7 @@ import android.view.TextureView
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -46,7 +47,10 @@ import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.AppTheme
 import com.example.newproject.ui.theme.BlackGoldColors
+import com.example.newproject.ui.theme.BlackGoldAssets
+import com.example.newproject.ui.theme.LocalAppAssets
 import com.example.newproject.ui.theme.LocalAppColors
+import com.example.newproject.ui.theme.NeonAssets
 import com.example.newproject.ui.theme.NeonColors
 import com.example.newproject.utils.BiometricHelper
 import kotlinx.coroutines.launch
@@ -140,6 +144,7 @@ fun LoginScreenContent(
     onShowBiometricPromptForEnroll: () -> Unit = {}
 ) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     val context = LocalContext.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -183,10 +188,19 @@ fun LoginScreenContent(
         ) { paddingValues ->
             LoadingDialog(isShowing = uiState.isLoading)
 
+            Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+                assets.loginBackground?.let { resId ->
+                    Image(
+                        painter = painterResource(resId),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
                     .padding(horizontal = 24.dp, vertical = 24.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -201,13 +215,16 @@ fun LoginScreenContent(
                             .size(28.dp)
                             .align(Alignment.CenterStart)
                             .clickable { scope.launch { drawerState.open() } }
-                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.accent.secondary, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 15.dp) else Modifier)
+                            .then(if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = colors.accent.secondary, alpha = 0.8f, glowRadius = 15.dp, borderRadius = 15.dp)
+                            else Modifier)
                     )
                     
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_xcash),
+                    Icon(
+                        painter = painterResource(id = assets.xcashWordmark),
                         contentDescription = stringResource(id = R.string.xcash_logo_desc),
-                        modifier = Modifier.height(30.dp).align(Alignment.Center)
+                        modifier = Modifier.height(30.dp).align(Alignment.Center),
+                        tint = Color.Unspecified
                     )
                     
                     LanguageSelector(
@@ -224,16 +241,16 @@ fun LoginScreenContent(
                     contentAlignment = Alignment.Center
                 ) {
                     val isPreview = androidx.compose.ui.platform.LocalInspectionMode.current
-                    if (isPreview) {
+                    if (isPreview || assets.centerLogoImage != null) {
                         Image(
-                            painter = painterResource(R.drawable.ic_xcash_logo),
+                            painter = painterResource(assets.centerLogoImage ?: R.drawable.ic_xcash_logo),
                             contentDescription = stringResource(R.string.center_neon_logo_desc),
                             modifier = Modifier.fillMaxWidth(0.9f)
                         )
                     } else {
                         val exoPlayer = remember(context) {
                             ExoPlayer.Builder(context).build().apply {
-                                val uri = Uri.parse("android.resource://${context.packageName}/${R.raw.bg_type3}")
+                                val uri = Uri.parse("android.resource://${context.packageName}/${assets.centerLogoVideo}")
                                 setMediaItem(MediaItem.fromUri(uri))
                                 repeatMode = ExoPlayer.REPEAT_MODE_OFF
                                 volume = 0f
@@ -369,6 +386,7 @@ fun LoginScreenContent(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
+            } // Box
         }
     }
 
@@ -410,7 +428,7 @@ fun LoginScreenContent(
 @Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
 private fun LoginPreviewNeon() {
-    AppTheme(colors = NeonColors) {
+    AppTheme(colors = NeonColors, assets = NeonAssets) {
         LoginScreenContent(uiState = LoginUiState(), onLoginClick = { _, _ -> })
     }
 }
@@ -418,7 +436,7 @@ private fun LoginPreviewNeon() {
 @Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
 @Composable
 private fun LoginPreviewBlackGold() {
-    AppTheme(colors = BlackGoldColors) {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         LoginScreenContent(uiState = LoginUiState(), onLoginClick = { _, _ -> })
     }
 }
