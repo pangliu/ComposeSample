@@ -69,15 +69,24 @@ fun SplitBillDialog(
     }
     val amounts = remember { mutableStateMapOf<Int, String>() }
 
-    // 切換模式時同步金額；EQUALLY 模式：整數平分，餘數給 You
+    // 切換模式時同步金額；EQUALLY 模式：小數部分給自己，整數平分後餘數也給自己
     val initAmounts: (SplitMode) -> Unit = { mode ->
         if (mode == SplitMode.EQUALLY && participants.isNotEmpty()) {
             val n = participants.size
-            val total = totalAmount.toInt()
-            val share = total / n
-            val remainder = total % n
+            val totalCents = (totalAmount * 100).toLong()
+            val decimalCents = totalCents % 100          // 小數部分（cents），全給自己
+            val integerPart = (totalCents / 100)         // 整數部分
+            val shareInt = integerPart / n               // 每人整數平分
+            val remainderInt = integerPart % n           // 整數除不盡的餘數，給自己
             participants.forEachIndexed { i, _ ->
-                amounts[i] = if (i == 0) "${share + remainder}" else "$share"
+                if (i == 0) {
+                    // 自己：整數份額 + 整數餘數 + 小數部分
+                    val myCents = shareInt * 100 + remainderInt * 100 + decimalCents
+                    amounts[i] = "%.2f".format(myCents / 100.0)
+                } else {
+                    // 其他人：整數份額，無小數
+                    amounts[i] = "$shareInt"
+                }
             }
         } else {
             participants.forEachIndexed { i, _ ->

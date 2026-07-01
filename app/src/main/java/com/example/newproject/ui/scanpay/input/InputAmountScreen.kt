@@ -41,9 +41,13 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,6 +61,58 @@ import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.lemonYellow
 import com.example.newproject.ui.theme.neonPurpleLight
+
+private class CurrencyVisualTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val raw = text.text
+        if (raw.isEmpty()) return TransformedText(text, OffsetMapping.Identity)
+
+        val dotIdx = raw.indexOf('.')
+        val intPart = if (dotIdx < 0) raw else raw.substring(0, dotIdx)
+        val decPart = if (dotIdx < 0) null else raw.substring(dotIdx + 1)
+        val realDecLen = decPart?.length ?: 0
+        val paddedZeros = if (decPart != null) (2 - realDecLen).coerceAtLeast(0) else 0
+
+        val intFormatted = buildString {
+            intPart.forEachIndexed { i, c ->
+                if (i > 0 && (intPart.length - i) % 3 == 0) append(',')
+                append(c)
+            }
+        }
+        val transformed = if (decPart != null) "$intFormatted.${"$decPart".padEnd(2, '0')}" else intFormatted
+
+        val origToTrans = IntArray(raw.length + 1)
+        val transToOrig = IntArray(transformed.length + 1) // initialized to 0
+
+        var origPos = 0
+        for (tc in transformed.indices) {
+            val c = transformed[tc]
+            val isPaddedZero = decPart != null &&
+                tc > intFormatted.length &&
+                (tc - intFormatted.length - 1) >= realDecLen
+            when {
+                c == ',' -> transToOrig[tc + 1] = origPos
+                isPaddedZero -> transToOrig[tc + 1] = raw.length
+                else -> {
+                    origToTrans[origPos] = tc
+                    origPos++
+                    transToOrig[tc + 1] = origPos
+                }
+            }
+        }
+        origToTrans[raw.length] = transformed.length - paddedZeros
+
+        return TransformedText(
+            AnnotatedString(transformed),
+            object : OffsetMapping {
+                override fun originalToTransformed(offset: Int) =
+                    origToTrans.getOrElse(offset) { transformed.length }
+                override fun transformedToOriginal(offset: Int) =
+                    transToOrig.getOrElse(offset) { raw.length }
+            }
+        )
+    }
+}
 
 @Composable
 fun InputAmountScreen(
@@ -175,7 +231,7 @@ private fun InputAmountContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 50.dp),
+                    .padding(start = 30.dp, end = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -191,7 +247,18 @@ private fun InputAmountContent(
                 Column(modifier = Modifier.weight(1f)) {
                     BasicTextField(
                         value = amount,
-                        onValueChange = { amount = it },
+                        onValueChange = { newValue ->
+                            val filtered = newValue.filter { it.isDigit() || it == '.' }
+                            val dotIndex = filtered.indexOf('.')
+                            val isValid = when {
+                                filtered.count { it == '.' } > 1 -> false
+                                dotIndex == -1 && filtered.length > 6 -> false
+                                dotIndex != -1 && dotIndex > 6 -> false
+                                dotIndex != -1 && filtered.length - dotIndex - 1 > 2 -> false
+                                else -> true
+                            }
+                            if (isValid) amount = filtered
+                        },
                         textStyle = TextStyle(
                             color = colors.accent.primary,
                             fontSize = 40.sp,
@@ -199,6 +266,7 @@ private fun InputAmountContent(
                             shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        visualTransformation = remember { CurrencyVisualTransformation() },
                         cursorBrush = SolidColor(colors.accent.primary),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
@@ -253,7 +321,7 @@ private fun InputAmountContent(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (isBalanceVisible) "PHP ${uiState.balance}" else "••••",
+                        text = if (isBalanceVisible) "PHP ${"%,.2f".format(uiState.balance)}" else "••••",
                         color = Color.White,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold

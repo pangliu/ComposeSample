@@ -10,17 +10,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,8 +36,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,14 +51,17 @@ import com.example.newproject.ui.scanpay.ScanPayUiState
 import com.example.newproject.ui.scanpay.ScanPayViewModel
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.AppTheme
 import com.example.newproject.ui.theme.LocalAppColors
+import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonCyanLight
+import com.example.newproject.ui.theme.neonGreen
+import com.example.newproject.ui.theme.neonMint
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.slateGray
 
 
 private val lemonYellow = Color(0xFFFEF27C)
-
+private val earnedPoint = 3.5
 @Composable
 fun TransactionSuccessfulScreen(
     viewModel: ScanPayViewModel = hiltViewModel(),
@@ -106,35 +109,35 @@ private fun TransactionSuccessfulContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
-                                modifier = Modifier.weight(0.2f),
+                                modifier = Modifier.weight(0.15f),
                                 painter = painterResource(R.mipmap.bg_left_qrcode),
-                                contentScale = ContentScale.Crop,
+                                contentScale = ContentScale.FillWidth,
                                 alignment = Alignment.CenterEnd,
                                 contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc)
                             )
                             Column(
                                 modifier = Modifier
                                     .testTag("transaction_successful")
-        //                        .border(width = 1.5.dp, color = neonCyan, shape = RoundedCornerShape(15.dp))
+                                    //                        .border(width = 1.5.dp, color = neonCyan, shape = RoundedCornerShape(15.dp))
                                     .neonGlow(
                                         color = colors.accent.primary,
-                                        alpha = 0.6f,
-                                        glowRadius = 15.dp,
-                                        borderRadius = 15.dp
+                                        alpha = 0.5f,
+                                        glowRadius = 20.dp,
+                                        borderRadius = 20.dp
                                     )
-        //                        .background(color = slateGray, shape = RoundedCornerShape(15.dp))
+                                    //                        .background(color = slateGray, shape = RoundedCornerShape(15.dp))
                                     .paint(
                                         painter = painterResource(R.mipmap.bg_success_payment_border),
-                                        contentScale = ContentScale.FillBounds
+                                        contentScale = ContentScale.FillWidth
                                     )
                                     .align(Alignment.CenterVertically)
-                                    .weight(0.65f)
-                                    .aspectRatio(1f)
+                                    .weight(0.7f)
                             ) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(vertical = 20.dp, horizontal = 20.dp),
+                                        .padding(top = 20.dp)
+                                        .padding(horizontal = 20.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Box(
@@ -172,10 +175,10 @@ private fun TransactionSuccessfulContent(
                                         )
                                     }
                                 }
+                                Spacer(Modifier.height(15.dp))
                                 Row(
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 10.dp),
+                                        .fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
                                     Text(
@@ -204,33 +207,123 @@ private fun TransactionSuccessfulContent(
                                         )
                                     )
                                 }
+                                Spacer(Modifier.height(20.dp))
+
+                                // TODO: 從 API 取得實際數字
+                                val originalTotal = 350.00
+                                val pointsApplied = 50.00
+                                val xPointsUsed = 5000
+                                val finalAmount = originalTotal - pointsApplied
+
                                 Column(
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 15.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                        .testTag("transaction-successful-content")
+                                        .fillMaxWidth(),
+                                    verticalArrangement = Arrangement.spacedBy(1.dp)
                                 ) {
-                                    Text(
-                                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                                        text = stringResource(R.string.scan_pay_my_qr_x_points),
-                                        color = colors.text.body,
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
+                                    Row(
                                         modifier = Modifier.fillMaxWidth(),
-                                        textAlign = TextAlign.Center,
-                                        text = stringResource(R.string.scan_pay_my_qr_confirm_hint),
-                                        color = colors.text.body,
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Original Total:",
+                                            color = Color.White,
+                                            fontSize = 11.sp,
+                                            lineHeight = 15.sp
+                                        )
+                                        Text(
+                                            text = "PHP %,.2f".format(originalTotal),
+                                            color = neonMint,
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            lineHeight = 15.sp
+                                        )
+                                    }
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalArrangement = Arrangement.spacedBy(0.dp)
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.Center,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(
+                                                text = "Points Applied:",
+                                                color = Color.White,
+                                                fontSize = 11.sp,
+                                                lineHeight = 13.sp
+                                            )
+                                            Text(
+                                                text = "-PHP %,.2f".format(pointsApplied),
+                                                color = neonMint,
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                lineHeight = 13.sp
+                                            )
+                                        }
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Text(
+                                                text = buildAnnotatedString {
+                                                    withStyle(
+                                                        SpanStyle(
+                                                            color = Color.White,
+                                                            fontWeight = FontWeight.Bold
+                                                        )
+                                                    ) {
+                                                        append("(via ")
+                                                    }
+                                                    withStyle(
+                                                        SpanStyle(
+                                                            color = neonMint,
+                                                            fontWeight = FontWeight.Bold
+                                                        )
+                                                    ) {
+                                                        append("%,d".format(xPointsUsed))
+                                                    }
+                                                    withStyle(
+                                                        SpanStyle(
+                                                            color = Color.White,
+                                                            fontWeight = FontWeight.Bold
+                                                        )
+                                                    ) {
+                                                        append(" X-points)")
+                                                    }
+                                                },
+                                                fontSize = 11.sp,
+                                                lineHeight = 13.sp
+                                            )
+                                        }
+                                    }
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Final Amount Paid:",
+                                            color = Color.White,
+                                            fontSize = 11.sp,
+                                            lineHeight = 15.sp
+                                        )
+                                        Text(
+                                            text = "PHP %,.2f".format(finalAmount),
+                                            color = neonMint,
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            lineHeight = 15.sp
+                                        )
+                                    }
                                 }
                             }
                             Image(
-                                modifier = Modifier.weight(0.2f),
+                                modifier = Modifier.weight(0.15f),
                                 painter = painterResource(R.mipmap.bg_right_qrcode),
-                                contentScale = ContentScale.Crop,
+                                contentScale = ContentScale.FillWidth,
                                 alignment = Alignment.CenterStart,
                                 contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
                             )
@@ -250,7 +343,11 @@ private fun TransactionSuccessfulContent(
                     contentDescription = null,
                     modifier = Modifier
                         .size(80.dp)
-                        .neonGlow(color = colors.accent.secondary, alpha = 0.25f, glowRadius = 30.dp)
+                        .neonGlow(
+                            color = colors.accent.secondary,
+                            alpha = 0.25f,
+                            glowRadius = 30.dp
+                        )
                 )
                 Column(
                     modifier = Modifier
@@ -259,12 +356,45 @@ private fun TransactionSuccessfulContent(
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(
+                                    SpanStyle(
+                                        color = neonCyan,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                ) {
+                                    append("+%,.2f".format(earnedPoint))
+                                }
+                                withStyle(
+                                    SpanStyle(
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                ) {
+                                    append(" X-Points earned")
+                                }
+
+                            },
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "PAYING FROM:", color = colors.text.body, fontSize = 14.sp)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = "Wallet name", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "Wallet name",
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -289,7 +419,7 @@ private fun TransactionSuccessfulContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-            ){
+            ) {
                 Image(
                     painter = painterResource(R.mipmap.ic_left_sigal_fire),
                     contentDescription = null,
@@ -318,15 +448,18 @@ private fun TransactionSuccessfulContent(
                             .border(
                                 width = 1.5.dp,
                                 color = colors.accent.primary.copy(alpha = 0.5f),
-                                shape = RoundedCornerShape(15.dp))
+                                shape = RoundedCornerShape(15.dp)
+                            )
                             .neonGlow(
                                 color = colors.accent.primary,
                                 alpha = 0.6f,
                                 glowRadius = 8.dp,
-                                borderRadius = 8.dp)
+                                borderRadius = 8.dp
+                            )
                             .background(
                                 color = colors.bg.page,
-                                shape = RoundedCornerShape(15.dp))
+                                shape = RoundedCornerShape(15.dp)
+                            )
                             .padding(10.dp)
                     ) {
                         Icon(
@@ -338,7 +471,8 @@ private fun TransactionSuccessfulContent(
                                 .neonGlow(
                                     color = lemonYellow,
                                     alpha = 0.7f,
-                                    glowRadius = 10.dp)
+                                    glowRadius = 10.dp
+                                )
                                 .size(30.dp)
                         )
                         Text(
@@ -376,14 +510,26 @@ private fun TransactionSuccessfulContent(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(width = 1.5.dp, color = colors.accent.primary, shape = RoundedCornerShape(25.dp))
-                        .neonGlow(color = colors.accent.primary, alpha = 0.6f, glowRadius = 25.dp, borderRadius = 25.dp)
+                        .border(
+                            width = 1.5.dp,
+                            color = colors.accent.primary,
+                            shape = RoundedCornerShape(25.dp)
+                        )
+                        .neonGlow(
+                            color = colors.accent.primary,
+                            alpha = 0.6f,
+                            glowRadius = 25.dp,
+                            borderRadius = 25.dp
+                        )
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) { onBack() }
                         .padding(5.dp)
-                        .background(color = colors.accent.primary, shape = RoundedCornerShape(20.dp))
+                        .background(
+                            color = colors.accent.primary,
+                            shape = RoundedCornerShape(20.dp)
+                        )
                         .padding(vertical = 10.dp)
                 ) {
                     Text(
@@ -401,8 +547,17 @@ private fun TransactionSuccessfulContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp)
-                        .border(width = 1.5.dp, color = colors.accent.secondary, shape = RoundedCornerShape(25.dp))
-                        .neonGlow(color = colors.accent.secondary, alpha = 0.4f, glowRadius = 25.dp, borderRadius = 25.dp)
+                        .border(
+                            width = 1.5.dp,
+                            color = colors.accent.secondary,
+                            shape = RoundedCornerShape(25.dp)
+                        )
+                        .neonGlow(
+                            color = colors.accent.secondary,
+                            alpha = 0.4f,
+                            glowRadius = 25.dp,
+                            borderRadius = 25.dp
+                        )
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
@@ -431,7 +586,7 @@ private fun TransactionSuccessfulContent(
 @Preview(showBackground = true, backgroundColor = 0xFF0B1327)
 @Composable
 private fun TransactionSuccessfulScreenPreview() {
-    MaterialTheme {
+    AppTheme {
         TransactionSuccessfulContent(
             uiState = ScanPayUiState(
                 recipientNickName = "bruceb",

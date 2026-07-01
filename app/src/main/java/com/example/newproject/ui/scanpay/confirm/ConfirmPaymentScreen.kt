@@ -104,6 +104,7 @@ fun ConfirmPaymentScreen(
             when (event) {
                 is UiEvent.ShowToast ->
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+
                 else -> Unit
             }
         }
@@ -251,28 +252,29 @@ private fun ConfirmPaymentContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp),
-                        horizontalArrangement = Arrangement.Center
+//                        horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = stringResource(R.string.input_amount_currency),
                             color = colors.accent.primary,
-                            fontSize = 32.sp,
+                            fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
                             style = TextStyle(
                                 shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
                             )
                         )
-                        Spacer(Modifier.width(10.dp))
+                        Spacer(Modifier.width(8.dp))
                         Text(
-                            text = uiState.amount.ifEmpty { "0.00" },
+                            text = "%,.2f".format(uiState.amount.toDoubleOrNull() ?: 0.0),
                             color = colors.accent.primary,
-                            fontSize = 32.sp,
+                            fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
                             style = TextStyle(
                                 shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
                             )
                         )
                     }
+                    Spacer(Modifier.height(10.dp))
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -318,7 +320,11 @@ private fun ConfirmPaymentContent(
                     contentDescription = null,
                     modifier = Modifier
                         .size(80.dp)
-                        .neonGlow(color = colors.accent.secondary, alpha = 0.25f, glowRadius = 30.dp)
+                        .neonGlow(
+                            color = colors.accent.secondary,
+                            alpha = 0.25f,
+                            glowRadius = 30.dp
+                        )
                 )
                 Column(
                     modifier = Modifier
@@ -347,7 +353,10 @@ private fun ConfirmPaymentContent(
                     }
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(R.string.scan_pay_my_qr_available_balance, uiState.balance),
+                        text = stringResource(
+                            R.string.scan_pay_my_qr_available_balance,
+                            "%,.2f".format(uiState.balance)
+                        ),
                         color = colors.text.body,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
@@ -400,15 +409,18 @@ private fun ConfirmPaymentContent(
                     .border(
                         width = 1.5.dp,
                         color = colors.accent.primary.copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(12.dp))
+                        shape = RoundedCornerShape(12.dp)
+                    )
                     .neonGlow(
                         color = colors.accent.primary,
                         alpha = 0.5f,
                         glowRadius = 8.dp,
-                        borderRadius = 8.dp)
+                        borderRadius = 8.dp
+                    )
                     .background(
                         color = colors.bg.page,
-                        shape = RoundedCornerShape(15.dp))
+                        shape = RoundedCornerShape(15.dp)
+                    )
                     .padding(10.dp)
             ) {
                 Icon(
@@ -420,7 +432,8 @@ private fun ConfirmPaymentContent(
                         .neonGlow(
                             color = lemonYellow,
                             alpha = 0.7f,
-                            glowRadius = 10.dp)
+                            glowRadius = 10.dp
+                        )
                         .size(30.dp)
                 )
                 Column(
@@ -439,7 +452,10 @@ private fun ConfirmPaymentContent(
                         modifier = Modifier
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        text = stringResource(R.string.scan_pay_my_qr_points_balance, uiState.tokenBalance),
+                        text = stringResource(
+                            R.string.scan_pay_my_qr_points_balance,
+                            uiState.tokenBalance
+                        ),
                         color = colors.text.body,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
@@ -538,7 +554,7 @@ private fun ConfirmPaymentContent(
                             shape = RoundedCornerShape(30.dp)
                         )
                 ) {
-                    if(!hasError) {
+                    if (!hasError) {
                         Icon(
                             modifier = Modifier.size(24.dp),
                             imageVector = Icons.Default.Check,
@@ -548,11 +564,11 @@ private fun ConfirmPaymentContent(
                     }
                     Text(
                         text = if (hasError) stringResource(R.string.confirm_payment_try_again)
-                               else stringResource(R.string.confirm_payment_confirm_pay),
+                        else stringResource(R.string.confirm_payment_confirm_pay),
                         color = if (hasError) Color.White
-                                else Color.Black,
-                        fontSize = if(hasError)12.sp
-                                else 14.sp,
+                        else Color.Black,
+                        fontSize = if (hasError) 12.sp
+                        else 14.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )
@@ -561,7 +577,6 @@ private fun ConfirmPaymentContent(
         }
     }
 }
-
 
 
 @Preview(showBackground = true, backgroundColor = 0xFF0B1327)
