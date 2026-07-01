@@ -306,7 +306,7 @@ fun LoginScreenContent(
 //                                        Brush.radialGradient(
 //                                            colorStops = arrayOf(
 //                                                0.5f to Color.Transparent,
-//                                                1.0f to welcomeBackground
+//                                                1.0f to darkSlate
 //                                            )
 //                                        )
 //                                    )

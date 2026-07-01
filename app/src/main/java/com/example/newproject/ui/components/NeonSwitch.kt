@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonPurple
-import com.example.newproject.ui.theme.welcomeBackground
+import com.example.newproject.ui.theme.darkSlate
 
 private val TrackWidth  = 58.dp
 private val TrackHeight = 28.dp
@@ -126,7 +126,7 @@ private fun NeonSwitchPreview() {
 
     Row(
         modifier = Modifier
-            .background(welcomeBackground)
+            .background(darkSlate)
             .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically

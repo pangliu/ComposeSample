@@ -64,7 +64,7 @@ import com.example.newproject.ui.components.RowIconImage
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.balanceGold
+import com.example.newproject.ui.theme.lemonYellow
 import com.example.newproject.ui.theme.neonBlue
 import com.example.newproject.ui.theme.neonBlueLight
 import com.example.newproject.ui.theme.neonDarkPurple
@@ -158,7 +158,7 @@ private fun PromoBanner(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = stringResource(R.string.profile_edit_banner_title),
-                color = balanceGold,
+                color = lemonYellow,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )

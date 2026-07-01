@@ -38,7 +38,7 @@ import com.example.newproject.R
 import com.example.newproject.network.model.response.FriendResponse
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.balanceGold
+import com.example.newproject.ui.theme.lemonYellow
 import com.example.newproject.ui.theme.neonPink
 
 // "You" 固定佔第 1 格，其餘 4 格給好友，合計 5 格
@@ -99,8 +99,8 @@ fun SplitPartnersRow(
                         modifier = Modifier.size(10.dp)
                     )
                 },
-                borderColor = balanceGold,
-                bgColor = balanceGold.copy(alpha = 0.12f),
+                borderColor = lemonYellow,
+                bgColor = lemonYellow.copy(alpha = 0.12f),
                 onClick = onEdit
             )
             SplitActionButton(

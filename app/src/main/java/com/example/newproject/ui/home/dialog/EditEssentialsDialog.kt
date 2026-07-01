@@ -62,11 +62,11 @@ import com.example.newproject.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import com.example.newproject.ui.home.essential.EssentialItem
 import com.example.newproject.ui.home.essential.allEssentialItems
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.cardGradientMid
-import com.example.newproject.ui.theme.cardGradientStart
-import com.example.newproject.ui.theme.cashInGreen
-import com.example.newproject.ui.theme.darkBackground
-import com.example.newproject.ui.theme.sendPink
+import com.example.newproject.ui.theme.navyDark
+import com.example.newproject.ui.theme.indigoDark
+import com.example.newproject.ui.theme.limeGreen
+import com.example.newproject.ui.theme.deepNavy
+import com.example.newproject.ui.theme.vibrantPink
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -239,13 +239,13 @@ fun EditEssentialsContent(
         Box(
             modifier = Modifier
                 .neonGlow(
-                    color = cashInGreen,
+                    color = limeGreen,
                     alpha = 0.6f,
                     glowRadius = 15.dp,
                     borderRadius = 8.dp
                 )
                 .clip(RoundedCornerShape(50.dp))
-                .background(color = cashInGreen)
+                .background(color = limeGreen)
                 .clickable { onClose() }
                 .padding(vertical = 8.dp, horizontal = 20.dp),
             contentAlignment = Alignment.Center
@@ -409,7 +409,7 @@ private fun ReorderableEssentialGrid(
                                     .clip(RoundedCornerShape(16.dp))
                                     .background(
                                         brush = Brush.linearGradient(
-                                            colors = listOf(cardGradientStart, cardGradientMid)
+                                            colors = listOf(indigoDark, navyDark)
                                         )
                                     )
                                     .border(
@@ -457,7 +457,7 @@ private fun ReorderableEssentialGrid(
                                     .offset(x = 1.dp, y = (-2).dp)
                                     .size(18.dp)
                                     .clip(CircleShape)
-                                    .background(sendPink),
+                                    .background(vibrantPink),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
@@ -566,7 +566,7 @@ fun DraggableEssentialItem(
                     .clip(RoundedCornerShape(16.dp))
                     .background(
                         brush = Brush.linearGradient(
-                            colors = listOf(cardGradientStart, cardGradientMid)
+                            colors = listOf(indigoDark, navyDark)
                         )
                     )
                     .border(
@@ -611,8 +611,8 @@ fun DraggableEssentialItem(
 
         if (!isDragging) {
             val badgeColor = when (badgeType) {
-                BadgeType.REMOVE -> sendPink
-                BadgeType.ADD -> cashInGreen
+                BadgeType.REMOVE -> vibrantPink
+                BadgeType.ADD -> limeGreen
             }
             val badgeIcon = when (badgeType) {
                 BadgeType.REMOVE -> Icons.Default.Close
@@ -679,7 +679,7 @@ fun EditEssentialsContentPreview() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(darkBackground)
+                .background(deepNavy)
                 .padding(16.dp),
             contentAlignment = Alignment.BottomCenter
         ) {

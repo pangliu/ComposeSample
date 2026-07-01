@@ -65,7 +65,7 @@ import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.sendPink
+import com.example.newproject.ui.theme.vibrantPink
 
 @Composable
 fun CardDetailScreen(
@@ -201,11 +201,11 @@ fun CardDetailContent(
                             .padding(horizontal = 24.dp)
                             .border(
                                 width = 1.5.dp,
-                                color = sendPink,
+                                color = vibrantPink,
                                 shape = RoundedCornerShape(24.dp)
                             )
                             .neonGlow(
-                                color = sendPink,
+                                color = vibrantPink,
                                 alpha = 0.5f,
                                 glowRadius = 24.dp,
                                 borderRadius = 24.dp
@@ -223,7 +223,7 @@ fun CardDetailContent(
                     ) {
                         Text(
                             text = stringResource(R.string.card_detail_unlink_btn),
-                            color = sendPink,
+                            color = vibrantPink,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )

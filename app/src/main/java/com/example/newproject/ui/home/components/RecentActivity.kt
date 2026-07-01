@@ -38,10 +38,10 @@ import com.example.newproject.network.model.response.OrderStatus
 import com.example.newproject.network.model.response.OrderType
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.cashInGreen
-import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.limeGreen
+import com.example.newproject.ui.theme.deepNavy
 import com.example.newproject.ui.theme.neonCyanLight
-import com.example.newproject.ui.theme.sendPink
+import com.example.newproject.ui.theme.vibrantPink
 import com.example.newproject.ui.theme.themeWhite
 
 /**
@@ -100,7 +100,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
 private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
     val colors = LocalAppColors.current
     val isCashIn = order.type == OrderType.INCOMING
-    val iconColor = if (isCashIn) cashInGreen else sendPink
+    val iconColor = if (isCashIn) limeGreen else vibrantPink
     val icon = if (isCashIn) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward
     val descRes = if (isCashIn) R.string.recent_cash_in else R.string.recent_cash_out
     val amountText = if (isCashIn)
@@ -167,7 +167,7 @@ fun RecentActivityPreview() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(darkBackground)
+                .background(deepNavy)
                 .padding(16.dp)
         ) {
             RecentActivity(

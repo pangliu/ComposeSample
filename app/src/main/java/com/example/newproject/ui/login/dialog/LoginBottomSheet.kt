@@ -31,7 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
+import com.example.newproject.ui.theme.AppTheme
+import com.example.newproject.ui.theme.BlackGoldColors
 import com.example.newproject.ui.theme.LocalAppColors
+import com.example.newproject.ui.theme.NeonColors
+import com.example.newproject.ui.theme.dustyRed
+import com.example.newproject.ui.theme.neonCyanLight
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -43,10 +48,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.activity.compose.BackHandler
 import androidx.compose.ui.graphics.Shadow
-import com.example.newproject.ui.theme.neonCyanLight
-import com.example.newproject.ui.theme.neonMint
-import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.sendPink
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -100,8 +101,14 @@ fun LoginBottomSheet(
         ) {
             AnimatedVisibility(
                 visible = isVisible,
-                enter = slideInVertically(initialOffsetY = { it }, animationSpec = tween(300)) + fadeIn(animationSpec = tween(300)),
-                exit = slideOutVertically(targetOffsetY = { it }, animationSpec = tween(300)) + fadeOut(animationSpec = tween(300))
+                enter = slideInVertically(
+                    initialOffsetY = { it },
+                    animationSpec = tween(300)
+                ) + fadeIn(animationSpec = tween(300)),
+                exit = slideOutVertically(
+                    targetOffsetY = { it },
+                    animationSpec = tween(300)
+                ) + fadeOut(animationSpec = tween(300))
             ) {
                 LoginBottomSheetContent(
                     onLoginSubmit = onLoginSubmit,
@@ -126,7 +133,7 @@ fun LoginBottomSheetContent(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val inputBorderColor = if (errorMessage != null) sendPink else neonCyanLight
+    val inputBorderColor = if (errorMessage != null) dustyRed else colors.loginSheet.inputAccent
 
     Column(
         modifier = Modifier
@@ -141,7 +148,7 @@ fun LoginBottomSheetContent(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
         )
-        
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -151,7 +158,7 @@ fun LoginBottomSheetContent(
                     onClick = {} // 攔截點擊，避免關閉對話框
                 )
                 .background(colors.bg.page, RoundedCornerShape(32.dp))
-                .border(2.dp, neonPurpleLight, RoundedCornerShape(32.dp))
+                .border(2.dp, colors.loginSheet.outerBorder, RoundedCornerShape(32.dp))
                 .padding(horizontal = 32.dp, vertical = 25.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -166,14 +173,21 @@ fun LoginBottomSheetContent(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             )
-            
+
             // Mobile Input Row
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .height(35.dp)
-                        .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
+                        .then(
+                            if (colors.effect.enableGlow) Modifier.neonGlow(
+                                color = inputBorderColor,
+                                alpha = 0.5f,
+                                glowRadius = 15.dp,
+                                borderRadius = 25.dp
+                            ) else Modifier
+                        )
                         .background(colors.bg.page, RoundedCornerShape(25.dp))
                         .border(2.dp, inputBorderColor, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
@@ -193,14 +207,21 @@ fun LoginBottomSheetContent(
                 Box(
                     modifier = Modifier
                         .size(35.dp)
-                        .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 17.5.dp)
-                        .border(2.dp, inputBorderColor, CircleShape),
+                        .then(
+                            if (colors.effect.enableGlow) Modifier.neonGlow(
+                                color = colors.loginSheet.inputAccent,
+                                alpha = 0.5f,
+                                glowRadius = 15.dp,
+                                borderRadius = 17.5.dp
+                            ) else Modifier
+                        )
+                        .border(2.dp, colors.loginSheet.inputAccent, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Visibility,
                         contentDescription = stringResource(id = R.string.visibility_desc),
-                        tint = Color.LightGray,
+                        tint = colors.loginSheet.inputAccent,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -208,7 +229,7 @@ fun LoginBottomSheetContent(
             if (errorMessage != null) {
                 Text(
                     text = errorMessage,
-                    color = sendPink,
+                    color = dustyRed,
                     fontSize = 12.sp,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -227,14 +248,21 @@ fun LoginBottomSheetContent(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             )
-            
+
             // Password Input Row
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .height(35.dp)
-                        .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp)
+                        .then(
+                            if (colors.effect.enableGlow) Modifier.neonGlow(
+                                color = inputBorderColor,
+                                alpha = 0.5f,
+                                glowRadius = 15.dp,
+                                borderRadius = 25.dp
+                            ) else Modifier
+                        )
                         .background(colors.bg.page, RoundedCornerShape(25.dp))
                         .border(2.dp, inputBorderColor, RoundedCornerShape(25.dp))
                         .padding(horizontal = 16.dp),
@@ -254,20 +282,27 @@ fun LoginBottomSheetContent(
                 Box(
                     modifier = Modifier
                         .size(35.dp)
-                        .neonGlow(color = inputBorderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 17.5.dp)
-                        .border(2.dp, inputBorderColor, CircleShape)
+                        .then(
+                            if (colors.effect.enableGlow) Modifier.neonGlow(
+                                color = colors.loginSheet.inputAccent,
+                                alpha = 0.5f,
+                                glowRadius = 15.dp,
+                                borderRadius = 17.5.dp
+                            ) else Modifier
+                        )
+                        .border(2.dp, colors.loginSheet.inputAccent, CircleShape)
                         .clickable { passwordVisible = !passwordVisible },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = stringResource(id = R.string.toggle_visibility_desc),
-                        tint = Color.LightGray,
+                        tint = colors.loginSheet.inputAccent,
                         modifier = Modifier.size(18.dp)
                     )
                 }
             }
-            
+
             // Password Hints
             Row(
                 modifier = Modifier
@@ -275,17 +310,37 @@ fun LoginBottomSheetContent(
                     .padding(top = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(id = R.string.password_hint_length), color = Color.White, fontSize = 12.sp)
+                Text(
+                    stringResource(id = R.string.password_hint_length),
+                    color = Color.White,
+                    fontSize = 12.sp
+                )
                 Spacer(modifier = Modifier.width(3.dp))
-                Text(stringResource(id = R.string.login_hint_separator), color = neonMint, fontSize = 12.sp)
+                Text(
+                    stringResource(id = R.string.login_hint_separator),
+                    color = colors.loginSheet.hint,
+                    fontSize = 12.sp
+                )
                 Spacer(modifier = Modifier.width(3.dp))
-                Text(stringResource(id = R.string.password_hint_uppercase), color = neonMint, fontSize = 12.sp)
+                Text(
+                    stringResource(id = R.string.password_hint_uppercase),
+                    color = colors.loginSheet.hint,
+                    fontSize = 12.sp
+                )
                 Spacer(modifier = Modifier.width(3.dp))
-                Text(stringResource(id = R.string.login_hint_separator), color = neonMint, fontSize = 12.sp)
+                Text(
+                    stringResource(id = R.string.login_hint_separator),
+                    color = colors.loginSheet.hint,
+                    fontSize = 12.sp
+                )
                 Spacer(modifier = Modifier.width(3.dp))
-                Text(stringResource(id = R.string.password_hint_number), color = neonMint, fontSize = 12.sp)
+                Text(
+                    stringResource(id = R.string.password_hint_number),
+                    color = colors.loginSheet.hint,
+                    fontSize = 12.sp
+                )
             }
-            
+
             // Forgot Password
             Text(
                 text = stringResource(id = R.string.forgot_password),
@@ -295,28 +350,35 @@ fun LoginBottomSheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            
+
             Spacer(modifier = Modifier.height(10.dp))
-            
+
             // Send Button
             Box(
                 modifier = Modifier
                     .size(50.dp)
-                    .neonGlow(color = neonMint, alpha = 0.6f, glowRadius = 20.dp, borderRadius = 25.dp)
-                    .border(2.dp, neonMint, CircleShape)
+                    .then(
+                        if (colors.effect.enableGlow) Modifier.neonGlow(
+                            color = colors.loginSheet.submitButton,
+                            alpha = 0.4f,
+                            glowRadius = 20.dp,
+                            borderRadius = 25.dp
+                        ) else Modifier
+                    )
+                    .border(2.dp, colors.loginSheet.submitButton, CircleShape)
                     .clickable { onLoginSubmit(mobileNumber, password) },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = stringResource(id = R.string.submit_login_desc),
-                    tint = neonMint,
+                    tint = colors.loginSheet.submitButton,
                     modifier = Modifier
                         .size(25.dp)
                         .rotate(-40f)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
 
             if (showBiometricButton) {
@@ -354,14 +416,25 @@ fun LoginBottomSheetContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-fun LoginBottomSheetPreview() {
-    MaterialTheme {
+private fun LoginBottomSheetPreviewNeon() {
+    AppTheme(colors = NeonColors) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black),
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            LoginBottomSheetContent(onLoginSubmit = { _, _ -> })
+        }
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun LoginBottomSheetPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
             LoginBottomSheetContent(onLoginSubmit = { _, _ -> })

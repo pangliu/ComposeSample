@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.tabActiveColor
+import com.example.newproject.ui.theme.mediumCyan
 
 private val NavBarHeight = 60.dp
 
@@ -108,7 +108,7 @@ private fun BottomNavItem(
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val isActive = isPressed || isSelected
-    val color = if (isActive) tabActiveColor else Color.Gray
+    val color = if (isActive) mediumCyan else Color.Gray
     val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
     val iconRes = if (isActive) activeIconRes else defaultIconRes
 
@@ -146,7 +146,7 @@ private fun ScanAndPayTab(modifier: Modifier = Modifier, isSelected: Boolean = f
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val isActive = isPressed || isSelected
-    val color = if (isActive) tabActiveColor else Color.Gray
+    val color = if (isActive) mediumCyan else Color.Gray
     val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
 
     Column(

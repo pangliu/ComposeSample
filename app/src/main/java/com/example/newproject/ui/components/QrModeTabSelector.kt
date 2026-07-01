@@ -50,7 +50,7 @@ enum class QrMode { SCAN_QR, MY_QR }
 /**
  * SCAN QR / MY QR 切換 Tab 元件。
  *
- * - 外框：linearGradient(cardGradientMid, cardGradientStart) 漸層邊框
+ * - 外框：linearGradient(navyDark, indigoDark) 漸層邊框
  * - 選中 Tab（內圈）：左右全圓角膠囊形，neonCyan 邊框 + 半透明填色 + 光暈
  */
 @Composable

@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.deepNavy
 
 @Composable
 fun QuestCard() {
@@ -101,7 +101,7 @@ fun QuestCardPreview() {
         Box(
             modifier = Modifier.Companion
                 .fillMaxWidth()
-                .background(darkBackground)
+                .background(deepNavy)
                 .padding(16.dp)
         ) {
             QuestCard()

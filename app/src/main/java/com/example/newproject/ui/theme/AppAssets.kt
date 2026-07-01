@@ -9,7 +9,7 @@ data class AppAssets(
     @RawRes val centerLogoVideo: Int,           // LoginScreen 中央 logo 影片
     @DrawableRes val centerLogoImage: Int?,     // LoginScreen 中央 logo 靜態圖（null = 播影片）
     @DrawableRes val xcashWordmark: Int,        // 頂部 "xcash" 文字 logo
-    @DrawableRes val loginBackground: Int?,     // LoginScreen 頁面背景圖（null = 純色）
+    @DrawableRes val loginBackground: Int?,  // LoginScreen 頁面背景圖（null = 純色）
 )
 
 val NeonAssets = AppAssets(

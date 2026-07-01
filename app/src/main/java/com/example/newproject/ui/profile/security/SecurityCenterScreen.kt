@@ -53,7 +53,7 @@ import com.example.newproject.ui.profile.security.dialog.SecurityPinDialog
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.profile.components.FullyVerifiedBadge
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.balanceGold
+import com.example.newproject.ui.theme.lemonYellow
 import com.example.newproject.ui.theme.neonBlueLight
 import com.example.newproject.ui.theme.neonMint
 import com.example.newproject.ui.theme.neonPurpleLight

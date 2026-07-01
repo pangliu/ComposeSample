@@ -73,12 +73,12 @@ import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.scanpay.components.MyQrActionButton
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.balanceGold
+import com.example.newproject.ui.theme.lemonYellow
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonPurpleLight
 import com.example.newproject.ui.theme.neonPink
 import com.example.newproject.ui.theme.neonRed
-import com.example.newproject.ui.theme.qrCodeBackground
+import com.example.newproject.ui.theme.slateGray
 
 @Composable
 fun ConfirmPaymentScreen(
@@ -193,7 +193,7 @@ private fun ConfirmPaymentContent(
                             borderRadius = 8.dp
                         )
                         .background(
-                            color = qrCodeBackground,
+                            color = slateGray,
                             shape = RoundedCornerShape(15.dp)
                         )
                         .align(Alignment.CenterVertically)
@@ -358,7 +358,7 @@ private fun ConfirmPaymentContent(
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
-                        .neonGlow(color = balanceGold, alpha = 0.3f, glowRadius = 30.dp)
+                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
                         .align(Alignment.CenterVertically)
                 )
             }
@@ -418,7 +418,7 @@ private fun ConfirmPaymentContent(
 
                     modifier = Modifier.Companion
                         .neonGlow(
-                            color = balanceGold,
+                            color = lemonYellow,
                             alpha = 0.7f,
                             glowRadius = 10.dp)
                         .size(30.dp)

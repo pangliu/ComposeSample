@@ -28,28 +28,29 @@ val neonMint = Color(0xFF85EEAC)
 val neonBlushPink = Color(0xFFEFA2A8)
 val cyberPurple = Color(0xFFA260CC)
 // ========== 背景色 ==========
-val loginBackground = Color(0xFF030F1B)
-val welcomeBackground = Color(0xFF0B1327)
-val qrCodeBackground = Color(0xFF333C55)
-val darkBackground = Color(0xFF0A0E1A)       // 深色背景（Preview / ScanPay 圓圈）
-val darkOverlay = Color(0xFF0A0F1A)           // 深色遮罩（VerifyMobile / ScanPay）
+val deepMidnight = Color(0xFF030F1B)
+val darkSlate = Color(0xFF0B1327)
+val slateGray = Color(0xFF333C55)
+val deepNavy = Color(0xFF0A0E1A)       // 深色背景（Preview / ScanPay 圓圈）
+val obsidianBlue = Color(0xFF0A0F1A)           // 深色遮罩（VerifyMobile / ScanPay）
 // ========== 輸入框 / 表單 ==========
 //val inputFieldBackground = Color(0xFF2C2C2C) // LoginBottomSheet 輸入框背景
-val inputFieldDark = Color(0xFF2A2A2A)        // VerifyMobileDialog 輸入框背景
-val normalText = Color(0xFFADAEB0)
+val darkCharcoal = Color(0xFF2A2A2A)        // VerifyMobileDialog 輸入框背景
+val silverGray = Color(0xFFADAEB0)
 // ========== 語意色 ==========
-val cashInGreen = Color(0xFF96D230)
-val sendPink = Color(0xFFB80FB1)
-val cardBorder = Color(0xFF4A3080)
-val cardGradientStart = Color(0xFF1A1040)
-val cardGradientMid = Color(0xFF0D1B35)
+val limeGreen = Color(0xFF96D230)
+val vibrantPink = Color(0xFFB80FB1)
+val dustyRed = Color(0xFFD26464)           // 輸入框錯誤狀態邊框
+val plumPurple = Color(0xFF4A3080)
+val indigoDark = Color(0xFF1A1040)
+val navyDark = Color(0xFF0D1B35)
 
 // ========== Bottom Navigation ==========
-val tabActiveColor = Color(0xFF61C8E4)
+val mediumCyan = Color(0xFF61C8E4)
 
 // ========== Essential card ==========
-val essentialCardTitle = Color(0xFFBEE3EE)
-val balanceGold = Color(0xFFFEF27C)
+val paleCyan = Color(0xFFBEE3EE)
+val lemonYellow = Color(0xFFFEF27C)
 
 // ========== Drawer Menu 卡片顏色 ==========
 val aquaLight = Color(0xFF9BFBFD)        // Account Status 卡片邊框（淺水藍）
@@ -60,15 +61,13 @@ val cornflowerBlue = Color(0xFF5B80C4)   // Help & Policies 卡片邊框（矢�
 val royalBlue = Color(0xFF1E5BD1)        // Help & Policies 卡片標題（寶藍）
 
 // ========== Black Gold 主題顏色 ==========
-val goldPrimary = Color(0xFFE0BC77)          // 主要強調色（邊框、文字、glow）
-val goldDark = Color(0xFF3D2B00)             // 深色版（pressed / variant）
-val goldText = Color(0xFFC8B89A)             // body 文字
-val goldBackground = Color(0xFF050505)       // 頁面底色
-val goldSurface = Color(0xFF0F0F0F)          // Card / Dialog 底色
-val goldLoginButtonBackground = Color.Transparent   // Login 按鈕填色
-val goldTelegramButtonColor = Color(0xFF85D6EE)     // Telegram 按鈕邊框 & 文字
-val goldDrawerAccount = Color(0xFFDFB77E)           // Drawer Account Status 卡片（暖金）
-val goldDrawerProduct = Color(0xFFB47765)           // Drawer Product Features 卡片（赭紅金）
-val goldDrawerHelp = Color(0xFF5B80C4)              // Drawer Help & Policies 卡片（鋼藍，同 Neon）
-val goldSelectorBorder = Color(0xFFDFB77E)          // LanguageSelector 邊框
-val goldSelectorSelectedBg = Color(0xFFB28860)      // LanguageSelector 選中項目背景
+val antiqueGold = Color(0xFFE0BC77)          // 主要強調色（邊框、文字、glow）
+val sunGold = Color(0xFFFFBD2D)     // LoginBottomSheet 送出按鈕
+val deepBronze = Color(0xFF3D2B00)             // 深色版（pressed / variant）
+val warmSand = Color(0xFFC8B89A)             // body 文字
+val nearBlack = Color(0xFF050505)       // 頁面底色
+val charcoalBlack = Color(0xFF0F0F0F)          // Card / Dialog 底色
+val powderBlue = Color(0xFF85D6EE)     // Telegram 按鈕邊框 & 文字
+val paleGold = Color(0xFFDFB77E)           // Drawer Account Status 卡片 / LanguageSelector / Dialog 邊框（暖金）
+val terracottaGold = Color(0xFFB47765)           // Drawer Product Features 卡片（赭紅金）
+val caramelBrown = Color(0xFFB28860)      // LanguageSelector 選中項目背景

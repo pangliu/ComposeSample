@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.alpha
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.deepNavy
 
 @Composable
 fun LoadingDialog(
@@ -51,7 +51,7 @@ fun LoadingDialogContent() {
             .alpha(0.8f)
             .fillMaxSize()
             .background(
-                color = darkBackground
+                color = deepNavy
             )
             // Intercept all touches
             .clickable(

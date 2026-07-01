@@ -72,8 +72,8 @@ import com.example.newproject.R
 import com.example.newproject.ui.components.QrMode
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.balanceGold
-import com.example.newproject.ui.theme.qrCodeBackground
+import com.example.newproject.ui.theme.lemonYellow
+import com.example.newproject.ui.theme.slateGray
 import io.github.alexzhirkevich.qrose.options.QrBallShape
 import io.github.alexzhirkevich.qrose.options.QrBrush
 import io.github.alexzhirkevich.qrose.options.QrColors
@@ -153,7 +153,7 @@ internal fun MyQrContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight()
-                                .background(color = qrCodeBackground, shape = RoundedCornerShape(10.dp))
+                                .background(color = slateGray, shape = RoundedCornerShape(10.dp))
                                 .align(Alignment.Center),
                             contentScale = ContentScale.FillBounds,
                             painter = painterResource(R.mipmap.bg_qrcode_border),
@@ -221,7 +221,7 @@ internal fun MyQrContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight()
-//                                .background(color = qrCodeBackground, shape = RoundedCornerShape(10.dp))
+//                                .background(color = slateGray, shape = RoundedCornerShape(10.dp))
                                 .align(Alignment.Center),
                             contentScale = ContentScale.FillBounds,
                             painter = painterResource(R.mipmap.bg_qrcode_border),
@@ -304,7 +304,7 @@ internal fun MyQrContent(
                 contentDescription = null,
                 modifier = Modifier
                     .size(60.dp)
-                    .neonGlow(color = balanceGold, alpha = 0.3f, glowRadius = 30.dp)
+                    .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
                     .align(Alignment.CenterVertically)
             )
         }

@@ -55,7 +55,7 @@ import com.example.newproject.ui.scanpay.ScanPayViewModel
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.balanceGold
+import com.example.newproject.ui.theme.lemonYellow
 import com.example.newproject.ui.theme.neonPurpleLight
 
 @Composable
@@ -276,7 +276,7 @@ private fun InputAmountContent(
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
-                        .neonGlow(color = balanceGold, alpha = 0.3f, glowRadius = 30.dp)
+                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
                         .align(Alignment.TopEnd)
                 )
                 val isReviewEnabled = (amount.toDoubleOrNull() ?: 0.0) > 0.0

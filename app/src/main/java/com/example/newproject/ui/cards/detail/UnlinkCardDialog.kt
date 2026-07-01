@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.sendPink
+import com.example.newproject.ui.theme.vibrantPink
 
 private val warningRed = Color(0xFF790103)
 private val neonRed = Color(0xFFA34248)
@@ -149,9 +149,9 @@ fun UnlinkCardDialog(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .neonGlow(sendPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
+                        .neonGlow(vibrantPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
                         .background(dialogBg)
-                        .border(1.5.dp, sendPink, RoundedCornerShape(24.dp))
+                        .border(1.5.dp, vibrantPink, RoundedCornerShape(24.dp))
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
@@ -160,9 +160,9 @@ fun UnlinkCardDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        modifier = Modifier.neonGlow(sendPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp),
+                        modifier = Modifier.neonGlow(vibrantPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp),
                         text = stringResource(R.string.card_detail_unlink_dialog_cancel),
-                        color = sendPink,
+                        color = vibrantPink,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )

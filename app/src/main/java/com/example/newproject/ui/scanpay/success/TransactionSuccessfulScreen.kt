@@ -54,10 +54,10 @@ import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonPurpleLight
-import com.example.newproject.ui.theme.qrCodeBackground
+import com.example.newproject.ui.theme.slateGray
 
 
-private val balanceGold = Color(0xFFFEF27C)
+private val lemonYellow = Color(0xFFFEF27C)
 
 @Composable
 fun TransactionSuccessfulScreen(
@@ -122,7 +122,7 @@ private fun TransactionSuccessfulContent(
                                         glowRadius = 15.dp,
                                         borderRadius = 15.dp
                                     )
-        //                        .background(color = qrCodeBackground, shape = RoundedCornerShape(15.dp))
+        //                        .background(color = slateGray, shape = RoundedCornerShape(15.dp))
                                     .paint(
                                         painter = painterResource(R.mipmap.bg_success_payment_border),
                                         contentScale = ContentScale.FillBounds
@@ -279,7 +279,7 @@ private fun TransactionSuccessfulContent(
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
-                        .neonGlow(color = balanceGold, alpha = 0.3f, glowRadius = 30.dp)
+                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
                         .align(Alignment.CenterVertically)
                 )
             }
@@ -336,7 +336,7 @@ private fun TransactionSuccessfulContent(
 
                             modifier = Modifier.Companion
                                 .neonGlow(
-                                    color = balanceGold,
+                                    color = lemonYellow,
                                     alpha = 0.7f,
                                     glowRadius = 10.dp)
                                 .size(30.dp)

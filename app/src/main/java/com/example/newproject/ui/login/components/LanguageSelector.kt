@@ -36,7 +36,7 @@ import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.AppTheme
 import com.example.newproject.ui.theme.BlackGoldColors
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.darkBackground
+import com.example.newproject.ui.theme.deepNavy
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonPurple
 import androidx.compose.runtime.withFrameNanos
@@ -238,7 +238,7 @@ fun LanguageSelectorExpandedPreview() {
                         .width(72.dp)
                         .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.selector.border, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 20.dp) else Modifier)
                         .clip(RoundedCornerShape(5.dp))
-                        .background(darkBackground)
+                        .background(deepNavy)
                         .border(1.5.dp, colors.selector.border, RoundedCornerShape(8.dp))
                         .padding(vertical = 0.dp, horizontal = 50.dp)
                 ) {
@@ -297,7 +297,7 @@ fun LanguageSelectorExpandedBlackGoldPreview() {
                     modifier = Modifier
                         .width(72.dp)
                         .clip(RoundedCornerShape(5.dp))
-                        .background(darkBackground)
+                        .background(deepNavy)
                         .border(1.5.dp, colors.selector.border, RoundedCornerShape(8.dp))
                         .padding(vertical = 0.dp, horizontal = 50.dp)
                 ) {

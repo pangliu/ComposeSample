@@ -40,11 +40,11 @@ import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.cashInGreen
-import com.example.newproject.ui.theme.darkBackground
-import com.example.newproject.ui.theme.sendPink
+import com.example.newproject.ui.theme.limeGreen
+import com.example.newproject.ui.theme.deepNavy
+import com.example.newproject.ui.theme.vibrantPink
 
-private val balanceGold = Color(0xFFFEF27C)
+private val lemonYellow = Color(0xFFFEF27C)
 private val balanceSwitchBackground = Color(0xFF3C3C4C)
 private val balanceVisibility = Color(0xFF353649)
 private val cardStringNormal = Color(0xFFD8DADF)
@@ -117,13 +117,13 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Box(
                         modifier = Modifier
                             .neonGlow(
-                                color = cashInGreen,
+                                color = limeGreen,
                                 alpha = 0.6f,
                                 glowRadius = 15.dp,
                                 borderRadius = 8.dp
                             )
                             .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
-                            .background(cashInGreen)
+                            .background(limeGreen)
                             .clickable { /* TODO: Cash In */ }
                             .padding(horizontal = 14.dp, vertical = 5.dp)
                     ) {
@@ -168,13 +168,13 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 Box(
                     modifier = Modifier.Companion
                         .neonGlow(
-                            color = sendPink,
+                            color = vibrantPink,
                             alpha = 0.6f,
                             glowRadius = 15.dp,
                             borderRadius = 8.dp
                         )
                         .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
-                        .background(sendPink)
+                        .background(vibrantPink)
                         .clickable { /* TODO: Send */ }
                         .padding(horizontal = 14.dp, vertical = 5.dp)
                 ) {
@@ -210,7 +210,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         tint = Color.Companion.Unspecified,
 
                         modifier = Modifier.Companion
-                            .neonGlow(color = balanceGold, alpha = 0.7f, glowRadius = 10.dp)
+                            .neonGlow(color = lemonYellow, alpha = 0.7f, glowRadius = 10.dp)
                             .size(50.dp)
                     )
                     Spacer(modifier = Modifier.Companion.width(10.dp))
@@ -265,7 +265,7 @@ fun BalanceCardPreview() {
         Box(
             modifier = Modifier.Companion
                 .fillMaxWidth()
-                .background(darkBackground)
+                .background(deepNavy)
                 .padding(16.dp)
         ) {
             BalanceCard(cashBalance = 12345.0, tokenBalance = 500.0)

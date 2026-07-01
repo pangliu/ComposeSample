@@ -20,8 +20,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,11 +37,11 @@ import com.example.newproject.ui.home.essential.EssentialItem
 import com.example.newproject.ui.home.essential.ITEMS_PER_PAGE
 import com.example.newproject.ui.home.essential.allEssentialItems
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.cardBorder
-import com.example.newproject.ui.theme.cardGradientMid
-import com.example.newproject.ui.theme.cardGradientStart
-import com.example.newproject.ui.theme.darkBackground
-import com.example.newproject.ui.theme.essentialCardTitle
+import com.example.newproject.ui.theme.plumPurple
+import com.example.newproject.ui.theme.navyDark
+import com.example.newproject.ui.theme.indigoDark
+import com.example.newproject.ui.theme.deepNavy
+import com.example.newproject.ui.theme.paleCyan
 
 private val cardGradientEnd = Color(0xFF0A1228)
 private val essentialEdit = Color(0xFF3E4155)
@@ -66,7 +68,7 @@ fun XEssentialsCard(
         ) {
             Text(
                 text = stringResource(R.string.essentials_title),
-                color = essentialCardTitle,
+                color = paleCyan,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -115,18 +117,13 @@ fun XEssentialsCard(
         // ── 可左右滑動的功能圖示 Pager ──
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            cardGradientStart.copy(alpha = 0.7f),
-                            cardGradientMid.copy(alpha = 0.7f),
-                            cardGradientEnd.copy(alpha = 0.7f)
-                        )
-                    )
+                .paint(
+                    painter = painterResource(id = R.mipmap.bg_home_essentials),
+                    contentScale = ContentScale.FillBounds
                 )
-                .border(1.dp, cardBorder.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
+                .fillMaxWidth()
+//                .clip(RoundedCornerShape(20.dp))
+//                .border(1.dp, plumPurple.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 8.dp, vertical = 8.dp)
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -231,8 +228,8 @@ fun EssentialItemView(item: EssentialItem) {
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            cardGradientMid,
-                            cardGradientStart
+                            navyDark,
+                            indigoDark
                         )
                     )
                 )
@@ -285,7 +282,7 @@ fun XEssentialsCardPreview() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(darkBackground)
+                .background(deepNavy)
                 .padding(16.dp)
         ) {
             XEssentialsCard(

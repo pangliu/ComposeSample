@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,10 +36,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.AppTheme
+import com.example.newproject.ui.theme.BlackGoldColors
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.inputFieldDark
-import com.example.newproject.ui.theme.neonCyanLight
-import com.example.newproject.ui.theme.neonMint
+import com.example.newproject.ui.theme.NeonColors
+import com.example.newproject.ui.theme.darkCharcoal
 
 @Composable
 fun FindAppDialog(
@@ -65,14 +65,9 @@ fun FindAppDialog(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(
-                    color = neonCyanLight,
-                    alpha = 0.6f,
-                    glowRadius = 16.dp,
-                    borderRadius = 20.dp
-                )
+                .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.selector.border, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp) else Modifier)
                 .background(colors.bg.page, RoundedCornerShape(20.dp))
-                .border(2.dp, neonCyanLight, RoundedCornerShape(20.dp))
+                .border(2.dp, colors.selector.border, RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp)
         ) {
             Column(
@@ -152,21 +147,16 @@ fun FindAppDialog(
                     Box(
                         modifier = Modifier
                             .size(48.dp)
-                            .neonGlow(
-                                color = neonMint,
-                                alpha = 0.6f,
-                                glowRadius = 16.dp,
-                                borderRadius = 24.dp
-                            )
+                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.loginSheet.submitButton, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 24.dp) else Modifier)
                             .background(colors.bg.page, CircleShape)
-                            .border(2.dp, neonMint, CircleShape)
+                            .border(2.dp, colors.loginSheet.submitButton, CircleShape)
                             .clickable { onSubmit(idNumber, mobile, email) },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = stringResource(R.string.find_app_submit_desc),
-                            tint = neonMint,
+                            tint = colors.loginSheet.submitButton,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -187,6 +177,7 @@ private fun FindAppInputField(
     keyboardType: KeyboardType = KeyboardType.Text,
     onTrailingClick: (() -> Unit)? = null
 ) {
+    val colors = LocalAppColors.current
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
@@ -203,14 +194,9 @@ private fun FindAppInputField(
                 modifier = Modifier
                     .weight(1f)
                     .height(40.dp)
-                    .neonGlow(
-                        color = neonCyanLight,
-                        alpha = 0.8f,
-                        glowRadius = 12.dp,
-                        borderRadius = 20.dp
-                    )
-                    .background(inputFieldDark, RoundedCornerShape(20.dp))
-                    .border(1.5.dp, neonCyanLight, RoundedCornerShape(20.dp))
+                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.selector.border, alpha = 0.8f, glowRadius = 12.dp, borderRadius = 20.dp) else Modifier)
+                    .background(darkCharcoal, RoundedCornerShape(20.dp))
+                    .border(1.5.dp, colors.selector.border, RoundedCornerShape(20.dp))
                     .padding(horizontal = 14.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
@@ -221,7 +207,7 @@ private fun FindAppInputField(
                     visualTransformation = visualTransformation,
                     keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
                     textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-                    cursorBrush = SolidColor(neonCyanLight),
+                    cursorBrush = SolidColor(colors.selector.border),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -231,14 +217,9 @@ private fun FindAppInputField(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .neonGlow(
-                        color = neonCyanLight,
-                        alpha = 0.8f,
-                        glowRadius = 12.dp,
-                        borderRadius = 20.dp
-                    )
-                    .background(inputFieldDark, CircleShape)
-                    .border(1.5.dp, neonCyanLight, CircleShape)
+                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.selector.border, alpha = 0.8f, glowRadius = 12.dp, borderRadius = 20.dp) else Modifier)
+                    .background(darkCharcoal, CircleShape)
+                    .border(1.5.dp, colors.selector.border, CircleShape)
                     .then(
                         if (onTrailingClick != null) Modifier.clickable { onTrailingClick() }
                         else Modifier
@@ -248,7 +229,7 @@ private fun FindAppInputField(
                 Icon(
                     imageVector = trailingIcon,
                     contentDescription = trailingIconDesc,
-                    tint = neonCyanLight,
+                    tint = colors.selector.border,
                     modifier = Modifier.size(18.dp)
                 )
             }
@@ -256,15 +237,21 @@ private fun FindAppInputField(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-fun FindAppDialogPreview() {
-    MaterialTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black)
-        ) {
+private fun FindAppDialogPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            FindAppDialog(onDismiss = {}, onSubmit = { _, _, _ -> })
+        }
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun FindAppDialogPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
+        Box(modifier = Modifier.fillMaxSize()) {
             FindAppDialog(onDismiss = {}, onSubmit = { _, _, _ -> })
         }
     }

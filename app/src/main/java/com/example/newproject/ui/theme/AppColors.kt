@@ -19,7 +19,7 @@ data class TextColors(
 )
 
 data class ButtonColors(
-    val loginBackground: Color,     // Login 按鈕填色
+    val loginBackground: Color,  // Login 按鈕填色
     val loginBorder: Color,         // Login 按鈕邊框（Neon 無邊框用 Transparent）
     val loginText: Color,           // Login 按鈕文字
     val telegramBackground: Color,  // Telegram 按鈕填色
@@ -52,6 +52,13 @@ data class AccountDialogColors(
     val button2: Color,                 // Verify My Identity 按鈕邊框
 )
 
+data class LoginSheetColors(
+    val outerBorder: Color,             // Card 外框邊框
+    val inputAccent: Color,             // 輸入框邊框 + eye icon tint（非錯誤狀態）
+    val hint: Color,                    // 密碼提示文字（Uppercase、Number）
+    val submitButton: Color,            // 送出按鈕邊框 + icon
+)
+
 data class AppColors(
     val accent: AccentColors,
     val bg: BgColors,
@@ -61,6 +68,7 @@ data class AppColors(
     val drawer: DrawerColors,
     val selector: SelectorColors,
     val accountDialog: AccountDialogColors,
+    val loginSheet: LoginSheetColors,
 )
 
 val NeonColors = AppColors(
@@ -70,11 +78,11 @@ val NeonColors = AppColors(
         secondaryDark = neonDarkPurple,
     ),
     bg = BgColors(
-        page = loginBackground,
+        page = deepMidnight,
         surface = Color(0xFF0D1B2E),
     ),
     text = TextColors(
-        body = normalText,
+        body = silverGray,
         onPrimary = Color.White,
     ),
     button = ButtonColors(
@@ -101,44 +109,56 @@ val NeonColors = AppColors(
         button1 = neonPurpleLight,
         button2 = neonBlue,
     ),
+    loginSheet = LoginSheetColors(
+        outerBorder = neonPurpleLight,
+        inputAccent = neonCyanLight,
+        hint = neonMint,
+        submitButton = neonMint,
+    ),
 )
 
 val BlackGoldColors = AppColors(
     accent = AccentColors(
-        primary = goldPrimary,
-        secondary = goldPrimary,
-        secondaryDark = goldDark,
+        primary = antiqueGold,
+        secondary = antiqueGold,
+        secondaryDark = deepBronze,
     ),
     bg = BgColors(
-        page = goldBackground,
-        surface = goldSurface,
+        page = nearBlack,
+        surface = charcoalBlack,
     ),
     text = TextColors(
-        body = goldText,
-        onPrimary = goldPrimary,
+        body = warmSand,
+        onPrimary = antiqueGold,
     ),
     button = ButtonColors(
-        loginBackground = goldLoginButtonBackground,
-        loginBorder = goldPrimary,
-        loginText = goldPrimary,
-        telegramBackground = goldLoginButtonBackground,
-        telegramBorder = goldTelegramButtonColor,
-        telegramText = goldTelegramButtonColor,
+        loginBackground = Color.Transparent,
+        loginBorder = antiqueGold,
+        loginText = antiqueGold,
+        telegramBackground = Color.Transparent,
+        telegramBorder = powderBlue,
+        telegramText = powderBlue,
     ),
     effect = EffectColors(
         enableGlow = false,
     ),
     drawer = DrawerColors(
-        accountCard = DrawerCardColors(title = goldDrawerAccount, border = goldDrawerAccount),
-        productCard = DrawerCardColors(title = goldDrawerProduct, border = goldDrawerProduct),
-        helpCard = DrawerCardColors(title = goldDrawerHelp, border = goldDrawerHelp),
+        accountCard = DrawerCardColors(title = paleGold, border = paleGold),
+        productCard = DrawerCardColors(title = terracottaGold, border = terracottaGold),
+        helpCard = DrawerCardColors(title = cornflowerBlue, border = cornflowerBlue),
     ),
     selector = SelectorColors(
-        border = goldSelectorBorder,
-        selectedBackground = goldSelectorSelectedBg,
+        border = paleGold,
+        selectedBackground = caramelBrown,
     ),
     accountDialog = AccountDialogColors(
-        button1 = goldDrawerProduct,
-        button2 = goldDrawerHelp,
+        button1 = terracottaGold,
+        button2 = cornflowerBlue,
+    ),
+    loginSheet = LoginSheetColors(
+        outerBorder = antiqueGold,
+        inputAccent = antiqueGold,
+        hint = antiqueGold,
+        submitButton = sunGold,
     ),
 )

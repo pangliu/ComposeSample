@@ -71,7 +71,7 @@ import com.example.newproject.ui.profile.components.FullyVerifiedBadge
 import com.example.newproject.ui.profile.components.LogoutConfirmDialog
 import com.example.newproject.ui.profile.dialog.InviteFriendsDialog
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.essentialCardTitle
+import com.example.newproject.ui.theme.paleCyan
 import com.example.newproject.ui.theme.neonCyanLight
 import com.example.newproject.ui.theme.neonDarkPurple
 import com.example.newproject.ui.theme.neonMint
