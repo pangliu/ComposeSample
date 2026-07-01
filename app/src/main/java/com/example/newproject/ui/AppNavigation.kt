@@ -10,6 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import com.example.newproject.ui.theme.AppTheme
+import com.example.newproject.ui.theme.BlackGoldAssets
+import com.example.newproject.ui.theme.BlackGoldColors
+import com.example.newproject.ui.theme.NeonAssets
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavType
@@ -54,7 +57,8 @@ fun AppNavigation(
         }
     }
 
-    AppTheme(colors = currentColors) {
+    val currentAssets = if (currentColors === BlackGoldColors) BlackGoldAssets else NeonAssets
+    AppTheme(colors = currentColors, assets = currentAssets) {
     NavHost(navController = navController, startDestination = Routes.WELCOME) {
 
         composable(Routes.WELCOME) {

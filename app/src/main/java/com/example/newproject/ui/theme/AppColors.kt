@@ -47,6 +47,11 @@ data class SelectorColors(
     val selectedBackground: Color,      // 選中項目背景色
 )
 
+data class AccountDialogColors(
+    val button1: Color,                 // Check Application Progress 按鈕邊框
+    val button2: Color,                 // Verify My Identity 按鈕邊框
+)
+
 data class AppColors(
     val accent: AccentColors,
     val bg: BgColors,
@@ -55,6 +60,7 @@ data class AppColors(
     val effect: EffectColors,
     val drawer: DrawerColors,
     val selector: SelectorColors,
+    val accountDialog: AccountDialogColors,
 )
 
 val NeonColors = AppColors(
@@ -91,6 +97,10 @@ val NeonColors = AppColors(
         border = neonCyanLight,
         selectedBackground = Color(0xFF1E3A58),
     ),
+    accountDialog = AccountDialogColors(
+        button1 = neonPurpleLight,
+        button2 = neonBlue,
+    ),
 )
 
 val BlackGoldColors = AppColors(
@@ -126,5 +136,9 @@ val BlackGoldColors = AppColors(
     selector = SelectorColors(
         border = goldSelectorBorder,
         selectedBackground = goldSelectorSelectedBg,
+    ),
+    accountDialog = AccountDialogColors(
+        button1 = goldDrawerProduct,
+        button2 = goldDrawerHelp,
     ),
 )

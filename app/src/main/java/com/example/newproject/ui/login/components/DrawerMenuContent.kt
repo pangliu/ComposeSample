@@ -77,10 +77,12 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                 color = Color.White,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
-                style = TextStyle(shadow = Shadow(
-                    color = colors.accent.primary.copy(alpha = 0.6f),
-                    blurRadius = 25f
-                ))
+                style = TextStyle(
+                    shadow = Shadow(
+                        color = colors.accent.primary.copy(alpha = 0.6f),
+                        blurRadius = 25f
+                    )
+                )
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -97,7 +99,6 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                         subtitle = stringResource(id = R.string.check_application_status)
                     ),
                     MenuItem(
-//                        icon = MenuIcon.Vector(Icons.Default.Person),
                         icon = MenuIcon.Resource(R.mipmap.ic_verify_id),
                         title = stringResource(id = R.string.verify_my_identity),
                         subtitle = stringResource(id = R.string.verify_identity)
@@ -114,8 +115,16 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                 titleColor = colors.drawer.productCard.title,
                 borderColor = colors.drawer.productCard.border,
                 items = listOf(
-                    MenuItem(MenuIcon.Vector(Icons.Default.Refresh), stringResource(id = R.string.real_time_fx_rates), null),
-                    MenuItem(MenuIcon.Vector(Icons.Default.Star), stringResource(id = R.string.explore_xcash_features), null)
+                    MenuItem(
+                        icon = MenuIcon.Resource(R.mipmap.ic_money_exchange),
+                        title = stringResource(id = R.string.real_time_fx_rates),
+                        subtitle = null
+                    ),
+                    MenuItem(
+                        icon = MenuIcon.Resource(R.mipmap.ic_explore),
+                        title = stringResource(id = R.string.explore_xcash_features),
+                        subtitle = null
+                    )
                 )
             )
 
@@ -127,8 +136,16 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
                 titleColor = colors.drawer.helpCard.title,
                 borderColor = colors.drawer.helpCard.border,
                 items = listOf(
-                    MenuItem(MenuIcon.Vector(Icons.Default.Email), stringResource(id = R.string.help_center), stringResource(id = R.string.help_center)),
-                    MenuItem(MenuIcon.Vector(Icons.Default.Lock), stringResource(id = R.string.user_terms_policies), stringResource(id = R.string.security_privacy))
+                    MenuItem(
+                        icon = MenuIcon.Resource(R.mipmap.ic_center_help),
+                        title = stringResource(id = R.string.help_center),
+                        subtitle = stringResource(id = R.string.help_center)
+                    ),
+                    MenuItem(
+                        icon = MenuIcon.Resource(R.mipmap.ic_user_item),
+                        title = stringResource(id = R.string.user_terms_policies),
+                        subtitle = stringResource(id = R.string.security_privacy)
+                    )
                 )
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -139,7 +156,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
 
 sealed class MenuIcon {
     data class Vector(val imageVector: ImageVector) : MenuIcon()
-    data class Resource(@DrawableRes val resId: Int, val useOriginalColor: Boolean = false) : MenuIcon()
+    data class Resource(@DrawableRes val resId: Int, val useOriginalColor: Boolean = false) :
+        MenuIcon()
 }
 
 data class MenuItem(
@@ -160,13 +178,22 @@ fun MenuCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = borderColor, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 16.dp) else Modifier)
+            .then(
+                if (colors.effect.enableGlow) Modifier.neonGlow(
+                    color = borderColor,
+                    alpha = 0.5f,
+                    glowRadius = 15.dp,
+                    borderRadius = 16.dp
+                ) else Modifier
+            )
             .let { if (onClick != null) it.clickable { onClick() } else it },
         colors = CardDefaults.cardColors(containerColor = colors.bg.page),
         border = BorderStroke(1.5.dp, borderColor),
         shape = RoundedCornerShape(16.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+        Column(modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -189,17 +216,40 @@ fun MenuCard(
             if (items.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(16.dp))
                 items.forEachIndexed { index, item ->
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         when (val icon = item.icon) {
-                            is MenuIcon.Vector -> Icon(imageVector = icon.imageVector, contentDescription = item.title, tint = titleColor, modifier = Modifier.size(35.dp))
-                            is MenuIcon.Resource -> Icon(painter = painterResource(icon.resId), contentDescription = item.title, tint = if (icon.useOriginalColor) Color.Unspecified else titleColor, modifier = Modifier.size(35.dp))
+                            is MenuIcon.Vector -> Icon(
+                                imageVector = icon.imageVector,
+                                contentDescription = item.title,
+                                tint = borderColor,
+                                modifier = Modifier.size(35.dp)
+                            )
+
+                            is MenuIcon.Resource -> Icon(
+                                painter = painterResource(icon.resId),
+                                contentDescription = item.title,
+                                tint = if (icon.useOriginalColor) Color.Unspecified else borderColor,
+                                modifier = Modifier.size(35.dp)
+                            )
                         }
 
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
-                            Text(text = item.title, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                            Text(
+                                text = item.title,
+                                color = Color.White,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium
+                            )
                             if (item.subtitle != null) {
-                                Text(text = item.subtitle, color = Color.LightGray, fontSize = 10.sp)
+                                Text(
+                                    text = item.subtitle,
+                                    color = Color.LightGray,
+                                    fontSize = 10.sp
+                                )
                             }
                         }
                     }

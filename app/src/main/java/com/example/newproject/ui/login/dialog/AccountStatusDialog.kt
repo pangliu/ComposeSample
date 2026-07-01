@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,10 +30,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.theme.AppTheme
+import com.example.newproject.ui.theme.BlackGoldColors
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.neonBlue
-import com.example.newproject.ui.theme.neonCyanLight
-import com.example.newproject.ui.theme.neonPurpleLight
+import com.example.newproject.ui.theme.NeonColors
 
 @Composable
 fun AccountStatusDialog(onDismiss: () -> Unit) {
@@ -59,14 +58,14 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(
-                    color = neonCyanLight,
+                .then(if (colors.effect.enableGlow) Modifier.neonGlow(
+                    color = colors.selector.border,
                     alpha = 0.6f,
                     glowRadius = 16.dp,
                     borderRadius = 24.dp
-                )
+                ) else Modifier)
                 .background(colors.bg.page, RoundedCornerShape(24.dp))
-                .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
+                .border(2.dp, colors.selector.border, RoundedCornerShape(24.dp))
                 .padding(24.dp)
         ) {
             Column(
@@ -76,50 +75,50 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                 // Title
                 Text(
                     text = stringResource(id = R.string.select_action),
-                    color = neonCyanLight,
+                    color = colors.selector.border,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(
                         shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
                     )
                 )
-                
+
                 Spacer(modifier = Modifier.height(32.dp))
-                
+
                 // Button 1: Check Application Progress
                 ActionDialogButton(
                     icon = R.mipmap.ic_check_progress,
                     text = stringResource(id = R.string.check_application_progress),
-                    borderColor = neonPurpleLight,
+                    borderColor = colors.accountDialog.button1,
                     onClick = { showFindAppDialog = true }
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Button 2: Verify My Identity
                 ActionDialogButton(
                     icon = R.mipmap.ic_verify_id,
                     text = stringResource(id = R.string.verify_my_identity),
-                    borderColor = neonBlue,
-                    onClick = { 
+                    borderColor = colors.accountDialog.button2,
+                    onClick = {
                         // TODO: 處理點擊事件
                         onDismiss()
                     }
                 )
-                
+
                 Spacer(modifier = Modifier.height(32.dp))
-                
+
                 // Close Button
                 Box(
                     modifier = Modifier
                         .size(48.dp)
-                        .neonGlow(
-                            color = neonCyanLight,
+                        .then(if (colors.effect.enableGlow) Modifier.neonGlow(
+                            color = colors.selector.border,
                             alpha = 0.6f,
                             glowRadius = 16.dp,
                             borderRadius = 24.dp
-                        )
-                        .border(2.dp, neonCyanLight, RoundedCornerShape(24.dp))
+                        ) else Modifier)
+                        .border(2.dp, colors.selector.border, RoundedCornerShape(24.dp))
                         .background(
                             color = colors.bg.page,
                             shape = RoundedCornerShape(24.dp)
@@ -130,7 +129,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(id = R.string.close),
-                        tint = neonCyanLight
+                        tint = colors.selector.border
                     )
                 }
             }
@@ -145,12 +144,12 @@ fun ActionDialogButton(icon: Int, text: String, borderColor: Color, onClick: () 
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(
+            .then(if (colors.effect.enableGlow) Modifier.neonGlow(
                 color = borderColor,
                 alpha = 0.6f,
                 glowRadius = 16.dp,
                 borderRadius = 16.dp
-            )
+            ) else Modifier)
             .background(colors.bg.page, RoundedCornerShape(16.dp))
             .border(2.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable { onClick() }
@@ -178,15 +177,21 @@ fun ActionDialogButton(icon: Int, text: String, borderColor: Color, onClick: () 
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-fun AccountStatusDialogPreview() {
-    MaterialTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black), // 黑色背景可以讓霓虹特效更明顯
-        ) {
+private fun AccountStatusDialogPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            AccountStatusDialog(onDismiss = {})
+        }
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun AccountStatusDialogPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
+        Box(modifier = Modifier.fillMaxSize()) {
             AccountStatusDialog(onDismiss = {})
         }
     }
