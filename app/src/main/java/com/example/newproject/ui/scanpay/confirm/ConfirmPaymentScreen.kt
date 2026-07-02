@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.Alignment
 import com.example.newproject.ui.UiEvent
+import com.example.newproject.ui.profile.transaction.formatAmount
 import com.example.newproject.ui.scanpay.ScanPayNavigationEvent
 import com.example.newproject.ui.scanpay.ScanPayUiState
 import com.example.newproject.ui.scanpay.ScanPayViewModel
@@ -454,7 +455,7 @@ private fun ConfirmPaymentContent(
                         textAlign = TextAlign.Center,
                         text = stringResource(
                             R.string.scan_pay_my_qr_points_balance,
-                            uiState.tokenBalance
+                            formatAmount(uiState.tokenBalance)
                         ),
                         color = colors.text.body,
                         fontWeight = FontWeight.Bold,

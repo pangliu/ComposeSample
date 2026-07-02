@@ -71,6 +71,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.newproject.R
 import com.example.newproject.ui.components.QrMode
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.profile.transaction.formatAmount
 import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.lemonYellow
 import com.example.newproject.ui.theme.slateGray
@@ -273,7 +274,7 @@ internal fun MyQrContent(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (isBalanceVisible) "PHP ${balance}" else "••••",
+                        text = if (isBalanceVisible) "PHP ${formatAmount(balance)}" else "••••",
                         color = Color.White,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold

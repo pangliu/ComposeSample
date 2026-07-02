@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newproject.R
+import com.example.newproject.ui.profile.transaction.formatAmount
 import com.example.newproject.ui.scanpay.ScanPayUiState
 import com.example.newproject.ui.scanpay.ScanPayViewModel
 import com.example.newproject.ui.components.SubPageTopBar
@@ -176,6 +177,12 @@ private fun TransactionSuccessfulContent(
                                     }
                                 }
                                 Spacer(Modifier.height(15.dp))
+                                Spacer(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 30.dp)
+                                    .height(1.5.dp)
+                                    .background(neonCyan))
+                                Spacer(Modifier.height(8.dp))
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth(),
@@ -193,9 +200,9 @@ private fun TransactionSuccessfulContent(
                                             )
                                         )
                                     )
-                                    Spacer(Modifier.width(10.dp))
+                                    Spacer(Modifier.width(5.dp))
                                     Text(
-                                        text = uiState.amount.ifEmpty { "0.00" },
+                                        text = formatAmount(uiState.amount.toDoubleOrNull() ?: 0.0),
                                         color = colors.accent.primary,
                                         fontSize = 32.sp,
                                         fontWeight = FontWeight.Bold,
@@ -207,6 +214,12 @@ private fun TransactionSuccessfulContent(
                                         )
                                     )
                                 }
+                                Spacer(Modifier.height(8.dp))
+                                Spacer(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 30.dp)
+                                    .height(1.5.dp)
+                                    .background(neonCyan))
                                 Spacer(Modifier.height(20.dp))
 
                                 // TODO: 從 API 取得實際數字
@@ -382,7 +395,17 @@ private fun TransactionSuccessfulContent(
                         .weight(1f)
                         .align(Alignment.CenterVertically)
                 ) {
-
+                    Spacer(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.5.dp)
+                        .neonGlow(
+                            color = neonCyan.copy(0.7f),
+                        )
+                        .background(
+                            color = neonCyan.copy(0.6f)
+                        )
+                    )
+                    Spacer(Modifier.height(10.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
@@ -404,6 +427,15 @@ private fun TransactionSuccessfulContent(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
+                    Spacer(Modifier.height(10.dp))
+                    Spacer(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.5.dp)
+
+                        .background(
+                            color = neonCyan.copy(0.6f)
+                        )
+                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp))
                 }
                 Image(
                     painter = painterResource(R.mipmap.ic_monkey),
@@ -476,12 +508,22 @@ private fun TransactionSuccessfulContent(
                                 )
                                 .size(30.dp)
                         )
+                        Spacer(Modifier.width(20.dp))
                         Text(
-                            modifier = Modifier
-                                .fillMaxWidth(),
+//                            modifier = Modifier
+//                                .fillMaxWidth(),
                             textAlign = TextAlign.Center,
-                            text = "Balance: ${uiState.balance}",
+                            text = "Balance: ",
                             color = colors.text.body,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                        Text(
+//                            modifier = Modifier
+//                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            text = formatAmount(uiState.balance),
+                            color = neonCyan,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
