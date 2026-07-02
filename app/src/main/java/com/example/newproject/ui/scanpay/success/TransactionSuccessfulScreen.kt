@@ -136,7 +136,7 @@ private fun TransactionSuccessfulContent(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(top = 20.dp)
+                                        .padding(top = 25.dp)
                                         .padding(horizontal = 20.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -331,7 +331,35 @@ private fun TransactionSuccessfulContent(
                     }  // inner Box
                 }  // Column
             }  // outer Box
+            Spacer(Modifier.height(20.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(
+                            SpanStyle(
+                                color = neonCyan,
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append("+%,.2f".format(earnedPoint))
+                        }
+                        withStyle(
+                            SpanStyle(
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append(" X-Points earned")
+                        }
 
+                    },
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             // ── Balance row ───────────────────────────────────────────────────
             Row(
                 modifier = Modifier
@@ -354,34 +382,7 @@ private fun TransactionSuccessfulContent(
                         .weight(1f)
                         .align(Alignment.CenterVertically)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(
-                                    SpanStyle(
-                                        color = neonCyan,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                ) {
-                                    append("+%,.2f".format(earnedPoint))
-                                }
-                                withStyle(
-                                    SpanStyle(
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                ) {
-                                    append(" X-Points earned")
-                                }
 
-                            },
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
