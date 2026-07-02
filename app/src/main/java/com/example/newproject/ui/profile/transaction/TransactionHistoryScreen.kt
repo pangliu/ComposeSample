@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,45 +49,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newproject.R
 import com.example.newproject.network.model.response.OrderHistoryResponse
-import com.example.newproject.network.model.response.OrderStatus
-import com.example.newproject.network.model.response.OrderType
 import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
+import com.example.newproject.ui.profile.components.TransactionItem
 import com.example.newproject.ui.theme.LocalAppColors
-import com.example.newproject.ui.theme.neonMint
-import com.example.newproject.ui.theme.neonPink
-import com.example.newproject.ui.theme.neonRed
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 private val CardBg = Color(0xFF0D1829)
+private val CategoryFilterBorder = Color(0xFF39A3BF)
 
-private val avatarPalette = listOf(
-    Color(0xFF2EFFF5), Color(0xFFDF4CFF), Color(0xFF3993D0),
-    Color(0xFFFF31A0), Color(0xFF94EEB5), Color(0xFFFEF27C),
-    Color(0xFF66A3CF), Color(0xFFFF4C4C)
-)
-
-private fun avatarColorForName(name: String): Color {
-    val index = (name.firstOrNull()?.code ?: 0) % avatarPalette.size
-    return avatarPalette[index]
-}
-
-private fun formatAmount(amount: Double): String {
+fun formatAmount(amount: Double): String {
     val fmt = NumberFormat.getNumberInstance(Locale.US)
     fmt.maximumFractionDigits = 2
     fmt.minimumFractionDigits = 2
     return fmt.format(amount)
-}
-
-private fun formatTimestamp(ts: Long): String {
-    return try {
-        SimpleDateFormat("MMM dd, hh:mm a", Locale.US).format(Date(ts))
-    } catch (e: Exception) {
-        ""
-    }
 }
 
 @Composable
@@ -131,7 +109,7 @@ private fun TransactionHistoryContent(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
             BalanceCard(
                 balance = uiState.balance,
@@ -240,10 +218,13 @@ private fun BalanceCard(
 @Composable
 private fun TimeFilterRow(selected: TimeFilter, onSelect: (TimeFilter) -> Unit) {
     val colors = LocalAppColors.current
+    val borderBrush = Brush.linearGradient(
+        listOf(colors.accent.primary.copy(0.5f), colors.accent.secondary.copy(0.7f))
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
+            .height(CategoryFilterRowHeight),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         TimeFilter.entries.forEach { filter ->
@@ -255,20 +236,17 @@ private fun TimeFilterRow(selected: TimeFilter, onSelect: (TimeFilter) -> Unit) 
             }
             Box(
                 modifier = Modifier
-                    .border(
-                        1.dp,
-                        if (isSelected) colors.accent.primary else colors.accent.primary.copy(0.3f),
-                        RoundedCornerShape(50)
-                    )
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .border(1.5.dp, borderBrush, RoundedCornerShape(10.dp))
                     .background(
                         if (isSelected) colors.accent.primary.copy(0.12f) else Color.Transparent,
-                        RoundedCornerShape(50)
+                        RoundedCornerShape(10.dp)
                     )
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ) { onSelect(filter) }
-                    .padding(horizontal = 16.dp, vertical = 7.dp),
+                    ) { onSelect(filter) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -282,48 +260,83 @@ private fun TimeFilterRow(selected: TimeFilter, onSelect: (TimeFilter) -> Unit) 
     }
 }
 
+private val CategoryFilterRowHeight = 30.dp
+
 @Composable
 private fun CategoryFilterRow(selected: CategoryFilter, onSelect: (CategoryFilter) -> Unit) {
-    val colors = LocalAppColors.current
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        CategoryFilter.entries.forEach { category ->
-            val isSelected = category == selected
-            val label = when (category) {
-                CategoryFilter.ALL -> stringResource(R.string.tx_category_all)
-                CategoryFilter.SPENT -> stringResource(R.string.tx_category_spent)
-                CategoryFilter.RECEIVED -> stringResource(R.string.tx_category_received)
-                CategoryFilter.MERCHANT_SERVICE -> stringResource(R.string.tx_category_merchant)
+        val segments = listOf(
+            CategoryFilter.ALL to stringResource(R.string.tx_category_all),
+            CategoryFilter.SPENT to stringResource(R.string.tx_category_spent),
+            CategoryFilter.RECEIVED to stringResource(R.string.tx_category_received)
+        )
+        Row(
+            modifier = Modifier
+                .weight(2f)
+                .height(CategoryFilterRowHeight)
+                .border(1.5.dp, CategoryFilterBorder, RoundedCornerShape(10.dp))
+                .padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            segments.forEach { (category, label) ->
+                val isSelected = category == selected
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .background(
+                            if (isSelected) CategoryFilterBorder else Color.Transparent,
+                            RoundedCornerShape(6.dp)
+                        )
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { onSelect(category) },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = label,
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                    )
+                }
             }
-            Box(
-                modifier = Modifier
-                    .background(
-                        if (isSelected) colors.accent.secondary.copy(0.25f) else CardBg,
-                        RoundedCornerShape(8.dp)
-                    )
-                    .border(
-                        1.dp,
-                        if (isSelected) colors.accent.secondary.copy(0.8f) else colors.accent.secondary.copy(0.2f),
-                        RoundedCornerShape(8.dp)
-                    )
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onSelect(category) }
-                    .padding(horizontal = 14.dp, vertical = 7.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = label,
-                    color = if (isSelected) Color.White else colors.text.body,
-                    fontSize = 12.sp,
-                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+        }
+
+        val isMerchantSelected = selected == CategoryFilter.MERCHANT_SERVICE
+        Row(
+            modifier = Modifier
+                .weight(1.5f)
+                .height(CategoryFilterRowHeight)
+                .border(1.5.dp, CategoryFilterBorder, RoundedCornerShape(10.dp))
+                .background(
+                    if (isMerchantSelected) CategoryFilterBorder else Color.Transparent,
+                    RoundedCornerShape(10.dp)
                 )
-            }
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onSelect(CategoryFilter.MERCHANT_SERVICE) }
+                .padding(horizontal = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally)
+        ) {
+            Text(
+                text = stringResource(R.string.tx_category_merchant),
+                color = Color.White,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal
+            )
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(16.dp)
+            )
         }
     }
 }
@@ -383,95 +396,6 @@ private fun TransactionListCard(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun TransactionItem(tx: OrderHistoryResponse) {
-    val colors = LocalAppColors.current
-    val isIncoming = tx.type == OrderType.INCOMING
-    val avatarColor = avatarColorForName(tx.paymentName)
-    val formattedDate = formatTimestamp(tx.expiredAt)
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 13.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(46.dp)
-                .background(avatarColor.copy(0.18f), CircleShape)
-                .border(1.dp, avatarColor.copy(0.5f), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = tx.paymentName.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
-                color = avatarColor,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Spacer(Modifier.width(12.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = tx.paymentName,
-                color = Color.White,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(Modifier.height(2.dp))
-            Text(
-                text = "${tx.account} · $formattedDate",
-                color = colors.text.body,
-                fontSize = 11.sp
-            )
-            if (isIncoming && tx.status == OrderStatus.SUCCESS) {
-                Spacer(Modifier.height(5.dp))
-                CopPointsChip()
-            }
-        }
-
-        Spacer(Modifier.width(8.dp))
-
-        Column(horizontalAlignment = Alignment.End) {
-            Text(
-                text = "${if (isIncoming) "+" else "-"}PHP ${formatAmount(tx.amount)}",
-                color = if (isIncoming) neonMint else neonPink,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
-            )
-            if (tx.status == OrderStatus.FAILED) {
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = stringResource(R.string.tx_status_failed),
-                    color = neonRed,
-                    fontSize = 10.sp
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun CopPointsChip() {
-    val colors = LocalAppColors.current
-    Box(
-        modifier = Modifier
-            .background(colors.accent.secondary.copy(0.2f), RoundedCornerShape(50))
-            .border(1.dp, colors.accent.secondary.copy(0.6f), RoundedCornerShape(50))
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.tx_cop_points),
-            color = colors.accent.secondary,
-            fontSize = 9.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 0.5.sp
-        )
     }
 }
 

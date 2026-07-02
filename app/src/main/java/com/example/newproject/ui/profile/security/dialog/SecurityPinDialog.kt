@@ -45,6 +45,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.newproject.R
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
+import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonPink
 import com.example.newproject.ui.theme.neonPurpleLight
 
@@ -79,7 +80,11 @@ fun SecurityPinDialog(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = neonCyan)
+                    .height(1.5.dp))
             // Promo banner
             Row(
                 modifier = Modifier
