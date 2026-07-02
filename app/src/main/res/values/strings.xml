@@ -180,6 +180,24 @@
     <string name="home_scan_icon_desc">Scan Icon</string>
     <string name="home_scan_pay">Scan / Pay</string>
 
+    <!-- NotificationsScreen -->
+    <string name="notifications_title">NOTIFICATIONS</string>
+    <string name="notifications_settings_desc">Settings</string>
+    <string name="notifications_tab_all">All</string>
+    <string name="notifications_tab_unread">Unread</string>
+    <string name="notifications_tab_read">Read</string>
+    <string name="notifications_filter_all">All</string>
+    <string name="notifications_filter_system">System</string>
+    <string name="notifications_filter_activity">Activity</string>
+    <string name="notifications_filter_promo">Promo</string>
+    <string name="notifications_empty">No notifications yet</string>
+    <string name="notifications_time_just_now">Just now</string>
+    <string name="notifications_time_minutes_ago">%dm ago</string>
+    <string name="notifications_time_hours_ago">%dh ago</string>
+    <string name="notifications_time_yesterday">Yesterday</string>
+    <string name="notifications_time_days_ago">%dd ago</string>
+    <string name="notifications_time_last_week">Last Week</string>
+
     <!-- BalanceCard -->
     <string name="balance_title">BALANCE</string>
     <string name="balance_toggle_desc">Toggle Balance</string>

@@ -186,7 +186,7 @@ fun HeaderSection(userName: String, onNavigate: (String) -> Unit = {}) {
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ) { /* TODO: 通知中心 */ }
+                    ) { onNavigate(Routes.NOTIFICATIONS) }
             )
             Spacer(modifier = Modifier.width(8.dp))
             Icon(

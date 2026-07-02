@@ -21,6 +21,8 @@ import com.example.newproject.ui.cards.add.AddNewCardScreen
 import com.example.newproject.ui.cards.detail.CardDetailScreen
 import com.example.newproject.ui.cards.linked_success.LinkedSuccessScreen
 import com.example.newproject.ui.cards.select.SelectCardTypeScreen
+import com.example.newproject.ui.home.notifications.NotificationsScreen
+import com.example.newproject.ui.home.notifications.NotificationsViewModel
 import com.example.newproject.ui.home.transaction_detail.TransactionDetailScreen
 import com.example.newproject.ui.home.transaction_detail.TransactionDetailViewModel
 import com.example.newproject.ui.home.update_log.UpdateLogScreen
@@ -106,6 +108,7 @@ fun AppNavigation(
                         Routes.CARD_LINKED_SUCCESS -> slideOutHorizontally { -it }
                         Routes.TRANSACTION_DETAIL -> slideOutHorizontally { -it }
                         Routes.UPDATE_LOG -> slideOutHorizontally { -it }
+                        Routes.NOTIFICATIONS -> slideOutHorizontally { -it }
                         else -> null
                     }
                 },
@@ -122,6 +125,7 @@ fun AppNavigation(
                         Routes.CARD_LINKED_SUCCESS -> slideInHorizontally { -it }
                         Routes.TRANSACTION_DETAIL -> slideInHorizontally { -it }
                         Routes.UPDATE_LOG -> slideInHorizontally { -it }
+                        Routes.NOTIFICATIONS -> slideInHorizontally { -it }
                         else -> null
                     }
                 }
@@ -207,6 +211,19 @@ fun AppNavigation(
                 UpdateLogScreen(
                     viewModel = viewModel,
                     onBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = Routes.NOTIFICATIONS,
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } }
+            ) {
+                val viewModel = hiltViewModel<NotificationsViewModel>()
+                NotificationsScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() },
+                    onNavigate = { navController.navigate(it) }
                 )
             }
 

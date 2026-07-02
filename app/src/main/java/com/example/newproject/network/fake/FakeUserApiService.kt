@@ -3,6 +3,8 @@ package com.example.newproject.network.fake
 import com.example.newproject.network.api.UserApiService
 import com.example.newproject.network.model.response.BaseResponse
 import com.example.newproject.network.model.response.FriendResponse
+import com.example.newproject.network.model.response.NotificationResponse
+import com.example.newproject.network.model.response.NotificationType
 import com.example.newproject.network.model.response.OrderHistoryResponse
 import com.example.newproject.network.model.response.OrderStatus
 import com.example.newproject.network.model.response.OrderType
@@ -122,6 +124,65 @@ class FakeUserApiService : UserApiService {
                     date = "2026-03-15",
                     title = "v2.1.0 Release",
                     message = "Introduced neon theme, biometric login support, and QR code sharing."
+                )
+            )
+        )
+    }
+
+    override suspend fun getNotifications(): BaseResponse<List<NotificationResponse>> {
+        delay(700)
+        val now = System.currentTimeMillis()
+        return BaseResponse(
+            code = 200,
+            errorMsg = "success",
+            result = listOf(
+                NotificationResponse(
+                    id = "N001",
+                    type = NotificationType.PROMO,
+                    title = "Double Rewards Weekend",
+                    message = "Earn 2x tokens on every scan & pay transaction this weekend only.",
+                    isRead = false,
+                    createdAt = now - 5 * 60_000
+                ),
+                NotificationResponse(
+                    id = "N002",
+                    type = NotificationType.SYSTEM,
+                    title = "Security Check Passed",
+                    message = "Your recent login was verified successfully from a new device.",
+                    isRead = false,
+                    createdAt = now - 15 * 60_000
+                ),
+                NotificationResponse(
+                    id = "N003",
+                    type = NotificationType.ACTIVITY,
+                    title = "Payment Sent",
+                    message = "Your payment of PHP 500.00 to John Cruz was completed successfully.",
+                    isRead = false,
+                    createdAt = now - 32 * 60_000
+                ),
+                NotificationResponse(
+                    id = "N004",
+                    type = NotificationType.PROMO,
+                    title = "Cash In Bonus Unlocked",
+                    message = "Cash in PHP 1,000 or more today and receive a free reward voucher.",
+                    isRead = true,
+                    createdAt = now - 2 * 60 * 60_000
+                ),
+                NotificationResponse(
+                    id = "N005",
+                    type = NotificationType.SYSTEM,
+                    title = "App Updated",
+                    message = "We've improved app performance and fixed several minor bugs.",
+                    isRead = true,
+                    createdAt = now - 25 * 60 * 60_000
+                ),
+                NotificationResponse(
+                    id = "N006",
+                    type = NotificationType.ACTIVITY,
+                    title = "Weekly Summary Ready",
+                    message = "Check out your spending summary and quest progress from last week.",
+                    isRead = true,
+                    createdAt = now - 8 * 24 * 60 * 60_000
                 )
             )
         )

@@ -21,6 +21,7 @@ object Routes {
     // Home sub-pages
     const val SETTINGS = "settings"
     const val UPDATE_LOG = "update_log"
+    const val NOTIFICATIONS = "notifications"
 
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"
