@@ -19,6 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Brush
@@ -27,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,6 +63,8 @@ fun XEssentialsCard(
     val pages = myMenuItems.chunked(ITEMS_PER_PAGE)
     val pagerState = rememberPagerState(pageCount = { pages.size })
     var showEditDialog by remember { mutableStateOf(false) }
+    var pagerHeight by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
     Column {
         // ── 標題列：X-Essentials + More / Edit ──
         Row(
@@ -108,17 +114,28 @@ fun XEssentialsCard(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if (pagerHeight > 0.dp)
+                                Modifier.height(pagerHeight)
+                            else
+                                Modifier.onSizeChanged { size ->
+                                    pagerHeight = with(density) { size.height.toDp() }
+                                }
+                        )
                 ) { pageIndex ->
                     val pageItems = pages[pageIndex]
-                    // 每頁分成上下兩排
-                    val firstRow = pageItems.take(4)
-                    val secondRow = pageItems.drop(4)
+                    // 補齊到 ITEMS_PER_PAGE 個 null，確保兩排高度固定
+                    val paddedItems: List<EssentialItem?> =
+                        pageItems + List(ITEMS_PER_PAGE - pageItems.size) { null }
+                    val firstRow = paddedItems.take(4)
+                    val secondRow = paddedItems.drop(4)
 
                     Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxWidth() // 高度改由內容（兩個 Row）決定
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -183,13 +200,14 @@ fun XEssentialsCard(
 }
 
 @Composable
-fun EssentialItemView(item: EssentialItem) {
+fun EssentialItemView(item: EssentialItem?) {
     val colors = LocalAppColors.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .width(70.dp)
-            .clickable { item.onClick() }
+            .then(if (item != null) Modifier.clickable { item.onClick() } else Modifier)
+            .then(if (item == null) Modifier.alpha(0f) else Modifier)
     ) {
         // 圖示方塊
         Box(
@@ -217,14 +235,14 @@ fun EssentialItemView(item: EssentialItem) {
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (item.iconVector != null) {
+            if (item?.iconVector != null) {
                 Icon(
                     imageVector = item.iconVector,
                     contentDescription = item.label,
                     tint = colors.accent.primary,
                     modifier = Modifier.size(30.dp)
                 )
-            } else if (item.iconRes != null) {
+            } else if (item?.iconRes != null) {
                 val tint = if (item.useOriginalColor) Color.Unspecified else colors.accent.primary
                 Icon(
                     painter = painterResource(id = item.iconRes),
@@ -239,7 +257,10 @@ fun EssentialItemView(item: EssentialItem) {
 
         // 標籤文字
         Text(
-            text = item.label,
+            modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            text = item?.label ?: "",
             color = colors.text.body,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium

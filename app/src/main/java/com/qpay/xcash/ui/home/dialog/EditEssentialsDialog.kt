@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -443,6 +444,7 @@ private fun ReorderableEssentialGrid(
                             }
                             Spacer(Modifier.height(6.dp))
                             Text(
+                                textAlign = TextAlign.Center,
                                 text = item.label,
                                 color = Color.White,
                                 fontSize = 11.sp,
@@ -603,6 +605,7 @@ fun DraggableEssentialItem(
 
             Text(
                 text = item.label,
+                textAlign = TextAlign.Center,
                 color = Color.White,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium
