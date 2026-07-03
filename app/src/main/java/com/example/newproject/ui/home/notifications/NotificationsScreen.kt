@@ -29,7 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,6 +49,8 @@ import com.example.newproject.ui.Routes
 import com.example.newproject.ui.UiEvent
 import com.example.newproject.ui.components.LoadingDialog
 import com.example.newproject.ui.home.notifications.components.NotificationCard
+import com.example.newproject.ui.home.notifications.dialog.NotificationSettingsDialog
+import com.example.newproject.ui.home.notifications.dialog.NotificationSettingsState
 import com.example.newproject.ui.theme.AppTheme
 import com.example.newproject.ui.theme.BlackGoldColors
 import com.example.newproject.ui.theme.LocalAppColors
@@ -60,6 +64,8 @@ fun NotificationsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    var showSettingsDialog by remember { mutableStateOf(false) }
+    var notificationSettings by remember { mutableStateOf(NotificationSettingsState()) }
 
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
@@ -80,10 +86,18 @@ fun NotificationsScreen(
             uiState = uiState,
             paddingValues = paddingValues,
             onBack = onBack,
-            onSettingsClick = { onNavigate(Routes.SETTINGS) },
+            onSettingsClick = { showSettingsDialog = true },
             onTabSelected = viewModel::setTab,
             onCategorySelected = viewModel::setCategoryFilter
         )
+
+        if (showSettingsDialog) {
+            NotificationSettingsDialog(
+                settings = notificationSettings,
+                onSettingsChange = { notificationSettings = it },
+                onDismiss = { showSettingsDialog = false }
+            )
+        }
     }
 }
 

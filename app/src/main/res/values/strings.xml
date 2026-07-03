@@ -197,6 +197,11 @@
     <string name="notifications_time_yesterday">Yesterday</string>
     <string name="notifications_time_days_ago">%dd ago</string>
     <string name="notifications_time_last_week">Last Week</string>
+    <string name="notifications_dialog_title">NOTIFICATION</string>
+    <string name="notifications_dialog_system_alerts">System Alerts</string>
+    <string name="notifications_dialog_promo_notifications">Promo Notifications</string>
+    <string name="notifications_dialog_transaction_alerts">Transaction Alerts</string>
+    <string name="notifications_dialog_cancel_desc">Cancel</string>
 
     <!-- BalanceCard -->
     <string name="balance_title">BALANCE</string>

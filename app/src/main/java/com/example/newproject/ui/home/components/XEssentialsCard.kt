@@ -74,33 +74,13 @@ fun XEssentialsCard(
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                // More 按鈕
-//                Box(
-//                    modifier = Modifier
-//                        .clip(RoundedCornerShape(10.dp))
-//                        .border(
-//                            width = 2.dp,
-//                            color = essentialMore,
-//                            shape = RoundedCornerShape(10.dp)
-//                        )
-//                        .clickable { /* TODO: More */ }
-//                        .padding(horizontal = 16.dp, vertical = 6.dp)
-//                ) {
-//                    Text(
-//                        text = stringResource(R.string.essentials_more),
-//                        color = essentialMore,
-//                        fontSize = 13.sp,
-//                        fontWeight = FontWeight.Medium
-//                    )
-//                }
-
                 // Edit 按鈕
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(8.dp))
                         .background(essentialEdit)
                         .clickable { showEditDialog = true }
-                        .padding(horizontal = 16.dp, vertical = 6.dp)
+                        .padding(horizontal = 16.dp, vertical = 5.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.essentials_edit),
@@ -122,9 +102,8 @@ fun XEssentialsCard(
                     contentScale = ContentScale.FillBounds
                 )
                 .fillMaxWidth()
-//                .clip(RoundedCornerShape(20.dp))
-//                .border(1.dp, plumPurple.copy(alpha = 0.5f), RoundedCornerShape(20.dp))
-                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .padding(horizontal = 10.dp, vertical = 10.dp),
+            contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 HorizontalPager(
@@ -138,27 +117,20 @@ fun XEssentialsCard(
 
                     Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.height(150.dp) // 固定高度：兩排 70dp + 8dp 間距
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth() // 高度改由內容（兩個 Row）決定
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
                         ) {
                             firstRow.forEach { item -> EssentialItemView(item) }
-                            // 若不足 4 個，用空白佔位
-                            repeat(4 - firstRow.size) {
-                                Spacer(modifier = Modifier.width(70.dp))
-                            }
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
                         ) {
                             secondRow.forEach { item -> EssentialItemView(item) }
-                            repeat(4 - secondRow.size) {
-                                // 空白佔位，維持與 EssentialItemView 相同寬高
-                                Spacer(modifier = Modifier.width(70.dp).height(70.dp))
-                            }
                         }
                     }
                 }
