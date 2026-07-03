@@ -1,0 +1,65 @@
+package com.qpay.xcash.repository
+
+import com.qpay.xcash.network.api.UserApiService
+import com.qpay.xcash.network.manager.SessionManager
+import com.qpay.xcash.network.manager.UserInfoManager
+import com.qpay.xcash.network.model.NetworkResult
+import com.qpay.xcash.network.model.response.FriendResponse
+import com.qpay.xcash.network.model.response.NotificationResponse
+import com.qpay.xcash.network.model.response.OrderHistoryResponse
+import com.qpay.xcash.network.model.response.UpdateLogResponse
+import com.qpay.xcash.network.model.response.UserInfoResponse
+import javax.inject.Inject
+
+class UserRepository @Inject constructor(
+    private val apiService: UserApiService,
+    private val userInfoManager: UserInfoManager,
+    sessionManager: SessionManager
+) : BaseRepository(sessionManager) {
+
+    suspend fun fetchUserInfo(): NetworkResult<UserInfoResponse> {
+        return safeApiCall { apiService.getUserInfo() }.also { result ->
+            if (result is NetworkResult.Success && result.data != null) {
+                userInfoManager.save(result.data)
+            }
+        }
+    }
+
+    // 示範 2：上傳圖片
+    suspend fun uploadUserImage(): NetworkResult<Any> {
+        return safeApiCall {
+            apiService.uploadUserImage()
+        }
+    }
+
+    // 示範 3：取得等級
+    suspend fun fetchUserLevelInfo(): NetworkResult<Any> {
+        return safeApiCall {
+            apiService.getUserLevelInfo()
+        }
+    }
+
+    suspend fun fetchOrderHistory(): NetworkResult<List<OrderHistoryResponse>> {
+        return safeApiCall {
+            apiService.getOrderHistory()
+        }
+    }
+
+    suspend fun fetchFriendList(): NetworkResult<List<FriendResponse>> {
+        return safeApiCall {
+            apiService.getFriendList()
+        }
+    }
+
+    suspend fun fetchUpdateLog(): NetworkResult<List<UpdateLogResponse>> {
+        return safeApiCall {
+            apiService.getUpdateLog()
+        }
+    }
+
+    suspend fun fetchNotifications(): NetworkResult<List<NotificationResponse>> {
+        return safeApiCall {
+            apiService.getNotifications()
+        }
+    }
+}
