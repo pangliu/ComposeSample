@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -60,6 +62,7 @@ import com.example.newproject.ui.components.SubPageTopBar
 import com.example.newproject.ui.components.neonGlow
 import com.example.newproject.ui.theme.LocalAppColors
 import com.example.newproject.ui.theme.lemonYellow
+import com.example.newproject.ui.theme.neonCyan
 import com.example.newproject.ui.theme.neonPurpleLight
 
 private class CurrencyVisualTransformation : VisualTransformation {
@@ -225,159 +228,237 @@ private fun InputAmountContent(
                     }
                 }
             }
-            Spacer(Modifier.height(32.dp))
-
-            // ── Amount Input ─────────────────────────────────────────────────
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 30.dp, end = 10.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .paint(
+                        painter = painterResource(R.mipmap.bg_input_amount)
+                    ),
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = stringResource(R.string.input_amount_currency),
-                    color = colors.accent.primary,
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Bold,
-                    style = TextStyle(
-                        shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
-                    )
-                )
-                Spacer(Modifier.width(12.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    BasicTextField(
-                        value = amount,
-                        onValueChange = { newValue ->
-                            val filtered = newValue.filter { it.isDigit() || it == '.' }
-                            val dotIndex = filtered.indexOf('.')
-                            val isValid = when {
-                                filtered.count { it == '.' } > 1 -> false
-                                dotIndex == -1 && filtered.length > 6 -> false
-                                dotIndex != -1 && dotIndex > 6 -> false
-                                dotIndex != -1 && filtered.length - dotIndex - 1 > 2 -> false
-                                else -> true
-                            }
-                            if (isValid) amount = filtered
-                        },
-                        textStyle = TextStyle(
-                            color = colors.accent.primary,
-                            fontSize = 40.sp,
-                            fontWeight = FontWeight.Bold,
+                // ── Amount Input ─────────────────────────────────────────────────
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 30.dp, end = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.input_amount_currency),
+                        color = colors.accent.primary,
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold,
+                        style = TextStyle(
                             shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
-                        ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        visualTransformation = remember { CurrencyVisualTransformation() },
-                        cursorBrush = SolidColor(colors.accent.primary),
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        decorationBox = { innerTextField ->
-                            if (amount.isEmpty()) {
-                                Text(
-                                    text = stringResource(R.string.input_amount_hint),
-                                    color = colors.accent.primary.copy(alpha = 0.3f),
-                                    fontSize = 40.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    style = TextStyle(
-                                        shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
-                                    )
-                                )
-                            }
-                            innerTextField()
-                        }
+                        )
                     )
+                    Spacer(Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        BasicTextField(
+                            value = amount,
+                            onValueChange = { newValue ->
+                                val filtered = newValue.filter { it.isDigit() || it == '.' }
+                                val dotIndex = filtered.indexOf('.')
+                                val isValid = when {
+                                    filtered.count { it == '.' } > 1 -> false
+                                    dotIndex == -1 && filtered.length > 6 -> false
+                                    dotIndex != -1 && dotIndex > 6 -> false
+                                    dotIndex != -1 && filtered.length - dotIndex - 1 > 2 -> false
+                                    else -> true
+                                }
+                                if (isValid) amount = filtered
+                            },
+                            textStyle = TextStyle(
+                                color = colors.accent.primary,
+                                fontSize = 40.sp,
+                                fontWeight = FontWeight.Bold,
+                                shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
+                            ),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            visualTransformation = remember { CurrencyVisualTransformation() },
+                            cursorBrush = SolidColor(colors.accent.primary),
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            decorationBox = { innerTextField ->
+                                if (amount.isEmpty()) {
+                                    Text(
+                                        text = stringResource(R.string.input_amount_hint),
+                                        color = colors.accent.primary.copy(alpha = 0.3f),
+                                        fontSize = 40.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        style = TextStyle(
+                                            shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
+                                        )
+                                    )
+                                }
+                                innerTextField()
+                            }
+                        )
+                    }
                 }
             }
             Spacer(Modifier.height(10.dp))
-            Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = stringResource(R.string.input_amount_title),
-                color = colors.accent.primary.copy(alpha = 0.6f)
-            )
-            Spacer(Modifier.height(10.dp))
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag(stringResource(R.string.input_amount_title))
-            ){
+                    .padding(horizontal = 10.dp)
+            ) {
                 Image(
                     painter = painterResource(R.mipmap.ic_car),
                     contentDescription = null,
                     modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(vertical = 15.dp)
                         .size(80.dp)
-                        .neonGlow(color = colors.accent.secondary, alpha = 0.25f, glowRadius = 30.dp)
-
+                        .neonGlow(
+                            color = colors.accent.secondary,
+                            alpha = 0.25f,
+                            glowRadius = 30.dp
+                        )
                 )
-                Row(
+                Column(
                     modifier = Modifier
-                        .align(Alignment.TopCenter),
-                    verticalAlignment = Alignment.CenterVertically
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)
                 ) {
-                    Text(
-                        text = stringResource(R.string.scan_pay_my_qr_balance),
-                        color = colors.text.body,
-                        fontSize = 14.sp,
+                    Spacer(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.5.dp)
+                        .neonGlow(
+                            color = neonCyan.copy(0.7f),
+                        )
+                        .background(
+                            color = neonCyan.copy(0.6f)
+                        )
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = if (isBalanceVisible) "PHP ${"%,.2f".format(uiState.balance)}" else "••••",
-                        color = Color.White,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        imageVector = if (isBalanceVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = stringResource(R.string.balance_toggle_desc),
-                        tint = Color.Gray,
-                        modifier = Modifier
-                            .size(18.dp)
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) { isBalanceVisible = !isBalanceVisible }
-                    )
+                    Spacer(Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Balance: ",
+                            color = colors.text.body,
+                            fontSize = 14.sp,
+                        )
+                        Text(
+                            text = "PHP 1,000,000",
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(Modifier.height(10.dp))
+                    Spacer(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.5.dp)
+
+                        .background(
+                            color = neonCyan.copy(0.6f)
+                        )
+                        .neonGlow(color = neonCyan, alpha = 0.3f, glowRadius = 30.dp))
                 }
                 Image(
                     painter = painterResource(R.mipmap.ic_monkey),
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
-                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
-                        .align(Alignment.TopEnd)
+                        .neonGlow(color = neonCyan, alpha = 0.3f, glowRadius = 30.dp)
+                        .align(Alignment.CenterVertically)
                 )
-                val isReviewEnabled = (amount.toDoubleOrNull() ?: 0.0) > 0.0
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .then(
-                            if (isReviewEnabled)
-                                Modifier.neonGlow(color = colors.accent.secondary, alpha = 0.7f, glowRadius = 12.dp, borderRadius = 15.dp)
-                            else Modifier
-                        )
-                        .background(
-                            color = if (isReviewEnabled) colors.accent.secondary else colors.accent.secondary.copy(alpha = 0.3f),
-                            shape = RoundedCornerShape(30.dp)
-                        )
-                        .clickable(
-                            enabled = isReviewEnabled,
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) { onReviewDetails(amount) }
-                        .padding(horizontal = 40.dp, vertical = 12.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.input_amount_review_details),
-                        color = if (isReviewEnabled) Color.Black else Color.Black.copy(alpha = 0.35f),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
             }
-
-
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .testTag(stringResource(R.string.input_amount_title))
+////                    .align(Alignment.)
+//            ){
+//                Image(
+//                    painter = painterResource(R.mipmap.ic_car),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .padding(vertical = 15.dp)
+//                        .size(80.dp)
+//                        .neonGlow(color = colors.accent.secondary, alpha = 0.25f, glowRadius = 30.dp)
+//
+//                )
+//                Column(
+//                    modifier = Modifier
+//                        .align(Alignment.Center),
+//                ) {
+//                    Spacer(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .background(color = neonCyan)
+//                            .height(1.5.dp),
+//                    )
+//                    Row(
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Text(
+//                            text = stringResource(R.string.scan_pay_my_qr_balance),
+//                            color = colors.text.body,
+//                            fontSize = 14.sp,
+//                        )
+//                        Spacer(modifier = Modifier.width(8.dp))
+//                        Text(
+//                            text = if (isBalanceVisible) "PHP ${"%,.2f".format(uiState.balance)}" else "••••",
+//                            color = Color.White,
+//                            fontSize = 14.sp,
+//                            fontWeight = FontWeight.Bold
+//                        )
+//                        Spacer(modifier = Modifier.width(8.dp))
+//                        Icon(
+//                            imageVector = if (isBalanceVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+//                            contentDescription = stringResource(R.string.balance_toggle_desc),
+//                            tint = Color.Gray,
+//                            modifier = Modifier
+//                                .size(18.dp)
+//                                .clickable(
+//                                    indication = null,
+//                                    interactionSource = remember { MutableInteractionSource() }
+//                                ) { isBalanceVisible = !isBalanceVisible }
+//                        )
+//                    }
+//                }
+//
+//                Image(
+//                    painter = painterResource(R.mipmap.ic_monkey),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .size(60.dp)
+//                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
+//                        .align(Alignment.TopEnd)
+//                )
+//            }
+            val isReviewEnabled = (amount.toDoubleOrNull() ?: 0.0) > 0.0
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .then(
+                        if (isReviewEnabled)
+                            Modifier.neonGlow(color = colors.accent.secondary, alpha = 0.7f, glowRadius = 12.dp, borderRadius = 15.dp)
+                        else Modifier
+                    )
+                    .background(
+                        color = if (isReviewEnabled) colors.accent.secondary else colors.accent.secondary.copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(30.dp)
+                    )
+                    .clickable(
+                        enabled = isReviewEnabled,
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { onReviewDetails(amount) }
+                    .padding(horizontal = 40.dp, vertical = 12.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.input_amount_review_details),
+                    color = if (isReviewEnabled) Color.Black else Color.Black.copy(alpha = 0.35f),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

@@ -3,10 +3,12 @@ package com.example.newproject.ui.home.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -83,23 +85,27 @@ fun QuestCard() {
             Text(
                 text = "with breathing cyan light effect",
                 color = Color.White,
-                fontSize = 10.sp,
+                fontSize = 12.sp,
             )
-            Spacer(Modifier.height(10.dp))
-            Text(
-                text = "Claim your loot here",
-                color = neonDivider,
-                textDecoration = TextDecoration.Underline,
-                fontSize = 10.sp,
-                lineHeight = 13.sp
-            )
-            Text(
-                text = "Start your grid & earn",
-                color = neonDivider,
-                textDecoration = TextDecoration.Underline,
-                fontSize = 10.sp,
-                lineHeight = 10.sp
-            )
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Claim your loot here",
+                    color = neonDivider,
+                    textDecoration = TextDecoration.Underline,
+                    fontSize = 12.sp,
+                    lineHeight = 13.sp
+                )
+                Text(
+                    text = "Start your grid & earn",
+                    color = neonDivider,
+                    textDecoration = TextDecoration.Underline,
+                    fontSize = 12.sp,
+                    lineHeight = 10.sp
+                )
+            }
         }
         Image(
             painter = painterResource(id = R.mipmap.bg_quest_card),

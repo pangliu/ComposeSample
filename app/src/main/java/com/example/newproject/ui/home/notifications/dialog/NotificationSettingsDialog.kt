@@ -61,9 +61,6 @@ fun NotificationSettingsDialog(
     settings: NotificationSettingsState,
     onSettingsChange: (NotificationSettingsState) -> Unit,
     onDismiss: () -> Unit,
-//    systemAlertsSwitchColor: Color = LocalAppColors.current.accent.primary,
-//    promoNotificationsSwitchColor: Color = neonDarkBlue,
-//    transactionAlertsSwitchColor: Color = neonDarkBlue
 ) {
     Popup(
         onDismissRequest = onDismiss,
@@ -89,9 +86,6 @@ fun NotificationSettingsDialog(
                 settings = settings,
                 onSettingsChange = onSettingsChange,
                 onDismiss = onDismiss,
-//                systemAlertsSwitchColor = systemAlertsSwitchColor,
-//                promoNotificationsSwitchColor = promoNotificationsSwitchColor,
-//                transactionAlertsSwitchColor = transactionAlertsSwitchColor
             )
         }
     }
@@ -102,9 +96,6 @@ fun NotificationSettingsDialogContent(
     settings: NotificationSettingsState,
     onSettingsChange: (NotificationSettingsState) -> Unit,
     onDismiss: () -> Unit,
-//    systemAlertsSwitchColor: Color = neonCyan,
-//    promoNotificationsSwitchColor: Color = neonDarkBlue,
-//    transactionAlertsSwitchColor: Color = neonDarkBlue
 ) {
     val colors = LocalAppColors.current
     Column(
@@ -142,27 +133,30 @@ fun NotificationSettingsDialogContent(
                 Spacer(modifier = Modifier.height(18.dp))
 
                 NotificationSettingRow(
-                    iconRes = R.mipmap.ic_notify_security,
+                    iconRes = R.mipmap.ic_notify_setting_sys,
                     label = stringResource(R.string.notifications_dialog_system_alerts),
                     checked = settings.systemAlerts,
                     onCheckedChange = { onSettingsChange(settings.copy(systemAlerts = it)) },
-                    switchColor = neonCyan
+                    switchColor = neonCyan,
+                    iconColor = neonCyan
                 )
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 NotificationSettingRow(
-                    iconRes = R.mipmap.ic_notify_gift,
+                    iconRes = R.mipmap.ic_notify_setting_gift,
                     label = stringResource(R.string.notifications_dialog_promo_notifications),
                     checked = settings.promoNotifications,
                     onCheckedChange = { onSettingsChange(settings.copy(promoNotifications = it)) },
-                    switchColor = neonDarkBlue
+                    switchColor = neonDarkBlue,
+                    iconColor = neonPurpleLight
                 )
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 NotificationSettingRow(
-                    iconRes = R.mipmap.ic_notify_rocket,
+                    iconRes = R.mipmap.ic_notify_setting_alter,
                     label = stringResource(R.string.notifications_dialog_transaction_alerts),
                     checked = settings.transactionAlerts,
                     onCheckedChange = { onSettingsChange(settings.copy(transactionAlerts = it)) },
-                    switchColor = neonDarkBlue
+                    switchColor = neonDarkBlue,
+                    iconColor = neonPurpleLight
                 )
             }
         }
@@ -193,7 +187,8 @@ private fun NotificationSettingRow(
     label: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    switchColor: Color = LocalAppColors.current.accent.primary
+    switchColor: Color = LocalAppColors.current.accent.primary,
+    iconColor: Color
 ) {
     val colors = LocalAppColors.current
     Row(
@@ -203,8 +198,8 @@ private fun NotificationSettingRow(
         Icon(
             painter = painterResource(iconRes),
             contentDescription = label,
-            tint = Color.Unspecified,
-            modifier = Modifier.size(28.dp)
+            tint = iconColor,
+            modifier = Modifier.size(32.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(

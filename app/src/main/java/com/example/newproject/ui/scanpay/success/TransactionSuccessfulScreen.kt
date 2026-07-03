@@ -420,13 +420,24 @@ private fun TransactionSuccessfulContent(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(R.string.scan_pay_my_qr_x_points),
-                        color = colors.text.body,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Available Balance: ",
+                            color = colors.text.body,
+                            fontSize = 14.sp,
+                        )
+                        Text(
+                            text = "PHP 1,000,000",
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
                     Spacer(Modifier.height(10.dp))
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
