@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -40,6 +42,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +53,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -232,69 +236,72 @@ private fun InputAmountContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .paint(
-                        painter = painterResource(R.mipmap.bg_input_amount)
+                        painter = painterResource(R.mipmap.bg_input_amount),
+                        contentScale = ContentScale.FillWidth
                     ),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
                 // ── Amount Input ─────────────────────────────────────────────────
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 30.dp, end = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = stringResource(R.string.input_amount_currency),
-                        color = colors.accent.primary,
-                        fontSize = 48.sp,
-                        fontWeight = FontWeight.Bold,
-                        style = TextStyle(
+                    BasicTextField(
+                        value = amount,
+                        onValueChange = { newValue ->
+                            val filtered = newValue.filter { it.isDigit() || it == '.' }
+                            val dotIndex = filtered.indexOf('.')
+                            val isValid = when {
+                                filtered.count { it == '.' } > 1 -> false
+                                dotIndex == -1 && filtered.length > 6 -> false
+                                dotIndex != -1 && dotIndex > 6 -> false
+                                dotIndex != -1 && filtered.length - dotIndex - 1 > 2 -> false
+                                else -> true
+                            }
+                            if (isValid) amount = filtered
+                        },
+                        textStyle = TextStyle(
+                            color = colors.accent.primary,
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Bold,
                             shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
-                        )
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        BasicTextField(
-                            value = amount,
-                            onValueChange = { newValue ->
-                                val filtered = newValue.filter { it.isDigit() || it == '.' }
-                                val dotIndex = filtered.indexOf('.')
-                                val isValid = when {
-                                    filtered.count { it == '.' } > 1 -> false
-                                    dotIndex == -1 && filtered.length > 6 -> false
-                                    dotIndex != -1 && dotIndex > 6 -> false
-                                    dotIndex != -1 && filtered.length - dotIndex - 1 > 2 -> false
-                                    else -> true
-                                }
-                                if (isValid) amount = filtered
-                            },
-                            textStyle = TextStyle(
-                                color = colors.accent.primary,
-                                fontSize = 40.sp,
-                                fontWeight = FontWeight.Bold,
-                                shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
-                            ),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                            visualTransformation = remember { CurrencyVisualTransformation() },
-                            cursorBrush = SolidColor(colors.accent.primary),
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            decorationBox = { innerTextField ->
-                                if (amount.isEmpty()) {
+                        ),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        visualTransformation = remember { CurrencyVisualTransformation() },
+                        cursorBrush = SolidColor(colors.accent.primary),
+                        singleLine = true,
+                        modifier = Modifier.width(IntrinsicSize.Min),
+                        decorationBox = { innerTextField ->
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = stringResource(R.string.input_amount_currency),
+                                    color = colors.accent.primary,
+                                    fontSize = 48.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    style = TextStyle(
+                                        shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
+                                    )
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Box {
+                                    // 永遠佔位確保最小寬度，空白時顯示，有字時透明
                                     Text(
                                         text = stringResource(R.string.input_amount_hint),
-                                        color = colors.accent.primary.copy(alpha = 0.3f),
+                                        color = if (amount.isEmpty())
+                                            colors.accent.primary.copy(alpha = 0.3f)
+                                        else
+                                            Color.Transparent,
                                         fontSize = 40.sp,
                                         fontWeight = FontWeight.Bold,
                                         style = TextStyle(
                                             shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
                                         )
                                     )
+                                    innerTextField()
                                 }
-                                innerTextField()
                             }
-                        )
-                    }
+                        }
+                    )
                 }
             }
             Spacer(Modifier.height(10.dp))
@@ -367,70 +374,6 @@ private fun InputAmountContent(
                         .align(Alignment.CenterVertically)
                 )
             }
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .testTag(stringResource(R.string.input_amount_title))
-////                    .align(Alignment.)
-//            ){
-//                Image(
-//                    painter = painterResource(R.mipmap.ic_car),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .padding(vertical = 15.dp)
-//                        .size(80.dp)
-//                        .neonGlow(color = colors.accent.secondary, alpha = 0.25f, glowRadius = 30.dp)
-//
-//                )
-//                Column(
-//                    modifier = Modifier
-//                        .align(Alignment.Center),
-//                ) {
-//                    Spacer(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .background(color = neonCyan)
-//                            .height(1.5.dp),
-//                    )
-//                    Row(
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        Text(
-//                            text = stringResource(R.string.scan_pay_my_qr_balance),
-//                            color = colors.text.body,
-//                            fontSize = 14.sp,
-//                        )
-//                        Spacer(modifier = Modifier.width(8.dp))
-//                        Text(
-//                            text = if (isBalanceVisible) "PHP ${"%,.2f".format(uiState.balance)}" else "••••",
-//                            color = Color.White,
-//                            fontSize = 14.sp,
-//                            fontWeight = FontWeight.Bold
-//                        )
-//                        Spacer(modifier = Modifier.width(8.dp))
-//                        Icon(
-//                            imageVector = if (isBalanceVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-//                            contentDescription = stringResource(R.string.balance_toggle_desc),
-//                            tint = Color.Gray,
-//                            modifier = Modifier
-//                                .size(18.dp)
-//                                .clickable(
-//                                    indication = null,
-//                                    interactionSource = remember { MutableInteractionSource() }
-//                                ) { isBalanceVisible = !isBalanceVisible }
-//                        )
-//                    }
-//                }
-//
-//                Image(
-//                    painter = painterResource(R.mipmap.ic_monkey),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .size(60.dp)
-//                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
-//                        .align(Alignment.TopEnd)
-//                )
-//            }
             val isReviewEnabled = (amount.toDoubleOrNull() ?: 0.0) > 0.0
             Box(
                 modifier = Modifier

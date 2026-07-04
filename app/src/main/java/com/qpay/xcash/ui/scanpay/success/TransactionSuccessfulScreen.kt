@@ -377,7 +377,7 @@ private fun TransactionSuccessfulContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 8.dp)
             ) {
                 Image(
                     painter = painterResource(R.mipmap.ic_car),
