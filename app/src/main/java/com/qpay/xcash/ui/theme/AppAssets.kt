@@ -14,6 +14,10 @@ data class AppAssets(
     @DrawableRes val balanceCoinIcon: Int,       // BalanceCard Token 金幣圖示
     @DrawableRes val cashInIcon: Int,            // BalanceCard Cash In 按鈕圖示
     @DrawableRes val balanceSendIcon: Int,       // BalanceCard Send 按鈕圖示
+    @DrawableRes val essentialsCardBackground: Int, // XEssentialsCard 背景圖
+    val essentialsCardAspectRatio: Float,        // essentialsCardBackground 圖片寬高比（width / height）
+    @DrawableRes val questCardBackground: Int,   // QuestCard 背景圖
+    @DrawableRes val scanButtonBackground: Int,  // ScanAndPayTab bg_scanner 背景圖
 )
 
 val NeonAssets = AppAssets(
@@ -25,6 +29,10 @@ val NeonAssets = AppAssets(
     balanceCoinIcon = R.mipmap.ic_balance_coin,
     cashInIcon = R.drawable.ic_cash_in,
     balanceSendIcon = R.drawable.ic_balance_send,
+    essentialsCardBackground = R.drawable.bg_home_essentials,
+    essentialsCardAspectRatio = 1083f / 579f,
+    questCardBackground = R.drawable.bg_quest_card,
+    scanButtonBackground = R.drawable.bg_scanner,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -36,6 +44,10 @@ val BlackGoldAssets = AppAssets(
     balanceCoinIcon = R.drawable.ic_balance_coin_black_gold,
     cashInIcon = R.drawable.ic_cash_in_black_gold,
     balanceSendIcon = R.drawable.ic_balance_send_black_gold,
+    essentialsCardBackground = R.drawable.bg_home_essentials_black_gold,
+    essentialsCardAspectRatio = 1080f / 579f,
+    questCardBackground = R.drawable.bg_quest_card_black_gold,
+    scanButtonBackground = R.drawable.bg_scanner_black_gold,
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }

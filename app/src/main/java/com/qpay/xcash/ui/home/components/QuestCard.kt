@@ -15,55 +15,63 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonAssets
+import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.deepNavy
-import com.qpay.xcash.ui.theme.neonBlue
-import com.qpay.xcash.ui.theme.neonDivider
 
 @Composable
 fun QuestCard() {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     Box(
         modifier = Modifier
 //            .padding(top = 20.dp) // 給上方預留一點空間讓人物露出來
             .fillMaxWidth()
     ) {
-        Text(
+        GradientText(
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(top = 0.dp),
             text = "X-Quests",
             color = Color.White,
+            brush = colors.gradient.goldShimmer,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        // 1. 底層的紫色邊框卡片 (Row 所在的容器)
+        // 1. 底層的邊框卡片 (Row 所在的容器)
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .fillMaxWidth()
                 .height(120.dp) // 固定高度
-                .neonGlow(
-                    color = colors.accent.secondary,
-                    alpha = 0.6f,
-                    glowRadius = 15.dp,
-                    borderRadius = 18.dp,
-                    blurStyle = android.graphics.BlurMaskFilter.Blur.OUTER
+                .then(
+                    if (colors.effect.enableGlow)
+                        Modifier.neonGlow(
+                            color = colors.accent.secondary,
+                            alpha = 0.6f,
+                            glowRadius = 15.dp,
+                            borderRadius = 18.dp,
+                            blurStyle = android.graphics.BlurMaskFilter.Blur.OUTER
+                        )
+                    else Modifier
                 )
                 .background(
                     color = colors.bg.page,
@@ -71,20 +79,20 @@ fun QuestCard() {
                 )
                 .border(
                     width = 2.dp,
-                    color = colors.accent.secondary, // 你剛才轉好的洋紅色
+                    brush = colors.questCard.border,
                     shape = RoundedCornerShape(18.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 8.dp) // 內部元件距離邊框的距離
         ) {
             Text(
                 text = "Stack your points now",
-                color = Color.White,
+                color = colors.questCard.stackPointsText,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
             Text(
                 text = "with breathing cyan light effect",
-                color = Color.White,
+                color = colors.questCard.breathingEffectText,
                 fontSize = 12.sp,
             )
             Column(
@@ -93,14 +101,14 @@ fun QuestCard() {
             ) {
                 Text(
                     text = "Claim your loot here",
-                    color = neonDivider,
+                    color = colors.questCard.linkText,
                     textDecoration = TextDecoration.Underline,
                     fontSize = 12.sp,
                     lineHeight = 13.sp
                 )
                 Text(
                     text = "Start your grid & earn",
-                    color = neonDivider,
+                    color = colors.questCard.linkText,
                     textDecoration = TextDecoration.Underline,
                     fontSize = 12.sp,
                     lineHeight = 10.sp
@@ -108,7 +116,7 @@ fun QuestCard() {
             }
         }
         Image(
-            painter = painterResource(id = R.mipmap.bg_quest_card),
+            painter = painterResource(id = assets.questCardBackground),
             contentDescription = "Quest Card",
             modifier = Modifier
                 .size(150.dp)
@@ -119,14 +127,28 @@ fun QuestCard() {
 }
 
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0A0E1A)
 @Composable
-fun QuestCardPreview() {
-    MaterialTheme {
+private fun QuestCardPreviewNeon() {
+    AppTheme(colors = NeonColors, assets = NeonAssets) {
         Box(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .fillMaxWidth()
                 .background(deepNavy)
+                .padding(16.dp)
+        ) {
+            QuestCard()
+        }
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun QuestCardPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(16.dp)
         ) {
             QuestCard()

@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -35,15 +34,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.home.dialog.EditEssentialsDialog
 import com.qpay.xcash.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import com.qpay.xcash.ui.home.essential.EssentialItem
 import com.qpay.xcash.ui.home.essential.ITEMS_PER_PAGE
 import com.qpay.xcash.ui.home.essential.allEssentialItems
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonAssets
+import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.plumPurple
-import com.qpay.xcash.ui.theme.navyDark
-import com.qpay.xcash.ui.theme.indigoDark
 import com.qpay.xcash.ui.theme.deepNavy
 import com.qpay.xcash.ui.theme.paleCyan
 
@@ -59,6 +63,7 @@ fun XEssentialsCard(
     onSaveMyMenu: (List<EssentialItem>) -> Unit,
 ) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     // 將 myMenuItems 依照每頁 8 個分頁
     val pages = myMenuItems.chunked(ITEMS_PER_PAGE)
     val pagerState = rememberPagerState(pageCount = { pages.size })
@@ -72,9 +77,10 @@ fun XEssentialsCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            GradientText(
                 text = stringResource(R.string.essentials_title),
                 color = paleCyan,
+                brush = colors.gradient.silverShimmer,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -90,7 +96,7 @@ fun XEssentialsCard(
                 ) {
                     Text(
                         text = stringResource(R.string.essentials_edit),
-                        color = colors.text.body,
+                        color = colors.essentialsCard.editText,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -103,11 +109,12 @@ fun XEssentialsCard(
         // ── 可左右滑動的功能圖示 Pager ──
         Box(
             modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(assets.essentialsCardAspectRatio)
                 .paint(
-                    painter = painterResource(id = R.mipmap.bg_home_essentials),
+                    painter = painterResource(id = assets.essentialsCardBackground),
                     contentScale = ContentScale.FillBounds
                 )
-                .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 10.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -215,22 +222,10 @@ fun EssentialItemView(item: EssentialItem?) {
                 .width(60.dp)
                 .height(50.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            navyDark,
-                            indigoDark
-                        )
-                    )
-                )
+                .background(brush = colors.essentialsCard.itemBackground)
                 .border(
                     width = 1.5.dp,
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            colors.accent.primary.copy(alpha = 0.4f),
-                            colors.accent.secondary.copy(alpha = 0.8f)
-                        )
-                    ),
+                    brush = colors.essentialsCard.itemBorder,
                     shape = RoundedCornerShape(16.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -239,11 +234,11 @@ fun EssentialItemView(item: EssentialItem?) {
                 Icon(
                     imageVector = item.iconVector,
                     contentDescription = item.label,
-                    tint = colors.accent.primary,
+                    tint = colors.essentialsCard.itemIcon,
                     modifier = Modifier.size(30.dp)
                 )
             } else if (item?.iconRes != null) {
-                val tint = if (item.useOriginalColor) Color.Unspecified else colors.accent.primary
+                val tint = if (item.useOriginalColor) Color.Unspecified else colors.essentialsCard.itemIcon
                 Icon(
                     painter = painterResource(id = item.iconRes),
                     contentDescription = item.label,
@@ -261,21 +256,38 @@ fun EssentialItemView(item: EssentialItem?) {
                 .fillMaxWidth(),
             textAlign = TextAlign.Center,
             text = item?.label ?: "",
-            color = colors.text.body,
+            color = colors.essentialsCard.itemLabel,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium
         )
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-fun XEssentialsCardPreview() {
-    MaterialTheme {
+private fun XEssentialsCardPreviewNeon() {
+    AppTheme(colors = NeonColors, assets = NeonAssets) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(deepNavy)
+                .padding(16.dp)
+        ) {
+            XEssentialsCard(
+                myMenuItems = allEssentialItems.take(ESSENTIALS_DISPLAY_COUNT),
+                onSaveMyMenu = {}
+            )
+        }
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun XEssentialsCardPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(16.dp)
         ) {
             XEssentialsCard(

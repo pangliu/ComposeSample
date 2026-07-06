@@ -20,7 +20,6 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -36,8 +35,12 @@ import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.OrderHistoryResponse
 import com.qpay.xcash.network.model.response.OrderStatus
 import com.qpay.xcash.network.model.response.OrderType
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.limeGreen
 import com.qpay.xcash.ui.theme.deepNavy
 import com.qpay.xcash.ui.theme.neonCyanLight
@@ -51,9 +54,10 @@ import com.qpay.xcash.ui.theme.themeWhite
 fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistoryResponse) -> Unit = {}) {
     val colors = LocalAppColors.current
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
+        GradientText(
             text = stringResource(R.string.recent_activity_title),
             color = themeWhite,
+            brush = colors.gradient.silverShimmer,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
@@ -61,8 +65,12 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(color = neonCyanLight, alpha = 0.6f, glowRadius = 18.dp, borderRadius = 18.dp)
-                .border(width = 2.dp, color = neonCyanLight, shape = RoundedCornerShape(18.dp))
+                .then(
+                    if (colors.effect.enableGlow)
+                        Modifier.neonGlow(color = neonCyanLight, alpha = 0.6f, glowRadius = 18.dp, borderRadius = 18.dp)
+                    else Modifier
+                )
+                .border(width = 2.dp, brush = colors.recentActivity.border, shape = RoundedCornerShape(18.dp))
                 .background(color = colors.bg.page, shape = RoundedCornerShape(18.dp))
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             contentAlignment = Alignment.Center
@@ -159,51 +167,68 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+private val previewOrders: List<OrderHistoryResponse>
+    @Composable get() {
+        val now = System.currentTimeMillis()
+        return listOf(
+            OrderHistoryResponse(
+                orderId = "ORD001",
+                amount = 500.0,
+                type = OrderType.INCOMING,
+                paymentName = "GCash",
+                account = "09123456789",
+                targetAccount = "09987654321",
+                status = OrderStatus.SUCCESS,
+                expiredAt = now - 3_600_000
+            ),
+            OrderHistoryResponse(
+                orderId = "ORD002",
+                amount = 200.0,
+                type = OrderType.OUTGOING,
+                paymentName = "GoTyme",
+                account = "09123456789",
+                targetAccount = "09111222333",
+                status = OrderStatus.SUCCESS,
+                expiredAt = now - 7_200_000
+            ),
+            OrderHistoryResponse(
+                orderId = "ORD003",
+                amount = 1200.0,
+                type = OrderType.INCOMING,
+                paymentName = "GCash",
+                account = "09123456789",
+                targetAccount = "09444555666",
+                status = OrderStatus.FAILED,
+                expiredAt = now - 86_400_000
+            )
+        )
+    }
+
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0A0E1A)
 @Composable
-fun RecentActivityPreview() {
-    val now = System.currentTimeMillis()
-    MaterialTheme {
+private fun RecentActivityPreviewNeon() {
+    AppTheme(colors = NeonColors) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(deepNavy)
                 .padding(16.dp)
         ) {
-            RecentActivity(
-                orders = listOf(
-                    OrderHistoryResponse(
-                        orderId = "ORD001",
-                        amount = 500.0,
-                        type = OrderType.INCOMING,
-                        paymentName = "GCash",
-                        account = "09123456789",
-                        targetAccount = "09987654321",
-                        status = OrderStatus.SUCCESS,
-                        expiredAt = now - 3_600_000
-                    ),
-                    OrderHistoryResponse(
-                        orderId = "ORD002",
-                        amount = 200.0,
-                        type = OrderType.OUTGOING,
-                        paymentName = "GoTyme",
-                        account = "09123456789",
-                        targetAccount = "09111222333",
-                        status = OrderStatus.SUCCESS,
-                        expiredAt = now - 7_200_000
-                    ),
-                    OrderHistoryResponse(
-                        orderId = "ORD003",
-                        amount = 1200.0,
-                        type = OrderType.INCOMING,
-                        paymentName = "GCash",
-                        account = "09123456789",
-                        targetAccount = "09444555666",
-                        status = OrderStatus.FAILED,
-                        expiredAt = now - 86_400_000
-                    )
-                )
-            )
+            RecentActivity(orders = previewOrders)
+        }
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun RecentActivityPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            RecentActivity(orders = previewOrders)
         }
     }
 }

@@ -40,6 +40,10 @@ data class AppColors(
     val accountDialog: AccountDialogColors,
     val loginSheet: LoginSheetColors,
     val balanceCard: BalanceCardColors,
+    val essentialsCard: EssentialsCardColors,
+    val questCard: QuestCardColors,
+    val recentActivity: RecentActivityColors,
+    val bottomNav: BottomNavColors,
 )
 
 val NeonColors = AppColors(
@@ -69,6 +73,10 @@ val NeonColors = AppColors(
     accountDialog = NeonAccountDialogColors,
     loginSheet = NeonLoginSheetColors,
     balanceCard = NeonBalanceCardColors,
+    essentialsCard = NeonEssentialsCardColors,
+    questCard = NeonQuestCardColors,
+    recentActivity = NeonRecentActivityColors,
+    bottomNav = NeonBottomNavColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -102,4 +110,8 @@ val BlackGoldColors = AppColors(
     accountDialog = BlackGoldAccountDialogColors,
     loginSheet = BlackGoldLoginSheetColors,
     balanceCard = BlackGoldBalanceCardColors,
+    essentialsCard = BlackGoldEssentialsCardColors,
+    questCard = BlackGoldQuestCardColors,
+    recentActivity = BlackGoldRecentActivityColors,
+    bottomNav = BlackGoldBottomNavColors,
 )

@@ -7,7 +7,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,7 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonAssets
+import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.mediumCyan
 
 private val NavBarHeight = 60.dp
@@ -104,13 +109,15 @@ private fun BottomNavItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+    val colors = LocalAppColors.current
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val isActive = isPressed || isSelected
-    val color = if (isActive) mediumCyan else Color.Gray
+    val color = if (isActive) colors.bottomNav.activeText else Color.Gray
     val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
     val iconRes = if (isActive) activeIconRes else defaultIconRes
+    val iconTint = if (isActive) colors.bottomNav.activeIconTint else Color.Unspecified
 
     Column(
         modifier = modifier
@@ -125,7 +132,7 @@ private fun BottomNavItem(
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = title,
-            tint = Color.Unspecified,
+            tint = iconTint,
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -142,6 +149,7 @@ private fun BottomNavItem(
 
 @Composable
 private fun ScanAndPayTab(modifier: Modifier = Modifier, isSelected: Boolean = false, onClick: () -> Unit = {}) {
+    val assets = LocalAppAssets.current
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -168,7 +176,7 @@ private fun ScanAndPayTab(modifier: Modifier = Modifier, isSelected: Boolean = f
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(R.mipmap.bg_scanner),
+                painter = painterResource(assets.scanButtonBackground),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxWidth()
@@ -191,11 +199,23 @@ private fun ScanAndPayTab(modifier: Modifier = Modifier, isSelected: Boolean = f
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun CustomBottomNavigationPreview() {
+private fun CustomBottomNavigationPreviewNeon() {
     var selectedIndex by remember { mutableStateOf(0) }
-    MaterialTheme {
+    AppTheme(colors = NeonColors, assets = NeonAssets) {
+        CustomBottomNavigation(
+            selectedIndex = selectedIndex,
+            onTabSelected = { selectedIndex = it }
+        )
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun CustomBottomNavigationPreviewBlackGold() {
+    var selectedIndex by remember { mutableStateOf(0) }
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         CustomBottomNavigation(
             selectedIndex = selectedIndex,
             onTabSelected = { selectedIndex = it }
