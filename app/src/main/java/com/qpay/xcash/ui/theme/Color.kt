@@ -52,6 +52,12 @@ val mediumCyan = Color(0xFF61C8E4)
 val paleCyan = Color(0xFFBEE3EE)
 val lemonYellow = Color(0xFFFEF27C)
 
+// ========== Balance Card ==========
+val slateCharcoal = Color(0xFF3C3C4C)    // Balance Switch 膠囊按鈕背景
+val duskIndigo = Color(0xFF353649)       // 眼睛圖示按鈕背景 / Balance Switch 邊框
+val mistGray = Color(0xFFD8DADF)         // 一般文字色（BALANCE 標題、Token 數量）
+val frostWhite = Color(0xFFF7F9F9)       // 金額文字色（較亮）
+
 // ========== Drawer Menu 卡片顏色 ==========
 val aquaLight = Color(0xFF9BFBFD)        // Account Status 卡片邊框（淺水藍）
 val tealMedium = Color(0xFF31C8CD)       // Account Status 卡片標題（中青綠）
@@ -69,5 +75,14 @@ val nearBlack = Color(0xFF050505)       // 頁面底色
 val charcoalBlack = Color(0xFF0F0F0F)          // Card / Dialog 底色
 val powderBlue = Color(0xFF85D6EE)     // Telegram 按鈕邊框 & 文字
 val paleGold = Color(0xFFDFB77E)           // Drawer Account Status 卡片 / LanguageSelector / Dialog 邊框（暖金）
+val amberGold = Color(0xFFF4BF55)          // BalanceCard Cash In 按鈕邊框 / 文字；文字漸層中段
+val platinumSilver = Color(0xFFC7C9CE)     // BalanceCard Send 按鈕邊框 / 文字
+val oldGold = Color(0xFFC39C4F)            // 金色文字漸層最深色（上下兩端）
+val champagneGold = Color(0xFFECD5A0)      // 金色文字漸層最亮色（正中間）
+val graphiteGray = Color(0xFF595858)       // 銀色文字漸層最深色（上下兩端）
+val steelGray = Color(0xFF959494)          // 銀色文字漸層中間色
+val silverMist = Color(0xFFC3C3C3)         // 銀色文字漸層最亮色（正中間）
+val jadeTeal = Color(0xFF4CBFAE)           // BalanceCard Balance Switch 圖示（依設計圖推測，可微調）
+val charcoalGray = Color(0xFF363636)       // BalanceCard Balance Switch 按鈕背景
 val terracottaGold = Color(0xFFB47765)           // Drawer Product Features 卡片（赭紅金）
 val caramelBrown = Color(0xFFB28860)      // LanguageSelector 選中項目背景

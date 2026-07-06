@@ -1,5 +1,6 @@
 package com.qpay.xcash.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 data class AccentColors(
@@ -18,57 +19,27 @@ data class TextColors(
     val onPrimary: Color,       // 放在 primary 色塊上的文字
 )
 
-data class ButtonColors(
-    val loginBackground: Color,  // Login 按鈕填色
-    val loginBorder: Color,         // Login 按鈕邊框（Neon 無邊框用 Transparent）
-    val loginText: Color,           // Login 按鈕文字
-    val telegramBackground: Color,  // Telegram 按鈕填色
-    val telegramBorder: Color,      // Telegram 按鈕邊框
-    val telegramText: Color,        // Telegram 按鈕文字
-)
-
 data class EffectColors(
     val enableGlow: Boolean,    // Neon = true，Black Gold = false
 )
 
-data class DrawerCardColors(
-    val title: Color,           // 卡片標題文字色
-    val border: Color,          // 卡片邊框色
-)
-
-data class DrawerColors(
-    val accountCard: DrawerCardColors,   // Account Status 卡片
-    val productCard: DrawerCardColors,   // Product Features 卡片
-    val helpCard: DrawerCardColors,      // Help & Policies 卡片
-)
-
-data class SelectorColors(
-    val border: Color,                  // 下拉框邊框色
-    val selectedBackground: Color,      // 選中項目背景色
-)
-
-data class AccountDialogColors(
-    val button1: Color,                 // Check Application Progress 按鈕邊框
-    val button2: Color,                 // Verify My Identity 按鈕邊框
-)
-
-data class LoginSheetColors(
-    val outerBorder: Color,             // Card 外框邊框
-    val inputAccent: Color,             // 輸入框邊框 + eye icon tint（非錯誤狀態）
-    val hint: Color,                    // 密碼提示文字（Uppercase、Number）
-    val submitButton: Color,            // 送出按鈕邊框 + icon
+data class GradientColors(
+    val goldShimmer: Brush?,     // 直向金色文字漸層裝飾效果；Neon = null（不套用，維持單色文字）
+    val silverShimmer: Brush?,   // 直向銀色文字漸層裝飾效果；Neon = null（不套用，維持單色文字）
 )
 
 data class AppColors(
     val accent: AccentColors,
     val bg: BgColors,
     val text: TextColors,
-    val button: ButtonColors,
+    val loginButton: LoginButtonColors,
     val effect: EffectColors,
+    val gradient: GradientColors,
     val drawer: DrawerColors,
     val selector: SelectorColors,
     val accountDialog: AccountDialogColors,
     val loginSheet: LoginSheetColors,
+    val balanceCard: BalanceCardColors,
 )
 
 val NeonColors = AppColors(
@@ -85,36 +56,19 @@ val NeonColors = AppColors(
         body = silverGray,
         onPrimary = Color.White,
     ),
-    button = ButtonColors(
-        loginBackground = neonPurple,
-        loginBorder = Color.Transparent,
-        loginText = Color.White,
-        telegramBackground = neonGreen,
-        telegramBorder = neonGreenLight,
-        telegramText = Color.White,
-    ),
+    loginButton = NeonLoginButtonColors,
     effect = EffectColors(
         enableGlow = true,
     ),
-    drawer = DrawerColors(
-        accountCard = DrawerCardColors(title = tealMedium, border = aquaLight),
-        productCard = DrawerCardColors(title = orchidDark, border = orchidLight),
-        helpCard = DrawerCardColors(title = royalBlue, border = cornflowerBlue),
+    gradient = GradientColors(
+        goldShimmer = null,
+        silverShimmer = null,
     ),
-    selector = SelectorColors(
-        border = neonCyanLight,
-        selectedBackground = Color(0xFF1E3A58),
-    ),
-    accountDialog = AccountDialogColors(
-        button1 = neonPurpleLight,
-        button2 = neonBlue,
-    ),
-    loginSheet = LoginSheetColors(
-        outerBorder = neonPurpleLight,
-        inputAccent = neonCyanLight,
-        hint = neonMint,
-        submitButton = neonMint,
-    ),
+    drawer = NeonDrawerColors,
+    selector = NeonSelectorColors,
+    accountDialog = NeonAccountDialogColors,
+    loginSheet = NeonLoginSheetColors,
+    balanceCard = NeonBalanceCardColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -131,34 +85,21 @@ val BlackGoldColors = AppColors(
         body = warmSand,
         onPrimary = antiqueGold,
     ),
-    button = ButtonColors(
-        loginBackground = Color.Transparent,
-        loginBorder = antiqueGold,
-        loginText = antiqueGold,
-        telegramBackground = Color.Transparent,
-        telegramBorder = powderBlue,
-        telegramText = powderBlue,
-    ),
+    loginButton = BlackGoldLoginButtonColors,
     effect = EffectColors(
         enableGlow = false,
     ),
-    drawer = DrawerColors(
-        accountCard = DrawerCardColors(title = paleGold, border = paleGold),
-        productCard = DrawerCardColors(title = terracottaGold, border = terracottaGold),
-        helpCard = DrawerCardColors(title = cornflowerBlue, border = cornflowerBlue),
+    gradient = GradientColors(
+        goldShimmer = Brush.verticalGradient(
+            listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
+        ),
+        silverShimmer = Brush.verticalGradient(
+            listOf(graphiteGray, steelGray, silverMist, steelGray, graphiteGray)
+        ),
     ),
-    selector = SelectorColors(
-        border = paleGold,
-        selectedBackground = caramelBrown,
-    ),
-    accountDialog = AccountDialogColors(
-        button1 = terracottaGold,
-        button2 = cornflowerBlue,
-    ),
-    loginSheet = LoginSheetColors(
-        outerBorder = antiqueGold,
-        inputAccent = antiqueGold,
-        hint = antiqueGold,
-        submitButton = sunGold,
-    ),
+    drawer = BlackGoldDrawerColors,
+    selector = BlackGoldSelectorColors,
+    accountDialog = BlackGoldAccountDialogColors,
+    loginSheet = BlackGoldLoginSheetColors,
+    balanceCard = BlackGoldBalanceCardColors,
 )

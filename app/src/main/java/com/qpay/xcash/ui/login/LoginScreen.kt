@@ -331,14 +331,14 @@ fun LoginScreenContent(
                             .fillMaxWidth()
                             .height(50.dp)
                             .then(if (colors.effect.enableGlow)
-                                Modifier.neonGlow(color = colors.button.loginBorder.takeIf { it != Color.Transparent }
-                                    ?: colors.button.loginBackground, alpha = 0.9f, glowRadius = 20.dp)
+                                Modifier.neonGlow(color = colors.loginButton.loginBorder.takeIf { it != Color.Transparent }
+                                    ?: colors.loginButton.loginBackground, alpha = 0.9f, glowRadius = 20.dp)
                             else Modifier),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = colors.button.loginBackground,
-                            contentColor = colors.button.loginText
+                            containerColor = colors.loginButton.loginBackground,
+                            contentColor = colors.loginButton.loginText
                         ),
-                        border = BorderStroke(width = 1.5.dp, color = colors.button.loginBorder),
+                        border = BorderStroke(width = 1.5.dp, color = colors.loginButton.loginBorder),
                         shape = RoundedCornerShape(25.dp)
                     ) {
                         Text(if (uiState.isLoading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.login_btn), fontSize = 16.sp)
@@ -350,12 +350,12 @@ fun LoginScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.button.telegramBorder, alpha = 0.7f, glowRadius = 20.dp) else Modifier),
+                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.loginButton.telegramBorder, alpha = 0.7f, glowRadius = 20.dp) else Modifier),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = colors.button.telegramBackground,
-                            contentColor = colors.button.telegramText
+                            containerColor = colors.loginButton.telegramBackground,
+                            contentColor = colors.loginButton.telegramText
                         ),
-                        border = BorderStroke(width = 1.dp, color = colors.button.telegramBorder),
+                        border = BorderStroke(width = 1.dp, color = colors.loginButton.telegramBorder),
                         shape = RoundedCornerShape(25.dp)
                     ){
                         Text(if (uiState.isLoading) stringResource(id = R.string.logging_in) else stringResource(id = R.string.sign_up_with_telegram), fontSize = 16.sp)

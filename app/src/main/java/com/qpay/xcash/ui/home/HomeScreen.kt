@@ -103,7 +103,7 @@ private fun HomeScreenContent(
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    Spacer(modifier = Modifier.height(8.dp))
+//                    Spacer(modifier = Modifier.height(8.dp))
                     BalanceCard(
                         cashBalance = uiState.userInfo.cashBalance,
                         tokenBalance = uiState.userInfo.tokenBalance

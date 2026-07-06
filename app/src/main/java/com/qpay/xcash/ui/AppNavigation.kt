@@ -10,9 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import com.qpay.xcash.ui.theme.AppTheme
-import com.qpay.xcash.ui.theme.BlackGoldAssets
-import com.qpay.xcash.ui.theme.BlackGoldColors
-import com.qpay.xcash.ui.theme.NeonAssets
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavType
@@ -47,7 +44,7 @@ fun AppNavigation(
     appViewModel: AppViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
-    val currentColors by appViewModel.currentColors.collectAsState()
+    val currentTheme by appViewModel.currentTheme.collectAsState()
 
     LaunchedEffect(Unit) {
         appViewModel.logoutEvent.collect {
@@ -59,8 +56,7 @@ fun AppNavigation(
         }
     }
 
-    val currentAssets = if (currentColors === BlackGoldColors) BlackGoldAssets else NeonAssets
-    AppTheme(colors = currentColors, assets = currentAssets) {
+    AppTheme(colors = currentTheme.colors, assets = currentTheme.assets) {
         NavHost(navController = navController, startDestination = Routes.WELCOME) {
 
             composable(Routes.WELCOME) {

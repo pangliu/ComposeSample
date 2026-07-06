@@ -10,6 +10,10 @@ data class AppAssets(
     @DrawableRes val centerLogoImage: Int?,     // LoginScreen 中央 logo 靜態圖（null = 播影片）
     @DrawableRes val xcashWordmark: Int,        // 頂部 "xcash" 文字 logo
     @DrawableRes val loginBackground: Int?,  // LoginScreen 頁面背景圖（null = 純色）
+    @DrawableRes val balanceCardBackground: Int, // BalanceCard 背景圖
+    @DrawableRes val balanceCoinIcon: Int,       // BalanceCard Token 金幣圖示
+    @DrawableRes val cashInIcon: Int,            // BalanceCard Cash In 按鈕圖示
+    @DrawableRes val balanceSendIcon: Int,       // BalanceCard Send 按鈕圖示
 )
 
 val NeonAssets = AppAssets(
@@ -17,6 +21,10 @@ val NeonAssets = AppAssets(
     centerLogoImage = null,
     xcashWordmark = R.drawable.ic_xcash,
     loginBackground = null,
+    balanceCardBackground = R.drawable.bg_balance_card,
+    balanceCoinIcon = R.mipmap.ic_balance_coin,
+    cashInIcon = R.drawable.ic_cash_in,
+    balanceSendIcon = R.drawable.ic_balance_send,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -24,6 +32,10 @@ val BlackGoldAssets = AppAssets(
     centerLogoImage = R.drawable.ic_xcash_logo_black_gold,
     xcashWordmark = R.drawable.ic_xcash_black_gold,
     loginBackground = R.drawable.bg_login_black_gold,
+    balanceCardBackground = R.drawable.bg_balance_card_black_gold,
+    balanceCoinIcon = R.drawable.ic_balance_coin_black_gold,
+    cashInIcon = R.drawable.ic_cash_in_black_gold,
+    balanceSendIcon = R.drawable.ic_balance_send_black_gold,
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }

@@ -2,9 +2,7 @@ package com.qpay.xcash.network.manager
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.qpay.xcash.ui.theme.AppColors
-import com.qpay.xcash.ui.theme.BlackGoldColors
-import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.ThemeMode
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,15 +20,19 @@ class ThemeManager @Inject constructor(
         private const val THEME_BLACK_GOLD = "black_gold"
     }
 
-    fun save(colors: AppColors) {
-        val value = if (colors === BlackGoldColors) THEME_BLACK_GOLD else THEME_NEON
+    fun save(mode: ThemeMode) {
+        val value = when (mode) {
+            ThemeMode.NEON -> THEME_NEON
+            ThemeMode.BLACK_GOLD -> THEME_BLACK_GOLD
+        }
         prefs.edit().putString(KEY_THEME, value).apply()
     }
 
-    fun load(): AppColors {
-        return when (prefs.getString(KEY_THEME, THEME_NEON)) {
-            THEME_BLACK_GOLD -> BlackGoldColors
-            else -> NeonColors
+    fun load(): ThemeMode {
+        return when (prefs.getString(KEY_THEME, THEME_BLACK_GOLD)) {
+            THEME_NEON -> ThemeMode.NEON
+            THEME_BLACK_GOLD -> ThemeMode.BLACK_GOLD
+            else -> ThemeMode.BLACK_GOLD
         }
     }
 }
