@@ -47,7 +47,7 @@ val BlackGoldBalanceCardColors = BalanceCardColors(
     sendBorder = platinumSilver,
     sendText = platinumSilver,
     switchBackground = charcoalGray,
-    switchBorder = platinumSilver,
+    switchBorder = platinumSilver.copy(0.5f),
     switchIcon = platinumSilver,
     switchText = silverMist,
 )
@@ -58,6 +58,8 @@ data class EssentialsCardColors(
     val itemIcon: Color,       // EssentialItemView icon 顏色
     val itemLabel: Color,      // EssentialItemView icon 下方標籤文字顏色
     val editText: Color,       // Edit 按鈕文字顏色
+    val editTextBg: Color,     // Edit 按鈕背景顏色
+    val editTextBorder: Color, // Edit 按鈕邊框顏色
 )
 
 val NeonEssentialsCardColors = EssentialsCardColors(
@@ -73,6 +75,8 @@ val NeonEssentialsCardColors = EssentialsCardColors(
     itemIcon = neonCyan,
     itemLabel = silverGray,
     editText = silverGray,
+    editTextBg = slateCharcoal,
+    editTextBorder = duskIndigo
 )
 
 val BlackGoldEssentialsCardColors = EssentialsCardColors(
@@ -86,6 +90,8 @@ val BlackGoldEssentialsCardColors = EssentialsCardColors(
     itemIcon = paleChampagne,
     itemLabel = coolGray,
     editText = coolGray,
+    editTextBg = charcoalLightBlack,
+    editTextBorder = platinumSilver.copy(0.5f),
 )
 
 data class QuestCardColors(
@@ -116,10 +122,14 @@ val BlackGoldQuestCardColors = QuestCardColors(
 
 data class RecentActivityColors(
     val border: Brush,   // 卡片邊框（Neon: 純色；Black Gold: 銀色漸層，由左至右，同 silverShimmer）
+    val cashInIconTint: Color,
+    val cashOutIconTint: Color,
 )
 
 val NeonRecentActivityColors = RecentActivityColors(
     border = SolidColor(neonCyanLight),
+    cashInIconTint = limeGreen,
+    cashOutIconTint = vibrantPink
 )
 
 val BlackGoldRecentActivityColors = RecentActivityColors(
@@ -127,4 +137,6 @@ val BlackGoldRecentActivityColors = RecentActivityColors(
     border = Brush.horizontalGradient(
         colors = listOf(graphiteGray, steelGray, silverMist, steelGray, graphiteGray)
     ),
+    cashInIconTint = antiqueGold,
+    cashOutIconTint = platinumSilver
 )

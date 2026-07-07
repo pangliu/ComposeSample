@@ -39,7 +39,7 @@ fun SubPageTopBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(70.dp)
     ) {
         if (showBack) {
             Icon(

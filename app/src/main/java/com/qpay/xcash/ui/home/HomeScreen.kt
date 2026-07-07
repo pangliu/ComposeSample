@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +43,7 @@ import com.qpay.xcash.network.model.response.OrderHistoryResponse
 import com.qpay.xcash.network.model.response.UserInfoResponse
 import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.UiEvent
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.LoadingDialogContent
 import com.qpay.xcash.ui.home.components.BalanceCard
 import com.qpay.xcash.ui.home.components.XEssentialsCard
@@ -51,6 +52,13 @@ import com.qpay.xcash.ui.home.components.RecentActivity
 import com.qpay.xcash.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import com.qpay.xcash.ui.home.essential.EssentialItem
 import com.qpay.xcash.ui.home.essential.allEssentialItems
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonAssets
+import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.mistGray
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), onNavigate: (String) -> Unit = {}) {
@@ -131,26 +139,34 @@ private fun HomeScreenContent(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+private val previewUiState = HomeUiState(
+    isLoadingUserInfo = false,
+    isLoadingOrders = false,
+    userInfo = UserInfoResponse(
+        userId = "U12345",
+        userName = "Hank Liu",
+        userPhone = "0912345678",
+        userEmail = "test@example.com",
+        cashBalance = 12500.0,
+        tokenBalance = 888.0,
+        nickName = "hankHaHa"
+    ),
+    orders = emptyList()
+)
+
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0A0E1A)
 @Composable
-private fun HomeScreenPreview() {
-    MaterialTheme {
-        HomeScreenContent(
-            uiState = HomeUiState(
-                isLoadingUserInfo = false,
-                isLoadingOrders = false,
-                userInfo = UserInfoResponse(
-                    userId = "U12345",
-                    userName = "Hank Liu",
-                    userPhone = "0912345678",
-                    userEmail = "test@example.com",
-                    cashBalance = 12500.0,
-                    tokenBalance = 888.0,
-                    nickName = "hankHaHa"
-                ),
-                orders = emptyList()
-            )
-        )
+private fun HomeScreenPreviewNeon() {
+    AppTheme(colors = NeonColors, assets = NeonAssets) {
+        HomeScreenContent(uiState = previewUiState)
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun HomeScreenPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        HomeScreenContent(uiState = previewUiState)
     }
 }
 
@@ -158,6 +174,7 @@ private fun HomeScreenPreview() {
 
 @Composable
 fun HeaderSection(userName: String, onNavigate: (String) -> Unit = {}) {
+    val colors = LocalAppColors.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -166,11 +183,13 @@ fun HeaderSection(userName: String, onNavigate: (String) -> Unit = {}) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
+            GradientText(
                 text = stringResource(R.string.home_greeting, userName),
-                color = Color.White,
+                color = mistGray,
+                brush = colors.gradient.goldShimmer,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Companion.ExtraBold,
+                letterSpacing = 1.sp
             )
         }
         Row(
@@ -178,7 +197,7 @@ fun HeaderSection(userName: String, onNavigate: (String) -> Unit = {}) {
 //            modifier = Modifier.offset(x = 12.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.Notifications,
+                painter = painterResource(R.drawable.ic_home_notify),
                 contentDescription = stringResource(R.string.home_notifications_desc),
                 tint = Color.Gray,
                 modifier = Modifier
@@ -190,7 +209,8 @@ fun HeaderSection(userName: String, onNavigate: (String) -> Unit = {}) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
-                imageVector = Icons.Default.Settings,
+//                imageVector = Icons.Default.Settings,
+                painter = painterResource(R.drawable.ic_home_setting),
                 contentDescription = stringResource(R.string.home_settings_desc),
                 tint = Color.Gray,
                 modifier = Modifier

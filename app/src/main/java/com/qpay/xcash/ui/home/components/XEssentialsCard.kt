@@ -51,9 +51,7 @@ import com.qpay.xcash.ui.theme.plumPurple
 import com.qpay.xcash.ui.theme.deepNavy
 import com.qpay.xcash.ui.theme.paleCyan
 
-private val cardGradientEnd = Color(0xFF0A1228)
 private val essentialEdit = Color(0xFF3E4155)
-private val essentialMore = Color(0xFF48B4C9)
 
 // ── X-Essentials 快捷功能區 ──────────────────────────────────────────────────
 
@@ -90,9 +88,14 @@ fun XEssentialsCard(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
-                        .background(essentialEdit)
+                        .background(colors.essentialsCard.editTextBg)
                         .clickable { showEditDialog = true }
-                        .padding(horizontal = 16.dp, vertical = 5.dp)
+                        .border(
+                            width = 1.dp,
+                            color = colors.essentialsCard.editTextBorder,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.essentials_edit),
@@ -221,12 +224,12 @@ fun EssentialItemView(item: EssentialItem?) {
             modifier = Modifier
                 .width(60.dp)
                 .height(50.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(8.dp))
                 .background(brush = colors.essentialsCard.itemBackground)
                 .border(
                     width = 1.5.dp,
                     brush = colors.essentialsCard.itemBorder,
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(8.dp)
                 ),
             contentAlignment = Alignment.Center
         ) {

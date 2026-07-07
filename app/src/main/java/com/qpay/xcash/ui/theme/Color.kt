@@ -51,6 +51,7 @@ val mediumCyan = Color(0xFF61C8E4)
 // ========== Essential card ==========
 val paleCyan = Color(0xFFBEE3EE)
 val lemonYellow = Color(0xFFFEF27C)
+val charcoalLightBlack = Color(0xFF232323)
 
 // ========== Balance Card ==========
 val slateCharcoal = Color(0xFF3C3C4C)    // Balance Switch 膠囊按鈕背景
@@ -83,7 +84,7 @@ val graphiteGray = Color(0xFF595858)       // 銀色文字漸層最深色（上�
 val steelGray = Color(0xFF959494)          // 銀色文字漸層中間色
 val silverMist = Color(0xFFC3C3C3)         // 銀色文字漸層最亮色（正中間）
 val jadeTeal = Color(0xFF4CBFAE)           // BalanceCard Balance Switch 圖示（依設計圖推測，可微調）
-val charcoalGray = Color(0xFF363636)       // BalanceCard Balance Switch 按鈕背景
+val charcoalGray = Color(0xFF484848)       // BalanceCard Balance Switch 按鈕背景
 val terracottaGold = Color(0xFFB47765)           // Drawer Product Features 卡片（赭紅金）
 val caramelBrown = Color(0xFFB28860)      // LanguageSelector 選中項目背景
 val taupeGold = Color(0xFFBCAB8D)         // XEssentialsCard EssentialItemView 邊框漸層兩端（左下 / 右上）

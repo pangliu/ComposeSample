@@ -41,17 +41,18 @@ import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
-import com.qpay.xcash.ui.theme.limeGreen
 import com.qpay.xcash.ui.theme.deepNavy
 import com.qpay.xcash.ui.theme.neonCyanLight
-import com.qpay.xcash.ui.theme.vibrantPink
 import com.qpay.xcash.ui.theme.themeWhite
 
 /**
  * @param orders null → loading；emptyList → 無資料；否則顯示列表
  */
 @Composable
-fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistoryResponse) -> Unit = {}) {
+fun RecentActivity(
+    orders: List<OrderHistoryResponse>,
+    onItemClick: (OrderHistoryResponse) -> Unit = {}
+) {
     val colors = LocalAppColors.current
     Column(modifier = Modifier.fillMaxWidth()) {
         GradientText(
@@ -67,10 +68,19 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
                 .fillMaxWidth()
                 .then(
                     if (colors.effect.enableGlow)
-                        Modifier.neonGlow(color = neonCyanLight, alpha = 0.6f, glowRadius = 18.dp, borderRadius = 18.dp)
+                        Modifier.neonGlow(
+                            color = neonCyanLight,
+                            alpha = 0.6f,
+                            glowRadius = 18.dp,
+                            borderRadius = 18.dp
+                        )
                     else Modifier
                 )
-                .border(width = 2.dp, brush = colors.recentActivity.border, shape = RoundedCornerShape(18.dp))
+                .border(
+                    width = 2.dp,
+                    brush = colors.recentActivity.border,
+                    shape = RoundedCornerShape(18.dp)
+                )
                 .background(color = colors.bg.page, shape = RoundedCornerShape(18.dp))
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             contentAlignment = Alignment.Center
@@ -84,6 +94,7 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
                         modifier = Modifier.padding(vertical = 24.dp)
                     )
                 }
+
                 else -> {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         orders.forEachIndexed { index, order ->
@@ -108,7 +119,11 @@ fun RecentActivity(orders: List<OrderHistoryResponse>, onItemClick: (OrderHistor
 private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
     val colors = LocalAppColors.current
     val isCashIn = order.type == OrderType.INCOMING
-    val iconColor = if (isCashIn) limeGreen else vibrantPink
+    val iconColor = if (isCashIn) {
+        colors.recentActivity.cashInIconTint
+    } else {
+        colors.recentActivity.cashOutIconTint
+    }
     val icon = if (isCashIn) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward
     val descRes = if (isCashIn) R.string.recent_cash_in else R.string.recent_cash_out
     val amountText = if (isCashIn)
@@ -129,7 +144,7 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(iconColor.copy(alpha = 0.15f)),
+                .background(iconColor.copy(alpha = 0.3f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -146,6 +161,7 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
             text = stringResource(descRes),
             color = colors.text.body,
             fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f)
         )
 
