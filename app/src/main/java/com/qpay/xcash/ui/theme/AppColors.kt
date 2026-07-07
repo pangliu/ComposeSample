@@ -49,6 +49,7 @@ data class AppColors(
     val notificationCard: NotificationCardColors,
     val notifySettingDialog: NotifySettingDialogColors,
     val setting: SettingColors,
+    val transactionDetail: TransactionDetailColors,
 )
 
 val NeonColors = AppColors(
@@ -87,6 +88,7 @@ val NeonColors = AppColors(
     notificationCard = NeonNotificationCardColors,
     notifySettingDialog = NeonNotifySettingDialogColors,
     setting = NeonSettingColors,
+    transactionDetail = NeonTransactionDetailColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -129,4 +131,5 @@ val BlackGoldColors = AppColors(
     notificationCard = BlackGoldNotificationCardColors,
     notifySettingDialog = BlackGoldNotifySettingDialogColors,
     setting = BlackGoldSettingColors,
+    transactionDetail = BlackGoldTransactionDetailColors,
 )

@@ -56,7 +56,6 @@ AppNavigation.kt  ← 從 currentTheme 取出 colors/assets，注入最外層 Ap
 | `ui/home/dialog/LogoutDialog.kt` | `DialogBg` |
 | `ui/home/setting/SettingScreen.kt` | `CardBg` |
 | `ui/home/notifications/components/NotificationCard.kt` | `CardBg` |
-| `ui/home/transaction_detail/TransactionDetailScreen.kt` | `CardBg` |
 | `ui/home/update_log/UpdateLogScreen.kt` | `CardBg` |
 
 其餘 `ui/home` 檔案（`HomeScreen.kt`、`EssentialItems.kt`、`QuestCard.kt`、`RecentActivity.kt`、`NotificationsScreen.kt`、`NotificationSettingsDialog.kt`）目前只使用 `AppColors.kt` 的全域色（`colors.accent` / `colors.bg` / `colors.text`），已符合雙主題規則，不需額外處理。
