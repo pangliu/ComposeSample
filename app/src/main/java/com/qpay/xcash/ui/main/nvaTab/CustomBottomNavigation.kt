@@ -150,11 +150,12 @@ private fun BottomNavItem(
 @Composable
 private fun ScanAndPayTab(modifier: Modifier = Modifier, isSelected: Boolean = false, onClick: () -> Unit = {}) {
     val assets = LocalAppAssets.current
+    val colors = LocalAppColors.current
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-
     val isActive = isPressed || isSelected
-    val color = if (isActive) mediumCyan else Color.Gray
+//    val color = if (isActive) mediumCyan else Color.Gray
+    val textColor = if (isActive) colors.bottomNav.activeText else Color.Gray
     val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
 
     Column(
@@ -182,15 +183,15 @@ private fun ScanAndPayTab(modifier: Modifier = Modifier, isSelected: Boolean = f
                 modifier = Modifier.fillMaxWidth()
             )
             Icon(
-                painter = painterResource(R.mipmap.ic_scanner),
+                painter = painterResource(assets.scanIcon),
                 contentDescription = stringResource(R.string.home_scan_icon_desc),
-                tint = Color.Unspecified,
-                modifier = Modifier.size(24.dp)
+                tint = colors.bottomNav.scanPayIconTint,
+                modifier = Modifier.size(colors.bottomNav.scanPayIconSize)
             )
         }
         Text(
             text = stringResource(R.string.home_scan_pay),
-            color = color,
+            color = textColor,
             fontSize = 12.sp,
             fontWeight = fontWeight,
             maxLines = 1,

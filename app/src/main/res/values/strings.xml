@@ -403,6 +403,7 @@
 
     <!-- Common -->
     <string name="common_back_desc">Back</string>
+    <string name="common_notify_settings_desc">Notification Settings</string>
 
     <!-- InputAmountScreen -->
     <string name="input_amount_title">Enter Amount</string>

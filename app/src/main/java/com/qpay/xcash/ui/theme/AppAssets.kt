@@ -18,6 +18,7 @@ data class AppAssets(
     val essentialsCardAspectRatio: Float,        // essentialsCardBackground 圖片寬高比（width / height）
     @DrawableRes val questCardBackground: Int,   // QuestCard 背景圖
     @DrawableRes val scanButtonBackground: Int,  // ScanAndPayTab bg_scanner 背景圖
+    @DrawableRes val scanIcon: Int,              // ScanAndPayTab 扫描圖示
 )
 
 val NeonAssets = AppAssets(
@@ -33,6 +34,7 @@ val NeonAssets = AppAssets(
     essentialsCardAspectRatio = 1083f / 579f,
     questCardBackground = R.drawable.bg_quest_card,
     scanButtonBackground = R.drawable.bg_scanner,
+    scanIcon = R.drawable.ic_scanner,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -48,6 +50,7 @@ val BlackGoldAssets = AppAssets(
     essentialsCardAspectRatio = 1080f / 579f,
     questCardBackground = R.drawable.bg_quest_card_black_gold,
     scanButtonBackground = R.drawable.bg_scanner_black_gold,
+    scanIcon = R.drawable.ic_scanner_black_gold,
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }
