@@ -40,15 +40,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.NeonSwitch
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
-import com.qpay.xcash.ui.theme.neonBlueLight
-import com.qpay.xcash.ui.theme.neonCyan
-import com.qpay.xcash.ui.theme.neonDarkBlue
-import com.qpay.xcash.ui.theme.neonPurpleLight
 
 data class NotificationSettingsState(
     val systemAlerts: Boolean = true,
@@ -116,14 +113,15 @@ fun NotificationSettingsDialogContent(
                     .background(colors.bg.surface, RoundedCornerShape(16.dp))
                     .border(
                         1.5.dp,
-                        colors.accent.primary.copy(alpha = 0.6f),
+                        colors.notifySettingDialog.contentBorder,
                         RoundedCornerShape(16.dp)
                     )
                     .padding(horizontal = 18.dp, vertical = 20.dp)
             ) {
-                Text(
+                GradientText(
                     text = stringResource(R.string.notifications_dialog_title),
                     color = colors.text.onPrimary,
+                    brush = colors.gradient.goldShimmer,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
@@ -137,8 +135,8 @@ fun NotificationSettingsDialogContent(
                     label = stringResource(R.string.notifications_dialog_system_alerts),
                     checked = settings.systemAlerts,
                     onCheckedChange = { onSettingsChange(settings.copy(systemAlerts = it)) },
-                    switchColor = neonCyan,
-                    iconColor = neonCyan
+                    switchColor = colors.notifySettingDialog.notifySysSwitch,
+                    iconColor = colors.notifySettingDialog.notifySysIconTint
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 NotificationSettingRow(
@@ -146,8 +144,8 @@ fun NotificationSettingsDialogContent(
                     label = stringResource(R.string.notifications_dialog_promo_notifications),
                     checked = settings.promoNotifications,
                     onCheckedChange = { onSettingsChange(settings.copy(promoNotifications = it)) },
-                    switchColor = neonDarkBlue,
-                    iconColor = neonPurpleLight
+                    switchColor = colors.notifySettingDialog.notifyPromoSwitch,
+                    iconColor = colors.notifySettingDialog.notifyPromoIconTint
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 NotificationSettingRow(
@@ -155,8 +153,8 @@ fun NotificationSettingsDialogContent(
                     label = stringResource(R.string.notifications_dialog_transaction_alerts),
                     checked = settings.transactionAlerts,
                     onCheckedChange = { onSettingsChange(settings.copy(transactionAlerts = it)) },
-                    switchColor = neonDarkBlue,
-                    iconColor = neonPurpleLight
+                    switchColor = colors.notifySettingDialog.notifyTransactionSwitch,
+                    iconColor = colors.notifySettingDialog.notifyTransactionIconTint
                 )
             }
         }
@@ -164,7 +162,7 @@ fun NotificationSettingsDialogContent(
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .border(1.5.dp, neonPurpleLight.copy(alpha = 0.6f), CircleShape)
+                .border(1.5.dp, colors.notifySettingDialog.cancelButtonBorder, CircleShape)
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
@@ -174,7 +172,7 @@ fun NotificationSettingsDialogContent(
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = stringResource(R.string.notifications_dialog_cancel_desc),
-                tint = neonPurpleLight,
+                tint = colors.notifySettingDialog.cancelButtonIcon,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -204,7 +202,7 @@ private fun NotificationSettingRow(
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = label,
-            color = colors.text.onPrimary,
+            color = colors.notifySettingDialog.notifyContentText,
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(1f)

@@ -23,6 +23,7 @@ val neonPink = Color(0xFFFF31A0)
 val neonBlue = Color(0xFF2E88FF)
 val neonBlueLight = Color(0xFF66A3CF)
 val neonDivider = Color(0xAAB0D6DF)
+val notifyCardBg = Color(0xFF0D1829)   // NotificationCard 卡片底色（Neon）
 // ========== transaction detail ===========
 val neonMint = Color(0xFF85EEAC)
 val neonBlushPink = Color(0xFFEFA2A8)

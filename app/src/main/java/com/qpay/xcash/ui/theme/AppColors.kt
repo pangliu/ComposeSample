@@ -44,6 +44,10 @@ data class AppColors(
     val questCard: QuestCardColors,
     val recentActivity: RecentActivityColors,
     val bottomNav: BottomNavColors,
+    val notificationTab: NotificationTabColors,
+    val notificationFilter: NotificationFilterColors,
+    val notificationCard: NotificationCardColors,
+    val notifySettingDialog: NotifySettingDialogColors,
 )
 
 val NeonColors = AppColors(
@@ -77,6 +81,10 @@ val NeonColors = AppColors(
     questCard = NeonQuestCardColors,
     recentActivity = NeonRecentActivityColors,
     bottomNav = NeonBottomNavColors,
+    notificationTab = NeonNotificationTabColors,
+    notificationFilter = NeonNotificationFilterColors,
+    notificationCard = NeonNotificationCardColors,
+    notifySettingDialog = NeonNotifySettingDialogColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -114,4 +122,8 @@ val BlackGoldColors = AppColors(
     questCard = BlackGoldQuestCardColors,
     recentActivity = BlackGoldRecentActivityColors,
     bottomNav = BlackGoldBottomNavColors,
+    notificationTab = BlackGoldNotificationTabColors,
+    notificationFilter = BlackGoldNotificationFilterColors,
+    notificationCard = BlackGoldNotificationCardColors,
+    notifySettingDialog = BlackGoldNotifySettingDialogColors,
 )

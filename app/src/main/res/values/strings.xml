@@ -182,7 +182,6 @@
 
     <!-- NotificationsScreen -->
     <string name="notifications_title">NOTIFICATIONS</string>
-    <string name="notifications_settings_desc">Settings</string>
     <string name="notifications_tab_all">All</string>
     <string name="notifications_tab_unread">Unread</string>
     <string name="notifications_tab_read">Read</string>

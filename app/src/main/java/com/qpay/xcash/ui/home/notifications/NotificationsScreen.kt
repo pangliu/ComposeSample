@@ -15,14 +15,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,9 +39,9 @@ import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.NotificationResponse
 import com.qpay.xcash.network.model.response.NotificationType
-import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.LoadingDialog
+import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.home.notifications.components.NotificationCard
 import com.qpay.xcash.ui.home.notifications.dialog.NotificationSettingsDialog
 import com.qpay.xcash.ui.home.notifications.dialog.NotificationSettingsState
@@ -70,8 +64,11 @@ fun NotificationsScreen(
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
             when (event) {
-                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-                is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                    .show()
+
+                is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
@@ -79,7 +76,7 @@ fun NotificationsScreen(
     val colors = LocalAppColors.current
     Scaffold(
         containerColor = colors.bg.page,
-        contentColor = Color.White
+        contentColor = colors.text.onPrimary
     ) { paddingValues ->
         LoadingDialog(isShowing = uiState.isLoading)
         NotificationsContent(
@@ -115,10 +112,18 @@ private fun NotificationsContent(
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        NotificationsTopBar(onBack = onBack, onSettingsClick = onSettingsClick)
+        SubPageTopBar(
+            title = stringResource(R.string.notifications_title),
+            onBack = onBack,
+            showNotifySettings = true,
+            onNotifySettingsClick = onSettingsClick
+        )
         NotificationTabRow(selectedTab = uiState.selectedTab, onTabSelected = onTabSelected)
         Spacer(modifier = Modifier.height(12.dp))
-        NotificationFilterRow(selectedCategory = uiState.selectedCategory, onCategorySelected = onCategorySelected)
+        NotificationFilterRow(
+            selectedCategory = uiState.selectedCategory,
+            onCategorySelected = onCategorySelected
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
         val filtered = uiState.filteredNotifications
@@ -141,54 +146,6 @@ private fun NotificationsContent(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun NotificationsTopBar(
-    onBack: () -> Unit,
-    onSettingsClick: () -> Unit
-) {
-    val colors = LocalAppColors.current
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-    ) {
-        Icon(
-            painter = painterResource(R.mipmap.ic_back),
-            contentDescription = stringResource(R.string.common_back_desc),
-            tint = Color.Unspecified,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 16.dp)
-                .size(40.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onBack() }
-        )
-        Text(
-            text = stringResource(R.string.notifications_title),
-            color = Color.White,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Center)
-        )
-        Icon(
-//            imageVector = Icons.Default.Settings,
-            painter = painterResource(R.mipmap.ic_notify_settings),
-            contentDescription = stringResource(R.string.notifications_settings_desc),
-            tint = Color.Unspecified,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 16.dp)
-                .size(25.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onSettingsClick() }
-        )
     }
 }
 
@@ -218,7 +175,7 @@ private fun NotificationTabRow(
             ) {
                 Text(
                     text = stringResource(labelRes),
-                    color = if (isSelected) Color.White else colors.text.body,
+                    color = if (isSelected) colors.notificationTab.activeText else colors.notificationTab.inactiveText,
                     fontSize = 13.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                     modifier = Modifier.padding(vertical = 10.dp)
@@ -227,7 +184,7 @@ private fun NotificationTabRow(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp)
-                        .height(1.5.dp)
+                        .height(2.dp)
                         .background(
                             if (isSelected) colors.accent.primary else Color.Transparent,
                             RoundedCornerShape(1.dp)
@@ -264,10 +221,14 @@ private fun NotificationFilterRow(
                 modifier = Modifier
                     .weight(1f)
                     .background(
-                        if (isSelected) colors.accent.primary else Color.Transparent,
+                        if (isSelected) colors.notificationFilter.selectedBackground else Color.Transparent,
                         RoundedCornerShape(50)
                     )
-                    .border(1.dp, colors.accent.primary.copy(alpha = 0.6f), RoundedCornerShape(50))
+                    .border(
+                        1.dp,
+                        if (isSelected) colors.notificationFilter.selectedBorder else colors.notificationFilter.unselectedBorder,
+                        RoundedCornerShape(50)
+                    )
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -277,7 +238,7 @@ private fun NotificationFilterRow(
             ) {
                 Text(
                     text = stringResource(labelRes),
-                    color = if (isSelected) colors.bg.page else colors.text.body,
+                    color = if (isSelected) colors.notificationFilter.selectedText else colors.notificationFilter.unselectedText,
                     fontSize = 12.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                 )

@@ -31,16 +31,16 @@ import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.NotificationResponse
 import com.qpay.xcash.network.model.response.NotificationType
+import com.qpay.xcash.ui.theme.AppAssets
 import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonAssets
 import com.qpay.xcash.ui.theme.NeonColors
-import com.qpay.xcash.ui.theme.neonCyan
-import com.qpay.xcash.ui.theme.neonPink
-import com.qpay.xcash.ui.theme.neonPurple
+import com.qpay.xcash.ui.theme.NotificationCardColors
 import java.util.concurrent.TimeUnit
-
-private val CardBg = Color(0xFF0D1829)
 
 @Composable
 fun formatRelativeTime(ts: Long): String {
@@ -58,52 +58,42 @@ fun formatRelativeTime(ts: Long): String {
     }
 }
 
-private fun iconAndColorFor(type: NotificationType): Pair<Int, Color> = when (type) {
-    NotificationType.PROMO -> R.mipmap.ic_notify_gift to neonPink
-    NotificationType.SYSTEM -> R.mipmap.ic_notify_security to neonPurple
-    NotificationType.ACTIVITY -> R.mipmap.ic_notify_rocket to neonCyan
+private fun iconResFor(type: NotificationType, assets: AppAssets): Int = when (type) {
+    NotificationType.PROMO -> assets.notifyGiftIcon
+    NotificationType.SYSTEM -> assets.notifySecurityIcon
+    NotificationType.ACTIVITY -> assets.notifyRocketIcon
+}
+
+private fun borderColorFor(type: NotificationType, colors: NotificationCardColors): Color = when (type) {
+    NotificationType.PROMO -> colors.promoBorder
+    NotificationType.SYSTEM -> colors.systemBorder
+    NotificationType.ACTIVITY -> colors.activityBorder
+}
+
+private fun backgroundColorFor(type: NotificationType, colors: NotificationCardColors): Color = when (type) {
+    NotificationType.PROMO -> colors.promoBackground
+    NotificationType.SYSTEM -> colors.systemBackground
+    NotificationType.ACTIVITY -> colors.activityBackground
 }
 
 @Composable
 fun NotificationCard(notification: NotificationResponse) {
     val colors = LocalAppColors.current
-    val (iconRes, accentColor) = iconAndColorFor(notification.type)
+    val assets = LocalAppAssets.current
+    val iconRes = iconResFor(notification.type, assets)
+    val borderColor = borderColorFor(notification.type, colors.notificationCard)
+    val backgroundColor = backgroundColorFor(notification.type, colors.notificationCard)
     val contentAlpha = if (notification.isRead) 0.55f else 1f
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .alpha(contentAlpha)
-            .background(CardBg, RoundedCornerShape(12.dp))
-            .border(1.dp, accentColor.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+            .background(backgroundColor, RoundedCornerShape(12.dp))
+            .border(1.dp, borderColor, RoundedCornerShape(12.dp))
             .padding(12.dp),
         verticalAlignment = Alignment.Top
     ) {
-//        if (!notification.isRead) {
-//            Box(
-//                modifier = Modifier
-//                    .padding(top = 6.dp, end = 6.dp)
-//                    .size(7.dp)
-//                    .background(accentColor, CircleShape)
-//            )
-//        } else {
-//            Spacer(modifier = Modifier.width(13.dp))
-//        }
-
-//        Box(
-//            modifier = Modifier
-//                .size(40.dp)
-//                .background(accentColor.copy(alpha = 0.18f), CircleShape)
-//                .border(1.dp, accentColor.copy(alpha = 0.5f), CircleShape),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Icon(
-//                painter = painterResource(id = iconRes),
-//                contentDescription = notification.title,
-//                tint = Color.Unspecified,
-//                modifier = Modifier.size(20.dp)
-//            )
-//        }
         Icon(
             painter = painterResource(iconRes),
             contentDescription = notification.title,
@@ -116,14 +106,14 @@ fun NotificationCard(notification: NotificationResponse) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = notification.title,
-                color = Color.White,
+                color = colors.notificationCard.titleText,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(Modifier.height(4.dp))
             Text(
                 text = notification.message,
-                color = colors.text.body,
+                color = colors.notificationCard.contentText,
                 fontSize = 12.sp,
                 lineHeight = 16.sp,
                 maxLines = 2,
@@ -193,7 +183,7 @@ private val previewCardNotifications = listOf(
 @Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
 private fun NotificationCardPreviewNeon() {
-    AppTheme(colors = NeonColors) {
+    AppTheme(colors = NeonColors, assets = NeonAssets) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -210,7 +200,7 @@ private fun NotificationCardPreviewNeon() {
 @Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
 @Composable
 private fun NotificationCardPreviewBlackGold() {
-    AppTheme(colors = BlackGoldColors) {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

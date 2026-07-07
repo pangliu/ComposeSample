@@ -77,7 +77,7 @@ import com.qpay.xcash.ui.theme.NeonColors
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .padding(end = 16.dp)
-                    .size(40.dp)
+                    .size(30.dp)
                     .gradientTint(colors.gradient.silverShimmer)
                     .clickable(
                         indication = null,

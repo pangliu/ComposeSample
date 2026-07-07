@@ -19,6 +19,9 @@ data class AppAssets(
     @DrawableRes val questCardBackground: Int,   // QuestCard 背景圖
     @DrawableRes val scanButtonBackground: Int,  // ScanAndPayTab bg_scanner 背景圖
     @DrawableRes val scanIcon: Int,              // ScanAndPayTab 扫描圖示
+    @DrawableRes val notifyGiftIcon: Int,        // NotificationCard PROMO 圖示
+    @DrawableRes val notifySecurityIcon: Int,    // NotificationCard SYSTEM 圖示
+    @DrawableRes val notifyRocketIcon: Int,      // NotificationCard ACTIVITY 圖示
 )
 
 val NeonAssets = AppAssets(
@@ -35,6 +38,9 @@ val NeonAssets = AppAssets(
     questCardBackground = R.drawable.bg_quest_card,
     scanButtonBackground = R.drawable.bg_scanner,
     scanIcon = R.drawable.ic_scanner,
+    notifyGiftIcon = R.drawable.ic_notify_gift,
+    notifySecurityIcon = R.drawable.ic_notify_security,
+    notifyRocketIcon = R.drawable.ic_notify_rocket,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -51,6 +57,9 @@ val BlackGoldAssets = AppAssets(
     questCardBackground = R.drawable.bg_quest_card_black_gold,
     scanButtonBackground = R.drawable.bg_scanner_black_gold,
     scanIcon = R.drawable.ic_scanner_black_gold,
+    notifyGiftIcon = R.drawable.ic_notify_gift_black_gold,
+    notifySecurityIcon = R.drawable.ic_notify_security_black_gold,
+    notifyRocketIcon = R.drawable.ic_notify_rocket_black_gold,
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }
