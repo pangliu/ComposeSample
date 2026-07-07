@@ -176,7 +176,7 @@ private fun NotificationTabRow(
                 Text(
                     text = stringResource(labelRes),
                     color = if (isSelected) colors.notificationTab.activeText else colors.notificationTab.inactiveText,
-                    fontSize = 13.sp,
+                    fontSize = 16.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
@@ -225,7 +225,7 @@ private fun NotificationFilterRow(
                         RoundedCornerShape(50)
                     )
                     .border(
-                        1.dp,
+                        1.5.dp,
                         if (isSelected) colors.notificationFilter.selectedBorder else colors.notificationFilter.unselectedBorder,
                         RoundedCornerShape(50)
                     )
@@ -239,7 +239,7 @@ private fun NotificationFilterRow(
                 Text(
                     text = stringResource(labelRes),
                     color = if (isSelected) colors.notificationFilter.selectedText else colors.notificationFilter.unselectedText,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                 )
             }

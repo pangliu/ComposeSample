@@ -90,7 +90,7 @@ fun NotificationCard(notification: NotificationResponse) {
             .fillMaxWidth()
             .alpha(contentAlpha)
             .background(backgroundColor, RoundedCornerShape(12.dp))
-            .border(1.dp, borderColor, RoundedCornerShape(12.dp))
+            .border(1.5.dp, borderColor, RoundedCornerShape(12.dp))
             .padding(12.dp),
         verticalAlignment = Alignment.Top
     ) {

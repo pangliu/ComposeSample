@@ -193,6 +193,8 @@ fun AppNavigation(
                     hiltViewModel<com.qpay.xcash.ui.home.setting.SettingViewModel>()
                 SettingScreen(
                     viewModel = viewModel,
+                    currentTheme = currentTheme,
+                    onThemeChange = { appViewModel.setTheme(it) },
                     onBack = { navController.popBackStack() },
                     onNavigate = { navController.navigate(it) }
                 )

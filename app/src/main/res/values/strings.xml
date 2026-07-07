@@ -377,6 +377,7 @@
     <string name="setting_delete_account">Delete Account</string>
     <string name="setting_logout">Logout</string>
     <string name="setting_theme_neon_cyber">Neon Cyber</string>
+    <string name="setting_theme_black_gold">Black Gold</string>
 
     <!-- LinkedSuccessScreen -->
     <string name="linked_success_title">Card Linked\nSuccessfully!</string>
