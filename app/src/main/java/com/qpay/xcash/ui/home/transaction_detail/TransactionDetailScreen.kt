@@ -1,6 +1,7 @@
 package com.qpay.xcash.ui.home.transaction_detail
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,7 +27,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,13 +37,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,10 +59,14 @@ import com.qpay.xcash.ui.components.RowIconImage
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonAssets
 import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.neonCyan
+import java.util.Locale
 
 @Composable
 fun TransactionDetailScreen(
@@ -116,6 +121,7 @@ private fun TransactionDetailContent(
     onBack: () -> Unit
 ) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     val isSuccess = detail.status == OrderStatus.SUCCESS
     val statusColor =
         if (isSuccess) colors.accent.primary else colors.transactionDetail.failedStatusText
@@ -149,7 +155,7 @@ private fun TransactionDetailContent(
                 Icon(
                     painter = painterResource(R.mipmap.ic_success_transaction),
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = colors.transactionDetail.successIcon,
                     modifier = Modifier.size(56.dp)
                 )
                 Text(
@@ -165,7 +171,7 @@ private fun TransactionDetailContent(
 
             // Amount
             GradientText(
-                text = "${detail.currency} ${String.format("%,.2f", detail.amount)}",
+                text = "${detail.currency} ${String.format(Locale.US, "%,.2f", detail.amount)}",
                 color = colors.transactionDetail.amountText,
                 brush = colors.gradient.goldShimmer,
                 fontSize = 36.sp,
@@ -178,15 +184,15 @@ private fun TransactionDetailContent(
             Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                 ActionIconButton(
                     icon = RowIcon.Resource(R.mipmap.ic_reload),
-                    tint = Color.Unspecified,
+                    tint = colors.transactionDetail.reloadIcon,
                     onClick = {})
                 ActionIconButton(
                     icon = RowIcon.Resource(R.mipmap.ic_favorite),
-                    tint = Color.Unspecified,
+                    tint = colors.transactionDetail.favoriteIcon,
                     onClick = {})
                 ActionIconButton(
                     icon = RowIcon.Resource(R.mipmap.ic_share),
-                    tint = Color.Unspecified,
+                    tint = colors.transactionDetail.shareIcon,
                     onClick = {})
             }
 
@@ -194,7 +200,8 @@ private fun TransactionDetailContent(
 
             // Pay To / Pay From card
             InfoCard(
-                borderColor = colors.accent.primary
+                background = assets.transactionDetailCardBg,
+                borderColor = colors.transactionDetail.paymentInfoCardBorder
             ) {
                 PartyRow(
                     label = stringResource(R.string.tx_detail_pay_to),
@@ -204,10 +211,14 @@ private fun TransactionDetailContent(
                     account = detail.payToAccount,
                     bank = detail.payToBank
                 )
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    color = colors.accent.primary,
-                    thickness = 0.5.dp
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(
+                            brush = colors.transactionDetail.dividerBrush
+                        )
                 )
                 PartyRow(
                     label = stringResource(R.string.tx_detail_pay_from),
@@ -223,21 +234,22 @@ private fun TransactionDetailContent(
 
             // Amount breakdown card
             InfoCard(
+                background = assets.transactionDetailCardBgSmall,
                 borderColor = colors.transactionDetail.amountCardBorder
             ) {
                 AmountRow(
                     label = stringResource(R.string.tx_detail_amount),
-                    value = "${detail.currency} ${String.format("%,.2f", detail.amount)}"
+                    value = "${detail.currency} ${String.format(Locale.US, "%,.2f", detail.amount)}"
                 )
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(15.dp))
                 AmountRow(
                     label = stringResource(R.string.tx_detail_fee),
-                    value = "${detail.currency} ${String.format("%,.2f", detail.fee)}"
+                    value = "${detail.currency} ${String.format(Locale.US, "%,.2f", detail.fee)}"
                 )
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(15.dp))
                 AmountRow(
                     label = stringResource(R.string.tx_detail_total),
-                    value = "${detail.currency} ${String.format("%,.2f", detail.total)}"
+                    value = "${detail.currency} ${String.format(Locale.US, "%,.2f", detail.total)}"
                 )
             }
 
@@ -245,14 +257,17 @@ private fun TransactionDetailContent(
 
             // Reference card
             InfoCard(
-                borderColor = colors.accent.primary
+                background = assets.transactionDetailCardBgSmall,
+                borderColor = colors.transactionDetail.transactionCardBorder
             ) {
+                Spacer(Modifier.height(10.dp))
                 LabelValueRow(
                     label = stringResource(R.string.tx_detail_reference_no),
                     value = detail.referenceNo
                 )
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(15.dp))
                 LabelValueRow(label = stringResource(R.string.tx_detail_date), value = detail.date)
+                Spacer(Modifier.height(10.dp))
             }
 
             Spacer(Modifier.height(28.dp))
@@ -294,26 +309,50 @@ private fun TransactionDetailContent(
 }
 
 @Composable
-private fun InfoCard(borderColor: Color = neonCyan, content: @Composable () -> Unit) {
+private fun InfoCard(
+    background: Int?,
+    borderColor: Color = neonCyan,
+    content: @Composable () -> Unit
+) {
     val colors = LocalAppColors.current
-    Column(
+    val assets = LocalAppAssets.current
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .then(
-                if (colors.effect.enableGlow)
+                other = if (colors.effect.enableGlow)
                     Modifier.neonGlow(
                         borderColor,
-                        alpha = 0.15f,
+                        alpha = 0.6f,
                         glowRadius = 10.dp,
                         borderRadius = 16.dp
                     )
                 else Modifier
             )
-            .background(colors.transactionDetail.cardBackground, RoundedCornerShape(16.dp))
-            .border(1.5.dp, borderColor.copy(alpha = 0.9f), RoundedCornerShape(16.dp))
-            .padding(horizontal = 20.dp, vertical = 16.dp)
+//            .clip(RoundedCornerShape(16.dp))
+            .background(
+                color = colors.transactionDetail.cardBackground,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .border(
+                width = 1.5.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(16.dp)
+            )
     ) {
-        content()
+        background?.let { resId ->
+            Image(
+                painter = painterResource(resId),
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.matchParentSize()
+            )
+        }
+        Column(
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+        ) {
+            content()
+        }
     }
 }
 
@@ -335,16 +374,23 @@ private fun PartyRow(
             color = titleColor,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.width(88.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         )
-        Column {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
             Text(text = name, color = labelColor, fontSize = 14.sp, fontWeight = FontWeight.Bold)
             Text(text = account, color = labelColor.copy(alpha = 0.8f), fontSize = 13.sp)
             Text(
                 text = bank,
                 color = Color.White.copy(alpha = 0.9f),
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold)
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
@@ -360,13 +406,19 @@ private fun AmountRow(label: String, value: String) {
             text = label,
             color = colors.transactionDetail.amountRowTitle,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         )
         Text(
             text = value,
             color = colors.transactionDetail.amountRowLabel,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         )
     }
 }
@@ -383,16 +435,17 @@ private fun LabelValueRow(label: String, value: String) {
             text = label,
             color = colors.transactionDetail.labelValueRowTitle,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         )
         Text(
             text = value,
             color = colors.transactionDetail.labelValueRowLabel,
             fontSize = 13.sp,
-            textAlign = TextAlign.End,
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 12.dp)
         )
     }
 }
@@ -442,7 +495,7 @@ private val previewDetail = TransactionDetailResponse(
 @Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0A0E1A)
 @Composable
 private fun TransactionDetailPreviewNeon() {
-    AppTheme(colors = NeonColors) {
+    AppTheme(colors = NeonColors, assets = NeonAssets) {
         TransactionDetailContent(
             detail = previewDetail,
             paddingValues = PaddingValues(),
@@ -453,7 +506,7 @@ private fun TransactionDetailPreviewNeon() {
 @Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
 @Composable
 private fun TransactionDetailPreviewBlackGold() {
-    AppTheme(colors = BlackGoldColors) {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         TransactionDetailContent(
             detail = previewDetail,
             paddingValues = PaddingValues(),

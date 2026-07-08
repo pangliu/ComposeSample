@@ -122,7 +122,7 @@ fun NotificationSettingsDialogContent(
                     text = stringResource(R.string.notifications_dialog_title),
                     color = colors.text.onPrimary,
                     brush = colors.gradient.goldShimmer,
-                    fontSize = 15.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
