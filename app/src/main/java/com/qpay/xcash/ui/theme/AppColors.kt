@@ -41,6 +41,7 @@ data class AppColors(
     val setting: SettingColors,
     val transactionDetail: TransactionDetailColors,
     val updateLog: UpdateLogColors,
+    val cards: CardsColors,
 )
 
 val NeonColors = AppColors(
@@ -71,6 +72,7 @@ val NeonColors = AppColors(
     setting = NeonSettingColors,
     transactionDetail = NeonTransactionDetailColors,
     updateLog = NeonUpdateLogColors,
+    cards = NeonCardsColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -105,4 +107,5 @@ val BlackGoldColors = AppColors(
     setting = BlackGoldSettingColors,
     transactionDetail = BlackGoldTransactionDetailColors,
     updateLog = BlackGoldUpdateLogColors,
+    cards = BlackGoldCardsColors,
 )
