@@ -81,8 +81,8 @@ fun NotificationCard(notification: NotificationResponse) {
     val colors = LocalAppColors.current
     val assets = LocalAppAssets.current
     val iconRes = iconResFor(notification.type, assets)
-    val borderColor = borderColorFor(notification.type, colors.notificationCard)
-    val backgroundColor = backgroundColorFor(notification.type, colors.notificationCard)
+    val borderColor = borderColorFor(notification.type, colors.notification.card)
+    val backgroundColor = backgroundColorFor(notification.type, colors.notification.card)
     val contentAlpha = if (notification.isRead) 0.55f else 1f
 
     Row(
@@ -106,14 +106,14 @@ fun NotificationCard(notification: NotificationResponse) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = notification.title,
-                color = colors.notificationCard.titleText,
+                color = colors.notification.card.titleText,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(Modifier.height(4.dp))
             Text(
                 text = notification.message,
-                color = colors.notificationCard.contentText,
+                color = colors.notification.card.contentText,
                 fontSize = 12.sp,
                 lineHeight = 16.sp,
                 maxLines = 2,

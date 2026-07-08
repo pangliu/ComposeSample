@@ -65,9 +65,9 @@ fun FindAppDialog(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.selector.border, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp) else Modifier)
+                .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.login.selector.border, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp) else Modifier)
                 .background(colors.bg.page, RoundedCornerShape(20.dp))
-                .border(2.dp, colors.selector.border, RoundedCornerShape(20.dp))
+                .border(2.dp, colors.login.selector.border, RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp)
         ) {
             Column(
@@ -147,16 +147,16 @@ fun FindAppDialog(
                     Box(
                         modifier = Modifier
                             .size(48.dp)
-                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.loginSheet.submitButton, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 24.dp) else Modifier)
+                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.login.loginSheet.submitButton, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 24.dp) else Modifier)
                             .background(colors.bg.page, CircleShape)
-                            .border(2.dp, colors.loginSheet.submitButton, CircleShape)
+                            .border(2.dp, colors.login.loginSheet.submitButton, CircleShape)
                             .clickable { onSubmit(idNumber, mobile, email) },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = stringResource(R.string.find_app_submit_desc),
-                            tint = colors.loginSheet.submitButton,
+                            tint = colors.login.loginSheet.submitButton,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -194,9 +194,9 @@ private fun FindAppInputField(
                 modifier = Modifier
                     .weight(1f)
                     .height(40.dp)
-                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.selector.border, alpha = 0.8f, glowRadius = 12.dp, borderRadius = 20.dp) else Modifier)
+                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.login.selector.border, alpha = 0.8f, glowRadius = 12.dp, borderRadius = 20.dp) else Modifier)
                     .background(darkCharcoal, RoundedCornerShape(20.dp))
-                    .border(1.5.dp, colors.selector.border, RoundedCornerShape(20.dp))
+                    .border(1.5.dp, colors.login.selector.border, RoundedCornerShape(20.dp))
                     .padding(horizontal = 14.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
@@ -207,7 +207,7 @@ private fun FindAppInputField(
                     visualTransformation = visualTransformation,
                     keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
                     textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-                    cursorBrush = SolidColor(colors.selector.border),
+                    cursorBrush = SolidColor(colors.login.selector.border),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -217,9 +217,9 @@ private fun FindAppInputField(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.selector.border, alpha = 0.8f, glowRadius = 12.dp, borderRadius = 20.dp) else Modifier)
+                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.login.selector.border, alpha = 0.8f, glowRadius = 12.dp, borderRadius = 20.dp) else Modifier)
                     .background(darkCharcoal, CircleShape)
-                    .border(1.5.dp, colors.selector.border, CircleShape)
+                    .border(1.5.dp, colors.login.selector.border, CircleShape)
                     .then(
                         if (onTrailingClick != null) Modifier.clickable { onTrailingClick() }
                         else Modifier
@@ -229,7 +229,7 @@ private fun FindAppInputField(
                 Icon(
                     imageVector = trailingIcon,
                     contentDescription = trailingIconDesc,
-                    tint = colors.selector.border,
+                    tint = colors.login.selector.border,
                     modifier = Modifier.size(18.dp)
                 )
             }

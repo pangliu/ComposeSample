@@ -88,18 +88,18 @@ fun XEssentialsCard(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
-                        .background(colors.essentialsCard.editTextBg)
+                        .background(colors.home.essentialsCard.editTextBg)
                         .clickable { showEditDialog = true }
                         .border(
                             width = 1.dp,
-                            color = colors.essentialsCard.editTextBorder,
+                            color = colors.home.essentialsCard.editTextBorder,
                             shape = RoundedCornerShape(8.dp)
                         )
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.essentials_edit),
-                        color = colors.essentialsCard.editText,
+                        color = colors.home.essentialsCard.editText,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -225,10 +225,10 @@ fun EssentialItemView(item: EssentialItem?) {
                 .width(60.dp)
                 .height(50.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(brush = colors.essentialsCard.itemBackground)
+                .background(brush = colors.home.essentialsCard.itemBackground)
                 .border(
                     width = 1.5.dp,
-                    brush = colors.essentialsCard.itemBorder,
+                    brush = colors.home.essentialsCard.itemBorder,
                     shape = RoundedCornerShape(8.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -237,11 +237,11 @@ fun EssentialItemView(item: EssentialItem?) {
                 Icon(
                     imageVector = item.iconVector,
                     contentDescription = item.label,
-                    tint = colors.essentialsCard.itemIcon,
+                    tint = colors.home.essentialsCard.itemIcon,
                     modifier = Modifier.size(30.dp)
                 )
             } else if (item?.iconRes != null) {
-                val tint = if (item.useOriginalColor) Color.Unspecified else colors.essentialsCard.itemIcon
+                val tint = if (item.useOriginalColor) Color.Unspecified else colors.home.essentialsCard.itemIcon
                 Icon(
                     painter = painterResource(id = item.iconRes),
                     contentDescription = item.label,
@@ -259,7 +259,7 @@ fun EssentialItemView(item: EssentialItem?) {
                 .fillMaxWidth(),
             textAlign = TextAlign.Center,
             text = item?.label ?: "",
-            color = colors.essentialsCard.itemLabel,
+            color = colors.home.essentialsCard.itemLabel,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium
         )

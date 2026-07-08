@@ -133,7 +133,7 @@ fun LoginBottomSheetContent(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val inputBorderColor = if (errorMessage != null) dustyRed else colors.loginSheet.inputAccent
+    val inputBorderColor = if (errorMessage != null) dustyRed else colors.login.loginSheet.inputAccent
 
     Column(
         modifier = Modifier
@@ -158,7 +158,7 @@ fun LoginBottomSheetContent(
                     onClick = {} // 攔截點擊，避免關閉對話框
                 )
                 .background(colors.bg.page, RoundedCornerShape(32.dp))
-                .border(2.dp, colors.loginSheet.outerBorder, RoundedCornerShape(32.dp))
+                .border(2.dp, colors.login.loginSheet.outerBorder, RoundedCornerShape(32.dp))
                 .padding(horizontal = 32.dp, vertical = 25.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -209,19 +209,19 @@ fun LoginBottomSheetContent(
                         .size(35.dp)
                         .then(
                             if (colors.effect.enableGlow) Modifier.neonGlow(
-                                color = colors.loginSheet.inputAccent,
+                                color = colors.login.loginSheet.inputAccent,
                                 alpha = 0.5f,
                                 glowRadius = 15.dp,
                                 borderRadius = 17.5.dp
                             ) else Modifier
                         )
-                        .border(2.dp, colors.loginSheet.inputAccent, CircleShape),
+                        .border(2.dp, colors.login.loginSheet.inputAccent, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Visibility,
                         contentDescription = stringResource(id = R.string.visibility_desc),
-                        tint = colors.loginSheet.inputAccent,
+                        tint = colors.login.loginSheet.inputAccent,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -284,20 +284,20 @@ fun LoginBottomSheetContent(
                         .size(35.dp)
                         .then(
                             if (colors.effect.enableGlow) Modifier.neonGlow(
-                                color = colors.loginSheet.inputAccent,
+                                color = colors.login.loginSheet.inputAccent,
                                 alpha = 0.5f,
                                 glowRadius = 15.dp,
                                 borderRadius = 17.5.dp
                             ) else Modifier
                         )
-                        .border(2.dp, colors.loginSheet.inputAccent, CircleShape)
+                        .border(2.dp, colors.login.loginSheet.inputAccent, CircleShape)
                         .clickable { passwordVisible = !passwordVisible },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = stringResource(id = R.string.toggle_visibility_desc),
-                        tint = colors.loginSheet.inputAccent,
+                        tint = colors.login.loginSheet.inputAccent,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -318,25 +318,25 @@ fun LoginBottomSheetContent(
                 Spacer(modifier = Modifier.width(3.dp))
                 Text(
                     stringResource(id = R.string.login_hint_separator),
-                    color = colors.loginSheet.hint,
+                    color = colors.login.loginSheet.hint,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.width(3.dp))
                 Text(
                     stringResource(id = R.string.password_hint_uppercase),
-                    color = colors.loginSheet.hint,
+                    color = colors.login.loginSheet.hint,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.width(3.dp))
                 Text(
                     stringResource(id = R.string.login_hint_separator),
-                    color = colors.loginSheet.hint,
+                    color = colors.login.loginSheet.hint,
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.width(3.dp))
                 Text(
                     stringResource(id = R.string.password_hint_number),
-                    color = colors.loginSheet.hint,
+                    color = colors.login.loginSheet.hint,
                     fontSize = 12.sp
                 )
             }
@@ -359,20 +359,20 @@ fun LoginBottomSheetContent(
                     .size(50.dp)
                     .then(
                         if (colors.effect.enableGlow) Modifier.neonGlow(
-                            color = colors.loginSheet.submitButton,
+                            color = colors.login.loginSheet.submitButton,
                             alpha = 0.4f,
                             glowRadius = 20.dp,
                             borderRadius = 25.dp
                         ) else Modifier
                     )
-                    .border(2.dp, colors.loginSheet.submitButton, CircleShape)
+                    .border(2.dp, colors.login.loginSheet.submitButton, CircleShape)
                     .clickable { onLoginSubmit(mobileNumber, password) },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = stringResource(id = R.string.submit_login_desc),
-                    tint = colors.loginSheet.submitButton,
+                    tint = colors.login.loginSheet.submitButton,
                     modifier = Modifier
                         .size(25.dp)
                         .rotate(-40f)

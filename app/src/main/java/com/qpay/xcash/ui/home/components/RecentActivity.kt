@@ -78,7 +78,7 @@ fun RecentActivity(
                 )
                 .border(
                     width = 2.dp,
-                    brush = colors.recentActivity.border,
+                    brush = colors.home.recentActivity.border,
                     shape = RoundedCornerShape(18.dp)
                 )
                 .background(color = colors.bg.page, shape = RoundedCornerShape(18.dp))
@@ -120,9 +120,9 @@ private fun TransactionRow(order: OrderHistoryResponse, onClick: () -> Unit) {
     val colors = LocalAppColors.current
     val isCashIn = order.type == OrderType.INCOMING
     val iconColor = if (isCashIn) {
-        colors.recentActivity.cashInIconTint
+        colors.home.recentActivity.cashInIconTint
     } else {
-        colors.recentActivity.cashOutIconTint
+        colors.home.recentActivity.cashOutIconTint
     }
     val icon = if (isCashIn) Icons.Default.ArrowDownward else Icons.Default.ArrowUpward
     val descRes = if (isCashIn) R.string.recent_cash_in else R.string.recent_cash_out

@@ -90,8 +90,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
             // Account Status 藍綠色區塊
             MenuCard(
                 title = stringResource(id = R.string.account_status),
-                titleColor = colors.drawer.accountCard.title,
-                borderColor = colors.drawer.accountCard.border,
+                titleColor = colors.login.drawer.accountCard.title,
+                borderColor = colors.login.drawer.accountCard.border,
                 items = listOf(
                     MenuItem(
                         icon = MenuIcon.Resource(R.mipmap.ic_check_progress),
@@ -112,8 +112,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
             // Product Features 紫色區塊
             MenuCard(
                 title = stringResource(id = R.string.product_features),
-                titleColor = colors.drawer.productCard.title,
-                borderColor = colors.drawer.productCard.border,
+                titleColor = colors.login.drawer.productCard.title,
+                borderColor = colors.login.drawer.productCard.border,
                 items = listOf(
                     MenuItem(
                         icon = MenuIcon.Resource(R.mipmap.ic_money_exchange),
@@ -133,8 +133,8 @@ fun DrawerMenuContent(onClose: () -> Unit, onAccountStatusClick: () -> Unit = {}
             // Help & Policies 藍色區塊
             MenuCard(
                 title = stringResource(id = R.string.help_policies),
-                titleColor = colors.drawer.helpCard.title,
-                borderColor = colors.drawer.helpCard.border,
+                titleColor = colors.login.drawer.helpCard.title,
+                borderColor = colors.login.drawer.helpCard.border,
                 items = listOf(
                     MenuItem(
                         icon = MenuIcon.Resource(R.mipmap.ic_center_help),

@@ -59,13 +59,13 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .then(if (colors.effect.enableGlow) Modifier.neonGlow(
-                    color = colors.selector.border,
+                    color = colors.login.selector.border,
                     alpha = 0.6f,
                     glowRadius = 16.dp,
                     borderRadius = 24.dp
                 ) else Modifier)
                 .background(colors.bg.page, RoundedCornerShape(24.dp))
-                .border(2.dp, colors.selector.border, RoundedCornerShape(24.dp))
+                .border(2.dp, colors.login.selector.border, RoundedCornerShape(24.dp))
                 .padding(24.dp)
         ) {
             Column(
@@ -75,7 +75,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                 // Title
                 Text(
                     text = stringResource(id = R.string.select_action),
-                    color = colors.selector.border,
+                    color = colors.login.selector.border,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(
@@ -89,7 +89,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                 ActionDialogButton(
                     icon = R.mipmap.ic_check_progress,
                     text = stringResource(id = R.string.check_application_progress),
-                    borderColor = colors.accountDialog.button1,
+                    borderColor = colors.login.accountDialog.button1,
                     onClick = { showFindAppDialog = true }
                 )
 
@@ -99,7 +99,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                 ActionDialogButton(
                     icon = R.mipmap.ic_verify_id,
                     text = stringResource(id = R.string.verify_my_identity),
-                    borderColor = colors.accountDialog.button2,
+                    borderColor = colors.login.accountDialog.button2,
                     onClick = {
                         // TODO: 處理點擊事件
                         onDismiss()
@@ -113,12 +113,12 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                     modifier = Modifier
                         .size(48.dp)
                         .then(if (colors.effect.enableGlow) Modifier.neonGlow(
-                            color = colors.selector.border,
+                            color = colors.login.selector.border,
                             alpha = 0.6f,
                             glowRadius = 16.dp,
                             borderRadius = 24.dp
                         ) else Modifier)
-                        .border(2.dp, colors.selector.border, RoundedCornerShape(24.dp))
+                        .border(2.dp, colors.login.selector.border, RoundedCornerShape(24.dp))
                         .background(
                             color = colors.bg.page,
                             shape = RoundedCornerShape(24.dp)
@@ -129,7 +129,7 @@ fun AccountStatusDialog(onDismiss: () -> Unit) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(id = R.string.close),
-                        tint = colors.selector.border
+                        tint = colors.login.selector.border
                     )
                 }
             }

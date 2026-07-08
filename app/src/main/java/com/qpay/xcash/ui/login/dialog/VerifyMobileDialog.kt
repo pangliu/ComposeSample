@@ -43,7 +43,7 @@ fun VerifyMobileDialog(
     onSubmit: (String) -> Unit
 ) {
     val colors = LocalAppColors.current
-    val cancelButtonColor = if (colors.effect.enableGlow) colors.loginSheet.inputAccent else Color.White
+    val cancelButtonColor = if (colors.effect.enableGlow) colors.login.loginSheet.inputAccent else Color.White
     var phone by remember { mutableStateOf(initialPhone) }
     var otpCode by remember { mutableStateOf("") }
     var timeLeft by remember { mutableIntStateOf(60) }
@@ -84,9 +84,9 @@ fun VerifyMobileDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.loginSheet.outerBorder, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp) else Modifier)
+                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.login.loginSheet.outerBorder, alpha = 0.6f, glowRadius = 16.dp, borderRadius = 20.dp) else Modifier)
                     .background(colors.bg.page, RoundedCornerShape(20.dp))
-                    .border(2.dp, colors.loginSheet.outerBorder, RoundedCornerShape(20.dp))
+                    .border(2.dp, colors.login.loginSheet.outerBorder, RoundedCornerShape(20.dp))
                     .padding(horizontal = 25.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -114,15 +114,15 @@ fun VerifyMobileDialog(
                         modifier = Modifier
                             .weight(1f)
                             .height(35.dp)
-                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.loginSheet.inputAccent, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp) else Modifier)
+                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.login.loginSheet.inputAccent, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 25.dp) else Modifier)
                             .background(darkCharcoal, RoundedCornerShape(25.dp))
-                            .border(2.dp, colors.loginSheet.inputAccent, RoundedCornerShape(25.dp))
+                            .border(2.dp, colors.login.loginSheet.inputAccent, RoundedCornerShape(25.dp))
                             .padding(horizontal = 16.dp),
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Text(
                             text = phone,
-                            color = colors.loginSheet.inputAccent,
+                            color = colors.login.loginSheet.inputAccent,
                             fontSize = 14.sp,
                             maxLines = 1
                         )
@@ -134,9 +134,9 @@ fun VerifyMobileDialog(
                     Box(
                         modifier = Modifier
                             .size(35.dp)
-                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.loginSheet.inputAccent, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 15.dp) else Modifier)
+                            .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.login.loginSheet.inputAccent, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 15.dp) else Modifier)
                             .background(darkCharcoal, CircleShape)
-                            .border(2.dp, colors.loginSheet.inputAccent, CircleShape)
+                            .border(2.dp, colors.login.loginSheet.inputAccent, CircleShape)
 //                            .rotate(-45f)
                             .clickable { /* TODO: 發送驗證碼邏輯 */ },
                         contentAlignment = Alignment.Center
@@ -144,7 +144,7 @@ fun VerifyMobileDialog(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = stringResource(R.string.verify_mobile_send_desc),
-                            tint = colors.loginSheet.inputAccent,
+                            tint = colors.login.loginSheet.inputAccent,
                             modifier = Modifier.size(15.dp)
                         )
                     }
@@ -188,9 +188,9 @@ fun VerifyMobileDialog(
                             Box(
                                 modifier = Modifier
                                     .size(35.dp)
-                                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.loginSheet.inputAccent, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 8.dp) else Modifier)
+                                    .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.login.loginSheet.inputAccent, alpha = 0.5f, glowRadius = 15.dp, borderRadius = 8.dp) else Modifier)
                                     .background(darkCharcoal, RoundedCornerShape(8.dp))
-                                    .border(2.dp, colors.loginSheet.inputAccent, RoundedCornerShape(8.dp)),
+                                    .border(2.dp, colors.login.loginSheet.inputAccent, RoundedCornerShape(8.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(

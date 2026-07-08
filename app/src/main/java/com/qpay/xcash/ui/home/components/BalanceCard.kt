@@ -124,7 +124,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                             .then(
                                 if (colors.effect.enableGlow)
                                     Modifier.neonGlow(
-                                        color = colors.balanceCard.cashInBackground,
+                                        color = colors.home.balanceCard.cashInBackground,
                                         alpha = 0.6f,
                                         glowRadius = 15.dp,
                                         borderRadius = 8.dp
@@ -132,10 +132,10 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                                 else Modifier
                             )
                             .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
-                            .background(colors.balanceCard.cashInBackground)
+                            .background(colors.home.balanceCard.cashInBackground)
                             .border(
                                 width = 1.5.dp,
-                                brush = colors.gradient.goldShimmer ?: SolidColor(colors.balanceCard.cashInBorder),
+                                brush = colors.gradient.goldShimmer ?: SolidColor(colors.home.balanceCard.cashInBorder),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clickable { /* TODO: Cash In */ }
@@ -145,13 +145,13 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                             Icon(
                                 painter = painterResource(id = assets.cashInIcon),
                                 contentDescription = stringResource(R.string.balance_cash_in),
-                                tint = if (colors.effect.enableGlow) colors.balanceCard.cashInText else Color.Companion.Unspecified,
+                                tint = if (colors.effect.enableGlow) colors.home.balanceCard.cashInText else Color.Companion.Unspecified,
                                 modifier = Modifier.Companion.size(18.dp)
                             )
                             Spacer(modifier = Modifier.Companion.width(4.dp))
                             GradientText(
                                 text = stringResource(R.string.balance_cash_in),
-                                color = colors.balanceCard.cashInText,
+                                color = colors.home.balanceCard.cashInText,
                                 brush = colors.gradient.goldShimmer,
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Companion.Bold
@@ -186,7 +186,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         .then(
                             if (colors.effect.enableGlow)
                                 Modifier.neonGlow(
-                                    color = colors.balanceCard.sendBackground,
+                                    color = colors.home.balanceCard.sendBackground,
                                     alpha = 0.6f,
                                     glowRadius = 15.dp,
                                     borderRadius = 8.dp
@@ -194,10 +194,10 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                             else Modifier
                         )
                         .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
-                        .background(colors.balanceCard.sendBackground)
+                        .background(colors.home.balanceCard.sendBackground)
                         .border(
                             width = 1.5.dp,
-                            brush = colors.gradient.silverShimmer ?: SolidColor(colors.balanceCard.sendBorder),
+                            brush = colors.gradient.silverShimmer ?: SolidColor(colors.home.balanceCard.sendBorder),
                             shape = RoundedCornerShape(8.dp)
                         )
                         .clickable { /* TODO: Send */ }
@@ -213,7 +213,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         Spacer(modifier = Modifier.Companion.width(4.dp))
                         GradientText(
                             text = stringResource(R.string.balance_send),
-                            color = colors.balanceCard.sendText,
+                            color = colors.home.balanceCard.sendText,
                             brush = colors.gradient.silverShimmer,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Companion.Bold
@@ -264,14 +264,14 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                 Box(
                     modifier = Modifier.Companion
                         .background(
-                            color = colors.balanceCard.switchBackground,
+                            color = colors.home.balanceCard.switchBackground,
                             shape = switchShape
                         )
                         .then(
                             if (colors.effect.enableGlow) Modifier
                             else Modifier.border(
                                 width = 1.dp,
-                                color = colors.balanceCard.switchBorder,
+                                color = colors.home.balanceCard.switchBorder,
                                 shape = switchShape
                             )
                         )
@@ -281,14 +281,14 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                     Row(verticalAlignment = Alignment.Companion.CenterVertically) {
                         Icon(
                             painter = painterResource(R.mipmap.ic_switch_balance),
-                            tint = colors.balanceCard.switchIcon,
+                            tint = colors.home.balanceCard.switchIcon,
                             contentDescription = stringResource(R.string.balance_switch),
                             modifier = Modifier.Companion.size(18.dp)
                         )
                         Spacer(modifier = Modifier.Companion.width(4.dp))
                         Text(
                             text = stringResource(R.string.balance_switch),
-                            color = colors.balanceCard.switchText,
+                            color = colors.home.balanceCard.switchText,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Companion.Bold
                         )

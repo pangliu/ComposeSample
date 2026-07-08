@@ -194,7 +194,6 @@ fun HeaderSection(userName: String, onNavigate: (String) -> Unit = {}) {
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier.offset(x = 12.dp)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_home_notify),

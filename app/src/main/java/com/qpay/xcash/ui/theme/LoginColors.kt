@@ -43,6 +43,14 @@ data class LoginSheetColors(
     val submitButton: Color,            // 送出按鈕邊框 + icon
 )
 
+data class LoginColors(
+    val button: LoginButtonColors,
+    val drawer: DrawerColors,
+    val selector: SelectorColors,
+    val accountDialog: AccountDialogColors,
+    val loginSheet: LoginSheetColors,
+)
+
 val NeonLoginButtonColors = LoginButtonColors(
     loginBackground = neonPurple,
     loginBorder = Color.Transparent,
@@ -105,4 +113,20 @@ val BlackGoldLoginSheetColors = LoginSheetColors(
     inputAccent = antiqueGold,
     hint = antiqueGold,
     submitButton = sunGold,
+)
+
+val NeonLoginColors = LoginColors(
+    button = NeonLoginButtonColors,
+    drawer = NeonDrawerColors,
+    selector = NeonSelectorColors,
+    accountDialog = NeonAccountDialogColors,
+    loginSheet = NeonLoginSheetColors,
+)
+
+val BlackGoldLoginColors = LoginColors(
+    button = BlackGoldLoginButtonColors,
+    drawer = BlackGoldDrawerColors,
+    selector = BlackGoldSelectorColors,
+    accountDialog = BlackGoldAccountDialogColors,
+    loginSheet = BlackGoldLoginSheetColors,
 )

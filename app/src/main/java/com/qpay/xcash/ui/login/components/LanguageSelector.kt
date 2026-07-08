@@ -127,14 +127,14 @@ fun LanguageSelector(
                         modifier = Modifier
                             .width(72.dp)
                             .then(if (colors.effect.enableGlow) Modifier.neonGlow(
-                                color = colors.selector.border,
+                                color = colors.login.selector.border,
                                 alpha = 0.65f,
                                 glowRadius = 18.dp,
                                 borderRadius = 8.dp,
                                 blurStyle = BlurMaskFilter.Blur.OUTER) else Modifier)
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color.Transparent)
-                            .border(1.5.dp, colors.selector.border, RoundedCornerShape(8.dp))
+                            .border(1.5.dp, colors.login.selector.border, RoundedCornerShape(8.dp))
                             .padding(vertical = 6.dp, horizontal = 6.dp)
                     ) {
                         languages.forEach { lang ->
@@ -145,7 +145,7 @@ fun LanguageSelector(
                                     .fillMaxWidth()
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(
-                                        if (isSelected) colors.selector.selectedBackground else Color.Transparent
+                                        if (isSelected) colors.login.selector.selectedBackground else Color.Transparent
                                     )
                                     .clickable(
                                         interactionSource = remember { MutableInteractionSource() },
@@ -158,7 +158,7 @@ fun LanguageSelector(
                             ) {
                                 Text(
                                     text = lang,
-                                    color = if (isSelected) Color.White else colors.selector.border,
+                                    color = if (isSelected) Color.White else colors.login.selector.border,
                                     fontSize = 14.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                 )
@@ -236,10 +236,10 @@ fun LanguageSelectorExpandedPreview() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .width(72.dp)
-                        .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.selector.border, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 20.dp) else Modifier)
+                        .then(if (colors.effect.enableGlow) Modifier.neonGlow(color = colors.login.selector.border, alpha = 0.65f, glowRadius = 18.dp, borderRadius = 20.dp) else Modifier)
                         .clip(RoundedCornerShape(5.dp))
                         .background(deepNavy)
-                        .border(1.5.dp, colors.selector.border, RoundedCornerShape(8.dp))
+                        .border(1.5.dp, colors.login.selector.border, RoundedCornerShape(8.dp))
                         .padding(vertical = 0.dp, horizontal = 50.dp)
                 ) {
                     languages.forEach { lang ->
@@ -250,13 +250,13 @@ fun LanguageSelectorExpandedPreview() {
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(
-                                    if (isSelected) colors.selector.selectedBackground else Color.Transparent
+                                    if (isSelected) colors.login.selector.selectedBackground else Color.Transparent
                                 )
                                 .padding(vertical = 5.dp)
                         ) {
                             Text(
                                 text = lang,
-                                color = if (isSelected) Color.White else colors.selector.border,
+                                color = if (isSelected) Color.White else colors.login.selector.border,
                                 fontSize = 14.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )
@@ -298,7 +298,7 @@ fun LanguageSelectorExpandedBlackGoldPreview() {
                         .width(72.dp)
                         .clip(RoundedCornerShape(5.dp))
                         .background(deepNavy)
-                        .border(1.5.dp, colors.selector.border, RoundedCornerShape(8.dp))
+                        .border(1.5.dp, colors.login.selector.border, RoundedCornerShape(8.dp))
                         .padding(vertical = 0.dp, horizontal = 50.dp)
                 ) {
                     languages.forEach { lang ->
@@ -309,13 +309,13 @@ fun LanguageSelectorExpandedBlackGoldPreview() {
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(
-                                    if (isSelected) colors.selector.selectedBackground else Color.Transparent
+                                    if (isSelected) colors.login.selector.selectedBackground else Color.Transparent
                                 )
                                 .padding(vertical = 5.dp)
                         ) {
                             Text(
                                 text = lang,
-                                color = if (isSelected) Color.White else colors.selector.border,
+                                color = if (isSelected) Color.White else colors.login.selector.border,
                                 fontSize = 14.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )

@@ -175,7 +175,7 @@ private fun NotificationTabRow(
             ) {
                 Text(
                     text = stringResource(labelRes),
-                    color = if (isSelected) colors.notificationTab.activeText else colors.notificationTab.inactiveText,
+                    color = if (isSelected) colors.notification.tab.activeText else colors.notification.tab.inactiveText,
                     fontSize = 16.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                     modifier = Modifier.padding(vertical = 10.dp)
@@ -221,12 +221,12 @@ private fun NotificationFilterRow(
                 modifier = Modifier
                     .weight(1f)
                     .background(
-                        if (isSelected) colors.notificationFilter.selectedBackground else Color.Transparent,
+                        if (isSelected) colors.notification.filter.selectedBackground else Color.Transparent,
                         RoundedCornerShape(50)
                     )
                     .border(
                         1.5.dp,
-                        if (isSelected) colors.notificationFilter.selectedBorder else colors.notificationFilter.unselectedBorder,
+                        if (isSelected) colors.notification.filter.selectedBorder else colors.notification.filter.unselectedBorder,
                         RoundedCornerShape(50)
                     )
                     .clickable(
@@ -238,7 +238,7 @@ private fun NotificationFilterRow(
             ) {
                 Text(
                     text = stringResource(labelRes),
-                    color = if (isSelected) colors.notificationFilter.selectedText else colors.notificationFilter.unselectedText,
+                    color = if (isSelected) colors.notification.filter.selectedText else colors.notification.filter.unselectedText,
                     fontSize = 14.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                 )

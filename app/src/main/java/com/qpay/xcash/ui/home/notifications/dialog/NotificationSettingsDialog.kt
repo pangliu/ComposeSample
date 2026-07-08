@@ -113,7 +113,7 @@ fun NotificationSettingsDialogContent(
                     .background(colors.bg.surface, RoundedCornerShape(16.dp))
                     .border(
                         1.5.dp,
-                        colors.notifySettingDialog.contentBorder,
+                        colors.notification.settingDialog.contentBorder,
                         RoundedCornerShape(16.dp)
                     )
                     .padding(horizontal = 18.dp, vertical = 20.dp)
@@ -135,8 +135,8 @@ fun NotificationSettingsDialogContent(
                     label = stringResource(R.string.notifications_dialog_system_alerts),
                     checked = settings.systemAlerts,
                     onCheckedChange = { onSettingsChange(settings.copy(systemAlerts = it)) },
-                    switchColor = colors.notifySettingDialog.notifySysSwitch,
-                    iconColor = colors.notifySettingDialog.notifySysIconTint
+                    switchColor = colors.notification.settingDialog.notifySysSwitch,
+                    iconColor = colors.notification.settingDialog.notifySysIconTint
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 NotificationSettingRow(
@@ -144,8 +144,8 @@ fun NotificationSettingsDialogContent(
                     label = stringResource(R.string.notifications_dialog_promo_notifications),
                     checked = settings.promoNotifications,
                     onCheckedChange = { onSettingsChange(settings.copy(promoNotifications = it)) },
-                    switchColor = colors.notifySettingDialog.notifyPromoSwitch,
-                    iconColor = colors.notifySettingDialog.notifyPromoIconTint
+                    switchColor = colors.notification.settingDialog.notifyPromoSwitch,
+                    iconColor = colors.notification.settingDialog.notifyPromoIconTint
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 NotificationSettingRow(
@@ -153,8 +153,8 @@ fun NotificationSettingsDialogContent(
                     label = stringResource(R.string.notifications_dialog_transaction_alerts),
                     checked = settings.transactionAlerts,
                     onCheckedChange = { onSettingsChange(settings.copy(transactionAlerts = it)) },
-                    switchColor = colors.notifySettingDialog.notifyTransactionSwitch,
-                    iconColor = colors.notifySettingDialog.notifyTransactionIconTint
+                    switchColor = colors.notification.settingDialog.notifyTransactionSwitch,
+                    iconColor = colors.notification.settingDialog.notifyTransactionIconTint
                 )
             }
         }
@@ -162,7 +162,7 @@ fun NotificationSettingsDialogContent(
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .border(1.5.dp, colors.notifySettingDialog.cancelButtonBorder, CircleShape)
+                .border(1.5.dp, colors.notification.settingDialog.cancelButtonBorder, CircleShape)
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
@@ -172,7 +172,7 @@ fun NotificationSettingsDialogContent(
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = stringResource(R.string.notifications_dialog_cancel_desc),
-                tint = colors.notifySettingDialog.cancelButtonIcon,
+                tint = colors.notification.settingDialog.cancelButtonIcon,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -202,7 +202,7 @@ private fun NotificationSettingRow(
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = label,
-            color = colors.notifySettingDialog.notifyContentText,
+            color = colors.notification.settingDialog.notifyContentText,
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(1f)

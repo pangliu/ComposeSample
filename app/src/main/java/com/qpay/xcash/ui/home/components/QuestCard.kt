@@ -79,20 +79,20 @@ fun QuestCard() {
                 )
                 .border(
                     width = 2.dp,
-                    brush = colors.questCard.border,
+                    brush = colors.home.questCard.border,
                     shape = RoundedCornerShape(18.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 8.dp) // 內部元件距離邊框的距離
         ) {
             Text(
                 text = "Stack your points now",
-                color = colors.questCard.stackPointsText,
+                color = colors.home.questCard.stackPointsText,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
             Text(
                 text = "with breathing cyan light effect",
-                color = colors.questCard.breathingEffectText,
+                color = colors.home.questCard.breathingEffectText,
                 fontSize = 12.sp,
             )
             Column(
@@ -101,14 +101,14 @@ fun QuestCard() {
             ) {
                 Text(
                     text = "Claim your loot here",
-                    color = colors.questCard.linkText,
+                    color = colors.home.questCard.linkText,
                     textDecoration = TextDecoration.Underline,
                     fontSize = 12.sp,
                     lineHeight = 13.sp
                 )
                 Text(
                     text = "Start your grid & earn",
-                    color = colors.questCard.linkText,
+                    color = colors.home.questCard.linkText,
                     textDecoration = TextDecoration.Underline,
                     fontSize = 12.sp,
                     lineHeight = 10.sp

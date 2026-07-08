@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,12 +41,14 @@ import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.UpdateLogResponse
 import com.qpay.xcash.ui.UiEvent
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
-
-private val CardBg = Color(0xFF0A1628)
+import com.qpay.xcash.ui.theme.NeonColors
 
 @Composable
 fun UpdateLogScreen(
@@ -114,22 +115,28 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(colors.accent.primary, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
-            .background(CardBg, RoundedCornerShape(12.dp))
-            .border(1.5.dp, colors.accent.primary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+            .then(
+                if (colors.effect.enableGlow)
+                    Modifier.neonGlow(colors.updateLog.cardBorder, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
+                else Modifier
+            )
+            .background(colors.updateLog.cardBackground, RoundedCornerShape(12.dp))
+            .border(1.5.dp, colors.updateLog.cardBorder.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
             .padding(horizontal = 16.dp, vertical = 14.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
+            GradientText(
                 text = log.date,
-                color = colors.accent.primary,
+                color = colors.updateLog.titleText,
+                brush = colors.updateLog.titleGradient,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.size(12.dp))
-            Text(
+            GradientText(
                 text = log.title,
-                color = colors.accent.primary,
+                color = colors.updateLog.titleText,
+                brush = colors.updateLog.titleGradient,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
@@ -138,7 +145,7 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
 
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 10.dp),
-            color = colors.accent.primary.copy(alpha = 0.9f),
+            color = colors.updateLog.divider.copy(alpha = 0.9f),
             thickness = 0.5.dp
         )
 
@@ -154,7 +161,7 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
         ) {
             Text(
                 text = log.message,
-                color = Color.White.copy(alpha = 0.85f),
+                color = colors.updateLog.messageText,
                 fontSize = 13.sp,
                 lineHeight = 20.sp,
                 modifier = Modifier.weight(1f)
@@ -162,30 +169,44 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = colors.text.body,
+                tint = colors.updateLog.chevronIcon,
                 modifier = Modifier.size(20.dp)
             )
         }
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+private val previewLogs = listOf(
+    UpdateLogResponse(
+        date = "2026-06-18",
+        title = "v2.3.0 Release",
+        message = "New split bill feature, improved QR scan performance, and various bug fixes."
+    ),
+    UpdateLogResponse(
+        date = "2026-05-01",
+        title = "v2.2.0 Release",
+        message = "Added transaction history export, fixed login crash on Android 12."
+    )
+)
+
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0A0E1A)
 @Composable
-private fun UpdateLogPreview() {
-    MaterialTheme {
+private fun UpdateLogPreviewNeon() {
+    AppTheme(colors = NeonColors) {
         UpdateLogContent(
-            logs = listOf(
-                UpdateLogResponse(
-                    date = "2026-06-18",
-                    title = "v2.3.0 Release",
-                    message = "New split bill feature, improved QR scan performance, and various bug fixes."
-                ),
-                UpdateLogResponse(
-                    date = "2026-05-01",
-                    title = "v2.2.0 Release",
-                    message = "Added transaction history export, fixed login crash on Android 12."
-                )
-            ),
+            logs = previewLogs,
+            paddingValues = PaddingValues(),
+            onBack = {}
+        )
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun UpdateLogPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
+        UpdateLogContent(
+            logs = previewLogs,
             paddingValues = PaddingValues(),
             onBack = {}
         )
