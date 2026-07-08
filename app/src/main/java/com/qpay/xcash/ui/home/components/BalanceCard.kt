@@ -92,7 +92,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                         text = stringResource(R.string.balance_title),
                         color = mistGray,
                         brush = colors.gradient.goldShimmer,
-                        fontSize = 16.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Companion.ExtraBold,
                         letterSpacing = 1.sp
                     )
@@ -230,7 +230,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
             ) {
                 // 左側：金幣圓圈 + Token 數量
                 Row(verticalAlignment = Alignment.Companion.CenterVertically) {
-                    Icon(
+                    Icon(   
                         painter = painterResource(assets.balanceCoinIcon),
                         contentDescription = stringResource(id = R.string.balance_coin),
                         tint = Color.Companion.Unspecified,

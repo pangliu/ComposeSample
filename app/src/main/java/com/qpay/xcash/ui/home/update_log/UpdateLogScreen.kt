@@ -61,8 +61,11 @@ fun UpdateLogScreen(
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
             when (event) {
-                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-                is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT)
+                    .show()
+
+                is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
@@ -117,11 +120,20 @@ private fun UpdateLogCard(log: UpdateLogResponse) {
             .fillMaxWidth()
             .then(
                 if (colors.effect.enableGlow)
-                    Modifier.neonGlow(colors.updateLog.cardBorder, alpha = 0.2f, glowRadius = 12.dp, borderRadius = 12.dp)
+                    Modifier.neonGlow(
+                        colors.updateLog.cardBorder,
+                        alpha = 0.2f,
+                        glowRadius = 12.dp,
+                        borderRadius = 12.dp
+                    )
                 else Modifier
             )
             .background(colors.updateLog.cardBackground, RoundedCornerShape(12.dp))
-            .border(1.5.dp, colors.updateLog.cardBorder.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+            .border(
+                width = 1.5.dp,
+                color = colors.updateLog.cardBorder.copy(alpha = 0.6f),
+                shape = RoundedCornerShape(12.dp)
+            )
             .padding(horizontal = 16.dp, vertical = 14.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {

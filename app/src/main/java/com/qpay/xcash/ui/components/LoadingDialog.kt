@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.alpha
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.deepNavy
+import com.qpay.xcash.ui.theme.nearBlack
 
 @Composable
 fun LoadingDialog(
@@ -51,7 +52,7 @@ fun LoadingDialogContent() {
             .alpha(0.8f)
             .fillMaxSize()
             .background(
-                color = deepNavy
+                color = colors.bg.page.copy(0.5f)
             )
             // Intercept all touches
             .clickable(
