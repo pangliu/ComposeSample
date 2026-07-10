@@ -29,7 +29,6 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -55,6 +54,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.TextStyle
@@ -67,12 +68,13 @@ import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
 import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.UiEvent
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonColors
 
 private enum class CardInputMethod { OCR, GALLERY }
-
-private val InputFieldBackground = Color(0xFF0D1525)
-private val InputMethodSelectedBg = Color(0xFF1A2A40)
 
 @Composable
 fun AddNewCardScreen(
@@ -115,7 +117,7 @@ fun AddNewCardContent(
     isLoading: Boolean = false,
     onSubmit: (cardNumber: String, cardholderName: String, expiryDate: String, cvv: String, billingZip: String) -> Unit = { _, _, _, _, _ -> }
 ) {
-    var selectedMethod by rememberSaveable { mutableStateOf(CardInputMethod.OCR) }
+    var selectedMethod by rememberSaveable { mutableStateOf(CardInputMethod.GALLERY) }
     var cardNumber by rememberSaveable { mutableStateOf("") }
     var cardholderName by rememberSaveable { mutableStateOf("") }
     var expiryDate by rememberSaveable { mutableStateOf("") }
@@ -153,31 +155,17 @@ fun AddNewCardContent(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     InputMethodButton(
+                        icon = painterResource(R.drawable.ic_ocr),
                         selected = selectedMethod == CardInputMethod.OCR,
                         onClick = { selectedMethod = CardInputMethod.OCR },
                         modifier = Modifier.weight(1f)
-                    ) {
-                        ScanFrameIcon(modifier = Modifier.size(44.dp))
-                        Spacer(Modifier.height(6.dp))
-                        Text(
-                            text = stringResource(R.string.add_new_card_ocr_label),
-                            color = colors.accent.primary,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                    )
                     InputMethodButton(
+                        icon = painterResource(R.drawable.ic_picture),
                         selected = selectedMethod == CardInputMethod.GALLERY,
                         onClick = { selectedMethod = CardInputMethod.GALLERY },
                         modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Image,
-                            contentDescription = stringResource(R.string.add_new_card_gallery_desc),
-                            tint = if (selectedMethod == CardInputMethod.GALLERY) colors.accent.primary else colors.accent.primary.copy(alpha = 0.5f),
-                            modifier = Modifier.size(44.dp)
-                        )
-                    }
+                    )
                 }
 
                 // Card Number
@@ -254,11 +242,14 @@ fun AddNewCardContent(
                     enabled = !isLoading,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(45.dp),
+                        .height(45.dp)
+                        .background(colors.addNewCard.confirmBackground, RoundedCornerShape(12.dp)),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = colors.accent.primary,
-                        contentColor = Color(0xFF0B1327)
+                        containerColor = Color.Transparent,
+                        contentColor = colors.addNewCard.confirmContent,
+                        disabledContainerColor = Color.Transparent,
+                        disabledContentColor = colors.addNewCard.confirmContent.copy(alpha = 0.5f)
                     )
                 ) {
                     Text(
@@ -276,15 +267,14 @@ fun AddNewCardContent(
 
 @Composable
 private fun InputMethodButton(
+    icon: Painter,
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit = {}
 ) {
     val colors = LocalAppColors.current
-    val borderColor = if (selected) colors.accent.primary else colors.accent.primary.copy(alpha = 0.2f)
-    val bgColor = if (selected) InputMethodSelectedBg else InputFieldBackground
-
+    val borderColor = if (selected) colors.addNewCard.methodBorderSelected else colors.addNewCard.methodBorderUnselected
+    val bgColor = if (selected) colors.addNewCard.methodBackgroundSelected else colors.addNewCard.methodBackgroundUnselected
     Box(
         modifier = modifier
             .height(110.dp)
@@ -297,38 +287,36 @@ private fun InputMethodButton(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            content = content
+        Icon(
+            modifier = Modifier.size(50.dp),
+            painter = icon,
+            contentDescription = null,
         )
     }
 }
 
-@Composable
-private fun ScanFrameIcon(modifier: Modifier = Modifier) {
-    val colors = LocalAppColors.current
-    val color = colors.accent.primary
-    Canvas(modifier = modifier) {
-        val cornerLen = size.width * 0.28f
-        val stroke = 2.5.dp.toPx()
-        val inset = stroke / 2
-
-        fun hLine(x1: Float, x2: Float, y: Float) =
-            drawLine(color, Offset(x1, y), Offset(x2, y), stroke, StrokeCap.Square)
-        fun vLine(x: Float, y1: Float, y2: Float) =
-            drawLine(color, Offset(x, y1), Offset(x, y2), stroke, StrokeCap.Square)
-
-        val r = size.width - inset
-        val b = size.height - inset
-
-        // 四個角落
-        vLine(inset, inset, inset + cornerLen);  hLine(inset, inset + cornerLen, inset)
-        hLine(r - cornerLen, r, inset);          vLine(r, inset, inset + cornerLen)
-        vLine(inset, b - cornerLen, b);          hLine(inset, inset + cornerLen, b)
-        hLine(r - cornerLen, r, b);              vLine(r, b - cornerLen, b)
-    }
-}
+//@Composable
+//private fun ScanFrameIcon(color: Color, modifier: Modifier = Modifier) {
+//    Canvas(modifier = modifier) {
+//        val cornerLen = size.width * 0.28f
+//        val stroke = 2.5.dp.toPx()
+//        val inset = stroke / 2
+//
+//        fun hLine(x1: Float, x2: Float, y: Float) =
+//            drawLine(color, Offset(x1, y), Offset(x2, y), stroke, StrokeCap.Square)
+//        fun vLine(x: Float, y1: Float, y2: Float) =
+//            drawLine(color, Offset(x, y1), Offset(x, y2), stroke, StrokeCap.Square)
+//
+//        val r = size.width - inset
+//        val b = size.height - inset
+//
+//        // 四個角落
+//        vLine(inset, inset, inset + cornerLen);  hLine(inset, inset + cornerLen, inset)
+//        hLine(r - cornerLen, r, inset);          vLine(r, inset, inset + cornerLen)
+//        vLine(inset, b - cornerLen, b);          hLine(inset, inset + cornerLen, b)
+//        hLine(r - cornerLen, r, b);              vLine(r, b - cornerLen, b)
+//    }
+//}
 
 @Composable
 private fun CardFormField(
@@ -344,32 +332,32 @@ private fun CardFormField(
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
 
-    val borderColor = if (isFocused) colors.accent.primary else colors.accent.primary.copy(alpha = 0.4f)
+    val borderColor = if (isFocused) colors.addNewCard.fieldBorderFocused else colors.addNewCard.fieldBorderUnfocused
     val borderWidth = 1.5.dp
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(
             text = label,
-            color = Color.White,
+            color = colors.addNewCard.fieldLabel,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium
         )
-        
+
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
-            textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+            textStyle = TextStyle(color = colors.addNewCard.fieldText, fontSize = 16.sp),
             singleLine = true,
             visualTransformation = visualTransformation,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             interactionSource = interactionSource,
-            cursorBrush = SolidColor(colors.accent.primary),
+            cursorBrush = SolidColor(colors.addNewCard.fieldCursor),
             modifier = Modifier.fillMaxWidth(),
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(InputFieldBackground, RoundedCornerShape(8.dp))
+                        .background(colors.addNewCard.fieldBackground, RoundedCornerShape(8.dp))
                         .border(borderWidth, borderColor, RoundedCornerShape(8.dp))
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     contentAlignment = Alignment.CenterStart
@@ -377,7 +365,7 @@ private fun CardFormField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = colors.text.body,
+                            color = colors.addNewCard.fieldPlaceholder,
                             fontSize = 14.sp
                         )
                     }
@@ -388,10 +376,18 @@ private fun CardFormField(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun AddNewCardPreview() {
-    MaterialTheme {
+private fun AddNewCardPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        AddNewCardContent()
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun AddNewCardPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         AddNewCardContent()
     }
 }

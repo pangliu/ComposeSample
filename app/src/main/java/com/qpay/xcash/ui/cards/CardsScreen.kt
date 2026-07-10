@@ -21,17 +21,21 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,15 +46,19 @@ import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.CreditCardResponse
 import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.UiEvent
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.LoadingDialog
+import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.cards.components.VoucherTicket
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.silverGray
 
-private val tokenOrange = Color(0xFFFF8C00)
 private val promoBannerCount = 4
 
 @Composable
@@ -95,15 +103,9 @@ fun CardsScreenContent(uiState: CardsUiState, onRefresh: () -> Unit = {}, onNavi
             .fillMaxSize()
             .background(colors.bg.page)
     ) {
-        Text(
-            text = stringResource(R.string.cards_management_title),
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp, bottom = 16.dp),
-            textAlign = TextAlign.Center
+        SubPageTopBar(
+            title = stringResource(R.string.cards_management_title),
+            showBack = false
         )
 
         PullToRefreshBox(
@@ -154,74 +156,31 @@ fun CardsScreenContent(uiState: CardsUiState, onRefresh: () -> Unit = {}, onNavi
     }
 }
 
-@Composable
-fun InfoCard() {
-    val colors = LocalAppColors.current
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(
-                if (colors.effect.enableGlow)
-                    Modifier.neonGlow(color = colors.accent.primary, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 12.dp)
-                else Modifier
-            )
-            .clip(RoundedCornerShape(12.dp))
-            .background(colors.bg.page)
-            .border(2.dp, colors.accent.primary.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = stringResource(R.string.cards_info_title),
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = stringResource(R.string.cards_info_body_1),
-                color = Color.White.copy(alpha = 0.8f),
-                fontSize = 14.sp
-            )
-            Text(
-                text = stringResource(R.string.cards_info_body_2),
-                color = Color.White.copy(alpha = 0.8f),
-                fontSize = 14.sp,
-                modifier = Modifier.padding(start = 16.dp)
-            )
-        }
-    }
-}
 
 @Composable
 fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> Unit = {}) {
     val colors = LocalAppColors.current
-    val glowColor = if (isPrimary) colors.accent.secondary else colors.accent.primary
-    val borderBrush = if (isPrimary) colors.cards.primaryCardBorder else colors.cards.secondaryCardBorder
-
+    val drawable = LocalAppAssets.current
+//    val glowColor = if (isPrimary) colors.accent.secondary else colors.accent.primary
+//    val borderBrush = if (isPrimary) colors.cards.primaryCardBorder else colors.cards.secondaryCardBorder
+    val cardBg = if (isPrimary) drawable.cardPrimaryBg else drawable.cardSecondaryBy
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .then(
-                if (colors.effect.enableGlow)
-                    Modifier.neonGlow(color = glowColor, alpha = 0.6f, glowRadius = 15.dp, borderRadius = 16.dp)
-                else Modifier
-            )
-            .background(
-                color = colors.bg.page,
-                shape = RoundedCornerShape(10.dp)
-            )
-            .border(
-                width = 1.5.dp,
-                brush = borderBrush,
-                shape = RoundedCornerShape(10.dp))
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
             ) { onClick() }
-            .padding(20.dp)
     ) {
-        Column {
+        Image(
+            painter = painterResource(cardBg),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.matchParentSize()
+        )
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
             // Top Row: Logo & Card Type / Badge
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -245,13 +204,20 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> 
                 if (isPrimary) {
                     Box(
                         modifier = Modifier
-                            .background(colors.accent.secondary.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
-                            .border(1.dp, colors.accent.secondary, RoundedCornerShape(12.dp))
+                            .background(
+                                colors.cards.primaryBadgeBackground,
+                                colors.cards.primaryBadgeShape
+                            )
+                            .border(
+                                1.dp,
+                                colors.cards.primaryBadgeBorder,
+                                colors.cards.primaryBadgeShape
+                            )
                             .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
-                        Text(
+                        GradientText(
                             text = stringResource(R.string.cards_primary_badge),
-                            color = Color.White,
+                            brush = colors.cards.primaryBadgeText,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -259,7 +225,7 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> 
                 } else {
                     Text(
                         text = "VISA/MC",
-                        color = colors.text.body,
+                        color = silverGray,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -292,7 +258,7 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> 
                 Column {
                     Text(
                         text = stringResource(R.string.cards_card_nickname),
-                        color = colors.text.body,
+                        color = silverGray,
                         fontSize = 12.sp
                     )
                     Text(
@@ -305,16 +271,16 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> 
 
                 Box(
                     modifier = Modifier
-                        .border(1.dp, tokenOrange, RoundedCornerShape(8.dp))
+                        .border(1.dp, colors.cards.manageButtonBorder, RoundedCornerShape(8.dp))
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) { onClick() }
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
-                    Text(
+                    GradientText(
                         text = stringResource(R.string.cards_manage_btn),
-                        color = tokenOrange,
+                        brush = colors.cards.manageButtonText,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -333,11 +299,16 @@ fun AddNewCardButton(onNavigate: (String) -> Unit = {}) {
             .padding(horizontal = 32.dp)
             .then(
                 if (colors.effect.enableGlow)
-                    Modifier.neonGlow(color = colors.accent.primary, alpha = 0.4f, glowRadius = 15.dp, borderRadius = 24.dp)
+                    Modifier.neonGlow(
+                        color = colors.accent.primary,
+                        alpha = 0.4f,
+                        glowRadius = 15.dp,
+                        borderRadius = 24.dp
+                    )
                 else Modifier
             )
             .clip(RoundedCornerShape(24.dp))
-            .background(colors.bg.page)
+            .background(colors.cards.addNewCardBackground)
             .border(1.5.dp, colors.accent.primary, RoundedCornerShape(24.dp))
             .clickable { onNavigate(Routes.SELECT_CARD_TYPE) }
             .padding(vertical = 12.dp),
@@ -347,13 +318,13 @@ fun AddNewCardButton(onNavigate: (String) -> Unit = {}) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = null,
-                tint = colors.accent.primary,
+                tint = colors.cards.addNewCardContent,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(R.string.cards_add_new_btn),
-                color = colors.accent.primary,
+                color = colors.cards.addNewCardContent,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -390,7 +361,9 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
                     modifier = Modifier
                         .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                         .background(
-                            if (pagerState.currentPage == index) colors.accent.primary else colors.text.body.copy(alpha = 0.3f),
+                            if (pagerState.currentPage == index) colors.accent.primary else colors.text.body.copy(
+                                alpha = 0.3f
+                            ),
                             CircleShape
                         )
                 )
@@ -409,7 +382,12 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
                     .height(52.dp)
                     .then(
                         if (colors.effect.enableGlow)
-                            Modifier.neonGlow(colors.accent.primary, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 26.dp)
+                            Modifier.neonGlow(
+                                colors.accent.primary,
+                                alpha = 0.5f,
+                                glowRadius = 12.dp,
+                                borderRadius = 26.dp
+                            )
                         else Modifier
                     )
                     .background(colors.bg.page, RoundedCornerShape(26.dp))
@@ -442,6 +420,7 @@ private fun CardsEmptyState(onNavigate: (String) -> Unit = {}) {
 @Composable
 private fun PromoBannerCard(page: Int) {
     val colors = LocalAppColors.current
+    val drawable = LocalAppAssets.current
     // 外層 Box：padding 為光暈預留空間，光暈永遠在此範圍內，不依賴父容器允許 overflow
     Box(
         modifier = Modifier
@@ -459,7 +438,8 @@ private fun PromoBannerCard(page: Int) {
                             color = colors.accent.primary,
                             alpha = 0.4f,
                             glowRadius = 12.dp,
-                            borderRadius = 16.dp)
+                            borderRadius = 16.dp
+                        )
                     else Modifier
                 )
                 .background(
@@ -469,7 +449,12 @@ private fun PromoBannerCard(page: Int) {
                 .border(
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
-                        colors = listOf(colors.accent.primary, colors.accent.secondary, colors.accent.primary)),
+                        colors = listOf(
+                            colors.accent.primary,
+                            colors.accent.secondary,
+                            colors.accent.primary
+                        )
+                    ),
                     shape = RoundedCornerShape(16.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -479,7 +464,23 @@ private fun PromoBannerCard(page: Int) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    VoucherTicket(amount = stringResource(R.string.cards_empty_voucher_amount))
+//                    VoucherTicket(amount = stringResource(R.string.cards_empty_voucher_amount))
+                    Box(
+
+                    ){
+                        Image(
+                            painter = painterResource(drawable.voucherTicketBg),
+                            contentDescription = null
+                        )
+                        GradientText(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = stringResource(R.string.cards_empty_voucher_amount),
+                            brush = colors.cards.voucherAmountText,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            letterSpacing = 1.sp
+                        )
+                    }
                     Text(
                         text = stringResource(R.string.cards_empty_promo_text),
                         color = Color.White,
@@ -514,7 +515,7 @@ fun CardsScreenPreviewNeon() {
 @Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
 @Composable
 fun CardsScreenPreviewBlackGold() {
-    AppTheme(colors = BlackGoldColors) {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         CardsScreenContent(
             uiState = CardsUiState(
                 isLoadingCards = false,
@@ -543,7 +544,7 @@ fun CardsScreenEmptyPreviewNeon() {
 @Preview(name = "Black Gold Empty", showBackground = true, backgroundColor = 0xFF050505)
 @Composable
 fun CardsScreenEmptyPreviewBlackGold() {
-    AppTheme(colors = BlackGoldColors) {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         CardsScreenContent(
             uiState = CardsUiState(
                 isLoadingCards = false,

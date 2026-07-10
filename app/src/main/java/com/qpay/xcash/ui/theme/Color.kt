@@ -21,10 +21,13 @@ val neonMellowPeach = Color(0xFFFDACA2)
 val neonRed = Color(0xFFFF4C4C)
 val neonPink = Color(0xFFFF31A0)
 val neonBlue = Color(0xFF2E88FF)
+val neonOrange = Color(0xFFFF8C00)     // CardsScreen Manage 按鈕外框 / 文字（Neon）
 val neonBlueLight = Color(0xFF66A3CF)
 val neonDivider = Color(0xAAB0D6DF)
 val notifyCardBg = Color(0xFF0D1829)   // NotificationCard 卡片底色（Neon）
 val twilightNavy = Color(0xFF0D1B2E)   // UpdateLogCard 卡片底色（Neon）
+val inkNavy = Color(0xFF0D1525)        // AddNewCardScreen 輸入框 / 未選中輸入方式底色（Neon）
+val steelNavy = Color(0xFF1A2A40)      // AddNewCardScreen 選中輸入方式底色（Neon）
 // ========== transaction detail ===========
 val neonMint = Color(0xFF85EEAC)
 val neonBlushPink = Color(0xFFEFA2A8)
