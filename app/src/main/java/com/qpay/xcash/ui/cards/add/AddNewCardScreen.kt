@@ -295,28 +295,6 @@ private fun InputMethodButton(
     }
 }
 
-//@Composable
-//private fun ScanFrameIcon(color: Color, modifier: Modifier = Modifier) {
-//    Canvas(modifier = modifier) {
-//        val cornerLen = size.width * 0.28f
-//        val stroke = 2.5.dp.toPx()
-//        val inset = stroke / 2
-//
-//        fun hLine(x1: Float, x2: Float, y: Float) =
-//            drawLine(color, Offset(x1, y), Offset(x2, y), stroke, StrokeCap.Square)
-//        fun vLine(x: Float, y1: Float, y2: Float) =
-//            drawLine(color, Offset(x, y1), Offset(x, y2), stroke, StrokeCap.Square)
-//
-//        val r = size.width - inset
-//        val b = size.height - inset
-//
-//        // 四個角落
-//        vLine(inset, inset, inset + cornerLen);  hLine(inset, inset + cornerLen, inset)
-//        hLine(r - cornerLen, r, inset);          vLine(r, inset, inset + cornerLen)
-//        vLine(inset, b - cornerLen, b);          hLine(inset, inset + cornerLen, b)
-//        hLine(r - cornerLen, r, b);              vLine(r, b - cornerLen, b)
-//    }
-//}
 
 @Composable
 private fun CardFormField(

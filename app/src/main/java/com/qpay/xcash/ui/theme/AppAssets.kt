@@ -26,8 +26,10 @@ data class AppAssets(
     @DrawableRes val transactionDetailCardBgSmall: Int?, // TransactionDetailScreen InfoCard 背景圖（null = 純色）
     @DrawableRes val cardPrimaryBg: Int,
     @DrawableRes val cardSecondaryBy: Int,
-    @DrawableRes val manageCardBg: Int,
+    @DrawableRes val cardDetailBg: Int,
+    val cardDetailAspectRatio: Float,            // cardDetailBg 圖片寬高比（width / height）
     @DrawableRes val voucherTicketBg: Int,
+    @DrawableRes val subPageBackground: Int?,    // 子頁面全屏背景圖（null = 純色 bg.page）
 )
 
 val NeonAssets = AppAssets(
@@ -51,8 +53,10 @@ val NeonAssets = AppAssets(
     transactionDetailCardBgSmall = null,
     cardPrimaryBg = R.drawable.bg_card_primary,
     cardSecondaryBy = R.drawable.bg_card_secondary,
-    manageCardBg = R.drawable.bg_manage_card,
+    cardDetailBg = R.drawable.bg_card_primary,
+    cardDetailAspectRatio = 1113f / 561f,
     voucherTicketBg = R.drawable.bg_voucher_ticket,
+    subPageBackground = R.mipmap.bg_sub_page,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -76,8 +80,10 @@ val BlackGoldAssets = AppAssets(
     transactionDetailCardBgSmall = R.drawable.bg_transaction_detail_small_black_gold,
     cardPrimaryBg = R.drawable.bg_card_primary_black_gold,
     cardSecondaryBy = R.drawable.bg_card_secondary_black_gold,
-    manageCardBg = R.drawable.bg_manage_card_black_gold,
+    cardDetailBg = R.drawable.bg_card_primary_black_gold,
+    cardDetailAspectRatio = 954f / 561f,
     voucherTicketBg = R.drawable.bg_voucher_ticket_black_gold,
+    subPageBackground = null,
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }

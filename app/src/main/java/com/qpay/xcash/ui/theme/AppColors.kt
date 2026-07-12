@@ -43,6 +43,8 @@ data class AppColors(
     val updateLog: UpdateLogColors,
     val cards: CardsColors,
     val addNewCard: AddNewCardColors,
+    val linkedSuccess: LinkedSuccessColors,
+    val cardDetail: CardDetailColors,
 )
 
 val NeonColors = AppColors(
@@ -75,6 +77,8 @@ val NeonColors = AppColors(
     updateLog = NeonUpdateLogColors,
     cards = NeonCardsColors,
     addNewCard = NeonAddNewCardColors,
+    linkedSuccess = NeonLinkedSuccessColors,
+    cardDetail = NeonCardDetailColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -111,4 +115,6 @@ val BlackGoldColors = AppColors(
     updateLog = BlackGoldUpdateLogColors,
     cards = BlackGoldCardsColors,
     addNewCard = BlackGoldAddNewCardColors,
+    linkedSuccess = BlackGoldLinkedSuccessColors,
+    cardDetail = BlackGoldCardDetailColors,
 )

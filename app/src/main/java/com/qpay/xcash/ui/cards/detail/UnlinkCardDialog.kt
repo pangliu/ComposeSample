@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -39,13 +38,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
 import com.qpay.xcash.ui.components.neonGlow
-import com.qpay.xcash.ui.theme.neonPurpleLight
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.bloodRed
+import com.qpay.xcash.ui.theme.dustyCrimson
 import com.qpay.xcash.ui.theme.vibrantPink
-
-private val warningRed = Color(0xFF790103)
-private val neonRed = Color(0xFFA34248)
-private val dialogBg = Color(0xFF0F1828)
-private val dialogBorderColor = Color(0xFF1E2D4A)
 
 @Composable
 fun UnlinkCardDialog(
@@ -54,6 +54,7 @@ fun UnlinkCardDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    val colors = LocalAppColors.current
     AnimatedVisibility(
         visible = isVisible,
         enter = fadeIn(),
@@ -78,8 +79,8 @@ fun UnlinkCardDialog(
                         exit = slideOutVertically { it / 4 }
                     )
                     .clip(RoundedCornerShape(20.dp))
-                    .background(dialogBg)
-                    .border(1.dp, dialogBorderColor, RoundedCornerShape(20.dp))
+                    .background(colors.cardDetail.dialogBackground)
+                    .border(1.dp, colors.cardDetail.dialogBorder, RoundedCornerShape(20.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -127,9 +128,13 @@ fun UnlinkCardDialog(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(warningRed.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
-                        .border(1.5.dp, neonRed.copy(alpha = 0.6f), RoundedCornerShape(24.dp))
-                        .neonGlow(neonRed, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
+                        .background(bloodRed.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
+                        .border(1.5.dp, dustyCrimson.copy(alpha = 0.6f), RoundedCornerShape(24.dp))
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(dustyCrimson, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
+                            else Modifier
+                        )
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
@@ -139,7 +144,7 @@ fun UnlinkCardDialog(
                 ) {
                     Text(
                         text = stringResource(R.string.card_detail_unlink_btn),
-                        color = neonRed,
+                        color = dustyCrimson,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -149,8 +154,12 @@ fun UnlinkCardDialog(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .neonGlow(vibrantPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
-                        .background(dialogBg)
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(vibrantPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
+                            else Modifier
+                        )
+                        .background(colors.cardDetail.dialogBackground)
                         .border(1.5.dp, vibrantPink, RoundedCornerShape(24.dp))
                         .clickable(
                             indication = null,
@@ -160,7 +169,11 @@ fun UnlinkCardDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        modifier = Modifier.neonGlow(vibrantPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp),
+                        modifier = Modifier.then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(vibrantPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
+                            else Modifier
+                        ),
                         text = stringResource(R.string.card_detail_unlink_dialog_cancel),
                         color = vibrantPink,
                         fontSize = 16.sp,
@@ -172,10 +185,25 @@ fun UnlinkCardDialog(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun UnlinkCardDialogPreview() {
-    MaterialTheme {
+private fun UnlinkCardDialogPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            UnlinkCardDialog(
+                last4 = "1234",
+                isVisible = true,
+                onConfirm = {},
+                onDismiss = {}
+            )
+        }
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun UnlinkCardDialogPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         Box(modifier = Modifier.fillMaxSize()) {
             UnlinkCardDialog(
                 last4 = "1234",

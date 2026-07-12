@@ -1,6 +1,6 @@
 package com.qpay.xcash.ui.cards.detail
 
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,13 +26,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,8 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
@@ -60,12 +54,16 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.CreditCardResponse
+import com.qpay.xcash.ui.components.GradientText
+import com.qpay.xcash.ui.components.NeonSwitch
 import com.qpay.xcash.ui.components.SubPageTopBar
-import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.neonCyanLight
-import com.qpay.xcash.ui.theme.neonPurpleLight
-import com.qpay.xcash.ui.theme.vibrantPink
+import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.silverGray
 
 @Composable
 fun CardDetailScreen(
@@ -101,14 +99,14 @@ fun CardDetailContent(
     onHideUnlinkDialog: () -> Unit = {},
     onConfirmUnlink: () -> Unit = {}
 ) {
+    val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     // 計算卡號後四碼供 UnlinkDialog 使用
     val last4 = uiState.card?.cardNumber
         ?.replace(" ", "")?.replace("-", "")
         ?.let { if (it.length >= 4) it.takeLast(4) else it }
         ?: ""
-
     Box(modifier = Modifier.fillMaxSize()) {
-    val colors = LocalAppColors.current
         Scaffold(
             containerColor = colors.bg.page,
             contentColor = Color.White
@@ -116,9 +114,13 @@ fun CardDetailContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .paint(
-                        painter = painterResource(R.mipmap.bg_sub_page),
-                        contentScale = ContentScale.FillBounds
+                    .then(
+                        assets.subPageBackground?.let {
+                            Modifier.paint(
+                                painter = painterResource(it),
+                                contentScale = ContentScale.FillBounds
+                            )
+                        } ?: Modifier
                     )
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
@@ -133,7 +135,8 @@ fun CardDetailContent(
                 uiState.card?.let { card ->
                     CardFaceView(
                         card = card,
-                        onEdit = { /* TODO: edit card */ }
+                        isPrimary = uiState.isPrimary,
+                        onManage = { /* TODO: manage card */ }
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
@@ -146,7 +149,7 @@ fun CardDetailContent(
                     ) {
                         Text(
                             text = stringResource(R.string.cards_card_nickname),
-                            color = colors.text.body,
+                            color = Color.White,
                             fontSize = 14.sp
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -179,16 +182,11 @@ fun CardDetailContent(
                             color = Color.White,
                             fontSize = 16.sp
                         )
-                        Switch(
+                        NeonSwitch(
                             checked = uiState.isPrimary,
                             onCheckedChange = { onSetPrimary() },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,
-                                checkedTrackColor = Color.Gray,
-                                checkedBorderColor = colors.accent.primary,
-                                uncheckedThumbColor = Color.White,
-                                uncheckedTrackColor = Color.White.copy(alpha = 0.3f)
-                            )
+                            activeColor = colors.accent.primary,
+                            showLabel = true
                         )
                     }
 
@@ -198,20 +196,14 @@ fun CardDetailContent(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 24.dp)
+                            .padding(horizontal = 50.dp)
                             .border(
                                 width = 1.5.dp,
-                                color = vibrantPink,
+                                color = colors.cardDetail.unlinkBorder,
                                 shape = RoundedCornerShape(24.dp)
                             )
-                            .neonGlow(
-                                color = vibrantPink,
-                                alpha = 0.5f,
-                                glowRadius = 24.dp,
-                                borderRadius = 24.dp
-                            )
                             .background(
-                                color = colors.bg.page,
+                                brush = colors.cardDetail.unlinkBackground,
                                 shape = RoundedCornerShape(24.dp)
                             )
                             .clickable(
@@ -223,7 +215,7 @@ fun CardDetailContent(
                     ) {
                         Text(
                             text = stringResource(R.string.card_detail_unlink_btn),
-                            color = vibrantPink,
+                            color = colors.cardDetail.unlinkText,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -245,8 +237,9 @@ fun CardDetailContent(
 }
 
 @Composable
-private fun CardFaceView(card: CreditCardResponse, onEdit: () -> Unit) {
+private fun CardFaceView(card: CreditCardResponse, isPrimary: Boolean, onManage: () -> Unit) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     val cleanNumber = card.cardNumber.replace(" ", "").replace("-", "")
     val last4 = if (cleanNumber.length >= 4) cleanNumber.takeLast(4) else cleanNumber
 
@@ -254,74 +247,98 @@ private fun CardFaceView(card: CreditCardResponse, onEdit: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .aspectRatio(1.586f)
-            .neonGlow(neonPurpleLight, alpha = 0.5f, glowRadius = 20.dp, borderRadius = 16.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(
-                Brush.verticalGradient(listOf(Color(0xFF1A0C3E), Color(0xFF080D2A)))
-            )
-            .border(
-                1.5.dp,
-                Brush.linearGradient(listOf(colors.accent.secondary, neonCyanLight, colors.accent.secondary)),
-                RoundedCornerShape(16.dp)
+            .aspectRatio(assets.cardDetailAspectRatio)
+//            .clip(RoundedCornerShape(16.dp))
+            .paint(
+                painter = painterResource(assets.cardDetailBg),
+                contentScale = ContentScale.FillBounds
             )
             .padding(20.dp)
     ) {
-        // Top row: icon + edit button
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopStart),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(Color.White.copy(alpha = 0.12f), RoundedCornerShape(10.dp))
-                    .border(1.dp, Color.White.copy(alpha = 0.25f), RoundedCornerShape(10.dp)),
-                contentAlignment = Alignment.Center
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Top row: 卡種 logo + Primary 徽章
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.ShoppingBag,
-                    contentDescription = null,
-                    tint = Color.White.copy(alpha = 0.9f),
-                    modifier = Modifier.size(22.dp)
-                )
+                CardNetworkLogo(cardType = card.cardType)
+
+                if (isPrimary) {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                colors.cards.primaryBadgeBackground,
+                                colors.cards.primaryBadgeShape
+                            )
+                            .border(
+                                width = 1.dp,
+                                brush = colors.cards.primaryBadgeBorder,
+                                colors.cards.primaryBadgeShape
+                            )
+                            .padding(horizontal = 20.dp, vertical = 8.dp)
+                    ) {
+                        GradientText(
+                            text = stringResource(R.string.cards_primary_badge),
+                            brush = colors.cards.primaryBadgeText,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
             }
 
-            Box(
-                modifier = Modifier
-                    .background(Color.White.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
-                    .border(1.dp, Color.White.copy(alpha = 0.35f), RoundedCornerShape(8.dp))
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onEdit() }
-                    .padding(horizontal = 14.dp, vertical = 6.dp)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Masked card number
+            Text(
+                text = "**** **** **** $last4",
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                letterSpacing = 2.sp
+            )
+
+            // 將 bottom row 推至卡片底部
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Bottom row: 卡片暱稱 / 姓名 + Manage 按鈕
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
             ) {
-                Text(
-                    text = stringResource(R.string.card_detail_edit_btn),
-                    color = Color.White,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                Column {
+                    Text(
+                        text = stringResource(R.string.cards_card_nickname),
+                        color = silverGray,
+                        fontSize = 12.sp
+                    )
+                    Text(
+                        text = card.cardName,
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, colors.cards.manageButtonBorder, RoundedCornerShape(8.dp))
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { onManage() }
+                        .padding(horizontal = 16.dp, vertical = 6.dp)
+                ) {
+                    GradientText(
+                        text = stringResource(R.string.cards_manage_btn),
+                        brush = colors.cards.manageButtonText,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
-        }
-
-        // Masked card number
-        Text(
-            text = "**** **** **** $last4",
-            color = Color.White,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-            letterSpacing = 2.sp,
-            modifier = Modifier.align(Alignment.Center)
-        )
-
-        // Card network logo
-        Box(modifier = Modifier.align(Alignment.BottomEnd)) {
-            CardNetworkLogo(cardType = card.cardType)
         }
     }
 }
@@ -330,23 +347,21 @@ private fun CardFaceView(card: CreditCardResponse, onEdit: () -> Unit) {
 private fun CardNetworkLogo(cardType: String) {
     when {
         cardType.contains("visa", ignoreCase = true) -> {
-            Text(
-                text = "VISA",
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.ExtraBold,
-                letterSpacing = 1.sp
+            Image(
+                painter = painterResource(R.drawable.ic_visa_card),
+                contentDescription = null,
+                modifier = Modifier.size(width = 40.dp, height = 26.dp)
             )
         }
         cardType.contains("master", ignoreCase = true) -> {
-            Canvas(modifier = Modifier.size(44.dp, 28.dp)) {
-                val radius = size.height / 2
-                val centerY = size.height / 2
-                drawCircle(color = Color(0xFFEB001B), radius = radius, center = Offset(size.width * 0.38f, centerY))
-                drawCircle(color = Color(0xFFF79E1B), radius = radius, center = Offset(size.width * 0.62f, centerY))
-            }
+            Image(
+                painter = painterResource(R.drawable.ic_master_card),
+                contentDescription = null,
+                modifier = Modifier.size(width = 40.dp, height = 26.dp)
+            )
         }
         else -> {
+            // TODO: 其他卡種之後補圖片
             Icon(
                 imageVector = Icons.Default.CreditCard,
                 contentDescription = null,
@@ -363,10 +378,11 @@ private fun NicknameField(
     onValueChange: (String) -> Unit,
     onDone: () -> Unit
 ) {
+    val colors = LocalAppColors.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, neonCyanLight, RoundedCornerShape(8.dp))
+            .border(1.dp, colors.cardDetail.nicknameBorder, RoundedCornerShape(8.dp))
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -374,9 +390,9 @@ private fun NicknameField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier.weight(1f),
-            textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+            textStyle = TextStyle(color = colors.cardDetail.nicknameText, fontSize = 16.sp),
             singleLine = true,
-            cursorBrush = SolidColor(neonCyanLight),
+            cursorBrush = SolidColor(colors.cardDetail.nicknameCursor),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { onDone() })
         )
@@ -384,34 +400,66 @@ private fun NicknameField(
         Icon(
             imageVector = Icons.Default.Edit,
             contentDescription = null,
-            tint = neonCyanLight,
+            tint = colors.cardDetail.nicknameEditIcon,
             modifier = Modifier.size(18.dp)
         )
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun CardDetailScreenPreview() {
-    MaterialTheme {
+private fun CardDetailScreenPreviewNeon() {
+    AppTheme(colors = NeonColors) {
         CardDetailContent(
             uiState = CardDetailUiState(
                 card = CreditCardResponse(1, "Mastercard", "My Main Card", "5353", "gcash", isPrimary = true),
                 nicknameInput = "My Main Card",
+                isPrimary = true,
                 showUnlinkDialog = false
             )
         )
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
 @Composable
-private fun CardDetailScreenWithDialogPreview() {
-    MaterialTheme {
+private fun CardDetailScreenPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         CardDetailContent(
             uiState = CardDetailUiState(
                 card = CreditCardResponse(1, "Mastercard", "My Main Card", "5353", "gcash", isPrimary = true),
                 nicknameInput = "My Main Card",
+                isPrimary = true,
+                showUnlinkDialog = false
+            )
+        )
+    }
+}
+
+@Preview(name = "Neon Dialog", showBackground = true, backgroundColor = 0xFF030F1B)
+@Composable
+private fun CardDetailScreenWithDialogPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        CardDetailContent(
+            uiState = CardDetailUiState(
+                card = CreditCardResponse(1, "Mastercard", "My Main Card", "5353", "gcash", isPrimary = true),
+                nicknameInput = "My Main Card",
+                isPrimary = true,
+                showUnlinkDialog = true
+            )
+        )
+    }
+}
+
+@Preview(name = "Black Gold Dialog", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun CardDetailScreenWithDialogPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        CardDetailContent(
+            uiState = CardDetailUiState(
+                card = CreditCardResponse(1, "Mastercard", "My Main Card", "5353", "gcash", isPrimary = true),
+                nicknameInput = "My Main Card",
+                isPrimary = true,
                 showUnlinkDialog = true
             )
         )
