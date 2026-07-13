@@ -37,7 +37,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -48,7 +47,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -242,6 +240,7 @@ private fun CardFaceView(card: CreditCardResponse, isPrimary: Boolean, onManage:
     val assets = LocalAppAssets.current
     val cleanNumber = card.cardNumber.replace(" ", "").replace("-", "")
     val last4 = if (cleanNumber.length >= 4) cleanNumber.takeLast(4) else cleanNumber
+    val cardDetailBg = if(isPrimary) assets.cardDetailBg else assets.cardSecondaryBg
 
     Box(
         modifier = Modifier
@@ -250,7 +249,7 @@ private fun CardFaceView(card: CreditCardResponse, isPrimary: Boolean, onManage:
             .aspectRatio(assets.cardDetailAspectRatio)
 //            .clip(RoundedCornerShape(16.dp))
             .paint(
-                painter = painterResource(assets.cardDetailBg),
+                painter = painterResource(cardDetailBg),
                 contentScale = ContentScale.FillBounds
             )
             .padding(20.dp)

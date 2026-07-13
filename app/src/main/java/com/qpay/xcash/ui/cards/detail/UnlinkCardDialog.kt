@@ -43,7 +43,6 @@ import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
-import com.qpay.xcash.ui.theme.bloodRed
 import com.qpay.xcash.ui.theme.dustyCrimson
 import com.qpay.xcash.ui.theme.vibrantPink
 
@@ -80,7 +79,7 @@ fun UnlinkCardDialog(
                     )
                     .clip(RoundedCornerShape(20.dp))
                     .background(colors.cardDetail.dialogBackground)
-                    .border(1.dp, colors.cardDetail.dialogBorder, RoundedCornerShape(20.dp))
+                    .border(1.5.dp, colors.cardDetail.dialogBorder, RoundedCornerShape(20.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -92,13 +91,13 @@ fun UnlinkCardDialog(
                 Icon(
                     painter = painterResource(R.mipmap.ic_warning),
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = colors.cardDetail.dialogWarningTint,
                     modifier = Modifier.size(80.dp)
                 )
                 // Title
                 Text(
                     text = stringResource(R.string.card_detail_unlink_dialog_title),
-                    color = Color.White,
+                    color = colors.cardDetail.dialogTitleText,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -107,7 +106,7 @@ fun UnlinkCardDialog(
                 // 卡號後四碼
                 Text(
                     text = "**** $last4",
-                    color = Color.White,
+                    color = colors.cardDetail.dialogCardNumberText,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 2.sp
@@ -116,7 +115,7 @@ fun UnlinkCardDialog(
                 // Description
                 Text(
                     text = stringResource(R.string.card_detail_unlink_dialog_desc),
-                    color = Color.White.copy(alpha = 0.6f),
+                    color = colors.cardDetail.dialogDescText,
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     lineHeight = 20.sp
@@ -124,15 +123,27 @@ fun UnlinkCardDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Unlink Card button（紅色填滿）
+                // Unlink Card button（Neon: 紅色填滿；Black Gold: 紅色橫向漸層）
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(bloodRed.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
-                        .border(1.5.dp, dustyCrimson.copy(alpha = 0.6f), RoundedCornerShape(24.dp))
+                        .background(
+                            colors.cardDetail.dialogUnlinkBackground,
+                            RoundedCornerShape(24.dp)
+                        )
+                        .border(
+                            1.5.dp,
+                            colors.cardDetail.dialogUnlinkBorder,
+                            RoundedCornerShape(24.dp)
+                        )
                         .then(
                             if (colors.effect.enableGlow)
-                                Modifier.neonGlow(dustyCrimson, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
+                                Modifier.neonGlow(
+                                    dustyCrimson,
+                                    alpha = 0.5f,
+                                    glowRadius = 24.dp,
+                                    borderRadius = 24.dp
+                                )
                             else Modifier
                         )
                         .clickable(
@@ -144,23 +155,35 @@ fun UnlinkCardDialog(
                 ) {
                     Text(
                         text = stringResource(R.string.card_detail_unlink_btn),
-                        color = dustyCrimson,
+                        color = colors.cardDetail.dialogUnlinkText,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
-                // Cancel button（粉紅邊框）
+                // Cancel button（Neon: 粉紅邊框；Black Gold: silverShimmer 橫向漸層）
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .then(
                             if (colors.effect.enableGlow)
-                                Modifier.neonGlow(vibrantPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
+                                Modifier.neonGlow(
+                                    vibrantPink,
+                                    alpha = 0.5f,
+                                    glowRadius = 24.dp,
+                                    borderRadius = 24.dp
+                                )
                             else Modifier
                         )
-                        .background(colors.cardDetail.dialogBackground)
-                        .border(1.5.dp, vibrantPink, RoundedCornerShape(24.dp))
+                        .background(
+                            colors.cardDetail.dialogCancelBackground,
+                            RoundedCornerShape(24.dp)
+                        )
+                        .border(
+                            1.5.dp,
+                            colors.cardDetail.dialogCancelBorder,
+                            RoundedCornerShape(24.dp)
+                        )
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
@@ -171,11 +194,16 @@ fun UnlinkCardDialog(
                     Text(
                         modifier = Modifier.then(
                             if (colors.effect.enableGlow)
-                                Modifier.neonGlow(vibrantPink, alpha = 0.5f, glowRadius = 24.dp, borderRadius = 24.dp)
+                                Modifier.neonGlow(
+                                    vibrantPink,
+                                    alpha = 0.5f,
+                                    glowRadius = 24.dp,
+                                    borderRadius = 24.dp
+                                )
                             else Modifier
                         ),
                         text = stringResource(R.string.card_detail_unlink_dialog_cancel),
-                        color = vibrantPink,
+                        color = colors.cardDetail.dialogCancelText,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )

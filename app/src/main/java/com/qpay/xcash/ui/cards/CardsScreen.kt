@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
@@ -27,13 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,7 +43,6 @@ import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.components.SubPageTopBar
-import com.qpay.xcash.ui.cards.components.VoucherTicket
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldAssets
@@ -163,7 +156,7 @@ fun CreditCardItem(card: CreditCardResponse, isPrimary: Boolean, onClick: () -> 
     val drawable = LocalAppAssets.current
 //    val glowColor = if (isPrimary) colors.accent.secondary else colors.accent.primary
 //    val borderBrush = if (isPrimary) colors.cards.primaryCardBorder else colors.cards.secondaryCardBorder
-    val cardBg = if (isPrimary) drawable.cardPrimaryBg else drawable.cardSecondaryBy
+    val cardBg = if (isPrimary) drawable.cardPrimaryBg else drawable.cardSecondaryBg
     Box(
         modifier = Modifier
             .fillMaxWidth()
