@@ -181,7 +181,7 @@ private fun IdentityCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(R.mipmap.ic_girl),
+            painter = painterResource(R.drawable.ic_girl),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier.size(72.dp)

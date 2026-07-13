@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,7 +21,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,17 +28,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
-
-// 外框漸層
-private val outerBorderBrush: Brush
-    @Composable get() {
-        val colors = LocalAppColors.current
-        return Brush.linearGradient(
-            colors = listOf(
-                colors.accent.secondary.copy(alpha = 0.8f),
-                colors.accent.primary.copy(alpha = 0.4f)))
-    }
+import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.silverGray
 
 // 內圈膠囊形狀（左右全圓角）
 private val innerCapsuleShape = RoundedCornerShape(50)
@@ -64,17 +56,21 @@ fun QrModeTabSelector(
         modifier = modifier
             .fillMaxWidth()
             .height(44.dp)
-            .neonGlow(
-                color = colors.accent.secondary,
-                alpha = 0.55f,
-                glowRadius = 12.dp,
-                borderRadius = 22.dp)
+            .then(
+                if (colors.effect.enableGlow)
+                    Modifier.neonGlow(
+                        color = colors.accent.secondary,
+                        alpha = 0.55f,
+                        glowRadius = 12.dp,
+                        borderRadius = 22.dp)
+                else Modifier
+            )
             .background(
                 color = colors.bg.page,
                 shape = RoundedCornerShape(22.dp))
             .border(
                 width = 1.5.dp,
-                brush = outerBorderBrush,
+                brush = colors.scanPay.qrTabBorder,
                 shape = RoundedCornerShape(22.dp)
             )
             .padding(5.dp),                 // 外框與內圈之間的留白
@@ -107,9 +103,13 @@ private fun RowScope.QrTab(
             .then(
                 if (isSelected) Modifier
                     // neonGlow 在 border/background 之前，光暈才能延伸到外框之外
-                    .neonGlow(colors.accent.primary, alpha = 0.55f, glowRadius = 12.dp, borderRadius = 22.dp)
+                    .then(
+                        if (colors.effect.enableGlow)
+                            Modifier.neonGlow(colors.accent.primary, alpha = 0.55f, glowRadius = 12.dp, borderRadius = 22.dp)
+                        else Modifier
+                    )
                     .background(
-                        color = colors.accent.primary, innerCapsuleShape)
+                        brush = colors.scanPay.qrTabSelectedFill, shape = innerCapsuleShape)
 //                    .border(1.dp, colors.accent.primary, innerCapsuleShape)
                 else Modifier
             )
@@ -121,7 +121,7 @@ private fun RowScope.QrTab(
     ) {
         Text(
             text = label,
-            color = if (isSelected) Color.Black else colors.text.body,
+            color = if (isSelected) Color.Black else silverGray,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp
@@ -129,10 +129,10 @@ private fun RowScope.QrTab(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0B1327)
 @Composable
-private fun QrModeTabSelectorScanPreview() {
-    MaterialTheme {
+private fun QrModeTabSelectorScanPreviewNeon() {
+    AppTheme(colors = NeonColors) {
         QrModeTabSelector(
             selectedMode = QrMode.SCAN_QR,
             onModeChange = {},
@@ -141,10 +141,34 @@ private fun QrModeTabSelectorScanPreview() {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
 @Composable
-private fun QrModeTabSelectorMyQrPreview() {
-    MaterialTheme {
+private fun QrModeTabSelectorScanPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
+        QrModeTabSelector(
+            selectedMode = QrMode.SCAN_QR,
+            onModeChange = {},
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
+    }
+}
+
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0B1327)
+@Composable
+private fun QrModeTabSelectorMyQrPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        QrModeTabSelector(
+            selectedMode = QrMode.MY_QR,
+            onModeChange = {},
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun QrModeTabSelectorMyQrPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
         QrModeTabSelector(
             selectedMode = QrMode.MY_QR,
             onModeChange = {},

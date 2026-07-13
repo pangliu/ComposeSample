@@ -25,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,10 +63,12 @@ import com.qpay.xcash.ui.scanpay.ScanPayUiState
 import com.qpay.xcash.ui.scanpay.ScanPayViewModel
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.lemonYellow
-import com.qpay.xcash.ui.theme.neonCyan
-import com.qpay.xcash.ui.theme.neonPurpleLight
+import com.qpay.xcash.ui.theme.NeonColors
 
 private class CurrencyVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
@@ -145,12 +146,22 @@ private fun InputAmountContent(
     onReviewDetails: (String) -> Unit = {}
 ) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     var amount by remember { mutableStateOf("") }
     var isBalanceVisible by remember { mutableStateOf(false) }
     Scaffold(
         containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            assets.scanPayBackground?.let { resId ->
+                Image(
+                    painter = painterResource(resId),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -164,32 +175,43 @@ private fun InputAmountContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 50.dp)
-                    .neonGlow(
-                        color = colors.accent.primary,
-                        alpha = 0.4f,
-                        glowRadius = 12.dp,
-                        borderRadius = 12.dp
+                    .then(
+                        if (colors.effect.enableGlow)
+                            Modifier.neonGlow(
+                                color = colors.accent.primary,
+                                alpha = 0.4f,
+                                glowRadius = 12.dp,
+                                borderRadius = 12.dp
+                            )
+                        else Modifier
                     )
                     .background(color = colors.bg.page, shape = RoundedCornerShape(12.dp))
                     .border(
                         width = 1.5.dp,
-                        color = colors.accent.primary.copy(alpha = 0.8f),
+                        color = colors.scanPay.inputCardOuterBorder,
                         shape = RoundedCornerShape(12.dp)
                     )
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-
-                        .neonGlow(
-                            color = colors.accent.secondary,
-                            alpha = 0.25f,
-                            glowRadius = 12.dp,
-                            borderRadius = 12.dp
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = colors.accent.secondary,
+                                    alpha = 0.25f,
+                                    glowRadius = 12.dp,
+                                    borderRadius = 12.dp
+                                )
+                            else Modifier
                         )
                         .padding(10.dp)
 //                        .background(colors.bg.page, RoundedCornerShape(12.dp))
-                        .border(1.5.dp, colors.accent.secondary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+                        .then(
+                            colors.scanPay.inputCardInnerBorder?.let { innerBorder ->
+                                Modifier.border(1.5.dp, innerBorder, RoundedCornerShape(12.dp))
+                            } ?: Modifier
+                        )
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -218,13 +240,13 @@ private fun InputAmountContent(
                         Spacer(Modifier.height(5.dp))
                         Text(
                             text = "@${uiState.recipientNickName}",
-                            color = neonPurpleLight,
+                            color = colors.scanPay.inputRecipientText,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = uiState.recipientName,
-                            color = neonPurpleLight,
+                            color = colors.scanPay.inputRecipientText,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -232,12 +254,17 @@ private fun InputAmountContent(
                     }
                 }
             }
+            val inputAmountBg = assets.inputAmountBackground
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .paint(
-                        painter = painterResource(R.mipmap.bg_input_amount),
-                        contentScale = ContentScale.FillWidth
+                    .then(
+                        if (inputAmountBg != null)
+                            Modifier.paint(
+                                painter = painterResource(inputAmountBg),
+                                contentScale = ContentScale.FillWidth
+                            )
+                        else Modifier.padding(vertical = 40.dp)
                     ),
                 verticalArrangement = Arrangement.Center,
             ) {
@@ -246,6 +273,9 @@ private fun InputAmountContent(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
+                    val amountGlowShadow = if (colors.effect.enableGlow)
+                        Shadow(color = colors.accent.primary, blurRadius = 15f)
+                    else null
                     BasicTextField(
                         value = amount,
                         onValueChange = { newValue ->
@@ -264,7 +294,7 @@ private fun InputAmountContent(
                             color = colors.accent.primary,
                             fontSize = 40.sp,
                             fontWeight = FontWeight.Bold,
-                            shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
+                            shadow = amountGlowShadow
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         visualTransformation = remember { CurrencyVisualTransformation() },
@@ -278,9 +308,7 @@ private fun InputAmountContent(
                                     color = colors.accent.primary,
                                     fontSize = 48.sp,
                                     fontWeight = FontWeight.Bold,
-                                    style = TextStyle(
-                                        shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
-                                    )
+                                    style = TextStyle(shadow = amountGlowShadow)
                                 )
                                 Spacer(Modifier.width(12.dp))
                                 Box {
@@ -293,9 +321,7 @@ private fun InputAmountContent(
                                             Color.Transparent,
                                         fontSize = 40.sp,
                                         fontWeight = FontWeight.Bold,
-                                        style = TextStyle(
-                                            shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
-                                        )
+                                        style = TextStyle(shadow = amountGlowShadow)
                                     )
                                     innerTextField()
                                 }
@@ -311,14 +337,18 @@ private fun InputAmountContent(
                     .padding(horizontal = 10.dp)
             ) {
                 Image(
-                    painter = painterResource(R.mipmap.ic_car),
+                    painter = painterResource(assets.myQrLeftDecorIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .size(80.dp)
-                        .neonGlow(
-                            color = colors.accent.secondary,
-                            alpha = 0.25f,
-                            glowRadius = 30.dp
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = colors.accent.secondary,
+                                    alpha = 0.25f,
+                                    glowRadius = 30.dp
+                                )
+                            else Modifier
                         )
                 )
                 Column(
@@ -329,11 +359,13 @@ private fun InputAmountContent(
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
                         .height(1.5.dp)
-                        .neonGlow(
-                            color = neonCyan.copy(0.7f),
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = colors.accent.primary.copy(0.7f))
+                            else Modifier
                         )
                         .background(
-                            color = neonCyan.copy(0.6f)
+                            color = colors.accent.primary.copy(0.6f)
                         )
                     )
                     Spacer(Modifier.height(10.dp))
@@ -344,12 +376,12 @@ private fun InputAmountContent(
                     ) {
                         Text(
                             text = "Balance: ",
-                            color = colors.text.body,
+                            color = colors.scanPay.inputBalanceLabelText,
                             fontSize = 14.sp,
                         )
                         Text(
                             text = "PHP 1,000,000",
-                            color = Color.White,
+                            color = colors.scanPay.inputBalanceAmountText,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -359,18 +391,26 @@ private fun InputAmountContent(
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
                         .height(1.5.dp)
-
                         .background(
-                            color = neonCyan.copy(0.6f)
+                            color = colors.accent.primary.copy(0.6f)
                         )
-                        .neonGlow(color = neonCyan, alpha = 0.3f, glowRadius = 30.dp))
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = colors.accent.primary, alpha = 0.3f, glowRadius = 30.dp)
+                            else Modifier
+                        )
+                    )
                 }
                 Image(
-                    painter = painterResource(R.mipmap.ic_monkey),
+                    painter = painterResource(assets.myQrRightDecorIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
-                        .neonGlow(color = neonCyan, alpha = 0.3f, glowRadius = 30.dp)
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = colors.accent.primary, alpha = 0.3f, glowRadius = 30.dp)
+                            else Modifier
+                        )
                         .align(Alignment.CenterVertically)
                 )
             }
@@ -379,13 +419,23 @@ private fun InputAmountContent(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .then(
-                        if (isReviewEnabled)
+                        if (isReviewEnabled && colors.effect.enableGlow)
                             Modifier.neonGlow(color = colors.accent.secondary, alpha = 0.7f, glowRadius = 12.dp, borderRadius = 15.dp)
                         else Modifier
                     )
                     .background(
-                        color = if (isReviewEnabled) colors.accent.secondary else colors.accent.secondary.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(30.dp)
+                        brush = colors.scanPay.reviewButtonFill,
+                        shape = RoundedCornerShape(30.dp),
+                        alpha = if (isReviewEnabled) 1f else 0.3f
+                    )
+                    .then(
+                        colors.scanPay.reviewButtonBorder?.let { borderColor ->
+                            Modifier.border(
+                                width = 1.5.dp,
+                                color = if (isReviewEnabled) borderColor else borderColor.copy(alpha = 0.3f),
+                                shape = RoundedCornerShape(30.dp)
+                            )
+                        } ?: Modifier
                     )
                     .clickable(
                         enabled = isReviewEnabled,
@@ -403,13 +453,27 @@ private fun InputAmountContent(
                 )
             }
         }
+        }
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun InputAmountScreenPreview() {
-    MaterialTheme {
+private fun InputAmountScreenPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        InputAmountContent(
+            uiState = ScanPayUiState(
+                recipientNickName = "bruceb",
+                recipientName = "Bruce Banner"
+            )
+        )
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun InputAmountScreenPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         InputAmountContent(
             uiState = ScanPayUiState(
                 recipientNickName = "bruceb",

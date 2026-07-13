@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,10 +33,13 @@ import com.qpay.xcash.ui.components.QrMode
 import com.qpay.xcash.ui.components.QrModeTabSelector
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.scanpay.components.MyQrContent
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.antiqueGold
+import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.lemonYellow
-import com.qpay.xcash.ui.theme.neonPurpleLight
 
 @Composable
 fun ScanPayScreen(
@@ -62,48 +66,69 @@ private fun ScanPayContent(
     onQrCodeScanned: (String) -> Unit = {}
 ) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     var selectedMode by rememberSaveable { mutableStateOf(QrMode.MY_QR) }
     val qrCodeUrl = "http://xcash.io/pay?account=hank_001&to=hank&name=hank+liu"
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colors.bg.page),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(colors.bg.page)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-        QrModeTabSelector(
-            selectedMode = selectedMode,
-            onModeChange = { selectedMode = it },
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-        Spacer(modifier = Modifier.height(15.dp))
-        MyQrContent(
-            qrCodeUrl = qrCodeUrl,
-            selectedMode = selectedMode,
-            userName = uiState.myUserName,
-            nickName = uiState.myNickName,
-            balance = uiState.balance,
-            onQrCodeScanned = onQrCodeScanned
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        assets.scanPayBackground?.let { resId ->
             Image(
-                painter = painterResource(R.mipmap.bg_yellow_star),
+                painter = painterResource(resId),
                 contentDescription = null,
-                modifier = Modifier
-                    .neonGlow(color = lemonYellow, alpha = 0.1f, glowRadius = 30.dp)
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxSize()
             )
-            Image(
-                painter = painterResource(R.mipmap.ic_tree),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(80.dp)
-                    .neonGlow(color = lemonYellow, alpha = 0.2f, glowRadius = 30.dp)
+        }
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
+            QrModeTabSelector(
+                selectedMode = selectedMode,
+                onModeChange = { selectedMode = it },
+                modifier = Modifier.padding(horizontal = 32.dp)
             )
+            Spacer(modifier = Modifier.height(15.dp))
+            MyQrContent(
+                qrCodeUrl = qrCodeUrl,
+                selectedMode = selectedMode,
+                userName = uiState.myUserName,
+                nickName = uiState.myNickName,
+                balance = uiState.balance,
+                onQrCodeScanned = onQrCodeScanned
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Image(
+                    painter = painterResource(R.mipmap.bg_yellow_star),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = lemonYellow, alpha = 0.1f, glowRadius = 30.dp)
+                            else Modifier
+                        )
+                )
+                Image(
+                    painter = painterResource(R.mipmap.ic_tree),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = lemonYellow, alpha = 0.2f, glowRadius = 30.dp)
+                            else Modifier
+                        )
+                )
+            }
         }
     }
 }
@@ -136,10 +161,18 @@ private fun parseXcashQrCode(url: String): Triple<String, String, String> {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0B1327)
 @Composable
-private fun ScanPayScreenPreview() {
-    MaterialTheme {
+private fun ScanPayScreenPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        ScanPayContent(uiState = ScanPayUiState(myUserName = "Hank Liu", myNickName = "Hank"))
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun ScanPayScreenPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         ScanPayContent(uiState = ScanPayUiState(myUserName = "Hank Liu", myNickName = "Hank"))
     }
 }

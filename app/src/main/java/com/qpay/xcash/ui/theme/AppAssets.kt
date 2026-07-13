@@ -30,6 +30,17 @@ data class AppAssets(
     val cardDetailAspectRatio: Float,            // cardDetailBg 圖片寬高比（width / height）
     @DrawableRes val voucherTicketBg: Int,
     @DrawableRes val subPageBackground: Int?,    // 子頁面全屏背景圖（null = 純色 bg.page）
+    @DrawableRes val scanPayBackground: Int?,    // ScanPayScreen 頁面背景圖（null = 純色 bg.page）
+    @DrawableRes val qrCodeBorder: Int,          // MyQrContent QR code 外框圖
+    @DrawableRes val myQrPanelBg: Int?,          // MyQrContent MY_QR 模式疊在外框圖上的內層底圖（null = 不顯示）
+    @DrawableRes val qrSectionLeftDecor: Int?,   // MyQrContent QR code 區塊左側裝飾圖（null = 不顯示）
+    @DrawableRes val qrSectionRightDecor: Int?,  // MyQrContent QR code 區塊右側裝飾圖（null = 不顯示）
+    @DrawableRes val myQrLeftDecorIcon: Int,     // MyQrContent / InputAmountScreen Balance 區塊左側裝飾圖（Neon 車子 / Black Gold 皇冠）
+    @DrawableRes val myQrRightDecorIcon: Int,    // MyQrContent / InputAmountScreen Balance 區塊右側裝飾圖（Neon 猴子 / Black Gold 獅子）
+    @DrawableRes val myQrActionButtonBg: Int?,   // MyQrActionButton 背景圖（null = 純色 + 邊框）
+    @DrawableRes val myQrQuestCardBg: Int?,      // MyQrContent Daily Quest 卡片背景圖（null = 純色 + 邊框）
+    @DrawableRes val myQrQuestCardIcon: Int,     // MyQrContent Daily Quest 卡片右側人物圖（Neon 女孩 / Black Gold 男人）
+    @DrawableRes val inputAmountBackground: Int?, // InputAmountScreen 金額輸入區背景圖（null = 不顯示）
 )
 
 val NeonAssets = AppAssets(
@@ -57,6 +68,17 @@ val NeonAssets = AppAssets(
     cardDetailAspectRatio = 1113f / 561f,
     voucherTicketBg = R.drawable.bg_voucher_ticket,
     subPageBackground = R.mipmap.bg_sub_page,
+    scanPayBackground = null,
+    qrCodeBorder = R.drawable.bg_qrcode_border,
+    myQrPanelBg = null,
+    qrSectionLeftDecor = R.mipmap.bg_left_qrcode,
+    qrSectionRightDecor = R.mipmap.bg_right_qrcode,
+    myQrLeftDecorIcon = R.mipmap.ic_car,
+    myQrRightDecorIcon = R.mipmap.ic_monkey,
+    myQrActionButtonBg = null,
+    myQrQuestCardBg = null,
+    myQrQuestCardIcon = R.drawable.ic_girl,
+    inputAmountBackground = R.mipmap.bg_input_amount,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -84,6 +106,17 @@ val BlackGoldAssets = AppAssets(
     cardDetailAspectRatio = 954f / 561f,
     voucherTicketBg = R.drawable.bg_voucher_ticket_black_gold,
     subPageBackground = null,
+    scanPayBackground = R.drawable.bg_scan_pay_black_gold,
+    qrCodeBorder = R.drawable.bg_qrcode_border_black_gold,
+    myQrPanelBg = R.drawable.bg_my_qrcode_black_gold,
+    qrSectionLeftDecor = null,
+    qrSectionRightDecor = null,
+    myQrLeftDecorIcon = R.drawable.ic_crown_black_gold,
+    myQrRightDecorIcon = R.drawable.ic_lion_black_gold,
+    myQrActionButtonBg = R.drawable.bg_myqr_action_button_black_gold,
+    myQrQuestCardBg = R.drawable.bg_detail_quest_card_black_gold,
+    myQrQuestCardIcon = R.drawable.ic_man,
+    inputAmountBackground = null,
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }
