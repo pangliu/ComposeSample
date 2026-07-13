@@ -571,6 +571,7 @@ internal fun MyQrActionButton(
     iconRes: Int,
     label: String,
     modifier: Modifier = Modifier,
+    fillWidth: Boolean = true,   // false = 以內容寬度呈現，不撐滿父層
     onClick: () -> Unit = {}
 ) {
     val colors = LocalAppColors.current
@@ -590,7 +591,7 @@ internal fun MyQrActionButton(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxWidth()
+                .then(if (fillWidth) Modifier.fillMaxWidth() else Modifier)
                 .then(
                     if (actionButtonBg == null)
                         Modifier

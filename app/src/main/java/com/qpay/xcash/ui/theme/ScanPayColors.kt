@@ -30,6 +30,18 @@ data class ScanPayColors(
     val inputBalanceAmountText: Color, // InputAmountScreen Balance 金額文字
     val reviewButtonFill: Brush,     // InputAmountScreen Review Details 按鈕填滿；Black Gold = 金色橫向漸層
     val reviewButtonBorder: Color?,  // InputAmountScreen Review Details 按鈕邊框；Neon = null（無邊框）
+    val confirmCardBackground: Color, // ConfirmPaymentScreen 付款資訊卡片底色
+    val confirmAvatarBorder: Color?, // ConfirmPaymentScreen Pay To 頭像框邊框；Neon = null（不顯示）
+    val confirmNickNameText: Color,  // ConfirmPaymentScreen Pay To @nickName 文字
+    val confirmNameText: Color,      // ConfirmPaymentScreen Pay To 姓名文字
+    val confirmHintText: Color,      // ConfirmPaymentScreen X points / 確認提示文字
+    val confirmBalanceLabelText: Color, // ConfirmPaymentScreen PAYING FROM / Available balance 標籤文字
+    val confirmBalanceValueText: Color, // ConfirmPaymentScreen Available balance 金額文字
+    val confirmCancelButtonFill: Brush, // ConfirmPaymentScreen Cancel 按鈕填滿；Neon = 透明
+    val confirmCancelButtonBorder: Color, // ConfirmPaymentScreen Cancel 按鈕邊框
+    val confirmCancelIcon: Color,    // ConfirmPaymentScreen Cancel 按鈕 X icon
+    val confirmCancelText: Color,    // ConfirmPaymentScreen Cancel 按鈕文字
+    val confirmPayButtonFill: Brush, // ConfirmPaymentScreen Confirm & Pay 按鈕填滿；Black Gold = 金色橫向漸層
 )
 
 val NeonScanPayColors = ScanPayColors(
@@ -58,6 +70,18 @@ val NeonScanPayColors = ScanPayColors(
     inputBalanceAmountText = themeWhite,
     reviewButtonFill = SolidColor(neonPurple),
     reviewButtonBorder = null,
+    confirmCardBackground = slateGray,
+    confirmAvatarBorder = null,
+    confirmNickNameText = neonCyanLight,
+    confirmNameText = neonPurpleLight,
+    confirmHintText = silverGray,
+    confirmBalanceLabelText = silverGray,
+    confirmBalanceValueText = silverGray,
+    confirmCancelButtonFill = SolidColor(Color.Transparent),
+    confirmCancelButtonBorder = neonPurple,
+    confirmCancelIcon = neonPurple,
+    confirmCancelText = neonPurpleLight,
+    confirmPayButtonFill = SolidColor(neonCyan),
 )
 
 val BlackGoldScanPayColors = ScanPayColors(
@@ -92,4 +116,22 @@ val BlackGoldScanPayColors = ScanPayColors(
         colors = listOf(camelGold, apricotGold, camelGold)
     ),
     reviewButtonBorder = apricotGold,
+    confirmCardBackground = charcoalBlack,
+    confirmAvatarBorder = apricotGold,
+    confirmNickNameText = antiqueGold,
+    confirmNameText = camelGold,
+    confirmHintText = themeWhite,
+    confirmBalanceLabelText = camelGold,
+    confirmBalanceValueText = themeWhite,
+    // 由左至右：camelGold → apricotGold → camelGold（與 Confirm & Pay 按鈕一致）
+    confirmCancelButtonFill = Brush.horizontalGradient(
+        colors = listOf(camelGold, apricotGold, camelGold)
+    ),
+    confirmCancelButtonBorder = apricotGold,
+    confirmCancelIcon = themeBlack,
+    confirmCancelText = themeBlack,
+    // 由左至右：camelGold → apricotGold → camelGold（與 Review Details 按鈕一致）
+    confirmPayButtonFill = Brush.horizontalGradient(
+        colors = listOf(camelGold, apricotGold, camelGold)
+    ),
 )

@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import android.widget.Toast
@@ -52,14 +51,18 @@ import com.qpay.xcash.ui.scanpay.components.SplitBillDialog
 import com.qpay.xcash.ui.scanpay.components.SplitPartnersRow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -73,13 +76,15 @@ import com.qpay.xcash.ui.components.NeonSwitch
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.scanpay.components.MyQrActionButton
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.lemonYellow
-import com.qpay.xcash.ui.theme.neonCyanLight
-import com.qpay.xcash.ui.theme.neonPurpleLight
 import com.qpay.xcash.ui.theme.neonPink
 import com.qpay.xcash.ui.theme.neonRed
-import com.qpay.xcash.ui.theme.slateGray
 
 @Composable
 fun ConfirmPaymentScreen(
@@ -149,6 +154,7 @@ private fun ConfirmPaymentContent(
     onCancelSplit: () -> Unit = {}
 ) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     var isBalanceVisible by remember { mutableStateOf(false) }
     var useXPoints by remember { mutableStateOf(false) }
     LoadingDialog(isShowing = uiState.isConfirming)
@@ -156,6 +162,15 @@ private fun ConfirmPaymentContent(
         containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            assets.scanPayBackground?.let { resId ->
+                Image(
+                    painter = painterResource(resId),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -171,34 +186,57 @@ private fun ConfirmPaymentContent(
                     Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    modifier = Modifier
-                        .weight(0.2f),
+                val leftDecor = assets.qrSectionLeftDecor
+                if (leftDecor != null) {
+                    Image(
+                        modifier = Modifier
+                            .weight(0.2f),
 //                        .fillMaxHeight(),
-                    painter = painterResource(R.mipmap.bg_left_qrcode),
-                    contentScale = ContentScale.Crop,
-                    alignment = Alignment.CenterEnd,
-                    contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc),
-                )
+                        painter = painterResource(leftDecor),
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.CenterEnd,
+                        contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc),
+                    )
+                } else {
+                    Spacer(modifier = Modifier.weight(0.2f))
+                }
+                val confirmCardBg = assets.confirmPaymentCardBg
                 Column(
                     modifier = Modifier
                         .testTag("confirm_payment")
-                        .border(
-                            width = 1.5.dp,
-                            color = colors.accent.primary,
-                            shape = RoundedCornerShape(15.dp)
+                        .then(
+                            if (confirmCardBg != null)
+                                // Black Gold：背景圖自帶邊框，不另畫 border / 純色底
+                                // sizeToIntrinsics = false：高度由內容決定，背景圖只鋪滿、不參與量測
+                                Modifier
+                                    .clip(RoundedCornerShape(15.dp))
+                                    .paint(
+                                        painter = painterResource(confirmCardBg),
+//                                        contentScale = ContentScale.FillBounds
+                                    )
+                            else
+                                Modifier
+                                    .border(
+                                        width = 1.5.dp,
+                                        color = colors.accent.primary,
+                                        shape = RoundedCornerShape(15.dp)
+                                    )
+                                    .then(
+                                        if (colors.effect.enableGlow)
+                                            Modifier.neonGlow(
+                                                color = colors.accent.primary,
+                                                alpha = 0.6f,
+                                                glowRadius = 8.dp,
+                                                borderRadius = 8.dp
+                                            )
+                                        else Modifier
+                                    )
+                                    .background(
+                                        color = colors.scanPay.confirmCardBackground,
+                                        shape = RoundedCornerShape(15.dp)
+                                    )
                         )
-                        .neonGlow(
-                            color = colors.accent.primary,
-                            alpha = 0.6f,
-                            glowRadius = 8.dp,
-                            borderRadius = 8.dp
-                        )
-                        .background(
-                            color = slateGray,
-                            shape = RoundedCornerShape(15.dp)
-                        )
-                        .align(Alignment.CenterVertically)
+                        .align(Alignment.Top)
                         .weight(0.65f)
                         .aspectRatio(1f)
                 ) {
@@ -211,11 +249,24 @@ private fun ConfirmPaymentContent(
                         Box(
                             modifier = Modifier
                                 .size(60.dp)
-                                .neonGlow(
-                                    color = colors.accent.primary,
-                                    alpha = 0.6f,
-                                    glowRadius = 8.dp,
-                                    borderRadius = 8.dp
+                                .then(
+                                    if (colors.effect.enableGlow)
+                                        Modifier.neonGlow(
+                                            color = colors.accent.primary,
+                                            alpha = 0.6f,
+                                            glowRadius = 8.dp,
+                                            borderRadius = 8.dp
+                                        )
+                                    else Modifier
+                                )
+                                .then(
+                                    colors.scanPay.confirmAvatarBorder?.let { borderColor ->
+                                        Modifier.border(
+                                            width = 1.5.dp,
+                                            color = borderColor,
+                                            shape = RoundedCornerShape(12.dp)
+                                        )
+                                    } ?: Modifier
                                 )
                                 .background(
                                     color = colors.bg.page,
@@ -233,13 +284,13 @@ private fun ConfirmPaymentContent(
                             )
                             Text(
                                 text = "@${uiState.recipientNickName}",
-                                color = neonCyanLight,
+                                color = colors.scanPay.confirmNickNameText,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
                                 text = uiState.recipientName,
-                                color = neonPurpleLight,
+                                color = colors.scanPay.confirmNameText,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal
                             )
@@ -253,16 +304,17 @@ private fun ConfirmPaymentContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp),
-//                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.Center
                     ) {
+                        val amountGlowShadow = if (colors.effect.enableGlow)
+                            Shadow(color = colors.accent.primary, blurRadius = 15f)
+                        else null
                         Text(
                             text = stringResource(R.string.input_amount_currency),
                             color = colors.accent.primary,
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
-                            style = TextStyle(
-                                shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
-                            )
+                            style = TextStyle(shadow = amountGlowShadow)
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
@@ -270,9 +322,7 @@ private fun ConfirmPaymentContent(
                             color = colors.accent.primary,
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
-                            style = TextStyle(
-                                shadow = Shadow(color = colors.accent.primary, blurRadius = 15f)
-                            )
+                            style = TextStyle(shadow = amountGlowShadow)
                         )
                     }
                     Spacer(Modifier.height(10.dp))
@@ -285,7 +335,7 @@ private fun ConfirmPaymentContent(
                         Text(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             text = stringResource(R.string.scan_pay_my_qr_x_points),
-                            color = colors.text.body,
+                            color = colors.scanPay.confirmHintText,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -294,21 +344,26 @@ private fun ConfirmPaymentContent(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             text = stringResource(R.string.scan_pay_my_qr_confirm_hint),
-                            color = colors.text.body,
+                            color = colors.scanPay.confirmHintText,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
-                Image(
-                    modifier = Modifier
-                        .weight(0.2f),
+                val rightDecor = assets.qrSectionRightDecor
+                if (rightDecor != null) {
+                    Image(
+                        modifier = Modifier
+                            .weight(0.2f),
 //                        .fillMaxHeight(),
-                    painter = painterResource(R.mipmap.bg_right_qrcode),
-                    contentScale = ContentScale.Crop,
-                    alignment = Alignment.CenterStart,
-                    contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
-                )
+                        painter = painterResource(rightDecor),
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.CenterStart,
+                        contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.weight(0.2f))
+                }
             }
 //            Spacer(Modifier.height(20.dp))
             Row(
@@ -317,14 +372,18 @@ private fun ConfirmPaymentContent(
                     .padding(horizontal = 0.dp)
             ) {
                 Image(
-                    painter = painterResource(R.mipmap.ic_car),
+                    painter = painterResource(assets.myQrLeftDecorIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .size(80.dp)
-                        .neonGlow(
-                            color = colors.accent.secondary,
-                            alpha = 0.25f,
-                            glowRadius = 30.dp
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = colors.accent.secondary,
+                                    alpha = 0.25f,
+                                    glowRadius = 30.dp
+                                )
+                            else Modifier
                         )
                 )
                 Column(
@@ -340,7 +399,7 @@ private fun ConfirmPaymentContent(
                     ) {
                         Text(
                             text = "PAYING FROM:",
-                            color = colors.text.body,
+                            color = colors.scanPay.confirmBalanceLabelText,
                             fontSize = 14.sp,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -352,23 +411,39 @@ private fun ConfirmPaymentContent(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                     }
+                    val balanceValue = "%,.2f".format(uiState.balance)
+                    val balanceText = stringResource(
+                        R.string.scan_pay_my_qr_available_balance,
+                        balanceValue
+                    )
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(
-                            R.string.scan_pay_my_qr_available_balance,
-                            "%,.2f".format(uiState.balance)
-                        ),
-                        color = colors.text.body,
+                        text = buildAnnotatedString {
+                            append(balanceText)
+                            val valueStart = balanceText.lastIndexOf(balanceValue)
+                            if (valueStart >= 0) {
+                                addStyle(
+                                    SpanStyle(color = colors.scanPay.confirmBalanceValueText),
+                                    valueStart,
+                                    valueStart + balanceValue.length
+                                )
+                            }
+                        },
+                        color = colors.scanPay.confirmBalanceLabelText,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 Image(
-                    painter = painterResource(R.mipmap.ic_monkey),
+                    painter = painterResource(assets.myQrRightDecorIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
-                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
+                            else Modifier
+                        )
                         .align(Alignment.CenterVertically)
                 )
             }
@@ -389,6 +464,7 @@ private fun ConfirmPaymentContent(
                     iconRes = R.mipmap.ic_money,
                     label = stringResource(R.string.scan_pay_my_qr_split_bill_btn),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
+                    fillWidth = false,
                     onClick = onSplitBill
                 )
             }
@@ -412,11 +488,15 @@ private fun ConfirmPaymentContent(
                         color = colors.accent.primary.copy(alpha = 0.7f),
                         shape = RoundedCornerShape(12.dp)
                     )
-                    .neonGlow(
-                        color = colors.accent.primary,
-                        alpha = 0.5f,
-                        glowRadius = 8.dp,
-                        borderRadius = 8.dp
+                    .then(
+                        if (colors.effect.enableGlow)
+                            Modifier.neonGlow(
+                                color = colors.accent.primary,
+                                alpha = 0.5f,
+                                glowRadius = 8.dp,
+                                borderRadius = 8.dp
+                            )
+                        else Modifier
                     )
                     .background(
                         color = colors.bg.page,
@@ -430,10 +510,14 @@ private fun ConfirmPaymentContent(
                     tint = Color.Companion.Unspecified,
 
                     modifier = Modifier.Companion
-                        .neonGlow(
-                            color = lemonYellow,
-                            alpha = 0.7f,
-                            glowRadius = 10.dp
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = lemonYellow,
+                                    alpha = 0.7f,
+                                    glowRadius = 10.dp
+                                )
+                            else Modifier
                         )
                         .size(30.dp)
                 )
@@ -497,14 +581,22 @@ private fun ConfirmPaymentContent(
                         .height(55.dp)
                         .border(
                             width = 1.5.dp,
-                            color = colors.accent.secondary,
+                            color = colors.scanPay.confirmCancelButtonBorder,
                             shape = RoundedCornerShape(30.dp)
                         )
-                        .neonGlow(
-                            color = colors.accent.secondary,
-                            alpha = 0.4f,
-                            glowRadius = 25.dp,
-                            borderRadius = 25.dp
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = colors.accent.secondary,
+                                    alpha = 0.4f,
+                                    glowRadius = 25.dp,
+                                    borderRadius = 25.dp
+                                )
+                            else Modifier
+                        )
+                        .background(
+                            brush = colors.scanPay.confirmCancelButtonFill,
+                            shape = RoundedCornerShape(30.dp)
                         )
                         .clickable(
                             indication = null,
@@ -514,19 +606,21 @@ private fun ConfirmPaymentContent(
                     Icon(
                         modifier = Modifier.size(24.dp),
                         imageVector = Icons.Default.Close,
-                        tint = colors.accent.secondary,
+                        tint = colors.scanPay.confirmCancelIcon,
                         contentDescription = null,
                     )
                     Text(
                         text = stringResource(R.string.confirm_payment_cancel),
                         fontSize = 14.sp,
-                        color = neonPurpleLight,
+                        color = colors.scanPay.confirmCancelText,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 Spacer(Modifier.width(10.dp))
                 val hasError = uiState.confirmErrorMessage.isNotEmpty()
-                val confirmBtnColor = if (hasError) neonPink else colors.accent.primary
+                val confirmBtnGlowColor = if (hasError) neonPink else colors.accent.primary
+                val confirmBtnFill = if (hasError) SolidColor(neonPink)
+                else colors.scanPay.confirmPayButtonFill
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -538,11 +632,15 @@ private fun ConfirmPaymentContent(
                             color = colors.accent.primary,
                             shape = RoundedCornerShape(30.dp)
                         )
-                        .neonGlow(
-                            color = confirmBtnColor,
-                            alpha = 0.6f,
-                            glowRadius = 25.dp,
-                            borderRadius = 25.dp
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = confirmBtnGlowColor,
+                                    alpha = 0.6f,
+                                    glowRadius = 25.dp,
+                                    borderRadius = 25.dp
+                                )
+                            else Modifier
                         )
                         .clickable(
                             enabled = !uiState.isConfirming,
@@ -551,8 +649,9 @@ private fun ConfirmPaymentContent(
                         ) { onConfirmPay() }
                         .padding(5.dp)
                         .background(
-                            color = if (uiState.isConfirming) confirmBtnColor.copy(alpha = 0.4f) else confirmBtnColor,
-                            shape = RoundedCornerShape(30.dp)
+                            brush = confirmBtnFill,
+                            shape = RoundedCornerShape(30.dp),
+                            alpha = if (uiState.isConfirming) 0.4f else 1f
                         )
                 ) {
                     if (!hasError) {
@@ -576,14 +675,29 @@ private fun ConfirmPaymentContent(
                 }
             }
         }
+        }
     }
 }
 
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun ConfirmPaymentScreenPreview() {
-    MaterialTheme {
+private fun ConfirmPaymentScreenPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        ConfirmPaymentContent(
+            uiState = ScanPayUiState(
+                recipientNickName = "bruceb",
+                recipientName = "Bruce Banner",
+                amount = "100.00"
+            )
+        )
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun ConfirmPaymentScreenPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         ConfirmPaymentContent(
             uiState = ScanPayUiState(
                 recipientNickName = "bruceb",
