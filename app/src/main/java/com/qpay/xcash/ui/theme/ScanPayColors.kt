@@ -42,6 +42,89 @@ data class ScanPayColors(
     val confirmCancelIcon: Color,    // ConfirmPaymentScreen Cancel 按鈕 X icon
     val confirmCancelText: Color,    // ConfirmPaymentScreen Cancel 按鈕文字
     val confirmPayButtonFill: Brush, // ConfirmPaymentScreen Confirm & Pay 按鈕填滿；Black Gold = 金色橫向漸層
+    val selectPartner: SelectPartnerDialogColors, // SelectSplitPartnerDialog 專屬顏色
+)
+
+// SelectSplitPartnerDialog 專屬顏色
+data class SelectPartnerDialogColors(
+    val dialogBackground: Color,            // Dialog 底色
+    val dialogBorder: Color,                // Dialog 外框邊框
+    val titleText: Color,                   // 標題文字
+    val countHintText: Color,               // 已選人數提示文字（尚未選擇）
+    val countHintActiveText: Color,         // 已選人數提示文字（已有選擇）
+    val itemNameText: Color,                // 好友姓名文字
+    val itemNickNameText: Color,            // 好友 @nickName 文字
+    val searchBorder: Color,                // 搜尋輸入框邊框
+    val searchText: Color,                  // 搜尋輸入框文字
+    val searchHintText: Color,              // 搜尋輸入框 placeholder 文字
+    val searchIcon: Color,                  // 搜尋 icon
+    val indicatorBorder: Color,             // 勾選框邊框（未選取）
+    val indicatorSelected: Color,           // 勾選框邊框 / Check icon（選取時）
+    val totalBarBackground: Color,          // Total to Split 區塊底色
+    val totalBarBorder: Color,              // Total to Split 區塊邊框
+    val totalLabelText: Color,              // Total to Split 標籤文字
+    val totalAmountText: Color,             // Total to Split 金額文字
+    val confirmButtonFill: Brush,           // Assign Amounts 按鈕填滿（enabled）；Black Gold = 金色橫向漸層
+    val confirmButtonDisabledFill: Brush,   // Assign Amounts 按鈕填滿（disabled）
+    val confirmButtonBorder: Color,         // Assign Amounts 按鈕邊框（enabled）
+    val confirmButtonDisabledBorder: Color, // Assign Amounts 按鈕邊框（disabled）
+    val confirmButtonText: Color,           // Assign Amounts 按鈕文字（enabled）
+    val confirmButtonDisabledText: Color,   // Assign Amounts 按鈕文字（disabled）
+)
+
+val NeonSelectPartnerDialogColors = SelectPartnerDialogColors(
+    dialogBackground = deepMidnight,
+    dialogBorder = neonCyan.copy(alpha = 0.7f),
+    titleText = neonPurple,
+    countHintText = silverGray,
+    countHintActiveText = neonCyan,
+    itemNameText = themeWhite,
+    itemNickNameText = silverGray,
+    searchBorder = neonCyan,
+    searchText = themeWhite,
+    searchHintText = silverGray.copy(alpha = 0.7f),
+    searchIcon = neonCyan,
+    indicatorBorder = silverGray.copy(alpha = 0.5f),
+    indicatorSelected = neonCyan,
+    totalBarBackground = deepMidnight,
+    totalBarBorder = neonCyan.copy(alpha = 0.7f),
+    totalLabelText = themeWhite,
+    totalAmountText = neonCyan,
+    confirmButtonFill = SolidColor(neonPurple.copy(alpha = 0.15f)),
+    confirmButtonDisabledFill = SolidColor(neonPurple.copy(alpha = 0.05f)),
+    confirmButtonBorder = neonPurple,
+    confirmButtonDisabledBorder = neonPurple.copy(alpha = 0.3f),
+    confirmButtonText = themeWhite,
+    confirmButtonDisabledText = themeWhite.copy(alpha = 0.35f),
+)
+
+val BlackGoldSelectPartnerDialogColors = SelectPartnerDialogColors(
+    dialogBackground = charcoalBlack,
+    dialogBorder = paleGold,
+    titleText = paleChampagne,
+    countHintText = warmSand,
+    countHintActiveText = antiqueGold,
+    itemNameText = themeWhite,
+    itemNickNameText = warmSand,
+    searchBorder = paleChampagne,
+    searchText = themeWhite,
+    searchHintText = warmSand.copy(alpha = 0.7f),
+    searchIcon = paleChampagne,
+    indicatorBorder = warmSand.copy(alpha = 0.5f),
+    indicatorSelected = antiqueGold,
+    totalBarBackground = charcoalBlack,
+    totalBarBorder = paleChampagne,
+    totalLabelText = themeWhite,
+    totalAmountText = antiqueGold,
+    // 由左至右：camelGold → apricotGold → camelGold（與 Review Details 按鈕一致）
+    confirmButtonFill = Brush.horizontalGradient(
+        colors = listOf(camelGold, apricotGold, camelGold)
+    ),
+    confirmButtonDisabledFill = SolidColor(deepBronze.copy(alpha = 0.35f)),
+    confirmButtonBorder = apricotGold,
+    confirmButtonDisabledBorder = apricotGold.copy(alpha = 0.3f),
+    confirmButtonText = themeBlack,
+    confirmButtonDisabledText = warmSand.copy(alpha = 0.4f),
 )
 
 val NeonScanPayColors = ScanPayColors(
@@ -82,6 +165,7 @@ val NeonScanPayColors = ScanPayColors(
     confirmCancelIcon = neonPurple,
     confirmCancelText = neonPurpleLight,
     confirmPayButtonFill = SolidColor(neonCyan),
+    selectPartner = NeonSelectPartnerDialogColors,
 )
 
 val BlackGoldScanPayColors = ScanPayColors(
@@ -134,4 +218,5 @@ val BlackGoldScanPayColors = ScanPayColors(
     confirmPayButtonFill = Brush.horizontalGradient(
         colors = listOf(camelGold, apricotGold, camelGold)
     ),
+    selectPartner = BlackGoldSelectPartnerDialogColors,
 )

@@ -274,7 +274,7 @@ private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
                     .size(90.dp),
                 tint = Color.Unspecified,
                 contentDescription = null,
-                painter = painterResource(R.mipmap.ic_female),
+                painter = painterResource(R.drawable.ic_friend_female),
             )
         }
 

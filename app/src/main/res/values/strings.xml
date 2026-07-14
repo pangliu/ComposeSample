@@ -144,6 +144,7 @@
     <string name="select_partner_selected_count">%d selected</string>
     <string name="select_partner_total_to_split">Total to Split</string>
     <string name="select_partner_assign_amounts">Assign Amounts</string>
+    <string name="select_partner_search_hint">Search friends</string>
 
     <!-- SplitBillDialog -->
     <string name="split_bill_title">ASSIGN AMOUNTS</string>

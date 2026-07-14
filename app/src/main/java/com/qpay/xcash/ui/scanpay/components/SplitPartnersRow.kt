@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
+import com.qpay.xcash.network.model.response.ContactType
 import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.theme.LocalAppColors
@@ -143,7 +144,7 @@ private fun SplitAvatarItem(
                     .size(40.dp),
                 tint = Color.Unspecified,
                 contentDescription = null,
-                painter = painterResource(R.mipmap.ic_male),
+                painter = painterResource(R.drawable.ic_friend_male),
             )
         }
         Spacer(Modifier.height(4.dp))
@@ -188,10 +189,10 @@ private fun SplitPartnersRowFullPreview() {
         SplitPartnersRow(
             myName = "Hank Liu",
             partners = listOf(
-                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb"),
-                FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman"),
-                FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "blackwidow"),
-                FriendResponse(id = "F004", name = "Steve Rogers", nickName = "cap")
+                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK),
+                FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM),
+                FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "blackwidow", contactType = ContactType.FACEBOOK),
+                FriendResponse(id = "F004", name = "Steve Rogers", nickName = "cap", contactType = ContactType.PHONE_NUM)
             )
         )
     }
@@ -204,8 +205,8 @@ private fun SplitPartnersRowPartialPreview() {
         SplitPartnersRow(
             myName = "Hank Liu",
             partners = listOf(
-                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb"),
-                FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman")
+                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK),
+                FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM)
             )
         )
     }

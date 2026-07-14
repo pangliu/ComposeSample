@@ -42,6 +42,9 @@ data class AppAssets(
     @DrawableRes val myQrQuestCardIcon: Int,     // MyQrContent Daily Quest 卡片右側人物圖（Neon 女孩 / Black Gold 男人）
     @DrawableRes val inputAmountBackground: Int?, // InputAmountScreen 金額輸入區背景圖（null = 不顯示）
     @DrawableRes val confirmPaymentCardBg: Int?, // ConfirmPaymentScreen 付款資訊卡片背景圖（null = 純色 + 邊框）
+    @DrawableRes val contactFacebookIcon: Int,   // SelectPartnerItem contact_type = facebook 圖示
+    @DrawableRes val contactPhoneIcon: Int,      // SelectPartnerItem contact_type = phone_num 圖示
+    @DrawableRes val friendMaleAvatar: Int,      // SelectPartnerItem 好友頭像（男）
 )
 
 val NeonAssets = AppAssets(
@@ -81,6 +84,9 @@ val NeonAssets = AppAssets(
     myQrQuestCardIcon = R.drawable.ic_girl,
     inputAmountBackground = R.mipmap.bg_input_amount,
     confirmPaymentCardBg = null,
+    contactFacebookIcon = R.drawable.ic_facebook_friend,
+    contactPhoneIcon = R.drawable.ic_phone_friend,
+    friendMaleAvatar = R.drawable.ic_friend_male,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -120,6 +126,9 @@ val BlackGoldAssets = AppAssets(
     myQrQuestCardIcon = R.drawable.ic_man,
     inputAmountBackground = null,
     confirmPaymentCardBg = R.drawable.bg_confirm_payment_black_gold,
+    contactFacebookIcon = R.drawable.ic_facebook_friend_black_gold,
+    contactPhoneIcon = R.drawable.ic_phone_friend_black_gold,
+    friendMaleAvatar = R.drawable.ic_friend_male_black_gold,
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }

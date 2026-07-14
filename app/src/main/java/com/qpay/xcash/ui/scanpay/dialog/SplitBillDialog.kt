@@ -1,4 +1,4 @@
-package com.qpay.xcash.ui.scanpay.components
+package com.qpay.xcash.ui.scanpay.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,6 +46,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import com.qpay.xcash.R
+import com.qpay.xcash.network.model.response.ContactType
 import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.theme.LocalAppColors
@@ -306,7 +307,7 @@ internal fun SplitBillParticipantItem(
                     .size(40.dp),
                 tint = Color.Unspecified,
                 contentDescription = null,
-                painter = painterResource(R.mipmap.ic_male),
+                painter = painterResource(R.drawable.ic_friend_male),
             )
         }
 
@@ -385,8 +386,8 @@ private fun SplitBillDialogPreview() {
         SplitBillDialog(
             totalAmount = 350.0,
             friendList = listOf(
-                FriendResponse(id = "F001", name = "Friend A", nickName = "frienda"),
-                FriendResponse(id = "F002", name = "Friend B", nickName = "friendb")
+                FriendResponse(id = "F001", name = "Friend A", nickName = "frienda", contactType = ContactType.FACEBOOK),
+                FriendResponse(id = "F002", name = "Friend B", nickName = "friendb", contactType = ContactType.PHONE_NUM)
             ),
             myName = "Hank Liu",
             onDismiss = {}

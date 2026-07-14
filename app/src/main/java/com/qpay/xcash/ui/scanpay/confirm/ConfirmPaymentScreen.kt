@@ -46,8 +46,8 @@ import com.qpay.xcash.ui.profile.transaction.formatAmount
 import com.qpay.xcash.ui.scanpay.ScanPayNavigationEvent
 import com.qpay.xcash.ui.scanpay.ScanPayUiState
 import com.qpay.xcash.ui.scanpay.ScanPayViewModel
-import com.qpay.xcash.ui.scanpay.components.SelectSplitPartnerDialog
-import com.qpay.xcash.ui.scanpay.components.SplitBillDialog
+import com.qpay.xcash.ui.scanpay.dialog.SelectSplitPartnerDialog
+import com.qpay.xcash.ui.scanpay.dialog.SplitBillDialog
 import com.qpay.xcash.ui.scanpay.components.SplitPartnersRow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -157,7 +157,7 @@ private fun ConfirmPaymentContent(
     val assets = LocalAppAssets.current
     var isBalanceVisible by remember { mutableStateOf(false) }
     var useXPoints by remember { mutableStateOf(false) }
-    LoadingDialog(isShowing = uiState.isConfirming)
+    LoadingDialog(isShowing = uiState.isConfirming || uiState.isFetchingFriends)
     Scaffold(
         containerColor = colors.bg.page,
         contentColor = Color.White

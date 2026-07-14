@@ -2,6 +2,7 @@ package com.qpay.xcash.network.fake
 
 import com.qpay.xcash.network.api.UserApiService
 import com.qpay.xcash.network.model.response.BaseResponse
+import com.qpay.xcash.network.model.response.ContactType
 import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.network.model.response.NotificationResponse
 import com.qpay.xcash.network.model.response.NotificationType
@@ -97,9 +98,13 @@ class FakeUserApiService : UserApiService {
             code = 200,
             errorMsg = "success",
             result = listOf(
-                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb"),
-                FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman"),
-                FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "blackwidow")
+                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "Hulk", contactType = ContactType.FACEBOOK),
+                FriendResponse(id = "F002", name = "Tony Stark", nickName = "Iron Man", contactType = ContactType.PHONE_NUM),
+                FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "Black Widow", contactType = ContactType.FACEBOOK),
+                FriendResponse(id = "F004", name = "Steve Rogers", nickName = "Captain America", contactType = ContactType.FACEBOOK),
+                FriendResponse(id = "F005", name = "Thor Odinson", nickName = "Thor", contactType = ContactType.PHONE_NUM),
+                FriendResponse(id = "F006", name = "Clint Barton", nickName = "Hawkeye", contactType = ContactType.FACEBOOK),
+                FriendResponse(id = "F007", name = "Peter Parker", nickName = "Spider-Man", contactType = ContactType.PHONE_NUM)
             )
         )
     }
