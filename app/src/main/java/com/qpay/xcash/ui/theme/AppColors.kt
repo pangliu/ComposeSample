@@ -46,6 +46,7 @@ data class AppColors(
     val linkedSuccess: LinkedSuccessColors,
     val cardDetail: CardDetailColors,
     val scanPay: ScanPayColors,
+    val profile: ProfileColors,
 )
 
 val NeonColors = AppColors(
@@ -81,6 +82,7 @@ val NeonColors = AppColors(
     linkedSuccess = NeonLinkedSuccessColors,
     cardDetail = NeonCardDetailColors,
     scanPay = NeonScanPayColors,
+    profile = NeonProfileColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -120,4 +122,5 @@ val BlackGoldColors = AppColors(
     linkedSuccess = BlackGoldLinkedSuccessColors,
     cardDetail = BlackGoldCardDetailColors,
     scanPay = BlackGoldScanPayColors,
+    profile = BlackGoldProfileColors,
 )

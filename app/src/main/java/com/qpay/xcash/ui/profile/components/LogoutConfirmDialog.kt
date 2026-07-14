@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,10 +30,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.qpay.xcash.R
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.neonPink
-
-private val DialogBg = Color(0xFF0D1B2E)
+import com.qpay.xcash.ui.theme.NeonColors
 
 @Composable
 fun LogoutConfirmDialog(
@@ -47,9 +45,13 @@ fun LogoutConfirmDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
-                .background(DialogBg, RoundedCornerShape(20.dp))
-                .border(1.5.dp, colors.accent.primary.copy(0.6f), RoundedCornerShape(20.dp))
+                .then(
+                    if (colors.effect.enableGlow)
+                        Modifier.neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
+                    else Modifier
+                )
+                .background(colors.profile.logoutDialog.background, RoundedCornerShape(20.dp))
+                .border(1.5.dp, colors.profile.logoutDialog.border, RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -63,7 +65,7 @@ fun LogoutConfirmDialog(
             )
             Text(
                 text = stringResource(R.string.logout_dialog_title),
-                color = colors.accent.primary,
+                color = colors.profile.logoutDialog.titleText,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -78,7 +80,12 @@ fun LogoutConfirmDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .background(Color(0xFF7A0A0A), RoundedCornerShape(24.dp))
+                    .background(colors.profile.logoutDialog.confirmButtonFill, RoundedCornerShape(24.dp))
+                    .then(
+                        colors.profile.logoutDialog.confirmButtonBorder?.let {
+                            Modifier.border(1.5.dp, it, RoundedCornerShape(24.dp))
+                        } ?: Modifier
+                    )
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
@@ -88,7 +95,7 @@ fun LogoutConfirmDialog(
             ) {
                 Text(
                     text = stringResource(R.string.logout_dialog_confirm),
-                    color = Color.White,
+                    color = colors.profile.logoutDialog.confirmButtonText,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -98,7 +105,8 @@ fun LogoutConfirmDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .border(1.5.dp, colors.accent.secondary.copy(0.8f), RoundedCornerShape(24.dp))
+                    .background(colors.profile.logoutDialog.cancelButtonFill, RoundedCornerShape(24.dp))
+                    .border(1.5.dp, colors.profile.logoutDialog.cancelButtonBorder, RoundedCornerShape(24.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
@@ -108,7 +116,7 @@ fun LogoutConfirmDialog(
             ) {
                 Text(
                     text = stringResource(R.string.logout_dialog_cancel),
-                    color = Color.White,
+                    color = colors.profile.logoutDialog.cancelButtonText,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -117,8 +125,18 @@ fun LogoutConfirmDialog(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun LogoutConfirmDialogPreview() {
-    LogoutConfirmDialog(onConfirm = {}, onDismiss = {})
+private fun LogoutConfirmDialogPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        LogoutConfirmDialog(onConfirm = {}, onDismiss = {})
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun LogoutConfirmDialogPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
+        LogoutConfirmDialog(onConfirm = {}, onDismiss = {})
+    }
 }

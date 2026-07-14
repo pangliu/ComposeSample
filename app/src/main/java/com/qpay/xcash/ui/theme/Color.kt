@@ -31,6 +31,7 @@ val steelNavy = Color(0xFF1A2A40)      // AddNewCardScreen 選中輸入方式底
 val oceanNavy = Color(0xFF0A1628)      // LinkedSuccessScreen Info card 底色（Neon）
 val duskNavy = Color(0xFF0F1828)       // UnlinkCardDialog 底色（Neon）
 val indigoLine = Color(0xFF1E2D4A)     // UnlinkCardDialog 邊框（Neon）
+val midnightNavy = Color(0xFF0E1A2E)   // FullyVerifiedBadge 盾牌 icon 圓形底色（Neon）
 // ========== transaction detail ===========
 val neonMint = Color(0xFF85EEAC)
 val neonBlushPink = Color(0xFFEFA2A8)
@@ -50,6 +51,7 @@ val limeGreen = Color(0xFF96D230)
 val vibrantPink = Color(0xFFB80FB1)
 val dustyRed = Color(0xFFD26464)           // 輸入框錯誤狀態邊框
 val bloodRed = Color(0xFF790103)           // UnlinkCardDialog Unlink 按鈕底色（Neon）
+val crimsonDark = Color(0xFF7A0A0A)        // LogoutConfirmDialog Log Out 按鈕底色（Neon）
 val dustyCrimson = Color(0xFFA34248)       // UnlinkCardDialog Unlink 按鈕文字 / 邊框（Neon）
 val plumPurple = Color(0xFF4A3080)
 val indigoDark = Color(0xFF1A1040)

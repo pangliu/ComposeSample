@@ -39,7 +39,10 @@ import com.qpay.xcash.R
 import com.qpay.xcash.ui.components.RowIcon
 import com.qpay.xcash.ui.components.RowIconImage
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonColors
 import io.github.alexzhirkevich.qrose.options.QrBallShape
 import io.github.alexzhirkevich.qrose.options.QrBrush
 import io.github.alexzhirkevich.qrose.options.QrColors
@@ -50,9 +53,7 @@ import io.github.alexzhirkevich.qrose.options.circle
 import io.github.alexzhirkevich.qrose.options.roundCorners
 import io.github.alexzhirkevich.qrose.options.solid
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
-import com.qpay.xcash.ui.theme.neonPurpleLight
 
-private val DialogBg = Color(0xFF0D1B2E)
 private val qrCodeUrl = "http://xcash.io/pay?account=hank_001&to=hank&name=hank+liu"
 @Composable
 fun InviteFriendsDialog(
@@ -72,9 +73,13 @@ fun InviteFriendsDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 12.dp, borderRadius = 20.dp)
-                    .background(DialogBg, RoundedCornerShape(20.dp))
-                    .border(1.5.dp, colors.accent.primary.copy(alpha = 0.6f), RoundedCornerShape(20.dp))
+                    .then(
+                        if (colors.effect.enableGlow)
+                            Modifier.neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 12.dp, borderRadius = 20.dp)
+                        else Modifier
+                    )
+                    .background(colors.profile.inviteDialog.background, RoundedCornerShape(20.dp))
+                    .border(1.5.dp, colors.profile.inviteDialog.border, RoundedCornerShape(20.dp))
                     .padding(horizontal = 24.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -82,7 +87,7 @@ fun InviteFriendsDialog(
                 // Title
                 Text(
                     text = stringResource(R.string.invite_dialog_title),
-                    color = colors.accent.primary,
+                    color = colors.profile.inviteDialog.titleText,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -97,14 +102,14 @@ fun InviteFriendsDialog(
                         frame = QrFrameShape.roundCorners(.25f)
                     ),
                     colors = QrColors(
-                        dark = QrBrush.solid(colors.accent.primary),
+                        dark = QrBrush.solid(colors.profile.inviteDialog.qrCodeColor),
                         light = QrBrush.solid(Color.Transparent)
                     )
                 )
                 Box(
                     modifier = Modifier
                         .size(140.dp)
-                        .border(2.dp, colors.accent.secondary.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
+                        .border(2.dp, colors.profile.inviteDialog.qrFrameBorder, RoundedCornerShape(12.dp))
                         .padding(6.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -121,12 +126,12 @@ fun InviteFriendsDialog(
                     fontSize = 12.sp
                 )
 
-                HorizontalDivider(color = colors.accent.primary.copy(alpha = 0.2f))
+                HorizontalDivider(color = colors.profile.inviteDialog.divider)
 
                 // Share via messengers
                 Text(
                     text = stringResource(R.string.invite_dialog_share_link),
-                    color = Color.White,
+                    color = colors.profile.inviteDialog.shareLabelText,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -167,7 +172,7 @@ fun InviteFriendsDialog(
                     )
                 }
 
-                HorizontalDivider(color = colors.accent.primary.copy(alpha = 0.2f))
+                HorizontalDivider(color = colors.profile.inviteDialog.divider)
 
                 // System share button
                 Row(
@@ -183,7 +188,7 @@ fun InviteFriendsDialog(
                 ) {
                     Text(
                         text = stringResource(R.string.invite_dialog_system_share),
-                        color = Color.White,
+                        color = colors.profile.inviteDialog.shareLabelText,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -200,7 +205,7 @@ fun InviteFriendsDialog(
                 // Tagline
                 Text(
                     text = stringResource(R.string.invite_dialog_tagline),
-                    color = colors.accent.secondary,
+                    color = colors.profile.inviteDialog.taglineText,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -212,7 +217,7 @@ fun InviteFriendsDialog(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .border(1.5.dp, neonPurpleLight.copy(alpha = 1f), CircleShape)
+                    .border(1.5.dp, colors.profile.inviteDialog.closeButtonBorder, CircleShape)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
@@ -223,7 +228,7 @@ fun InviteFriendsDialog(
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = stringResource(R.string.invite_dialog_close_desc),
-                    tint = neonPurpleLight,
+                    tint = colors.profile.inviteDialog.closeButtonIcon,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -232,8 +237,18 @@ fun InviteFriendsDialog(
 }
 
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun InviteFriendsDialogPreview() {
-    InviteFriendsDialog(onDismiss = {})
+private fun InviteFriendsDialogPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        InviteFriendsDialog(onDismiss = {})
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun InviteFriendsDialogPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
+        InviteFriendsDialog(onDismiss = {})
+    }
 }
