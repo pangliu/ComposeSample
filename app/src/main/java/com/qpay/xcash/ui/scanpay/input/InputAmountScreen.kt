@@ -188,7 +188,7 @@ private fun InputAmountContent(
                     .background(color = colors.bg.page, shape = RoundedCornerShape(12.dp))
                     .border(
                         width = 1.5.dp,
-                        color = colors.scanPay.inputCardOuterBorder,
+                        color = colors.scanPay.input.cardOuterBorder,
                         shape = RoundedCornerShape(12.dp)
                     )
             ) {
@@ -208,7 +208,7 @@ private fun InputAmountContent(
                         .padding(10.dp)
 //                        .background(colors.bg.page, RoundedCornerShape(12.dp))
                         .then(
-                            colors.scanPay.inputCardInnerBorder?.let { innerBorder ->
+                            colors.scanPay.input.cardInnerBorder?.let { innerBorder ->
                                 Modifier.border(1.5.dp, innerBorder, RoundedCornerShape(12.dp))
                             } ?: Modifier
                         )
@@ -240,13 +240,13 @@ private fun InputAmountContent(
                         Spacer(Modifier.height(5.dp))
                         Text(
                             text = "@${uiState.recipientNickName}",
-                            color = colors.scanPay.inputRecipientText,
+                            color = colors.scanPay.input.recipientText,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = uiState.recipientName,
-                            color = colors.scanPay.inputRecipientText,
+                            color = colors.scanPay.input.recipientText,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -376,12 +376,12 @@ private fun InputAmountContent(
                     ) {
                         Text(
                             text = "Balance: ",
-                            color = colors.scanPay.inputBalanceLabelText,
+                            color = colors.scanPay.input.balanceLabelText,
                             fontSize = 14.sp,
                         )
                         Text(
                             text = "PHP 1,000,000",
-                            color = colors.scanPay.inputBalanceAmountText,
+                            color = colors.scanPay.input.balanceAmountText,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -424,12 +424,12 @@ private fun InputAmountContent(
                         else Modifier
                     )
                     .background(
-                        brush = colors.scanPay.reviewButtonFill,
+                        brush = colors.scanPay.input.reviewButtonFill,
                         shape = RoundedCornerShape(30.dp),
                         alpha = if (isReviewEnabled) 1f else 0.3f
                     )
                     .then(
-                        colors.scanPay.reviewButtonBorder?.let { borderColor ->
+                        colors.scanPay.input.reviewButtonBorder?.let { borderColor ->
                             Modifier.border(
                                 width = 1.5.dp,
                                 color = if (isReviewEnabled) borderColor else borderColor.copy(alpha = 0.3f),

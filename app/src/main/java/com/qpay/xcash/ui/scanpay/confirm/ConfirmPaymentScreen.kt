@@ -232,7 +232,7 @@ private fun ConfirmPaymentContent(
                                         else Modifier
                                     )
                                     .background(
-                                        color = colors.scanPay.confirmCardBackground,
+                                        color = colors.scanPay.confirm.cardBackground,
                                         shape = RoundedCornerShape(15.dp)
                                     )
                         )
@@ -260,7 +260,7 @@ private fun ConfirmPaymentContent(
                                     else Modifier
                                 )
                                 .then(
-                                    colors.scanPay.confirmAvatarBorder?.let { borderColor ->
+                                    colors.scanPay.confirm.avatarBorder?.let { borderColor ->
                                         Modifier.border(
                                             width = 1.5.dp,
                                             color = borderColor,
@@ -284,13 +284,13 @@ private fun ConfirmPaymentContent(
                             )
                             Text(
                                 text = "@${uiState.recipientNickName}",
-                                color = colors.scanPay.confirmNickNameText,
+                                color = colors.scanPay.confirm.nickNameText,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
                                 text = uiState.recipientName,
-                                color = colors.scanPay.confirmNameText,
+                                color = colors.scanPay.confirm.nameText,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal
                             )
@@ -335,7 +335,7 @@ private fun ConfirmPaymentContent(
                         Text(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             text = stringResource(R.string.scan_pay_my_qr_x_points),
-                            color = colors.scanPay.confirmHintText,
+                            color = colors.scanPay.confirm.hintText,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -344,7 +344,7 @@ private fun ConfirmPaymentContent(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             text = stringResource(R.string.scan_pay_my_qr_confirm_hint),
-                            color = colors.scanPay.confirmHintText,
+                            color = colors.scanPay.confirm.hintText,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -399,7 +399,7 @@ private fun ConfirmPaymentContent(
                     ) {
                         Text(
                             text = "PAYING FROM:",
-                            color = colors.scanPay.confirmBalanceLabelText,
+                            color = colors.scanPay.confirm.balanceLabelText,
                             fontSize = 14.sp,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -423,13 +423,13 @@ private fun ConfirmPaymentContent(
                             val valueStart = balanceText.lastIndexOf(balanceValue)
                             if (valueStart >= 0) {
                                 addStyle(
-                                    SpanStyle(color = colors.scanPay.confirmBalanceValueText),
+                                    SpanStyle(color = colors.scanPay.confirm.balanceValueText),
                                     valueStart,
                                     valueStart + balanceValue.length
                                 )
                             }
                         },
-                        color = colors.scanPay.confirmBalanceLabelText,
+                        color = colors.scanPay.confirm.balanceLabelText,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -581,7 +581,7 @@ private fun ConfirmPaymentContent(
                         .height(55.dp)
                         .border(
                             width = 1.5.dp,
-                            color = colors.scanPay.confirmCancelButtonBorder,
+                            color = colors.scanPay.confirm.cancelButtonBorder,
                             shape = RoundedCornerShape(30.dp)
                         )
                         .then(
@@ -595,7 +595,7 @@ private fun ConfirmPaymentContent(
                             else Modifier
                         )
                         .background(
-                            brush = colors.scanPay.confirmCancelButtonFill,
+                            brush = colors.scanPay.confirm.cancelButtonFill,
                             shape = RoundedCornerShape(30.dp)
                         )
                         .clickable(
@@ -606,13 +606,13 @@ private fun ConfirmPaymentContent(
                     Icon(
                         modifier = Modifier.size(24.dp),
                         imageVector = Icons.Default.Close,
-                        tint = colors.scanPay.confirmCancelIcon,
+                        tint = colors.scanPay.confirm.cancelIcon,
                         contentDescription = null,
                     )
                     Text(
                         text = stringResource(R.string.confirm_payment_cancel),
                         fontSize = 14.sp,
-                        color = colors.scanPay.confirmCancelText,
+                        color = colors.scanPay.confirm.cancelText,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -620,7 +620,7 @@ private fun ConfirmPaymentContent(
                 val hasError = uiState.confirmErrorMessage.isNotEmpty()
                 val confirmBtnGlowColor = if (hasError) neonPink else colors.accent.primary
                 val confirmBtnFill = if (hasError) SolidColor(neonPink)
-                else colors.scanPay.confirmPayButtonFill
+                else colors.scanPay.confirm.payButtonFill
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,

@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,15 +52,14 @@ import com.qpay.xcash.ui.scanpay.ScanPayViewModel
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.neonCyan
-import com.qpay.xcash.ui.theme.neonCyanLight
-import com.qpay.xcash.ui.theme.neonGreen
-import com.qpay.xcash.ui.theme.neonMint
-import com.qpay.xcash.ui.theme.neonPurpleLight
+import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.lemonYellow
 
 
-private val lemonYellow = Color(0xFFFEF27C)
 private val earnedPoint = 3.5
 @Composable
 fun TransactionSuccessfulScreen(
@@ -79,58 +77,85 @@ private fun TransactionSuccessfulContent(
     onShare: () -> Unit = {}
 ) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     Scaffold(
         containerColor = colors.bg.page,
         contentColor = Color.White
     ) { paddingValues ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            assets.successPageBackground?.let { resId ->
+                Image(
+                    painter = painterResource(resId),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
-                Image(
-                    modifier = Modifier.matchParentSize(),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
-                    painter = painterResource(R.mipmap.bg_success_payment),
-                    alignment = Alignment.TopCenter
-                )
+                assets.successHeaderBackground?.let { resId ->
+                    Image(
+                        modifier = Modifier.matchParentSize(),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                        painter = painterResource(resId),
+                        alignment = Alignment.TopCenter
+                    )
+                }
                 Column {
                     SubPageTopBar(
                         title = stringResource(R.string.transaction_successful_title),
                         onBack = onBack,
                         showBack = false
                     )
-                    Spacer(Modifier.height(40.dp))
+//                    Spacer(Modifier.height(20.dp))
                     Box(modifier = Modifier.fillMaxWidth()) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Image(
-                                modifier = Modifier.weight(0.15f),
-                                painter = painterResource(R.mipmap.bg_left_qrcode),
-                                contentScale = ContentScale.FillWidth,
-                                alignment = Alignment.CenterEnd,
-                                contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc)
-                            )
-                            Column(
-                                modifier = Modifier
-                                    .testTag("transaction_successful")
-                                    //                        .border(width = 1.5.dp, color = neonCyan, shape = RoundedCornerShape(15.dp))
+                            val leftDecor = assets.qrSectionLeftDecor
+                            if (leftDecor != null) {
+                                Image(
+                                    modifier = Modifier.weight(0.15f),
+                                    painter = painterResource(leftDecor),
+                                    contentScale = ContentScale.FillWidth,
+                                    alignment = Alignment.CenterEnd,
+                                    contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc)
+                                )
+                            } else {
+                                Spacer(modifier = Modifier.weight(0.15f))
+                            }
+                            val cardModifier = if (colors.effect.enableGlow)
+                                // Neon：邊框圖 + glow
+                                Modifier
                                     .neonGlow(
                                         color = colors.accent.primary,
                                         alpha = 0.5f,
                                         glowRadius = 20.dp,
                                         borderRadius = 20.dp
                                     )
-                                    //                        .background(color = slateGray, shape = RoundedCornerShape(15.dp))
                                     .paint(
-                                        painter = painterResource(R.mipmap.bg_success_payment_border),
+                                        painter = painterResource(assets.successCardBg),
                                         contentScale = ContentScale.FillWidth
                                     )
+                            else
+                                // Black Gold：背景圖自帶邊框，FillBounds 撐滿內容高度
+                                Modifier
+                                    .paint(
+                                        painter = painterResource(assets.successCardBg),
+//                                        contentScale = ContentScale.FillBounds
+                                    )
+                                    .padding(bottom = 20.dp)
+                            Column(
+                                modifier = Modifier
+                                    .testTag("transaction_successful")
+                                    .then(cardModifier)
                                     .align(Alignment.CenterVertically)
                                     .weight(0.7f)
                             ) {
@@ -144,11 +169,24 @@ private fun TransactionSuccessfulContent(
                                     Box(
                                         modifier = Modifier
                                             .size(60.dp)
-                                            .neonGlow(
-                                                color = colors.accent.primary,
-                                                alpha = 0.6f,
-                                                glowRadius = 8.dp,
-                                                borderRadius = 8.dp
+                                            .then(
+                                                if (colors.effect.enableGlow)
+                                                    Modifier.neonGlow(
+                                                        color = colors.accent.primary,
+                                                        alpha = 0.6f,
+                                                        glowRadius = 8.dp,
+                                                        borderRadius = 8.dp
+                                                    )
+                                                else Modifier
+                                            )
+                                            .then(
+                                                colors.scanPay.success.avatarBorder?.let { borderColor ->
+                                                    Modifier.border(
+                                                        width = 1.5.dp,
+                                                        color = borderColor,
+                                                        shape = RoundedCornerShape(12.dp)
+                                                    )
+                                                } ?: Modifier
                                             )
                                             .background(
                                                 color = colors.bg.page,
@@ -164,13 +202,13 @@ private fun TransactionSuccessfulContent(
                                         )
                                         Text(
                                             text = "@${uiState.recipientNickName}",
-                                            color = neonCyanLight,
+                                            color = colors.scanPay.success.nickNameText,
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.Bold
                                         )
                                         Text(
                                             text = uiState.recipientName,
-                                            color = neonPurpleLight,
+                                            color = colors.scanPay.success.nameText,
                                             fontSize = 12.sp,
                                             fontWeight = FontWeight.Normal
                                         )
@@ -181,8 +219,11 @@ private fun TransactionSuccessfulContent(
                                     .fillMaxWidth()
                                     .padding(horizontal = 30.dp)
                                     .height(1.5.dp)
-                                    .background(neonCyan))
+                                    .background(colors.scanPay.success.divider))
                                 Spacer(Modifier.height(8.dp))
+                                val amountGlowShadow = if (colors.effect.enableGlow)
+                                    Shadow(color = colors.accent.primary, blurRadius = 15f)
+                                else null
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth(),
@@ -193,12 +234,7 @@ private fun TransactionSuccessfulContent(
                                         color = colors.accent.primary,
                                         fontSize = 32.sp,
                                         fontWeight = FontWeight.Bold,
-                                        style = TextStyle(
-                                            shadow = Shadow(
-                                                color = colors.accent.primary,
-                                                blurRadius = 15f
-                                            )
-                                        )
+                                        style = TextStyle(shadow = amountGlowShadow)
                                     )
                                     Spacer(Modifier.width(5.dp))
                                     Text(
@@ -206,12 +242,7 @@ private fun TransactionSuccessfulContent(
                                         color = colors.accent.primary,
                                         fontSize = 32.sp,
                                         fontWeight = FontWeight.Bold,
-                                        style = TextStyle(
-                                            shadow = Shadow(
-                                                color = colors.accent.primary,
-                                                blurRadius = 15f
-                                            )
-                                        )
+                                        style = TextStyle(shadow = amountGlowShadow)
                                     )
                                 }
                                 Spacer(Modifier.height(8.dp))
@@ -219,7 +250,7 @@ private fun TransactionSuccessfulContent(
                                     .fillMaxWidth()
                                     .padding(horizontal = 30.dp)
                                     .height(1.5.dp)
-                                    .background(neonCyan))
+                                    .background(colors.scanPay.success.divider))
                                 Spacer(Modifier.height(20.dp))
 
                                 // TODO: 從 API 取得實際數字
@@ -247,7 +278,7 @@ private fun TransactionSuccessfulContent(
                                         )
                                         Text(
                                             text = "PHP %,.2f".format(originalTotal),
-                                            color = neonMint,
+                                            color = colors.scanPay.success.detailAmountText,
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Bold,
                                             lineHeight = 15.sp
@@ -270,7 +301,7 @@ private fun TransactionSuccessfulContent(
                                             )
                                             Text(
                                                 text = "-PHP %,.2f".format(pointsApplied),
-                                                color = neonMint,
+                                                color = colors.scanPay.success.detailAmountText,
                                                 fontSize = 11.sp,
                                                 fontWeight = FontWeight.Bold,
                                                 lineHeight = 13.sp
@@ -292,7 +323,7 @@ private fun TransactionSuccessfulContent(
                                                     }
                                                     withStyle(
                                                         SpanStyle(
-                                                            color = neonMint,
+                                                            color = colors.scanPay.success.detailAmountText,
                                                             fontWeight = FontWeight.Bold
                                                         )
                                                     ) {
@@ -325,7 +356,7 @@ private fun TransactionSuccessfulContent(
                                         )
                                         Text(
                                             text = "PHP %,.2f".format(finalAmount),
-                                            color = neonMint,
+                                            color = colors.scanPay.success.detailAmountText,
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Bold,
                                             lineHeight = 15.sp
@@ -333,13 +364,18 @@ private fun TransactionSuccessfulContent(
                                     }
                                 }
                             }
-                            Image(
-                                modifier = Modifier.weight(0.15f),
-                                painter = painterResource(R.mipmap.bg_right_qrcode),
-                                contentScale = ContentScale.FillWidth,
-                                alignment = Alignment.CenterStart,
-                                contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
-                            )
+                            val rightDecor = assets.qrSectionRightDecor
+                            if (rightDecor != null) {
+                                Image(
+                                    modifier = Modifier.weight(0.15f),
+                                    painter = painterResource(rightDecor),
+                                    contentScale = ContentScale.FillWidth,
+                                    alignment = Alignment.CenterStart,
+                                    contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
+                                )
+                            } else {
+                                Spacer(modifier = Modifier.weight(0.15f))
+                            }
                         }
                     }  // inner Box
                 }  // Column
@@ -353,7 +389,7 @@ private fun TransactionSuccessfulContent(
                     text = buildAnnotatedString {
                         withStyle(
                             SpanStyle(
-                                color = neonCyan,
+                                color = colors.scanPay.success.earnedPointsText,
                                 fontWeight = FontWeight.Bold
                             )
                         ) {
@@ -380,14 +416,18 @@ private fun TransactionSuccessfulContent(
                     .padding(horizontal = 8.dp)
             ) {
                 Image(
-                    painter = painterResource(R.mipmap.ic_car),
+                    painter = painterResource(assets.myQrLeftDecorIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .size(80.dp)
-                        .neonGlow(
-                            color = colors.accent.secondary,
-                            alpha = 0.25f,
-                            glowRadius = 30.dp
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = colors.accent.secondary,
+                                    alpha = 0.25f,
+                                    glowRadius = 30.dp
+                                )
+                            else Modifier
                         )
                 )
                 Column(
@@ -398,11 +438,15 @@ private fun TransactionSuccessfulContent(
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
                         .height(1.5.dp)
-                        .neonGlow(
-                            color = neonCyan.copy(0.7f),
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = colors.scanPay.success.balanceDivider.copy(alpha = 0.7f),
+                                )
+                            else Modifier
                         )
                         .background(
-                            color = neonCyan.copy(0.6f)
+                            color = colors.scanPay.success.balanceDivider
                         )
                     )
                     Spacer(Modifier.height(10.dp))
@@ -411,7 +455,11 @@ private fun TransactionSuccessfulContent(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "PAYING FROM:", color = colors.text.body, fontSize = 14.sp)
+                        Text(
+                            text = "PAYING FROM:",
+                            color = colors.scanPay.success.balanceLabelText,
+                            fontSize = 14.sp
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "Wallet name",
@@ -427,7 +475,7 @@ private fun TransactionSuccessfulContent(
                     ) {
                         Text(
                             text = "Available Balance: ",
-                            color = colors.text.body,
+                            color = colors.scanPay.success.balanceLabelText,
                             fontSize = 14.sp,
                         )
                         Text(
@@ -442,18 +490,26 @@ private fun TransactionSuccessfulContent(
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
                         .height(1.5.dp)
-
                         .background(
-                            color = neonCyan.copy(0.6f)
+                            color = colors.scanPay.success.balanceDivider
                         )
-                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp))
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
+                            else Modifier
+                        )
+                    )
                 }
                 Image(
-                    painter = painterResource(R.mipmap.ic_monkey),
+                    painter = painterResource(assets.myQrRightDecorIcon),
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
-                        .neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
+                            else Modifier
+                        )
                         .align(Alignment.CenterVertically)
                 )
             }
@@ -464,13 +520,18 @@ private fun TransactionSuccessfulContent(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                Image(
-                    painter = painterResource(R.mipmap.ic_left_sigal_fire),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .align(Alignment.CenterVertically)
-                )
+                val leftFire = assets.successLeftFireDecor
+                if (leftFire != null) {
+                    Image(
+                        painter = painterResource(leftFire),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(60.dp)
+                            .align(Alignment.CenterVertically)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.size(60.dp))
+                }
                 Column(
                     modifier = Modifier
                         .weight(1f)
@@ -494,11 +555,15 @@ private fun TransactionSuccessfulContent(
                                 color = colors.accent.primary.copy(alpha = 0.5f),
                                 shape = RoundedCornerShape(15.dp)
                             )
-                            .neonGlow(
-                                color = colors.accent.primary,
-                                alpha = 0.6f,
-                                glowRadius = 8.dp,
-                                borderRadius = 8.dp
+                            .then(
+                                if (colors.effect.enableGlow)
+                                    Modifier.neonGlow(
+                                        color = colors.accent.primary,
+                                        alpha = 0.6f,
+                                        glowRadius = 8.dp,
+                                        borderRadius = 8.dp
+                                    )
+                                else Modifier
                             )
                             .background(
                                 color = colors.bg.page,
@@ -507,22 +572,24 @@ private fun TransactionSuccessfulContent(
                             .padding(10.dp)
                     ) {
                         Icon(
-                            painter = painterResource(R.mipmap.ic_balance_coin),
+                            painter = painterResource(assets.balanceCoinIcon),
                             contentDescription = stringResource(id = R.string.balance_coin),
                             tint = Color.Companion.Unspecified,
 
                             modifier = Modifier.Companion
-                                .neonGlow(
-                                    color = lemonYellow,
-                                    alpha = 0.7f,
-                                    glowRadius = 10.dp
+                                .then(
+                                    if (colors.effect.enableGlow)
+                                        Modifier.neonGlow(
+                                            color = lemonYellow,
+                                            alpha = 0.7f,
+                                            glowRadius = 10.dp
+                                        )
+                                    else Modifier
                                 )
                                 .size(30.dp)
                         )
                         Spacer(Modifier.width(20.dp))
                         Text(
-//                            modifier = Modifier
-//                                .fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             text = "Balance: ",
                             color = colors.text.body,
@@ -530,23 +597,26 @@ private fun TransactionSuccessfulContent(
                             fontSize = 14.sp
                         )
                         Text(
-//                            modifier = Modifier
-//                                .fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             text = formatAmount(uiState.balance),
-                            color = neonCyan,
+                            color = colors.scanPay.success.pointsBalanceText,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
                     }
                 }
-                Image(
-                    painter = painterResource(R.mipmap.ic_right_sigal_fire),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .align(Alignment.CenterVertically)
-                )
+                val rightFire = assets.successRightFireDecor
+                if (rightFire != null) {
+                    Image(
+                        painter = painterResource(rightFire),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(60.dp)
+                            .align(Alignment.CenterVertically)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.size(60.dp))
+                }
             }
             Spacer(Modifier.height(20.dp))
             // ── Buttons ───────────────────────────────────────────────────────
@@ -555,10 +625,8 @@ private fun TransactionSuccessfulContent(
                     .fillMaxWidth()
                     .padding(horizontal = 50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Done (neonCyan filled — same as CONFIRM & PAY)
+                // Done（Neon = neonCyan 填滿；Black Gold = 深藍紫橫向漸層 + 金色邊框）
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -566,14 +634,18 @@ private fun TransactionSuccessfulContent(
                         .fillMaxWidth()
                         .border(
                             width = 1.5.dp,
-                            color = colors.accent.primary,
+                            color = colors.scanPay.success.doneButtonBorder,
                             shape = RoundedCornerShape(25.dp)
                         )
-                        .neonGlow(
-                            color = colors.accent.primary,
-                            alpha = 0.6f,
-                            glowRadius = 25.dp,
-                            borderRadius = 25.dp
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = colors.accent.primary,
+                                    alpha = 0.6f,
+                                    glowRadius = 25.dp,
+                                    borderRadius = 25.dp
+                                )
+                            else Modifier
                         )
                         .clickable(
                             indication = null,
@@ -581,20 +653,20 @@ private fun TransactionSuccessfulContent(
                         ) { onBack() }
                         .padding(5.dp)
                         .background(
-                            color = colors.accent.primary,
+                            brush = colors.scanPay.success.doneButtonFill,
                             shape = RoundedCornerShape(20.dp)
                         )
                         .padding(vertical = 10.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.transaction_successful_done),
-                        color = Color.Black,
+                        color = colors.scanPay.success.doneButtonText,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 Spacer(Modifier.height(15.dp))
-                // Share My Experience (neonPurple outlined — same as CANCEL)
+                // Share My Experience（Neon = outlined；Black Gold = 深紫橫向漸層 + 金色邊框）
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -603,14 +675,22 @@ private fun TransactionSuccessfulContent(
                         .padding(horizontal = 20.dp)
                         .border(
                             width = 1.5.dp,
-                            color = colors.accent.secondary,
+                            color = colors.scanPay.success.shareButtonBorder,
                             shape = RoundedCornerShape(25.dp)
                         )
-                        .neonGlow(
-                            color = colors.accent.secondary,
-                            alpha = 0.4f,
-                            glowRadius = 25.dp,
-                            borderRadius = 25.dp
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(
+                                    color = colors.accent.secondary,
+                                    alpha = 0.4f,
+                                    glowRadius = 25.dp,
+                                    borderRadius = 25.dp
+                                )
+                            else Modifier
+                        )
+                        .background(
+                            brush = colors.scanPay.success.shareButtonFill,
+                            shape = RoundedCornerShape(25.dp)
                         )
                         .clickable(
                             indication = null,
@@ -621,26 +701,41 @@ private fun TransactionSuccessfulContent(
                     Icon(
                         modifier = Modifier.size(24.dp),
                         imageVector = Icons.Default.Share,
-                        tint = colors.accent.secondary,
+                        tint = colors.scanPay.success.shareIconTint,
                         contentDescription = null
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
                         text = stringResource(R.string.transaction_successful_share),
                         fontSize = 12.sp,
-                        color = neonPurpleLight,
+                        color = colors.scanPay.success.shareText,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
+        }
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun TransactionSuccessfulScreenPreview() {
-    AppTheme {
+private fun TransactionSuccessfulScreenPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        TransactionSuccessfulContent(
+            uiState = ScanPayUiState(
+                recipientNickName = "bruceb",
+                recipientName = "Bruce Banner",
+                amount = "100.00"
+            )
+        )
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun TransactionSuccessfulScreenPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         TransactionSuccessfulContent(
             uiState = ScanPayUiState(
                 recipientNickName = "bruceb",

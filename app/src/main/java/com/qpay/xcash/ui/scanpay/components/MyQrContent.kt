@@ -648,13 +648,13 @@ internal fun MyQrActionButton(
                             )
                     else Modifier
                 )
-                .padding(10.dp)
+                .padding(6.dp)
         ) {
             Icon(
                 painter = painterResource(iconRes),
                 contentDescription = null,
                 tint = colors.scanPay.actionButtonIconTint,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(20.dp)
             )
         }
             Spacer(Modifier.width(5.dp))

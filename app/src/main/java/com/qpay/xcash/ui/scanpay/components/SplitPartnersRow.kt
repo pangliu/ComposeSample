@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -28,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,9 +36,12 @@ import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.ContactType
 import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.lemonYellow
-import com.qpay.xcash.ui.theme.neonPink
+import com.qpay.xcash.ui.theme.NeonColors
 
 // "You" 固定佔第 1 格，其餘 4 格給好友，合計 5 格
 private const val MAX_SPLIT_FRIENDS = 4
@@ -54,6 +55,7 @@ fun SplitPartnersRow(
     modifier: Modifier = Modifier
 ) {
     val colors = LocalAppColors.current
+    val rowColors = colors.scanPay.splitPartners
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -96,12 +98,12 @@ fun SplitPartnersRow(
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = rowColors.editButtonIcon,
                         modifier = Modifier.size(10.dp)
                     )
                 },
-                borderColor = lemonYellow,
-                bgColor = lemonYellow.copy(alpha = 0.12f),
+                borderColor = rowColors.editButtonBorder,
+                bgColor = rowColors.editButtonBackground,
                 onClick = onEdit
             )
             SplitActionButton(
@@ -109,12 +111,12 @@ fun SplitPartnersRow(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = rowColors.cancelButtonIcon,
                         modifier = Modifier.size(15.dp)
                     )
                 },
-                borderColor = neonPink,
-                bgColor = neonPink.copy(alpha = 0.12f),
+                borderColor = rowColors.cancelButtonBorder,
+                bgColor = rowColors.cancelButtonBackground,
                 onClick = onCancel
             )
         }
@@ -128,6 +130,8 @@ private fun SplitAvatarItem(
     avatarColor: Color,
     modifier: Modifier = Modifier
 ) {
+    val rowColors = LocalAppColors.current.scanPay.splitPartners
+    val assets = LocalAppAssets.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(vertical = 8.dp)
@@ -144,13 +148,13 @@ private fun SplitAvatarItem(
                     .size(40.dp),
                 tint = Color.Unspecified,
                 contentDescription = null,
-                painter = painterResource(R.drawable.ic_friend_male),
+                painter = painterResource(assets.friendMaleAvatar),
             )
         }
         Spacer(Modifier.height(4.dp))
         Text(
             text = displayName,
-            color = Color.White,
+            color = rowColors.partnerNameText,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
             maxLines = 1,
@@ -166,10 +170,15 @@ private fun SplitActionButton(
     bgColor: Color,
     onClick: () -> Unit
 ) {
+    val colors = LocalAppColors.current
     Box(
         modifier = Modifier
             .size(24.dp)
-            .neonGlow(color = borderColor, alpha = 0.7f, glowRadius = 25.dp, borderRadius = 25.dp)
+            .then(
+                if (colors.effect.enableGlow)
+                    Modifier.neonGlow(color = borderColor, alpha = 0.7f, glowRadius = 25.dp, borderRadius = 25.dp)
+                else Modifier
+            )
             .background(bgColor, CircleShape)
             .border(1.5.dp, borderColor.copy(alpha = 0.6f), CircleShape)
             .clickable(
@@ -182,32 +191,58 @@ private fun SplitActionButton(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327, name = "4 partners + you")
 @Composable
-private fun SplitPartnersRowFullPreview() {
-    MaterialTheme {
-        SplitPartnersRow(
-            myName = "Hank Liu",
-            partners = listOf(
-                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK),
-                FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM),
-                FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "blackwidow", contactType = ContactType.FACEBOOK),
-                FriendResponse(id = "F004", name = "Steve Rogers", nickName = "cap", contactType = ContactType.PHONE_NUM)
-            )
+private fun SplitPartnersRowFullPreviewContent() {
+    SplitPartnersRow(
+        myName = "Hank Liu",
+        partners = listOf(
+            FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK),
+            FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM),
+            FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "blackwidow", contactType = ContactType.FACEBOOK),
+            FriendResponse(id = "F004", name = "Steve Rogers", nickName = "cap", contactType = ContactType.PHONE_NUM)
         )
+    )
+}
+
+@Composable
+private fun SplitPartnersRowPartialPreviewContent() {
+    SplitPartnersRow(
+        myName = "Hank Liu",
+        partners = listOf(
+            FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK),
+            FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM)
+        )
+    )
+}
+
+@Preview(name = "Neon — 4 partners + you", showBackground = true, backgroundColor = 0xFF0B1327)
+@Composable
+private fun SplitPartnersRowFullPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        SplitPartnersRowFullPreviewContent()
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327, name = "2 partners + you")
+@Preview(name = "Black Gold — 4 partners + you", showBackground = true, backgroundColor = 0xFF050505)
 @Composable
-private fun SplitPartnersRowPartialPreview() {
-    MaterialTheme {
-        SplitPartnersRow(
-            myName = "Hank Liu",
-            partners = listOf(
-                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK),
-                FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM)
-            )
-        )
+private fun SplitPartnersRowFullPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        SplitPartnersRowFullPreviewContent()
+    }
+}
+
+@Preview(name = "Neon — 2 partners + you", showBackground = true, backgroundColor = 0xFF0B1327)
+@Composable
+private fun SplitPartnersRowPartialPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        SplitPartnersRowPartialPreviewContent()
+    }
+}
+
+@Preview(name = "Black Gold — 2 partners + you", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun SplitPartnersRowPartialPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        SplitPartnersRowPartialPreviewContent()
     }
 }
