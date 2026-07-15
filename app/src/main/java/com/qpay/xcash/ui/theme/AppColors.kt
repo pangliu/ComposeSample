@@ -47,6 +47,7 @@ data class AppColors(
     val cardDetail: CardDetailColors,
     val scanPay: ScanPayColors,
     val profile: ProfileColors,
+    val verification: VerificationColors,
 )
 
 val NeonColors = AppColors(
@@ -83,6 +84,7 @@ val NeonColors = AppColors(
     cardDetail = NeonCardDetailColors,
     scanPay = NeonScanPayColors,
     profile = NeonProfileColors,
+    verification = NeonVerificationColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -123,4 +125,5 @@ val BlackGoldColors = AppColors(
     cardDetail = BlackGoldCardDetailColors,
     scanPay = BlackGoldScanPayColors,
     profile = BlackGoldProfileColors,
+    verification = BlackGoldVerificationColors,
 )

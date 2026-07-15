@@ -20,12 +20,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,15 +44,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.profile.components.FullyVerifiedBadge
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.neonDarkPurple
-import com.qpay.xcash.ui.theme.neonMellowPeach
-import com.qpay.xcash.ui.theme.neonMint
-
-private val CardBg = Color(0xFF0E1A2E)
-private val neonOrange = Color(0xFFFF8C42)
+import com.qpay.xcash.ui.theme.NeonColors
 
 private sealed class VerifyIcon {
     data class Vector(val imageVector: ImageVector) : VerifyIcon()
@@ -72,7 +70,9 @@ private data class VerifyItem(
     val completedSegments: Int,
     val status: VerifyStatus,
     val iconTint: Color = Color.Unspecified,
-    val barColor: Color,
+    val barBorder: Brush,
+    val barFirstFill: Brush,
+    val barFill: Color,
     val statusColor: Color
 )
 
@@ -147,9 +147,11 @@ private fun SectionHeader(
     modifier: Modifier = Modifier,
     letterSpacing: Boolean = false
 ) {
-    Text(
+    val colors = LocalAppColors.current
+    GradientText(
         text = text,
-        color = Color.White,
+        color = colors.verification.sectionHeaderText,
+        brush = colors.gradient.goldShimmer,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         letterSpacing = if (letterSpacing) 0.5.sp else 0.sp,
@@ -165,23 +167,22 @@ private fun IdentityCard(
     modifier: Modifier = Modifier
 ) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
-            .background(CardBg, RoundedCornerShape(16.dp))
-            .border(
-                1.5.dp,
-                Brush.linearGradient(
-                    listOf(colors.accent.primary.copy(0.4f), colors.accent.secondary.copy(0.8f))
-                ),
-                RoundedCornerShape(16.dp)
+            .then(
+                if (colors.effect.enableGlow) {
+                    Modifier.neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
+                } else Modifier
             )
+            .background(colors.verification.cardBackground, RoundedCornerShape(16.dp))
+            .border(1.5.dp, colors.verification.identityCardBorder, RoundedCornerShape(16.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_girl),
+            painter = painterResource(assets.verificationAvatar),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier.size(72.dp)
@@ -192,103 +193,20 @@ private fun IdentityCard(
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
                 text = stringResource(R.string.profile_hi_name, userName),
-                color = Color.White,
+                color = colors.verification.userNameText,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
             Text(
                 text = stringResource(R.string.profile_xcash_id, xcashId),
-                color = colors.text.body,
+                color = colors.verification.xcashIdText,
                 fontSize = 13.sp
             )
             if (isVerified) {
-                FullyVerifiedBadge()
+                FullyVerifiedBadge(text = stringResource(R.string.profile_fully_verified))
             } else {
-                VerificationPendingBadge()
+                FullyVerifiedBadge(text = stringResource(R.string.verification_pending_badge))
             }
-        }
-    }
-}
-
-@Composable
-private fun VerificationPendingBadge(modifier: Modifier = Modifier) {
-    val colors = LocalAppColors.current
-    val iconSize = 32.dp
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(start = iconSize / 2)
-                .border(
-                    1.5.dp,
-                    Brush.horizontalGradient(listOf(neonDarkPurple.copy(0.7f), colors.accent.secondary)),
-                    RoundedCornerShape(50)
-                )
-                .padding(start = iconSize / 2 + 10.dp, end = 12.dp, top = 5.dp, bottom = 5.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.verification_pending_badge),
-                color = colors.accent.secondary,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp
-            )
-        }
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(CardBg, androidx.compose.foundation.shape.CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(R.mipmap.ic_shield_check),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier.size(iconSize)
-            )
-        }
-    }
-}
-
-@Composable
-private fun FullyVerifiedBadge(modifier: Modifier = Modifier) {
-    val colors = LocalAppColors.current
-    val iconSize = 32.dp
-    Box(modifier = modifier, contentAlignment = Alignment.CenterStart) {
-        Row(
-            modifier = Modifier
-                .padding(start = iconSize / 2)
-                .border(
-                    1.5.dp,
-                    Brush.horizontalGradient(listOf(colors.accent.secondary.copy(0.7f), colors.accent.primary.copy(0.9f))),
-                    RoundedCornerShape(50)
-                )
-                .padding(start = iconSize / 2 + 10.dp, end = 12.dp, top = 5.dp, bottom = 5.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.profile_fully_verified),
-                color = colors.accent.secondary,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp
-            )
-        }
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(CardBg, androidx.compose.foundation.shape.CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(R.mipmap.ic_shield_check),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier.size(iconSize)
-            )
         }
     }
 }
@@ -296,6 +214,8 @@ private fun FullyVerifiedBadge(modifier: Modifier = Modifier) {
 @Composable
 private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
+    val verifiedColor = colors.verification.verifiedItem
+    val pendingColor = colors.verification.pendingItem
     val items = listOf(
         VerifyItem(
             icon = VerifyIcon.Resource(R.mipmap.ic_passport),
@@ -307,9 +227,11 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
             totalSegments = 3,
             completedSegments = 2,
             status = VerifyStatus.PENDING,
-            iconTint = neonMellowPeach,
-            barColor = neonMellowPeach,
-            statusColor = neonMellowPeach
+            iconTint = pendingColor,
+            barBorder = colors.verification.pendingBarBorder,
+            barFirstFill = colors.verification.pendingBarFirstFill,
+            barFill = pendingColor,
+            statusColor = pendingColor
         ),
         VerifyItem(
             icon = VerifyIcon.Resource(R.mipmap.ic_scan_passport),
@@ -321,9 +243,11 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
             ),
             completedSegments = 3,
             status = VerifyStatus.VERIFIED,
-            iconTint = colors.accent.primary,
-            barColor = colors.accent.primary,
-            statusColor = colors.accent.primary
+            iconTint = verifiedColor,
+            barBorder = colors.verification.verifiedBarBorder,
+            barFirstFill = colors.verification.verifiedBarFirstFill,
+            barFill = verifiedColor,
+            statusColor = verifiedColor
         ),
         VerifyItem(
             icon = VerifyIcon.Resource(R.mipmap.ic_profile_edit_phone),
@@ -335,9 +259,11 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
             ),
             completedSegments = 3,
             status = VerifyStatus.VERIFIED,
-            iconTint = colors.accent.primary,
-            barColor = colors.accent.primary,
-            statusColor = colors.accent.primary
+            iconTint = verifiedColor,
+            barBorder = colors.verification.verifiedBarBorder,
+            barFirstFill = colors.verification.verifiedBarFirstFill,
+            barFill = verifiedColor,
+            statusColor = verifiedColor
         ),
         VerifyItem(
             icon = VerifyIcon.Resource(R.mipmap.ic_profile_edit_mail),
@@ -349,29 +275,31 @@ private fun VerificationChecklistCard(modifier: Modifier = Modifier) {
             ),
             completedSegments = 3,
             status = VerifyStatus.VERIFIED,
-            iconTint = colors.accent.primary,
-            barColor = colors.accent.primary,
-            statusColor = colors.accent.primary,
+            iconTint = verifiedColor,
+            barBorder = colors.verification.verifiedBarBorder,
+            barFirstFill = colors.verification.verifiedBarFirstFill,
+            barFill = verifiedColor,
+            statusColor = verifiedColor,
         )
     )
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(colors.accent.primary, alpha = 0.2f, glowRadius = 8.dp, borderRadius = 16.dp)
-            .background(CardBg, RoundedCornerShape(16.dp))
-            .border(
-                1.5.dp,
-                Brush.linearGradient(listOf(colors.accent.primary.copy(0.3f), colors.accent.secondary.copy(0.4f))),
-                RoundedCornerShape(16.dp)
+            .then(
+                if (colors.effect.enableGlow) {
+                    Modifier.neonGlow(colors.accent.primary, alpha = 0.2f, glowRadius = 8.dp, borderRadius = 16.dp)
+                } else Modifier
             )
+            .background(colors.verification.cardBackground, RoundedCornerShape(16.dp))
+            .border(1.5.dp, colors.verification.checklistCardBorder, RoundedCornerShape(16.dp))
     ) {
         items.forEachIndexed { index, item ->
             VerifyItemRow(item = item)
             if (index < items.lastIndex) {
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    color = colors.accent.primary.copy(0.08f),
+                    color = colors.verification.checklistDivider,
                     thickness = 0.5.dp
                 )
             }
@@ -421,7 +349,9 @@ private fun VerifyItemRow(item: VerifyItem) {
             SegmentedProgressBar(
                 totalSegments = item.totalSegments,
                 completedSegments = item.completedSegments,
-                activeColor = item.barColor
+                borderBrush = item.barBorder,
+                firstFillBrush = item.barFirstFill,
+                fillColor = item.barFill
             )
             Spacer(Modifier.height(4.dp))
             StepsText(steps = item.steps, statusColor = item.statusColor)
@@ -433,14 +363,16 @@ private fun VerifyItemRow(item: VerifyItem) {
 private fun SegmentedProgressBar(
     totalSegments: Int,
     completedSegments: Int,
-    activeColor: Color,
+    borderBrush: Brush,
+    firstFillBrush: Brush,
+    fillColor: Color,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(18.dp)
-            .border(1.5.dp, activeColor.copy(alpha = 0.8f), RoundedCornerShape(50))
+            .border(1.5.dp, borderBrush, RoundedCornerShape(50))
             .padding(5.dp)
     ) {
         Row(
@@ -453,8 +385,12 @@ private fun SegmentedProgressBar(
                         .weight(1f)
                         .fillMaxHeight()
                         .background(
-                            if (index < completedSegments) activeColor else Color.Transparent,
-                            RoundedCornerShape(50)
+                            brush = when {
+                                index >= completedSegments -> SolidColor(Color.Transparent)
+                                index == 0 -> firstFillBrush
+                                else -> SolidColor(fillColor)
+                            },
+                            shape = RoundedCornerShape(50)
                         )
                 )
             }
@@ -483,12 +419,12 @@ private fun StepsText(steps: List<String>, statusColor: Color) {
 
 @Composable
 private fun ActionRequiredButton(modifier: Modifier = Modifier) {
+    val colors = LocalAppColors.current
     Box(
         modifier = modifier
             .fillMaxWidth()
-//            .neonGlow(neonMellowPeach, alpha = 0.5f, glowRadius = 12.dp, borderRadius = 12.dp)
-            .background(Color.Transparent, RoundedCornerShape(12.dp))
-            .border(2.dp, neonMellowPeach, RoundedCornerShape(12.dp))
+            .background(colors.verification.actionButtonFill, RoundedCornerShape(12.dp))
+            .border(2.dp, colors.verification.actionButtonBorder, RoundedCornerShape(12.dp))
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
@@ -498,7 +434,7 @@ private fun ActionRequiredButton(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = stringResource(R.string.verification_action_required),
-            color = neonMellowPeach,
+            color = colors.verification.actionButtonText,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp
@@ -506,10 +442,18 @@ private fun ActionRequiredButton(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun VerificationStatusPreview() {
-    MaterialTheme {
+private fun VerificationStatusPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        VerificationStatusContent()
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun VerificationStatusPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         VerificationStatusContent()
     }
 }

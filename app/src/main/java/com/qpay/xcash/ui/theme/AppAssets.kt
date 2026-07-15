@@ -51,6 +51,7 @@ data class AppAssets(
     @DrawableRes val contactPhoneIcon: Int,      // SelectPartnerItem contact_type = phone_num 圖示
     @DrawableRes val friendMaleAvatar: Int,      // SelectPartnerItem 好友頭像（男）
     @DrawableRes val friendFemaleAvatar: Int,    // ProfileScreen IdentityCard 頭像（女）
+    @DrawableRes val verificationAvatar: Int,    // VerificationStatusScreen IdentityCard 頭像（女）
 )
 
 val NeonAssets = AppAssets(
@@ -99,6 +100,7 @@ val NeonAssets = AppAssets(
     contactPhoneIcon = R.drawable.ic_phone_friend,
     friendMaleAvatar = R.drawable.ic_friend_male,
     friendFemaleAvatar = R.drawable.ic_friend_female,
+    verificationAvatar = R.drawable.ic_girl,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -147,6 +149,7 @@ val BlackGoldAssets = AppAssets(
     contactPhoneIcon = R.drawable.ic_phone_friend_black_gold,
     friendMaleAvatar = R.drawable.ic_friend_male_black_gold,
     friendFemaleAvatar = R.drawable.ic_friend_female_black_gold,
+    verificationAvatar = R.drawable.ic_friend_female_black_gold,    // TODO: 替換為 ic_girl_black_gold（資源尚未加入 res/drawable）
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }
