@@ -3,12 +3,10 @@ package com.qpay.xcash.ui.profile.transaction
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -29,7 +26,6 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,8 +36,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,15 +45,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.OrderHistoryResponse
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.profile.components.TransactionItem
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.lemonYellow
+import com.qpay.xcash.ui.theme.mistGray
 import java.text.NumberFormat
 import java.util.Locale
-
-private val CardBg = Color(0xFF0D1829)
-private val CategoryFilterBorder = Color(0xFF39A3BF)
 
 fun formatAmount(amount: Double): String {
     val fmt = NumberFormat.getNumberInstance(Locale.US)
@@ -88,6 +88,7 @@ private fun TransactionHistoryContent(
     onCategoryFilter: (CategoryFilter) -> Unit = {}
 ) {
     val colors = LocalAppColors.current
+
     var balanceVisible by remember { mutableStateOf(true) }
 
     Scaffold(
@@ -139,88 +140,121 @@ private fun BalanceCard(
     onToggleVisibility: () -> Unit
 ) {
     val colors = LocalAppColors.current
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 10.dp, borderRadius = 16.dp)
-            .background(CardBg, RoundedCornerShape(16.dp))
-            .border(
-                1.5.dp,
-                Brush.linearGradient(listOf(colors.accent.primary.copy(0.5f), colors.accent.secondary.copy(0.7f))),
-                RoundedCornerShape(16.dp)
-            )
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
+    val assets = LocalAppAssets.current
+    val txColors = colors.transactionHistory
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .then(
+//                if (colors.effect.enableGlow) {
+//                    Modifier.neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 10.dp, borderRadius = 16.dp)
+//                } else Modifier
+//            )
+//            .background(txColors.cardBackground, RoundedCornerShape(16.dp))
+//            .border(1.5.dp, txColors.balanceCardBorder, RoundedCornerShape(16.dp))
+//            .padding(16.dp),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.5.dp,
+                    brush = txColors.balanceCardBorder,
+                    shape = RoundedCornerShape(16.dp))
+                .padding(16.dp),
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
                     text = stringResource(R.string.tx_balance_label),
-                    color = colors.text.body,
-                    fontSize = 11.sp,
+                    color = txColors.balanceLabelText,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = if (balanceVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                     contentDescription = null,
-                    tint = colors.text.body,
+                    tint = txColors.balanceLabelText,
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(24.dp)
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) { onToggleVisibility() }
                 )
             }
-            Spacer(Modifier.height(6.dp))
             Text(
-                text = if (balanceVisible) "PHP ${formatAmount(balance)}" else "PHP ●●●,●●●",
-                color = Color.White,
+                text = if (balanceVisible) "PHP ${formatAmount(balance)}" else "PHP ••••••",
+                color = txColors.balanceValueText,
                 fontSize = 26.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 3.dp)
             )
-        }
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(verticalAlignment = Alignment.Companion.CenterVertically) {
+                Icon(
+                    painter = painterResource(assets.balanceCoinIcon),
+                    contentDescription = stringResource(id = R.string.balance_coin),
+                    tint = Color.Companion.Unspecified,
 
-        Spacer(Modifier.width(12.dp))
-
-        Box(
-            modifier = Modifier
-                .size(76.dp)
-                .background(
-                    Brush.radialGradient(listOf(colors.accent.secondary.copy(0.35f), colors.accent.primary.copy(0.15f))),
-                    CircleShape
+                    modifier = Modifier.Companion
+                        .then(
+                            if (colors.effect.enableGlow)
+                                Modifier.neonGlow(color = lemonYellow, alpha = 0.7f, glowRadius = 10.dp)
+                            else Modifier
+                        )
+                        .size(50.dp)
                 )
-                .border(1.5.dp, colors.accent.primary.copy(0.5f), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = if (balanceVisible) formatAmount(tokenBalance).substringBefore(".") else "●●●",
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(R.string.tx_x_points_label),
-                    color = colors.text.body,
-                    fontSize = 8.sp,
-                    letterSpacing = 0.5.sp
+                Spacer(modifier = Modifier.Companion.width(10.dp))
+                GradientText(
+                    text = if (!balanceVisible) "••••" else String.format(
+                        Locale.US,
+                        "%,.0f",
+                        tokenBalance
+                    ),
+                    color = mistGray,
+                    brush = colors.gradient.goldShimmer,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Companion.Bold
                 )
             }
         }
-    }
+
+//        Spacer(Modifier.width(12.dp))
+//
+//        Box(
+//            modifier = Modifier
+//                .size(76.dp)
+//                .background(txColors.tokenCircleBackground, CircleShape)
+//                .border(1.5.dp, txColors.tokenCircleBorder, CircleShape),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//                Text(
+//                    text = if (balanceVisible) formatAmount(tokenBalance).substringBefore(".") else "●●●",
+//                    color = txColors.tokenValueText,
+//                    fontSize = 14.sp,
+//                    fontWeight = FontWeight.Bold
+//                )
+//                Text(
+//                    text = stringResource(R.string.tx_x_points_label),
+//                    color = txColors.tokenLabelText,
+//                    fontSize = 8.sp,
+//                    letterSpacing = 0.5.sp
+//                )
+//            }
+//        }
+//    }
 }
 
 @Composable
 private fun TimeFilterRow(selected: TimeFilter, onSelect: (TimeFilter) -> Unit) {
-    val colors = LocalAppColors.current
-    val borderBrush = Brush.linearGradient(
-        listOf(colors.accent.primary.copy(0.5f), colors.accent.secondary.copy(0.7f))
-    )
+    val txColors = LocalAppColors.current.transactionHistory
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -238,9 +272,9 @@ private fun TimeFilterRow(selected: TimeFilter, onSelect: (TimeFilter) -> Unit) 
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .border(1.5.dp, borderBrush, RoundedCornerShape(10.dp))
+                    .border(1.5.dp, txColors.timeFilterBorder, RoundedCornerShape(10.dp))
                     .background(
-                        if (isSelected) colors.accent.primary.copy(0.12f) else Color.Transparent,
+                        if (isSelected) txColors.timeFilterSelectedBackground else Color.Transparent,
                         RoundedCornerShape(10.dp)
                     )
                     .clickable(
@@ -251,7 +285,7 @@ private fun TimeFilterRow(selected: TimeFilter, onSelect: (TimeFilter) -> Unit) 
             ) {
                 Text(
                     text = label,
-                    color = if (isSelected) colors.accent.primary else colors.text.body,
+                    color = if (isSelected) txColors.timeFilterSelectedText else txColors.timeFilterText,
                     fontSize = 12.sp,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                 )
@@ -264,6 +298,7 @@ private val CategoryFilterRowHeight = 30.dp
 
 @Composable
 private fun CategoryFilterRow(selected: CategoryFilter, onSelect: (CategoryFilter) -> Unit) {
+    val txColors = LocalAppColors.current.transactionHistory
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -277,7 +312,7 @@ private fun CategoryFilterRow(selected: CategoryFilter, onSelect: (CategoryFilte
             modifier = Modifier
                 .weight(2f)
                 .height(CategoryFilterRowHeight)
-                .border(1.5.dp, CategoryFilterBorder, RoundedCornerShape(10.dp))
+                .border(1.5.dp, txColors.categoryFilterBorder, RoundedCornerShape(10.dp))
                 .padding(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -288,7 +323,7 @@ private fun CategoryFilterRow(selected: CategoryFilter, onSelect: (CategoryFilte
                         .weight(1f)
                         .fillMaxHeight()
                         .background(
-                            if (isSelected) CategoryFilterBorder else Color.Transparent,
+                            if (isSelected) txColors.categorySelectedBackground else Color.Transparent,
                             RoundedCornerShape(6.dp)
                         )
                         .clickable(
@@ -299,7 +334,7 @@ private fun CategoryFilterRow(selected: CategoryFilter, onSelect: (CategoryFilte
                 ) {
                     Text(
                         text = label,
-                        color = Color.White,
+                        color = txColors.categoryText,
                         fontSize = 12.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                     )
@@ -312,9 +347,9 @@ private fun CategoryFilterRow(selected: CategoryFilter, onSelect: (CategoryFilte
             modifier = Modifier
                 .weight(1.5f)
                 .height(CategoryFilterRowHeight)
-                .border(1.5.dp, CategoryFilterBorder, RoundedCornerShape(10.dp))
+                .border(1.5.dp, txColors.categoryFilterBorder, RoundedCornerShape(10.dp))
                 .background(
-                    if (isMerchantSelected) CategoryFilterBorder else Color.Transparent,
+                    if (isMerchantSelected) txColors.categorySelectedBackground else Color.Transparent,
                     RoundedCornerShape(10.dp)
                 )
                 .clickable(
@@ -327,14 +362,14 @@ private fun CategoryFilterRow(selected: CategoryFilter, onSelect: (CategoryFilte
         ) {
             Text(
                 text = stringResource(R.string.tx_category_merchant),
-                color = Color.White,
+                color = txColors.categoryText,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal
             )
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = null,
-                tint = Color.White,
+                tint = txColors.categoryText,
                 modifier = Modifier.size(16.dp)
             )
         }
@@ -347,16 +382,17 @@ private fun TransactionListCard(
     isLoading: Boolean
 ) {
     val colors = LocalAppColors.current
+    val txColors = colors.transactionHistory
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .neonGlow(colors.accent.primary, alpha = 0.15f, glowRadius = 8.dp, borderRadius = 16.dp)
-            .background(CardBg, RoundedCornerShape(16.dp))
-            .border(
-                1.dp,
-                Brush.linearGradient(listOf(colors.accent.primary.copy(0.25f), colors.accent.secondary.copy(0.3f))),
-                RoundedCornerShape(16.dp)
+            .then(
+                if (colors.effect.enableGlow) {
+                    Modifier.neonGlow(colors.accent.primary, alpha = 0.15f, glowRadius = 8.dp, borderRadius = 16.dp)
+                } else Modifier
             )
+            .background(txColors.cardBackground, RoundedCornerShape(16.dp))
+            .border(1.dp, txColors.listCardBorder, RoundedCornerShape(16.dp))
     ) {
         when {
             isLoading -> {
@@ -378,7 +414,7 @@ private fun TransactionListCard(
                 ) {
                     Text(
                         text = stringResource(R.string.tx_empty),
-                        color = colors.text.body,
+                        color = txColors.emptyText,
                         fontSize = 14.sp
                     )
                 }
@@ -389,7 +425,7 @@ private fun TransactionListCard(
                     if (index < transactions.lastIndex) {
                         HorizontalDivider(
                             modifier = Modifier.padding(horizontal = 16.dp),
-                            color = colors.accent.primary.copy(0.08f),
+                            color = txColors.listDivider,
                             thickness = 0.5.dp
                         )
                     }
@@ -399,10 +435,18 @@ private fun TransactionListCard(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun TransactionHistoryPreview() {
-    MaterialTheme {
+private fun TransactionHistoryPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        TransactionHistoryContent()
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun TransactionHistoryPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
         TransactionHistoryContent()
     }
 }

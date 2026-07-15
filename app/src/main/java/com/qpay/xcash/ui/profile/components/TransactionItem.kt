@@ -30,22 +30,16 @@ import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.OrderHistoryResponse
 import com.qpay.xcash.network.model.response.OrderStatus
 import com.qpay.xcash.network.model.response.OrderType
+import com.qpay.xcash.ui.components.gradientTint
 import com.qpay.xcash.ui.profile.transaction.formatAmount
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
-import com.qpay.xcash.ui.theme.neonCyan
-import com.qpay.xcash.ui.theme.neonMint
-import com.qpay.xcash.ui.theme.neonPink
-import com.qpay.xcash.ui.theme.neonPurple
-import com.qpay.xcash.ui.theme.neonPurpleLight
 import com.qpay.xcash.ui.theme.neonRed
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-private val CardBg = Color(0xFF0D1829)
 
 private fun formatTimestamp(ts: Long): String {
     return try {
@@ -57,9 +51,8 @@ private fun formatTimestamp(ts: Long): String {
 
 @Composable
 fun TransactionItem(tx: OrderHistoryResponse) {
-    val colors = LocalAppColors.current
+    val txColors = LocalAppColors.current.transactionHistory
     val isIncoming = tx.type == OrderType.INCOMING
-    val typeColor = if (isIncoming) neonMint else neonPink
     val formattedDate = formatTimestamp(tx.expiredAt)
 
     Row(
@@ -81,7 +74,9 @@ fun TransactionItem(tx: OrderHistoryResponse) {
                 ),
                 contentDescription = tx.paymentName,
                 tint = Color.Unspecified,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier
+                    .size(40.dp)
+                    .gradientTint(txColors.itemIconGradient)
             )
 //        }
 
@@ -90,14 +85,14 @@ fun TransactionItem(tx: OrderHistoryResponse) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = tx.paymentName,
-                color = Color.White,
+                color = txColors.itemTitleText,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(Modifier.height(2.dp))
             Text(
                 text = "${tx.account} · $formattedDate",
-                color = colors.text.body,
+                color = txColors.itemSubtitleText,
                 fontSize = 11.sp
             )
             if (isIncoming && tx.status == OrderStatus.SUCCESS) {
@@ -111,7 +106,7 @@ fun TransactionItem(tx: OrderHistoryResponse) {
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = "${if (isIncoming) "+" else "-"}PHP ${formatAmount(tx.amount)}",
-                color = if (isIncoming) neonCyan else neonPurpleLight,
+                color = if (isIncoming) txColors.amountIncomingText else txColors.amountOutgoingText,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -183,13 +178,13 @@ private val previewTransactions = listOf(
 @Composable
 private fun TransactionItemPreviewNeon() {
     AppTheme(colors = NeonColors) {
-        Column(modifier = Modifier.background(CardBg)) {
+        Column(modifier = Modifier.background(NeonColors.transactionHistory.cardBackground)) {
             previewTransactions.forEachIndexed { index, tx ->
                 TransactionItem(tx)
                 if (index < previewTransactions.lastIndex) {
                     HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        color = NeonColors.accent.primary.copy(0.08f),
+                        color = NeonColors.transactionHistory.listDivider,
                         thickness = 0.5.dp
                     )
                 }
@@ -202,13 +197,13 @@ private fun TransactionItemPreviewNeon() {
 @Composable
 private fun TransactionItemPreviewBlackGold() {
     AppTheme(colors = BlackGoldColors) {
-        Column(modifier = Modifier.background(CardBg)) {
+        Column(modifier = Modifier.background(BlackGoldColors.transactionHistory.cardBackground)) {
             previewTransactions.forEachIndexed { index, tx ->
                 TransactionItem(tx)
                 if (index < previewTransactions.lastIndex) {
                     HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        color = BlackGoldColors.accent.primary.copy(0.08f),
+                        color = BlackGoldColors.transactionHistory.listDivider,
                         thickness = 0.5.dp
                     )
                 }

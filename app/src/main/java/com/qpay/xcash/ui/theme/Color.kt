@@ -24,7 +24,7 @@ val neonBlue = Color(0xFF2E88FF)
 val neonOrange = Color(0xFFFF8C00)     // CardsScreen Manage 按鈕外框 / 文字（Neon）
 val neonBlueLight = Color(0xFF66A3CF)
 val neonDivider = Color(0xAAB0D6DF)
-val notifyCardBg = Color(0xFF0D1829)   // NotificationCard 卡片底色（Neon）
+val notifyCardBg = Color(0xFF0D1829)   // NotificationCard / TransactionHistoryScreen 卡片底色（Neon）
 val twilightNavy = Color(0xFF0D1B2E)   // UpdateLogCard 卡片底色（Neon）
 val inkNavy = Color(0xFF0D1525)        // AddNewCardScreen 輸入框 / 未選中輸入方式底色（Neon）
 val steelNavy = Color(0xFF1A2A40)      // AddNewCardScreen 選中輸入方式底色（Neon）
@@ -32,6 +32,7 @@ val oceanNavy = Color(0xFF0A1628)      // LinkedSuccessScreen Info card 底色�
 val duskNavy = Color(0xFF0F1828)       // UnlinkCardDialog 底色（Neon）
 val indigoLine = Color(0xFF1E2D4A)     // UnlinkCardDialog 邊框（Neon）
 val midnightNavy = Color(0xFF0E1A2E)   // FullyVerifiedBadge 盾牌 icon 圓形底色（Neon）
+val steelTeal = Color(0xFF39A3BF)      // TransactionHistoryScreen 分類篩選外框 / 選中底色（Neon）
 // ========== transaction detail ===========
 val neonMint = Color(0xFF85EEAC)
 val neonBlushPink = Color(0xFFEFA2A8)
