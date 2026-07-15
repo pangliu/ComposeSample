@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -64,6 +65,8 @@ import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.LoadingDialog
+import com.qpay.xcash.ui.components.SubPageTopBar
+import com.qpay.xcash.ui.components.gradientTint
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.profile.components.FullyVerifiedBadge
 import com.qpay.xcash.ui.profile.components.LogoutConfirmDialog
@@ -71,6 +74,7 @@ import com.qpay.xcash.ui.profile.dialog.InviteFriendsDialog
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
 
@@ -136,97 +140,95 @@ fun ProfileScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.bg.page)
-            .verticalScroll(rememberScrollState())
-            .padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        GradientText(
-            text = stringResource(R.string.profile_title),
-            color = Color.White,
-            brush = colors.gradient.goldShimmer,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+        SubPageTopBar(
+            title = stringResource(R.string.profile_title),
+            showBack = false
+        )
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp, bottom = 0.dp),
-            textAlign = TextAlign.Center
-        )
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            ProfileSectionHeader(stringResource(R.string.profile_section_identity))
+            IdentityCard(uiState, onClick = { onNavigate(Routes.VERIFICATION_STATUS) })
 
-        ProfileSectionHeader(stringResource(R.string.profile_section_identity))
-        IdentityCard(uiState, onClick = { onNavigate(Routes.VERIFICATION_STATUS) })
+            ProfileSectionHeader(stringResource(R.string.profile_section_social))
+            SocialRewardsCard(
+                inviteCode = uiState.inviteCode,
+                badgeCount = uiState.badgeCount,
+                onInviteFriends = { showInviteDialog = true }
+            )
 
-        ProfileSectionHeader(stringResource(R.string.profile_section_social))
-        SocialRewardsCard(
-            inviteCode = uiState.inviteCode,
-            badgeCount = uiState.badgeCount,
-            onInviteFriends = { showInviteDialog = true }
-        )
+            ProfileSectionHeader(stringResource(R.string.profile_section_account))
+            ProfileMenuCard(borderColor = colors.profile.menuAccountBorder) {
+                ProfileMenuItem(
+                    icon = ProfileIcon.Resource(R.mipmap.ic_profile_setting),
+                    label = stringResource(R.string.profile_edit),
+                    iconTint = colors.profile.menuAccountIconTint,
+                    onClick = { onNavigate(Routes.PROFILE_EDIT) }
+                )
+                HorizontalDivider(
+                    color = colors.profile.menuAccountBorder.copy(alpha = 0.15f),
+                    thickness = 0.5.dp
+                )
+                ProfileMenuItem(
+                    icon = ProfileIcon.Resource(R.mipmap.ic_credit_card_setting),
+                    iconTint = colors.profile.menuAccountIconTint,
+                    label = stringResource(R.string.profile_recurring)
+                )
+                HorizontalDivider(
+                    color = colors.profile.menuAccountBorder.copy(alpha = 0.15f),
+                    thickness = 0.5.dp
+                )
+                ProfileMenuItem(
+                    icon = ProfileIcon.Resource(R.mipmap.ic_calendar),
+                    label = stringResource(R.string.profile_transaction_history),
+                    iconTint = colors.profile.menuAccountIconTint,
+                    onClick = { onNavigate(Routes.TRANSACTION_HISTORY) }
+                )
+            }
 
-        ProfileSectionHeader(stringResource(R.string.profile_section_account))
-        ProfileMenuCard(borderColor = colors.profile.menuAccountBorder) {
-            ProfileMenuItem(
-                icon = ProfileIcon.Resource(R.mipmap.ic_profile_setting),
-                label = stringResource(R.string.profile_edit),
-                iconTint = colors.profile.menuAccountIconTint,
-                onClick = { onNavigate(Routes.PROFILE_EDIT) }
+            ProfileSectionHeader(stringResource(R.string.profile_section_security))
+            ProfileMenuCard(borderColor = colors.profile.menuSecurityBorder) {
+                ProfileMenuItem(
+                    icon = ProfileIcon.Vector(Icons.Outlined.Lock),
+                    label = stringResource(R.string.profile_security_center),
+                    iconTint = colors.profile.menuSecurityIconTint,
+                    onClick = { onNavigate(Routes.SECURITY_CENTER) }
+                )
+            }
+
+            ProfileSectionHeader(stringResource(R.string.profile_section_support))
+            ProfileMenuCard(borderColor = colors.profile.menuSupportBorder) {
+                ProfileMenuItem(
+                    icon = ProfileIcon.Vector(Icons.AutoMirrored.Outlined.HelpOutline),
+                    iconTint = colors.profile.menuSupportIconTint,
+                    label = stringResource(R.string.profile_help_center)
+                )
+                HorizontalDivider(
+                    color = colors.profile.menuSupportBorder.copy(alpha = 0.15f),
+                    thickness = 0.5.dp
+                )
+                ProfileMenuItem(
+                    icon = ProfileIcon.Vector(Icons.Outlined.Security),
+                    iconTint = colors.profile.menuSupportIconTint,
+                    label = stringResource(R.string.profile_terms)
+                )
+            }
+
+            Spacer(Modifier.height(4.dp))
+
+            LogoutButton(
+                enabled = !uiState.isLoggingOut,
+                onClick = { showLogoutDialog = true }
             )
-            HorizontalDivider(
-                color = colors.profile.menuAccountBorder.copy(alpha = 0.15f),
-                thickness = 0.5.dp
-            )
-            ProfileMenuItem(
-                icon = ProfileIcon.Resource(R.mipmap.ic_credit_card_setting),
-                iconTint = colors.profile.menuAccountIconTint,
-                label = stringResource(R.string.profile_recurring)
-            )
-            HorizontalDivider(
-                color = colors.profile.menuAccountBorder.copy(alpha = 0.15f),
-                thickness = 0.5.dp
-            )
-            ProfileMenuItem(
-                icon = ProfileIcon.Resource(R.mipmap.ic_calendar),
-                label = stringResource(R.string.profile_transaction_history),
-                iconTint = colors.profile.menuAccountIconTint,
-                onClick = { onNavigate(Routes.TRANSACTION_HISTORY) }
-            )
+
+            Spacer(Modifier.height(8.dp))
         }
-
-        ProfileSectionHeader(stringResource(R.string.profile_section_security))
-        ProfileMenuCard(borderColor = colors.profile.menuSecurityBorder) {
-            ProfileMenuItem(
-                icon = ProfileIcon.Vector(Icons.Outlined.Lock),
-                label = stringResource(R.string.profile_security_center),
-                iconTint = colors.profile.menuSecurityIconTint,
-                onClick = { onNavigate(Routes.SECURITY_CENTER) }
-            )
-        }
-
-        ProfileSectionHeader(stringResource(R.string.profile_section_support))
-        ProfileMenuCard(borderColor = colors.profile.menuSupportBorder) {
-            ProfileMenuItem(
-                icon = ProfileIcon.Vector(Icons.AutoMirrored.Outlined.HelpOutline),
-                iconTint = colors.profile.menuSupportIconTint,
-                label = stringResource(R.string.profile_help_center)
-            )
-            HorizontalDivider(
-                color = colors.profile.menuSupportBorder.copy(alpha = 0.15f),
-                thickness = 0.5.dp
-            )
-            ProfileMenuItem(
-                icon = ProfileIcon.Vector(Icons.Outlined.Security),
-                iconTint = colors.profile.menuSupportIconTint,
-                label = stringResource(R.string.profile_terms)
-            )
-        }
-
-        Spacer(Modifier.height(4.dp))
-
-        LogoutButton(
-            enabled = !uiState.isLoggingOut,
-            onClick = { showLogoutDialog = true }
-        )
-
-        Spacer(Modifier.height(8.dp))
     }
 }
 
@@ -251,6 +253,7 @@ private fun ProfileSectionHeader(title: String) {
 @Composable
 private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -273,33 +276,22 @@ private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
                 brush = colors.profile.identityCardBorder,
                 shape = RoundedCornerShape(16.dp)
             )
-            .padding(16.dp),
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(90.dp),
-//                .clip(CircleShape)
-//                .background(
-//                    Brush.radialGradient(listOf(neonPurple.copy(alpha = 0.7f), neonCyan.copy(alpha = 0.4f)))
-//                )
-//                .border(1.5.dp, neonCyan, CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-//            Icon(
-//                imageVector = Icons.Default.Person,
-//                contentDescription = stringResource(R.string.profile_avatar_desc),
-//                tint = Color.White,
-//                modifier = Modifier.size(42.dp)
-//            )
+//        Box(
+//            modifier = Modifier
+//                .size(90.dp),
+//            contentAlignment = Alignment.Center
+//        ) {
             Icon(
                 modifier = Modifier
-                    .size(90.dp),
+                    .size(75.dp),
                 tint = Color.Unspecified,
                 contentDescription = null,
-                painter = painterResource(R.drawable.ic_friend_female),
+                painter = painterResource(assets.friendFemaleAvatar),
             )
-        }
+//        }
 
         Spacer(Modifier.width(14.dp))
 
@@ -344,7 +336,7 @@ private fun SocialRewardsCard(
             )
             .background(colors.bg.page, RoundedCornerShape(14.dp))
             .border(1.5.dp, colors.profile.socialCardBorder, RoundedCornerShape(14.dp))
-            .padding(12.dp),
+            .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // 左側：Invite & Earn
@@ -371,11 +363,13 @@ private fun SocialRewardsCard(
                     painter = painterResource(R.mipmap.ic_gift),
                     contentDescription = null,
                     tint = Color.Unspecified,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier
+                        .size(18.dp)
+                        .gradientTint(colors.gradient.goldShimmer)
                 )
                 Text(
                     text = stringResource(R.string.profile_g_code, inviteCode),
-                    color = Color.White,
+                    color = colors.profile.socialCodeText,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -421,18 +415,17 @@ private fun SocialRewardsCard(
         }
 
         // 分隔線
-        Box(
+        Spacer(
             modifier = Modifier
                 .padding(horizontal = 12.dp)
-                .width(1.dp)
-                .height(100.dp)
-                .align(Alignment.CenterVertically)
+                .width(1.5.dp)
+                .height(70.dp)
                 .background(colors.profile.socialDivider)
         )
 
         // 右側：My Badges
         Column(
-            modifier = Modifier.weight(0.7f),
+            modifier = Modifier.weight(0.8f),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
@@ -446,24 +439,30 @@ private fun SocialRewardsCard(
                     painter = painterResource(R.mipmap.ic_trophy),
                     contentDescription = null,
                     tint = Color.Unspecified,
-                    modifier = Modifier.size(26.dp)
+                    modifier = Modifier
+                        .size(26.dp)
+                        .gradientTint(colors.gradient.goldShimmer)
                 )
                 Icon(
                     painter = painterResource(R.mipmap.ic_star),
                     contentDescription = null,
                     tint = Color.Unspecified,
-                    modifier = Modifier.size(26.dp)
+                    modifier = Modifier
+                        .size(26.dp)
+                        .gradientTint(colors.gradient.goldShimmer)
                 )
                 Icon(
                     painter = painterResource(R.mipmap.ic_rocket),
                     contentDescription = null,
                     tint = Color.Unspecified,
-                    modifier = Modifier.size(26.dp)
+                    modifier = Modifier
+                        .size(26.dp)
+                        .gradientTint(colors.gradient.goldShimmer)
                 )
             }
             Text(
                 text = stringResource(R.string.profile_earned_badges, badgeCount),
-                color = colors.text.body,
+                color = colors.profile.socialEarnedText,
                 fontSize = 12.sp
             )
         }

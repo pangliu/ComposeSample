@@ -20,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.GradientText
+import com.qpay.xcash.ui.components.gradientTint
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
@@ -47,9 +49,10 @@ fun FullyVerifiedBadge(
                 .padding(start = iconSize / 2 + 10.dp, end = 12.dp, top = 5.dp, bottom = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            GradientText(
                 text = text,
                 color = colors.profile.badge.text,
+                brush = colors.gradient.goldShimmer,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
@@ -65,7 +68,9 @@ fun FullyVerifiedBadge(
                 painter = painterResource(R.mipmap.ic_shield_check),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier.size(iconSize)
+                modifier = Modifier
+                    .size(iconSize)
+                    .gradientTint(colors.gradient.goldShimmer)
             )
         }
     }

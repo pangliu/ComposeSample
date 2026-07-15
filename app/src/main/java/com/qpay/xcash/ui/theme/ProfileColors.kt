@@ -14,6 +14,8 @@ data class ProfileColors(
     val xcashIdText: Color,           // IdentityCard xcash ID 文字
     val socialCardBorder: Color,      // SocialRewardsCard 外框
     val socialTitleText: Color,       // Invite & Earn / My Badges 標題文字
+    val socialCodeText: Color,        // G-code 文字
+    val socialEarnedText: Color,      // Earned x badges 文字
     val socialDivider: Color,         // SocialRewardsCard 中間直向分隔線
     val inviteButtonFill: Brush,      // Invite Friends 按鈕填滿；Black Gold = 金色橫向漸層
     val inviteButtonBorder: Color,    // Invite Friends 按鈕邊框
@@ -59,6 +61,7 @@ data class InviteDialogColors(
     val background: Color,          // Dialog 底色
     val border: Color,              // Dialog 外框邊框
     val titleText: Color,           // 標題文字
+    val accentGradient: Brush?,     // 標題 / 分享 icon / System share 漸層（由上至下）；Neon = null（維持單色）
     val qrCodeColor: Color,         // QR code 本體顏色
     val qrFrameBorder: Color,       // QR code 外框邊框
     val divider: Color,             // 區塊分隔線
@@ -78,6 +81,8 @@ val NeonProfileColors = ProfileColors(
     xcashIdText = Color.LightGray,
     socialCardBorder = neonCyan.copy(alpha = 0.5f),
     socialTitleText = themeWhite,
+    socialCodeText = themeWhite,
+    socialEarnedText = silverGray,
     socialDivider = neonCyan.copy(alpha = 0.25f),
     inviteButtonFill = SolidColor(neonCyan.copy(alpha = 0.1f)),
     inviteButtonBorder = neonCyan.copy(alpha = 0.5f),
@@ -115,6 +120,7 @@ val NeonProfileColors = ProfileColors(
         background = twilightNavy,
         border = neonCyan.copy(alpha = 0.6f),
         titleText = neonCyan,
+        accentGradient = null,
         qrCodeColor = neonCyan,
         qrFrameBorder = neonPurple.copy(alpha = 0.8f),
         divider = neonCyan.copy(alpha = 0.2f),
@@ -131,16 +137,18 @@ val BlackGoldProfileColors = ProfileColors(
         listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
     ),
     identityCardBorder = SolidColor(paleGold),
-    userNameText = antiqueGold,
-    xcashIdText = warmSand,
+    userNameText = coolGray,
+    xcashIdText = coolGray,
     socialCardBorder = paleGold,
-    socialTitleText = antiqueGold,
+    socialTitleText = apricotGold,
+    socialCodeText = mistGray,
+    socialEarnedText = mistGray,
     socialDivider = antiqueGold.copy(alpha = 0.25f),
-    // 由左至右：camelGold → apricotGold → camelGold（與 Review Details 按鈕一致）
+    // 由左至右：bronzeGold → paleChampagne → bronzeGold
     inviteButtonFill = Brush.horizontalGradient(
-        colors = listOf(camelGold, apricotGold, camelGold)
+        colors = listOf(bronzeGold, paleChampagne, bronzeGold)
     ),
-    inviteButtonBorder = apricotGold,
+    inviteButtonBorder = paleGold,
     inviteButtonText = themeBlack,
     menuAccountBorder = paleGold,
     menuSecurityBorder = paleGold,
@@ -185,12 +193,16 @@ val BlackGoldProfileColors = ProfileColors(
         background = charcoalBlack,
         border = paleGold,
         titleText = paleChampagne,
+        // 由上至下：tawnyGold → paleChampagne → tawnyGold
+        accentGradient = Brush.verticalGradient(
+            colors = listOf(tawnyGold, paleChampagne, tawnyGold)
+        ),
         qrCodeColor = antiqueGold,
         qrFrameBorder = apricotGold,
         divider = antiqueGold.copy(alpha = 0.2f),
         shareLabelText = themeWhite,
         taglineText = antiqueGold,
-        closeButtonBorder = antiqueGold,
-        closeButtonIcon = antiqueGold,
+        closeButtonBorder = coolGray,
+        closeButtonIcon = coolGray,
     ),
 )

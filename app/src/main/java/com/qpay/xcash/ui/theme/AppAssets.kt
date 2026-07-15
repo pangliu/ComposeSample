@@ -50,6 +50,7 @@ data class AppAssets(
     @DrawableRes val contactFacebookIcon: Int,   // SelectPartnerItem contact_type = facebook 圖示
     @DrawableRes val contactPhoneIcon: Int,      // SelectPartnerItem contact_type = phone_num 圖示
     @DrawableRes val friendMaleAvatar: Int,      // SelectPartnerItem 好友頭像（男）
+    @DrawableRes val friendFemaleAvatar: Int,    // ProfileScreen IdentityCard 頭像（女）
 )
 
 val NeonAssets = AppAssets(
@@ -97,6 +98,7 @@ val NeonAssets = AppAssets(
     contactFacebookIcon = R.drawable.ic_facebook_friend,
     contactPhoneIcon = R.drawable.ic_phone_friend,
     friendMaleAvatar = R.drawable.ic_friend_male,
+    friendFemaleAvatar = R.drawable.ic_friend_female,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -144,6 +146,7 @@ val BlackGoldAssets = AppAssets(
     contactFacebookIcon = R.drawable.ic_facebook_friend_black_gold,
     contactPhoneIcon = R.drawable.ic_phone_friend_black_gold,
     friendMaleAvatar = R.drawable.ic_friend_male_black_gold,
+    friendFemaleAvatar = R.drawable.ic_friend_female_black_gold,
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }

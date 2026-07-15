@@ -36,8 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.RowIcon
 import com.qpay.xcash.ui.components.RowIconImage
+import com.qpay.xcash.ui.components.gradientTint
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
@@ -85,9 +87,10 @@ fun InviteFriendsDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Title
-                Text(
+                GradientText(
                     text = stringResource(R.string.invite_dialog_title),
                     color = colors.profile.inviteDialog.titleText,
+                    brush = colors.profile.inviteDialog.accentGradient,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -144,31 +147,37 @@ fun InviteFriendsDialog(
                         icon = RowIcon.Resource(R.mipmap.ic_invite_wc),
                         tint = Color.Unspecified,
                         size = 36.dp,
-                        modifier = Modifier.clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = onShareWhatsApp
-                        )
+                        modifier = Modifier
+                            .gradientTint(colors.profile.inviteDialog.accentGradient)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = onShareWhatsApp
+                            )
                     )
                     RowIconImage(
                         icon = RowIcon.Resource(R.mipmap.ic_invite_tg),
                         tint = Color.Unspecified,
                         size = 54.dp,
-                        modifier = Modifier.clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = onShareTelegram
-                        )
+                        modifier = Modifier
+                            .gradientTint(colors.profile.inviteDialog.accentGradient)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = onShareTelegram
+                            )
                     )
                     RowIconImage(
                         icon = RowIcon.Resource(R.mipmap.ic_invite_msg),
                         tint = Color.Unspecified,
                         size = 36.dp,
-                        modifier = Modifier.clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = onShareMessenger
-                        )
+                        modifier = Modifier
+                            .gradientTint(colors.profile.inviteDialog.accentGradient)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = onShareMessenger
+                            )
                     )
                 }
 
@@ -186,9 +195,10 @@ fun InviteFriendsDialog(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    GradientText(
                         text = stringResource(R.string.invite_dialog_system_share),
                         color = colors.profile.inviteDialog.shareLabelText,
+                        brush = colors.profile.inviteDialog.accentGradient,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -198,7 +208,9 @@ fun InviteFriendsDialog(
 //                        contentDescription = null,
                         icon = RowIcon.Resource(R.mipmap.ic_invite_share),
                         tint = Color.Unspecified,
-                        modifier = Modifier.size(25.dp)
+                        modifier = Modifier
+                            .size(25.dp)
+                            .gradientTint(colors.profile.inviteDialog.accentGradient)
                     )
                 }
 
