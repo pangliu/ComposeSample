@@ -36,7 +36,6 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,18 +58,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.RowIcon
 import com.qpay.xcash.ui.components.RowIconImage
 import com.qpay.xcash.ui.components.SubPageTopBar
+import com.qpay.xcash.ui.components.gradientTint
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.lemonYellow
-import com.qpay.xcash.ui.theme.neonBlue
-import com.qpay.xcash.ui.theme.neonBlueLight
-import com.qpay.xcash.ui.theme.neonDarkPurple
-import com.qpay.xcash.ui.theme.neonMint
-
-private val CardBackground = Color(0xFF0E1A2E)
+import com.qpay.xcash.ui.theme.NeonColors
 
 @Composable
 fun ProfileEditScreen(
@@ -130,24 +129,16 @@ private fun ProfileEditContent(
 
 @Composable
 private fun PromoBanner(modifier: Modifier = Modifier) {
+    val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth()
-//            .height(90.dp)
-//            .neonGlow(color = neonPurple, alpha = 0.4f, glowRadius = 10.dp, borderRadius = 16.dp)
-//            .background(
-//                Brush.horizontalGradient(
-//                    listOf(Color(0xFF200A40), Color(0xFF0D1630), Color(0xFF200A40))
-//                ),
-//                RoundedCornerShape(16.dp)
-//            )
-//            .border(1.5.dp, neonPurple.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
     ) {
         Image(
-            painter = painterResource(R.mipmap.bg_profile_edit_top),
+            painter = painterResource(assets.profileEditBanner),
             contentDescription = null,
-//            contentScale = ContentScale.Companion.FillWidth,
             contentScale = ContentScale.FillWidth                                                                           ,
             modifier = Modifier.Companion.fillMaxWidth()
         )
@@ -158,13 +149,13 @@ private fun PromoBanner(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = stringResource(R.string.profile_edit_banner_title),
-                color = lemonYellow,
+                color = colors.profileEdit.bannerTitleText,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
             Text(
                 text = stringResource(R.string.profile_edit_banner_subtitle),
-                color = Color.White,
+                color = colors.profileEdit.bannerSubtitleText,
                 fontSize = 18.sp,
                 lineHeight = 17.sp
             )
@@ -176,7 +167,6 @@ private fun PromoBanner(modifier: Modifier = Modifier) {
 private fun MyDeetsSection(uiState: ProfileEditUiState, modifier: Modifier = Modifier) {
     SectionCard(
         title = stringResource(R.string.profile_edit_section_my_deets),
-        borderColor = neonBlueLight,
         modifier = modifier
     ) {
         LockedFieldRow(
@@ -222,53 +212,52 @@ private fun MyDeetsSection(uiState: ProfileEditUiState, modifier: Modifier = Mod
 private fun SpillTheTeaSection(uiState: ProfileEditUiState, modifier: Modifier = Modifier) {
     SectionCard(
         title = stringResource(R.string.profile_edit_section_spill_tea),
-        borderColor = neonBlueLight,
         modifier = modifier
     ) {
         DropdownFieldRow(
-            icon = Icons.Outlined.School,
+            icon = RowIcon.Resource(R.drawable.ic_profile_edit_book),
             label = stringResource(R.string.profile_edit_education),
             value = uiState.educationLevel
         )
         FieldDivider()
         DropdownFieldRow(
-            icon = Icons.Default.Work,
+            icon = RowIcon.Resource(R.drawable.ic_profile_edit_education),
             label = stringResource(R.string.profile_edit_hustle),
             value = uiState.currentHustle
         )
         FieldDivider()
         DropdownFieldRow(
-            icon = Icons.Default.People,
+            icon = RowIcon.Resource(R.drawable.ic_profile_edit_coin),
             label = stringResource(R.string.profile_edit_income_currency),
             value = uiState.incomeCurrency
         )
         FieldDivider()
         DropdownFieldRow(
-            icon = Icons.Default.Favorite,
+            icon = RowIcon.Resource(R.drawable.ic_profile_edit_banknote),
             label = stringResource(R.string.profile_edit_yearly_bag),
             value = uiState.yearlyBag
         )
         FieldDivider()
         DropdownFieldRow(
-            icon = Icons.Default.Favorite,
+            icon = RowIcon.Resource(R.drawable.ic_profile_edit_ring),
             label = stringResource(R.string.profile_edit_relationship),
             value = uiState.relationshipStatus
         )
         FieldDivider()
         DropdownFieldRow(
-            icon = Icons.Default.ChildCare,
+            icon = RowIcon.Resource(R.drawable.ic_profile_edit_family),
             label = stringResource(R.string.profile_edit_kids),
             value = uiState.gotKids
         )
         FieldDivider()
         DropdownFieldRow(
-            icon = Icons.Default.Search,
+            icon = RowIcon.Resource(R.drawable.ic_profile_edit_search),
             label = stringResource(R.string.profile_edit_find_us),
             value = uiState.howFoundUs
         )
         FieldDivider()
         DropdownFieldRow(
-            icon = Icons.Default.People,
+            icon = RowIcon.Resource(R.drawable.ic_profile_edit_hand),
             label = stringResource(R.string.profile_edit_referral),
             value = uiState.referralName,
             subtitle = stringResource(R.string.profile_edit_referral_code, uiState.referralCode)
@@ -280,32 +269,34 @@ private fun SpillTheTeaSection(uiState: ProfileEditUiState, modifier: Modifier =
 @Composable
 private fun SectionCard(
     title: String,
-    borderColor: Color,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val colors = LocalAppColors.current
     Box(modifier = modifier.fillMaxWidth()) {
         // 先畫 chip（z-order 較低），讓卡片背景蓋住其下半段邊框
         Box(
             modifier = Modifier
                 .align(Alignment.TopStart)
-//                .background(
-//                    color = neonDarkPurple.copy(alpha = 0.5f),
-//                    shape = RoundedCornerShape(8.dp))
                 .border(
                     width = 1.5.dp,
-                    color = neonDarkPurple,
+                    color = colors.profileEdit.chipBorder,
                     shape = RoundedCornerShape(8.dp))
-                .neonGlow(
-                    color = neonDarkPurple.copy(alpha = 0.8f),
-                    glowRadius = 8.dp,
-                    borderRadius = 14.dp
+                .then(
+                    if (colors.effect.enableGlow) {
+                        Modifier.neonGlow(
+                            color = colors.profileEdit.chipGlow.copy(alpha = 0.8f),
+                            glowRadius = 8.dp,
+                            borderRadius = 14.dp
+                        )
+                    } else Modifier
                 )
                 .padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 25.dp)
         ) {
-            Text(
+            GradientText(
                 text = title,
-                color = Color.White,
+                color = colors.profileEdit.chipTitleText,
+                brush = colors.profileEdit.accentGradient,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
@@ -315,9 +306,13 @@ private fun SectionCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 33.dp)
-                .neonGlow(borderColor, alpha = 0.6f, glowRadius = 8.dp, borderRadius = 14.dp)
-                .background(CardBackground, RoundedCornerShape(14.dp))
-                .border(1.5.dp, borderColor.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+                .then(
+                    if (colors.effect.enableGlow) {
+                        Modifier.neonGlow(colors.profileEdit.cardGlow, alpha = 0.6f, glowRadius = 8.dp, borderRadius = 14.dp)
+                    } else Modifier
+                )
+                .background(colors.profileEdit.cardBackground, RoundedCornerShape(14.dp))
+                .border(1.5.dp, colors.profileEdit.cardBorder, RoundedCornerShape(14.dp))
                 .padding(top = 12.dp),
             content = content
         )
@@ -343,9 +338,13 @@ private fun LockedFieldRow(icon: RowIcon, label: String, value: String) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = icon, tint = colors.accent.primary)
+        RowIconImage(
+            icon = icon,
+            tint = colors.accent.primary,
+            modifier = Modifier.gradientTint(colors.profileEdit.accentGradient)
+        )
         Spacer(Modifier.width(10.dp))
-        Text(label, color = colors.text.body, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(label, color = colors.profileEdit.fieldLabelText, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Icon(
             imageVector = Icons.Outlined.Lock,
             contentDescription = null,
@@ -353,7 +352,7 @@ private fun LockedFieldRow(icon: RowIcon, label: String, value: String) {
             modifier = Modifier.size(13.dp)
         )
         Spacer(Modifier.width(4.dp))
-        Text(value, color = Color.White, fontSize = 13.sp)
+        Text(value, color = colors.profileEdit.fieldValueText, fontSize = 13.sp)
     }
 }
 
@@ -366,10 +365,14 @@ private fun PlainFieldRow(icon: RowIcon, label: String, value: String) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = icon, tint = colors.accent.primary)
+        RowIconImage(
+            icon = icon,
+            tint = colors.accent.primary,
+            modifier = Modifier.gradientTint(colors.profileEdit.accentGradient)
+        )
         Spacer(Modifier.width(10.dp))
-        Text(label, color = colors.text.body, fontSize = 13.sp, modifier = Modifier.weight(1f))
-        Text(value, color = Color.White, fontSize = 13.sp)
+        Text(label, color = colors.profileEdit.fieldLabelText, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(value, color = colors.profileEdit.fieldValueText, fontSize = 13.sp)
     }
 }
 
@@ -387,9 +390,13 @@ private fun ChangeableFieldRow(
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = icon, tint = colors.accent.primary)
+        RowIconImage(
+            icon = icon,
+            tint = colors.accent.primary,
+            modifier = Modifier.gradientTint(colors.profileEdit.accentGradient)
+        )
         Spacer(Modifier.width(10.dp))
-        Text(label, color = colors.text.body, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(label, color = colors.profileEdit.fieldLabelText, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Text(value, color = colors.text.body, fontSize = 12.sp)
         Spacer(Modifier.width(8.dp))
         Box(
@@ -429,17 +436,21 @@ private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RowIconImage(icon = RowIcon.Resource(R.mipmap.ic_profile_edit_lock), tint = colors.accent.primary)
+        RowIconImage(
+            icon = RowIcon.Resource(R.mipmap.ic_profile_edit_lock),
+            tint = colors.accent.primary,
+            modifier = Modifier.gradientTint(colors.profileEdit.accentGradient)
+        )
         Spacer(Modifier.width(10.dp))
         Text(
             text = stringResource(R.string.profile_edit_password),
-            color = colors.text.body,
+            color = colors.profileEdit.fieldLabelText,
             fontSize = 13.sp,
             modifier = Modifier.weight(1f)
         )
         Text(
             text = if (isVisible) "password" else "••••••••",
-            color = Color.White,
+            color = colors.profileEdit.fieldValueText,
             fontSize = 13.sp
         )
         Spacer(Modifier.width(6.dp))
@@ -484,7 +495,8 @@ private fun PasswordFieldRow(onChangeTap: () -> Unit = {}) {
 
 @Composable
 private fun DropdownFieldRow(
-    icon: ImageVector,
+//    icon: ImageVector,
+    icon: RowIcon,
     label: String,
     value: String,
     subtitle: String? = null,
@@ -501,10 +513,16 @@ private fun DropdownFieldRow(
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null, tint = colors.accent.primary, modifier = Modifier.size(20.dp))
+        RowIconImage(
+            icon = icon,
+            tint = Color.Unspecified,
+            modifier = Modifier
+                .size(20.dp)
+                .gradientTint(colors.profileEdit.accentGradient)
+        )
         Spacer(Modifier.width(10.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(label, color = Color.White, fontSize = 13.sp)
+            Text(label, color = colors.profileEdit.fieldValueText, fontSize = 13.sp)
             if (subtitle != null) {
                 Text(subtitle, color = colors.text.body, fontSize = 11.sp)
             }
@@ -523,7 +541,7 @@ private fun DropdownFieldRow(
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(value, color = Color.White, fontSize = 12.sp)
+            Text(value, color = colors.profileEdit.fieldValueText, fontSize = 12.sp)
             Spacer(Modifier.width(4.dp))
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
@@ -535,18 +553,26 @@ private fun DropdownFieldRow(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+private val previewUiState = ProfileEditUiState(
+    fullName = "Bruce Banner",
+    gender = "Male",
+    mobile = "0917-123-4567",
+    email = "bruce@starklabs.com",
+    dob = "1970-01-01"
+)
+
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun ProfileEditPreview() {
-    MaterialTheme {
-        ProfileEditContent(
-            uiState = ProfileEditUiState(
-                fullName = "Bruce Banner",
-                gender = "Male",
-                mobile = "0917-123-4567",
-                email = "bruce@starklabs.com",
-                dob = "1970-01-01"
-            )
-        )
+private fun ProfileEditPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        ProfileEditContent(uiState = previewUiState)
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun ProfileEditPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        ProfileEditContent(uiState = previewUiState)
     }
 }
