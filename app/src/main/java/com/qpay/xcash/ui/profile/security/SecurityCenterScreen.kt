@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.Alignment
@@ -48,17 +46,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.SubPageTopBar
+import com.qpay.xcash.ui.components.gradientTint
 import com.qpay.xcash.ui.profile.security.dialog.SecurityPinDialog
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.profile.components.FullyVerifiedBadge
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
+import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.lemonYellow
+import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.neonBlueLight
-import com.qpay.xcash.ui.theme.neonMint
-import com.qpay.xcash.ui.theme.neonPurpleLight
-
-private val CardBackground = Color(0xFF0E1A2E)
 
 sealed class ChecklistIcon {
     data class Vector(val imageVector: ImageVector) : ChecklistIcon()
@@ -86,6 +86,7 @@ fun SecurityCenterContent(
     }
 
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     Scaffold(
         containerColor = colors.bg.page,
         contentColor = Color.White
@@ -93,9 +94,13 @@ fun SecurityCenterContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .paint(
-                    painter = painterResource(R.mipmap.bg_sub_page),
-                    contentScale = ContentScale.FillBounds
+                .then(
+                    assets.subPageBackground?.let {
+                        Modifier.paint(
+                            painter = painterResource(it),
+                            contentScale = ContentScale.FillBounds
+                        )
+                    } ?: Modifier
                 )
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
@@ -140,9 +145,11 @@ fun SecurityCenterContent(
 
 @Composable
 private fun SectionHeader(title: String, modifier: Modifier = Modifier) {
-    Text(
+    val colors = LocalAppColors.current
+    GradientText(
         text = title,
-        color = Color.White,
+        color = colors.security.sectionHeaderText,
+        brush = colors.gradient.goldShimmer,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         modifier = modifier
@@ -157,38 +164,26 @@ private fun IdentityCard(
     modifier: Modifier = Modifier
 ) {
     val colors = LocalAppColors.current
+    val assets = LocalAppAssets.current
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
-            .background(CardBackground, RoundedCornerShape(16.dp))
-            .border(
-                width = 1.5.dp,
-                brush = Brush.linearGradient(
-                    listOf(colors.accent.primary.copy(alpha = 0.4f), colors.accent.secondary.copy(alpha = 0.8f))
-                ),
-                shape = RoundedCornerShape(16.dp)
+            .then(
+                if (colors.effect.enableGlow) {
+                    Modifier.neonGlow(colors.accent.primary, alpha = 0.35f, glowRadius = 10.dp, borderRadius = 16.dp)
+                } else Modifier
             )
+            .background(colors.security.cardBackground, RoundedCornerShape(16.dp))
+            .border(1.5.dp, colors.security.identityCardBorder, RoundedCornerShape(16.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier
-                .size(72.dp),
-//                .background(
-//                    Brush.radialGradient(
-//                        listOf(neonPurple.copy(alpha = 0.5f), neonCyan.copy(alpha = 0.3f))
-//                    ),
-//                    CircleShape
-//                )
-//                .border(
-//                    width = 1.5.dp,
-//                    color = neonCyan,
-//                    shape = CircleShape),
+            modifier = Modifier.size(72.dp),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_girl),
+                painter = painterResource(assets.securityAvatar),
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier.size(72.dp)
@@ -200,13 +195,13 @@ private fun IdentityCard(
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
                 text = stringResource(R.string.profile_hi_name, userName),
-                color = Color.White,
+                color = colors.security.userNameText,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
             Text(
                 text = stringResource(R.string.profile_xcash_id, xcashId),
-                color = colors.text.body,
+                color = colors.security.xcashIdText,
                 fontSize = 13.sp
             )
             if (isVerified) {
@@ -222,11 +217,14 @@ private fun SecurityScoreCard(score: Int, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(colors.accent.secondary, alpha = 0.4f, glowRadius = 10.dp, borderRadius = 16.dp)
-            .background(CardBackground, RoundedCornerShape(16.dp))
-            .border(1.5.dp, colors.accent.secondary.copy(alpha = 0.7f), RoundedCornerShape(16.dp))
+            .then(
+                if (colors.effect.enableGlow) {
+                    Modifier.neonGlow(colors.accent.secondary, alpha = 0.4f, glowRadius = 10.dp, borderRadius = 16.dp)
+                } else Modifier
+            )
+            .background(colors.security.cardBackground, RoundedCornerShape(16.dp))
+            .border(1.5.dp, colors.security.scoreCardBorder, RoundedCornerShape(16.dp))
             .padding(horizontal = 16.dp, vertical = 14.dp),
-//        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             painter = painterResource(R.mipmap.ic_security),
@@ -235,13 +233,14 @@ private fun SecurityScoreCard(score: Int, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .size(48.dp)
                 .align(Alignment.CenterVertically)
-//                .neonGlow(neonPurple, alpha = 0.6f, glowRadius = 20.dp)
+                .gradientTint(colors.security.scoreIconGradient)
         )
         Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(
+            GradientText(
                 text = stringResource(R.string.security_score_label),
-                color = colors.accent.secondary,
+                color = colors.security.scoreLabelText,
+                brush = colors.security.scoreLabelGradient,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
@@ -250,40 +249,37 @@ private fun SecurityScoreCard(score: Int, modifier: Modifier = Modifier) {
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
                     text = stringResource(R.string.security_score_prefix),
-                    color = Color.White,
+                    color = colors.security.scoreValueText,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(end = 5.dp)
                 )
                 Text(
                     text = "$score",
-                    color = Color.White,
+                    color = colors.security.scoreValueText,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = stringResource(R.string.security_score_max),
-                    color = Color.White,
+                    color = colors.security.scoreValueText,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
         }
-        Row(
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
+        Row {
             Icon(
                 painter = painterResource(R.mipmap.ic_gold_coin),
                 contentDescription = null,
-                tint = Color.Unspecified,
+                tint = colors.security.scoreTrailingIconTint,
                 modifier = Modifier.size(24.dp)
             )
             Spacer(Modifier.width(8.dp))
             Icon(
                 painter = painterResource(R.mipmap.ic_gift),
                 contentDescription = null,
-                tint = Color.Unspecified,
+                tint = colors.security.scoreTrailingIconTint,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -296,26 +292,31 @@ private fun ChecklistCard(modifier: Modifier = Modifier, onPinClick: () -> Unit 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .neonGlow(neonBlueLight, alpha = 0.3f, glowRadius = 8.dp, borderRadius = 14.dp)
-            .background(CardBackground, RoundedCornerShape(14.dp))
-            .border(1.5.dp, neonBlueLight.copy(alpha = 0.6f), RoundedCornerShape(14.dp))
+            .then(
+                if (colors.effect.enableGlow) {
+                    Modifier.neonGlow(neonBlueLight, alpha = 0.3f, glowRadius = 8.dp, borderRadius = 14.dp)
+                } else Modifier
+            )
+            .background(colors.security.cardBackground, RoundedCornerShape(14.dp))
+            .border(1.5.dp, colors.security.checklistCardBorder, RoundedCornerShape(14.dp))
     ) {
         // Title row
-        Text(
+        GradientText(
             text = stringResource(R.string.security_checklist_title),
-            color = Color.White,
+            color = colors.security.checklistTitleText,
+            brush = colors.security.checklistTitleGradient,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
             letterSpacing = 1.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    colors.accent.primary.copy(alpha = 0.08f),
+                    colors.security.checklistTitleBackground,
                     RoundedCornerShape(topStart = 13.dp, topEnd = 13.dp)
                 )
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         )
-        HorizontalDivider(color = colors.accent.primary.copy(alpha = 0.2f), thickness = 0.5.dp)
+        HorizontalDivider(color = colors.security.checklistHeaderDivider, thickness = 0.5.dp)
 
         ChecklistItem(
             icon = ChecklistIcon.Resource(R.mipmap.ic_lock),
@@ -358,7 +359,7 @@ private fun ChecklistDivider() {
     val colors = LocalAppColors.current
     HorizontalDivider(
         modifier = Modifier.padding(horizontal = 16.dp),
-        color = colors.accent.primary.copy(alpha = 0.1f),
+        color = colors.security.checklistDivider,
         thickness = 0.5.dp
     )
 }
@@ -384,10 +385,7 @@ private fun ChecklistItem(
     ) {
         // Icon container
         Box(
-            modifier = Modifier
-                .size(50.dp),
-//                .background(neonCyan.copy(alpha = 0.08f), RoundedCornerShape(10.dp))
-//                .border(1.dp, neonCyan.copy(alpha = 0.25f), RoundedCornerShape(10.dp)),
+            modifier = Modifier.size(50.dp),
             contentAlignment = Alignment.Center
         ) {
             when (icon) {
@@ -395,12 +393,15 @@ private fun ChecklistItem(
                     imageVector = icon.imageVector,
                     contentDescription = null,
                     tint = colors.accent.primary,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier
+                        .size(22.dp)
+                        .gradientTint(colors.security.itemIconGradient)
                 )
                 is ChecklistIcon.Resource -> Icon(
                     painter = painterResource(icon.resId),
                     contentDescription = null,
                     tint = Color.Unspecified,
+                    modifier = Modifier.gradientTint(colors.security.itemIconGradient)
                 )
             }
         }
@@ -410,7 +411,7 @@ private fun ChecklistItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = Color.White,
+                color = colors.security.itemTitleText,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 maxLines = 1,
@@ -418,7 +419,7 @@ private fun ChecklistItem(
             )
             Text(
                 text = subtitle,
-                color = colors.text.body,
+                color = colors.security.itemSubtitleText,
                 fontSize = 11.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -433,7 +434,7 @@ private fun ChecklistItem(
         Icon(
             imageVector = Icons.AutoMirrored.Filled.NavigateNext,
             contentDescription = null,
-            tint = Color.White.copy(alpha = 0.4f),
+            tint = colors.security.chevron,
             modifier = Modifier.size(20.dp)
         )
     }
@@ -447,14 +448,14 @@ private fun StatusStepsRow(steps: List<String>) {
             if (index > 0) {
                 Text(
                     text = " > ",
-                    color = colors.text.body,
+                    color = colors.security.statusStepText,
                     fontSize = 11.sp
                 )
             }
             val isLast = index == steps.lastIndex
             Text(
                 text = step,
-                color = if (isLast) neonBlueLight else colors.text.body,
+                color = if (isLast) colors.security.statusStepActiveText else colors.security.statusStepText,
                 fontSize = 11.sp,
                 fontWeight = if (isLast) FontWeight.Bold else FontWeight.Normal
             )
@@ -462,10 +463,25 @@ private fun StatusStepsRow(steps: List<String>) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0E1422)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun SecurityCenterPreview() {
-    MaterialTheme {
+private fun SecurityCenterPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        SecurityCenterContent(
+            uiState = SecurityCenterUiState(
+                userName = "Bruce Banner",
+                xcashId = "0917-123-4567",
+                isVerified = true,
+                securityScore = 95
+            )
+        )
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun SecurityCenterPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         SecurityCenterContent(
             uiState = SecurityCenterUiState(
                 userName = "Bruce Banner",

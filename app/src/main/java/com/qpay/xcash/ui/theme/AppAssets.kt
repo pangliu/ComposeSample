@@ -52,6 +52,7 @@ data class AppAssets(
     @DrawableRes val friendMaleAvatar: Int,      // SelectPartnerItem 好友頭像（男）
     @DrawableRes val friendFemaleAvatar: Int,    // ProfileScreen IdentityCard 頭像（女）
     @DrawableRes val verificationAvatar: Int,    // VerificationStatusScreen IdentityCard 頭像（女）
+    @DrawableRes val securityAvatar: Int,        // SecurityCenterScreen IdentityCard 頭像（女）
     @DrawableRes val profileEditBanner: Int,     // ProfileEditScreen 頂部 PromoBanner 背景圖
 )
 
@@ -102,6 +103,7 @@ val NeonAssets = AppAssets(
     friendMaleAvatar = R.drawable.ic_friend_male,
     friendFemaleAvatar = R.drawable.ic_friend_female,
     verificationAvatar = R.drawable.ic_girl,
+    securityAvatar = R.drawable.ic_girl,
     profileEditBanner = R.drawable.bg_profile_edit_top,
 )
 
@@ -152,6 +154,7 @@ val BlackGoldAssets = AppAssets(
     friendMaleAvatar = R.drawable.ic_friend_male_black_gold,
     friendFemaleAvatar = R.drawable.ic_friend_female_black_gold,
     verificationAvatar = R.drawable.ic_friend_female_black_gold,    // TODO: 替換為 ic_girl_black_gold（資源尚未加入 res/drawable）
+    securityAvatar = R.drawable.ic_friend_female_black_gold,    // TODO: 替換為 ic_girl_black_gold（資源尚未加入 res/drawable）
     profileEditBanner = R.drawable.bg_profile_edit_top_black_gold,    // TODO: 替換為 bg_profile_edit_top_black_gold（資源尚未加入）
 )
 

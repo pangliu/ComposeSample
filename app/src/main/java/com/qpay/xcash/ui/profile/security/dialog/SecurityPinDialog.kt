@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -43,13 +42,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.neonCyan
-import com.qpay.xcash.ui.theme.neonPink
-import com.qpay.xcash.ui.theme.neonPurpleLight
+import com.qpay.xcash.ui.theme.NeonColors
 
-private val DialogBg = Color(0xFF0D1B2E)
 private const val PIN_LENGTH = 6
 
 @Composable
@@ -61,20 +61,26 @@ fun SecurityPinDialog(
     var confirmPin by remember { mutableStateOf("") }
 
     val colors = LocalAppColors.current
+    val dialogColors = colors.security.pinDialog
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
-                .background(DialogBg, RoundedCornerShape(20.dp))
-                .border(1.5.dp, colors.accent.primary.copy(alpha = 0.7f), RoundedCornerShape(20.dp))
+                .then(
+                    if (colors.effect.enableGlow) {
+                        Modifier.neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
+                    } else Modifier
+                )
+                .background(dialogColors.background, RoundedCornerShape(20.dp))
+                .border(1.5.dp, dialogColors.border, RoundedCornerShape(20.dp))
                 .padding(horizontal = 20.dp, vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Title
-            Text(
+            GradientText(
                 text = stringResource(R.string.pin_dialog_title),
-                color = colors.accent.primary,
+                color = dialogColors.titleText,
+                brush = dialogColors.titleGradient,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -83,22 +89,21 @@ fun SecurityPinDialog(
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = neonCyan)
+                    .background(color = dialogColors.titleDivider)
                     .height(1.5.dp))
             // Promo banner
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .neonGlow(colors.accent.secondary, alpha = 0.3f, glowRadius = 6.dp, borderRadius = 10.dp)
-                    .background(colors.accent.secondary.copy(alpha = 0.08f), RoundedCornerShape(10.dp))
-                    .border(1.5.dp, colors.accent.secondary.copy(alpha = 0.7f), RoundedCornerShape(10.dp))
+                    .background(dialogColors.bannerBackground, RoundedCornerShape(10.dp))
+                    .border(1.5.dp, dialogColors.bannerBorder, RoundedCornerShape(10.dp))
                     .padding(horizontal = 10.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
                     text = stringResource(R.string.pin_dialog_banner),
-                    color = colors.accent.secondary,
+                    color = dialogColors.bannerText,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f),
@@ -107,13 +112,13 @@ fun SecurityPinDialog(
                 Icon(
                     painter = painterResource(R.mipmap.ic_trophy),
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = dialogColors.bannerIconTint,
                     modifier = Modifier.size(20.dp)
                 )
                 Icon(
                     painter = painterResource(R.mipmap.ic_gift),
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = dialogColors.bannerIconTint,
                     modifier = Modifier.size(18.dp)
                 )
             }
@@ -147,8 +152,7 @@ fun SecurityPinDialog(
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-//                        .neonGlow(colors.accent.primary, alpha = 0.4f, glowRadius = 8.dp, borderRadius = 26.dp)
-                        .border(1.5.dp, colors.accent.primary, CircleShape)
+                        .border(1.5.dp, dialogColors.confirmButtonBorder, CircleShape)
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() },
@@ -163,7 +167,7 @@ fun SecurityPinDialog(
                     Icon(
                         imageVector = Icons.Default.Save,
                         contentDescription = stringResource(R.string.pin_dialog_confirm_desc),
-                        tint = colors.accent.primary,
+                        tint = dialogColors.confirmButtonIcon,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -172,8 +176,7 @@ fun SecurityPinDialog(
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-//                        .neonGlow(neonPink, alpha = 0.4f, glowRadius = 8.dp, borderRadius = 26.dp)
-                        .border(1.5.dp, neonPurpleLight, CircleShape)
+                        .border(1.5.dp, dialogColors.closeButtonBorder, CircleShape)
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() },
@@ -184,7 +187,7 @@ fun SecurityPinDialog(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(R.string.pin_dialog_close_desc),
-                        tint = neonPurpleLight,
+                        tint = dialogColors.closeButtonIcon,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -199,7 +202,7 @@ private fun PinSection(
     value: String,
     onValueChange: (String) -> Unit
 ) {
-    val colors = LocalAppColors.current
+    val dialogColors = LocalAppColors.current.security.pinDialog
     // Hidden TextField drives input; boxes display the filled state
     BasicTextField(
         value = value,
@@ -211,7 +214,7 @@ private fun PinSection(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = label,
-                    color = Color.White,
+                    color = dialogColors.pinLabelText,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -222,12 +225,12 @@ private fun PinSection(
                             modifier = Modifier
                                 .size(40.dp)
                                 .background(
-                                    if (filled) colors.accent.primary.copy(alpha = 0.15f) else Color.Transparent,
+                                    if (filled) dialogColors.pinBoxFilledBackground else Color.Transparent,
                                     RoundedCornerShape(8.dp)
                                 )
                                 .border(
                                     1.5.dp,
-                                    if (filled) colors.accent.primary else colors.accent.primary.copy(alpha = 0.4f),
+                                    if (filled) dialogColors.pinBoxFilledBorder else dialogColors.pinBoxEmptyBorder,
                                     RoundedCornerShape(8.dp)
                                 ),
                             contentAlignment = Alignment.Center
@@ -236,7 +239,7 @@ private fun PinSection(
                                 Box(
                                     modifier = Modifier
                                         .size(8.dp)
-                                        .background(colors.accent.primary, CircleShape)
+                                        .background(dialogColors.pinDot, CircleShape)
                                 )
                             }
                         }
@@ -272,8 +275,18 @@ private fun DisabledRow(label: String) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun SecurityPinDialogPreview() {
-    SecurityPinDialog(onDismiss = {})
+private fun SecurityPinDialogPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        SecurityPinDialog(onDismiss = {})
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun SecurityPinDialogPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        SecurityPinDialog(onDismiss = {})
+    }
 }

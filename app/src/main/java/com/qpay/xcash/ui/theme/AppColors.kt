@@ -49,6 +49,7 @@ data class AppColors(
     val profile: ProfileColors,
     val profileEdit: ProfileEditColors,
     val verification: VerificationColors,
+    val security: SecurityColors,
 )
 
 val NeonColors = AppColors(
@@ -87,6 +88,7 @@ val NeonColors = AppColors(
     profile = NeonProfileColors,
     profileEdit = NeonProfileEditColors,
     verification = NeonVerificationColors,
+    security = NeonSecurityColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -129,4 +131,5 @@ val BlackGoldColors = AppColors(
     profile = BlackGoldProfileColors,
     profileEdit = BlackGoldProfileEditColors,
     verification = BlackGoldVerificationColors,
+    security = BlackGoldSecurityColors,
 )
