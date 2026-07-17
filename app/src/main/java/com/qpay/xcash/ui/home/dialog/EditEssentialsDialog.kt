@@ -62,12 +62,10 @@ import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.home.essential.ESSENTIALS_DISPLAY_COUNT
 import com.qpay.xcash.ui.home.essential.EssentialItem
 import com.qpay.xcash.ui.home.essential.allEssentialItems
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
-import com.qpay.xcash.ui.theme.navyDark
-import com.qpay.xcash.ui.theme.indigoDark
-import com.qpay.xcash.ui.theme.limeGreen
-import com.qpay.xcash.ui.theme.deepNavy
-import com.qpay.xcash.ui.theme.vibrantPink
+import com.qpay.xcash.ui.theme.NeonColors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -158,11 +156,15 @@ fun EditEssentialsContent(
                 indication = null,
                 onClick = {}
             )
-            .neonGlow(
-                color = colors.accent.secondary,
-                alpha = 0.6f,
-                glowRadius = 15.dp,
-                borderRadius = 28.dp
+            .then(
+                if (colors.effect.enableGlow)
+                    Modifier.neonGlow(
+                        color = colors.accent.secondary,
+                        alpha = 0.6f,
+                        glowRadius = 15.dp,
+                        borderRadius = 28.dp
+                    )
+                else Modifier
             )
             .background(colors.bg.page, RoundedCornerShape(28.dp))
             .border(2.dp, colors.accent.secondary, RoundedCornerShape(28.dp))
@@ -171,14 +173,14 @@ fun EditEssentialsContent(
     ) {
         Text(
             text = stringResource(R.string.edit_essentials_title),
-            color = Color.White,
+            color = colors.home.editEssentials.titleText,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
 
         Text(
             text = stringResource(R.string.edit_essentials_hint),
-            color = Color.Gray,
+            color = colors.home.editEssentials.hintText,
             fontSize = 12.sp
         )
 
@@ -239,21 +241,25 @@ fun EditEssentialsContent(
 
         Box(
             modifier = Modifier
-                .neonGlow(
-                    color = limeGreen,
-                    alpha = 0.6f,
-                    glowRadius = 15.dp,
-                    borderRadius = 8.dp
+                .then(
+                    if (colors.effect.enableGlow)
+                        Modifier.neonGlow(
+                            color = colors.home.editEssentials.saveButtonGlow,
+                            alpha = 0.6f,
+                            glowRadius = 15.dp,
+                            borderRadius = 8.dp
+                        )
+                    else Modifier
                 )
                 .clip(RoundedCornerShape(50.dp))
-                .background(color = limeGreen)
+                .background(colors.home.editEssentials.saveButtonBg)
                 .clickable { onClose() }
                 .padding(vertical = 8.dp, horizontal = 20.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = stringResource(R.string.edit_essentials_save),
-                color = Color.White,
+                color = colors.home.editEssentials.saveButtonText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -408,19 +414,10 @@ private fun ReorderableEssentialGrid(
                                     .width(60.dp)
                                     .height(50.dp)
                                     .clip(RoundedCornerShape(16.dp))
-                                    .background(
-                                        brush = Brush.linearGradient(
-                                            colors = listOf(indigoDark, navyDark)
-                                        )
-                                    )
+                                    .background(brush = colors.home.editEssentials.itemBackground)
                                     .border(
                                         width = 1.5.dp,
-                                        brush = Brush.linearGradient(
-                                            colors = listOf(
-                                                colors.accent.primary.copy(alpha = 0.4f),
-                                                colors.accent.secondary.copy(alpha = 0.8f)
-                                            )
-                                        ),
+                                        brush = colors.home.editEssentials.itemBorder,
                                         shape = RoundedCornerShape(16.dp)
                                     ),
                                 contentAlignment = Alignment.Center
@@ -429,11 +426,11 @@ private fun ReorderableEssentialGrid(
                                     Icon(
                                         imageVector = item.iconVector,
                                         contentDescription = item.label,
-                                        tint = colors.accent.primary,
+                                        tint = colors.home.editEssentials.itemIcon,
                                         modifier = Modifier.size(30.dp)
                                     )
                                 } else if (item.iconRes != null) {
-                                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.accent.primary
+                                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.home.editEssentials.itemIcon
                                     Icon(
                                         painter = painterResource(id = item.iconRes),
                                         contentDescription = item.label,
@@ -446,7 +443,7 @@ private fun ReorderableEssentialGrid(
                             Text(
                                 textAlign = TextAlign.Center,
                                 text = item.label,
-                                color = Color.White,
+                                color = colors.home.editEssentials.itemLabel,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -459,13 +456,13 @@ private fun ReorderableEssentialGrid(
                                     .offset(x = 1.dp, y = (-2).dp)
                                     .size(18.dp)
                                     .clip(CircleShape)
-                                    .background(vibrantPink),
+                                    .background(colors.home.editEssentials.removeBadge),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = stringResource(R.string.edit_essentials_remove_desc),
-                                    tint = Color.White,
+                                    tint = colors.home.editEssentials.badgeIcon,
                                     modifier = Modifier.size(12.dp)
                                 )
                             }
@@ -566,19 +563,10 @@ fun DraggableEssentialItem(
                     .width(60.dp)
                     .height(50.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(indigoDark, navyDark)
-                        )
-                    )
+                    .background(brush = colors.home.editEssentials.itemBackground)
                     .border(
                         width = 1.5.dp,
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                colors.accent.primary.copy(alpha = 0.4f),
-                                colors.accent.secondary.copy(alpha = 0.8f)
-                            )
-                        ),
+                        brush = colors.home.editEssentials.itemBorder,
                         shape = RoundedCornerShape(16.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -587,11 +575,11 @@ fun DraggableEssentialItem(
                     Icon(
                         imageVector = item.iconVector,
                         contentDescription = item.label,
-                        tint = colors.accent.primary,
+                        tint = colors.home.editEssentials.itemIcon,
                         modifier = Modifier.size(30.dp)
                     )
                 } else if (item.iconRes != null) {
-                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.accent.primary
+                    val tint = if (item.useOriginalColor) Color.Unspecified else colors.home.editEssentials.itemIcon
                     Icon(
                         painter = painterResource(id = item.iconRes),
                         contentDescription = item.label,
@@ -606,7 +594,7 @@ fun DraggableEssentialItem(
             Text(
                 text = item.label,
                 textAlign = TextAlign.Center,
-                color = Color.White,
+                color = colors.home.editEssentials.itemLabel,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -614,8 +602,8 @@ fun DraggableEssentialItem(
 
         if (!isDragging) {
             val badgeColor = when (badgeType) {
-                BadgeType.REMOVE -> vibrantPink
-                BadgeType.ADD -> limeGreen
+                BadgeType.REMOVE -> colors.home.editEssentials.removeBadge
+                BadgeType.ADD -> colors.home.editEssentials.addBadge
             }
             val badgeIcon = when (badgeType) {
                 BadgeType.REMOVE -> Icons.Default.Close
@@ -634,7 +622,7 @@ fun DraggableEssentialItem(
                 Icon(
                     imageVector = badgeIcon,
                     contentDescription = if (badgeType == BadgeType.REMOVE) stringResource(R.string.edit_essentials_remove_desc) else stringResource(R.string.edit_essentials_add_desc),
-                    tint = Color.White,
+                    tint = colors.home.editEssentials.badgeIcon,
                     modifier = Modifier.size(12.dp)
                 )
             }
@@ -658,13 +646,13 @@ fun SectionHeader(
     ) {
         Text(
             text = title,
-            color = colors.accent.primary,
+            color = colors.home.editEssentials.sectionTitleText,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
         Text(
             text = stringResource(R.string.edit_essentials_items_count, count),
-            color = Color.Gray,
+            color = colors.home.editEssentials.hintText,
             fontSize = 12.sp
         )
     }
@@ -672,17 +660,40 @@ fun SectionHeader(
 
 // ── Preview ──────────────────────────────────────────────────────────────────
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-fun EditEssentialsContentPreview() {
+private fun EditEssentialsContentPreviewNeon() {
     val myMenu = allEssentialItems.take(ESSENTIALS_DISPLAY_COUNT)
     val others = allEssentialItems.drop(ESSENTIALS_DISPLAY_COUNT)
 
-    MaterialTheme {
+    AppTheme(colors = NeonColors) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(deepNavy)
+                .padding(16.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            EditEssentialsContent(
+                myMenuItems = myMenu,
+                otherItems = others,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.9f)
+            )
+        }
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun EditEssentialsContentPreviewBlackGold() {
+    val myMenu = allEssentialItems.take(ESSENTIALS_DISPLAY_COUNT)
+    val others = allEssentialItems.drop(ESSENTIALS_DISPLAY_COUNT)
+
+    AppTheme(colors = BlackGoldColors) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(16.dp),
             contentAlignment = Alignment.BottomCenter
         ) {

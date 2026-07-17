@@ -50,9 +50,11 @@ import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.profile.components.TransactionItem
 import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonAssets
 import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.lemonYellow
 import com.qpay.xcash.ui.theme.mistGray
@@ -112,21 +114,21 @@ private fun TransactionHistoryContent(
                     .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-            BalanceCard(
-                balance = uiState.balance,
-                tokenBalance = uiState.tokenBalance,
-                balanceVisible = balanceVisible,
-                onToggleVisibility = { balanceVisible = !balanceVisible }
-            )
+                BalanceCard(
+                    balance = uiState.balance,
+                    tokenBalance = uiState.tokenBalance,
+                    balanceVisible = balanceVisible,
+                    onToggleVisibility = { balanceVisible = !balanceVisible }
+                )
 
-            TimeFilterRow(selected = uiState.selectedTimeFilter, onSelect = onTimeFilter)
+                TimeFilterRow(selected = uiState.selectedTimeFilter, onSelect = onTimeFilter)
 
-            CategoryFilterRow(selected = uiState.selectedCategory, onSelect = onCategoryFilter)
+                CategoryFilterRow(selected = uiState.selectedCategory, onSelect = onCategoryFilter)
 
-            TransactionListCard(
-                transactions = uiState.filteredTransactions,
-                isLoading = uiState.isLoading
-            )
+                TransactionListCard(
+                    transactions = uiState.filteredTransactions,
+                    isLoading = uiState.isLoading
+                )
             }
         }
     }
@@ -142,114 +144,76 @@ private fun BalanceCard(
     val colors = LocalAppColors.current
     val assets = LocalAppAssets.current
     val txColors = colors.transactionHistory
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .then(
-//                if (colors.effect.enableGlow) {
-//                    Modifier.neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 10.dp, borderRadius = 16.dp)
-//                } else Modifier
-//            )
-//            .background(txColors.cardBackground, RoundedCornerShape(16.dp))
-//            .border(1.5.dp, txColors.balanceCardBorder, RoundedCornerShape(16.dp))
-//            .padding(16.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    width = 1.5.dp,
-                    brush = txColors.balanceCardBorder,
-                    shape = RoundedCornerShape(16.dp))
-                .padding(16.dp),
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.tx_balance_label),
-                    color = txColors.balanceLabelText,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Icon(
-                    imageVector = if (balanceVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                    contentDescription = null,
-                    tint = txColors.balanceLabelText,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) { onToggleVisibility() }
-                )
-            }
-            Text(
-                text = if (balanceVisible) "PHP ${formatAmount(balance)}" else "PHP ••••••",
-                color = txColors.balanceValueText,
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 3.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.5.dp,
+                brush = txColors.balanceCardBorder,
+                shape = RoundedCornerShape(16.dp)
             )
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(verticalAlignment = Alignment.Companion.CenterVertically) {
-                Icon(
-                    painter = painterResource(assets.balanceCoinIcon),
-                    contentDescription = stringResource(id = R.string.balance_coin),
-                    tint = Color.Companion.Unspecified,
-
-                    modifier = Modifier.Companion
-                        .then(
-                            if (colors.effect.enableGlow)
-                                Modifier.neonGlow(color = lemonYellow, alpha = 0.7f, glowRadius = 10.dp)
-                            else Modifier
-                        )
-                        .size(50.dp)
-                )
-                Spacer(modifier = Modifier.Companion.width(10.dp))
-                GradientText(
-                    text = if (!balanceVisible) "••••" else String.format(
-                        Locale.US,
-                        "%,.0f",
-                        tokenBalance
-                    ),
-                    color = mistGray,
-                    brush = colors.gradient.goldShimmer,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Companion.Bold
-                )
-            }
+            .padding(16.dp),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.tx_balance_label),
+                color = txColors.balanceLabelText,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                imageVector = if (balanceVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                contentDescription = null,
+                tint = txColors.balanceLabelText,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { onToggleVisibility() }
+            )
         }
+        Text(
+            text = if (balanceVisible) "PHP ${formatAmount(balance)}" else "PHP ••••••",
+            color = txColors.balanceValueText,
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(vertical = 3.dp)
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Row(verticalAlignment = Alignment.Companion.CenterVertically) {
+            Icon(
+                painter = painterResource(assets.balanceCoinIcon),
+                contentDescription = stringResource(id = R.string.balance_coin),
+                tint = Color.Companion.Unspecified,
 
-//        Spacer(Modifier.width(12.dp))
-//
-//        Box(
-//            modifier = Modifier
-//                .size(76.dp)
-//                .background(txColors.tokenCircleBackground, CircleShape)
-//                .border(1.5.dp, txColors.tokenCircleBorder, CircleShape),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//                Text(
-//                    text = if (balanceVisible) formatAmount(tokenBalance).substringBefore(".") else "●●●",
-//                    color = txColors.tokenValueText,
-//                    fontSize = 14.sp,
-//                    fontWeight = FontWeight.Bold
-//                )
-//                Text(
-//                    text = stringResource(R.string.tx_x_points_label),
-//                    color = txColors.tokenLabelText,
-//                    fontSize = 8.sp,
-//                    letterSpacing = 0.5.sp
-//                )
-//            }
-//        }
-//    }
+                modifier = Modifier.Companion
+                    .then(
+                        if (colors.effect.enableGlow)
+                            Modifier.neonGlow(color = lemonYellow, alpha = 0.7f, glowRadius = 10.dp)
+                        else Modifier
+                    )
+                    .size(50.dp)
+            )
+            Spacer(modifier = Modifier.Companion.width(10.dp))
+            GradientText(
+                text = if (!balanceVisible) "••••" else String.format(
+                    Locale.US,
+                    "%,.0f",
+                    tokenBalance
+                ),
+                color = mistGray,
+                brush = colors.gradient.goldShimmer,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Companion.Bold
+            )
+        }
+    }
 }
 
 @Composable
@@ -388,7 +352,12 @@ private fun TransactionListCard(
             .fillMaxWidth()
             .then(
                 if (colors.effect.enableGlow) {
-                    Modifier.neonGlow(colors.accent.primary, alpha = 0.15f, glowRadius = 8.dp, borderRadius = 16.dp)
+                    Modifier.neonGlow(
+                        colors.accent.primary,
+                        alpha = 0.15f,
+                        glowRadius = 8.dp,
+                        borderRadius = 16.dp
+                    )
                 } else Modifier
             )
             .background(txColors.cardBackground, RoundedCornerShape(16.dp))
@@ -402,9 +371,13 @@ private fun TransactionListCard(
                         .padding(40.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = colors.accent.primary, modifier = Modifier.size(32.dp))
+                    CircularProgressIndicator(
+                        color = colors.accent.primary,
+                        modifier = Modifier.size(32.dp)
+                    )
                 }
             }
+
             transactions.isEmpty() -> {
                 Box(
                     modifier = Modifier
@@ -419,6 +392,7 @@ private fun TransactionListCard(
                     )
                 }
             }
+
             else -> {
                 transactions.forEachIndexed { index, tx ->
                     TransactionItem(tx)
@@ -438,7 +412,7 @@ private fun TransactionListCard(
 @Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
 private fun TransactionHistoryPreviewNeon() {
-    AppTheme(colors = NeonColors) {
+    AppTheme(colors = NeonColors, assets = NeonAssets) {
         TransactionHistoryContent()
     }
 }
@@ -446,7 +420,7 @@ private fun TransactionHistoryPreviewNeon() {
 @Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
 @Composable
 private fun TransactionHistoryPreviewBlackGold() {
-    AppTheme(colors = BlackGoldColors) {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         TransactionHistoryContent()
     }
 }

@@ -12,11 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,8 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -38,15 +34,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.qpay.xcash.R
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonColors
 import com.qpay.xcash.ui.theme.neonPink
 import com.qpay.xcash.ui.theme.neonRed
 
-private val DialogBg = Color(0xFF0D1B2E)
 private val InputBg = Color(0xFF0A1220)
-private val warringText = Color(0xFFFF7474)
-private val cancelText = Color(0xFFF6A5F9)
-private val DeleteButtonBg = Color(0xFF5C1010)
 
 @Composable
 fun DeleteAccountDialog(
@@ -62,18 +57,21 @@ fun DeleteAccountDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(neonPink, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
-                .background(DialogBg, RoundedCornerShape(20.dp))
+                .then(
+                    if (colors.effect.enableGlow)
+                        Modifier.neonGlow(neonPink, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
+                    else Modifier
+                )
+                .background(colors.bg.surface, RoundedCornerShape(20.dp))
                 .border(1.5.dp, colors.accent.primary.copy(0.5f), RoundedCornerShape(20.dp))
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Warning icon
             Icon(
-//                imageVector = Icons.Outlined.Warning,
                 painter = painterResource(R.mipmap.ic_warning),
                 contentDescription = null,
-                tint = warringText,
+                tint = colors.home.deleteDialog.warningTint,
                 modifier = Modifier
                     .size(68.dp)
                     .align(Alignment.CenterHorizontally)
@@ -82,7 +80,7 @@ fun DeleteAccountDialog(
             // Title
             Text(
                 text = stringResource(R.string.delete_account_dialog_title),
-                color = warringText,
+                color = colors.home.deleteDialog.warningTint,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -126,15 +124,14 @@ fun DeleteAccountDialog(
 //            )
 
             // Delete Account button
+            val deleteDialog = colors.home.deleteDialog
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .background(
-                        if (confirmEnabled) DeleteButtonBg else DeleteButtonBg.copy(alpha = 0.4f),
-                        RoundedCornerShape(25.dp)
-                    )
-                    .border(1.5.dp, warringText.copy(if (confirmEnabled) 0.8f else 0.3f), RoundedCornerShape(25.dp))
+                    .alpha(if (confirmEnabled) 1f else 0.4f)
+                    .background(brush = deleteDialog.deleteButtonBg, shape = RoundedCornerShape(25.dp))
+                    .border(1.5.dp, deleteDialog.deleteButtonBorder.copy(0.8f), RoundedCornerShape(25.dp))
                     .clickable(
                         enabled = confirmEnabled,
                         indication = null,
@@ -145,7 +142,7 @@ fun DeleteAccountDialog(
             ) {
                 Text(
                     text = stringResource(R.string.delete_account_dialog_confirm),
-                    color = if (confirmEnabled) warringText else warringText.copy(alpha = 0.4f),
+                    color = deleteDialog.deleteButtonText,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -156,7 +153,12 @@ fun DeleteAccountDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .border(1.5.dp, cancelText.copy(0.7f), RoundedCornerShape(25.dp))
+                    .then(
+                        if (deleteDialog.cancelBg != null)
+                            Modifier.background(brush = deleteDialog.cancelBg, shape = RoundedCornerShape(25.dp))
+                        else Modifier
+                    )
+                    .border(1.5.dp, deleteDialog.cancelBorder.copy(0.8f), RoundedCornerShape(25.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
@@ -166,7 +168,7 @@ fun DeleteAccountDialog(
             ) {
                 Text(
                     text = stringResource(R.string.delete_account_dialog_cancel),
-                    color = cancelText,
+                    color = deleteDialog.cancelText,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -175,10 +177,22 @@ fun DeleteAccountDialog(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0A0E1A)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
-private fun DeleteAccountDialogPreview() {
-    MaterialTheme {
+private fun DeleteAccountDialogPreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        DeleteAccountDialog(
+            userEmail = "user@example.com",
+            onConfirm = {},
+            onDismiss = {}
+        )
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun DeleteAccountDialogPreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
         DeleteAccountDialog(
             userEmail = "user@example.com",
             onConfirm = {},

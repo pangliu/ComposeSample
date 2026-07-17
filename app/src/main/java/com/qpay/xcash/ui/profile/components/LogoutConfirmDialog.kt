@@ -47,7 +47,12 @@ fun LogoutConfirmDialog(
                 .fillMaxWidth()
                 .then(
                     if (colors.effect.enableGlow)
-                        Modifier.neonGlow(colors.accent.primary, alpha = 0.3f, glowRadius = 12.dp, borderRadius = 20.dp)
+                        Modifier.neonGlow(
+                            colors.accent.primary,
+                            alpha = 0.3f,
+                            glowRadius = 12.dp,
+                            borderRadius = 20.dp
+                        )
                     else Modifier
                 )
                 .background(colors.profile.logoutDialog.background, RoundedCornerShape(20.dp))
@@ -80,7 +85,10 @@ fun LogoutConfirmDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .background(colors.profile.logoutDialog.confirmButtonFill, RoundedCornerShape(24.dp))
+                    .background(
+                        colors.profile.logoutDialog.confirmButtonFill,
+                        RoundedCornerShape(24.dp)
+                    )
                     .then(
                         colors.profile.logoutDialog.confirmButtonBorder?.let {
                             Modifier.border(1.5.dp, it, RoundedCornerShape(24.dp))
@@ -105,8 +113,15 @@ fun LogoutConfirmDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .background(colors.profile.logoutDialog.cancelButtonFill, RoundedCornerShape(24.dp))
-                    .border(1.5.dp, colors.profile.logoutDialog.cancelButtonBorder, RoundedCornerShape(24.dp))
+                    .background(
+                        colors.profile.logoutDialog.cancelButtonFill,
+                        RoundedCornerShape(24.dp)
+                    )
+                    .border(
+                        1.5.dp,
+                        colors.profile.logoutDialog.cancelButtonBorder,
+                        RoundedCornerShape(24.dp)
+                    )
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
