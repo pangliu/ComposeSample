@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -42,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogWindowProvider
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.ContactType
 import com.qpay.xcash.network.model.response.FriendResponse
@@ -74,6 +77,11 @@ fun SelectSplitPartnerDialog(
     }
 
     Dialog(onDismissRequest = onDismiss) {
+        val view = LocalView.current
+        SideEffect {
+            val window = (view.parent as? DialogWindowProvider)?.window
+            window?.setDimAmount(0.8f) // 0f = 完全透明, 1f = 全黑
+        }
         Column(modifier = Modifier.fillMaxWidth()) {
             // Dialog 外框
             Column(
@@ -251,8 +259,9 @@ fun SelectSplitPartnerDialog(
                         RoundedCornerShape(50.dp)
                     )
                     .background(
-                        if (isConfirmEnabled) dialogColors.confirmButtonFill else dialogColors.confirmButtonDisabledFill,
-                        RoundedCornerShape(50.dp)
+                        brush = if (isConfirmEnabled) dialogColors.confirmButtonFill else dialogColors.confirmButtonDisabledFill,
+                        shape = RoundedCornerShape(50.dp),
+                        alpha = if (isConfirmEnabled) 1f else 0.5f
                     )
                     .padding(horizontal = 30.dp)
                     .clickable(

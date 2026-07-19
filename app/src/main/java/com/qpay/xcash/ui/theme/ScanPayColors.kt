@@ -330,11 +330,13 @@ val BlackGoldSplitBillDialogColors = SplitBillDialogColors(
     confirmButtonFill = Brush.horizontalGradient(
         colors = listOf(camelGold, apricotGold, camelGold)
     ),
-    confirmButtonDisabledFill = SolidColor(deepBronze.copy(alpha = 0.35f)),
+    confirmButtonDisabledFill = Brush.horizontalGradient(
+        colors = listOf(camelGold, apricotGold, camelGold)
+    ),
     confirmButtonBorder = apricotGold,
     confirmButtonDisabledBorder = apricotGold.copy(alpha = 0.3f),
     confirmButtonText = themeBlack,
-    confirmButtonDisabledText = warmSand.copy(alpha = 0.4f),
+    confirmButtonDisabledText = Color.Black.copy(alpha = 0.6f),
 )
 
 val NeonSelectPartnerDialogColors = SelectPartnerDialogColors(
@@ -385,11 +387,14 @@ val BlackGoldSelectPartnerDialogColors = SelectPartnerDialogColors(
     confirmButtonFill = Brush.horizontalGradient(
         colors = listOf(camelGold, apricotGold, camelGold)
     ),
-    confirmButtonDisabledFill = SolidColor(deepBronze.copy(alpha = 0.35f)),
+//    confirmButtonDisabledFill = SolidColor(deepBronze.copy(alpha = 0.65f)),
+    confirmButtonDisabledFill = Brush.horizontalGradient(
+        colors = listOf(camelGold, apricotGold, camelGold)
+    ),
     confirmButtonBorder = apricotGold,
     confirmButtonDisabledBorder = apricotGold.copy(alpha = 0.3f),
     confirmButtonText = themeBlack,
-    confirmButtonDisabledText = warmSand.copy(alpha = 0.4f),
+    confirmButtonDisabledText = Color.Black.copy(alpha = 0.6f),
 )
 
 val NeonScanPayColors = ScanPayColors(

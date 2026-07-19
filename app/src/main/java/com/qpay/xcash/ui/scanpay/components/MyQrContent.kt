@@ -309,6 +309,16 @@ internal fun MyQrContent(
                     .weight(1f)
                     .align(Alignment.CenterVertically)
             ) {
+                Spacer(
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                        .fillMaxWidth()
+                        .height(2.dp)
+                        .background(
+                            color = colors.text.body,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -346,6 +356,16 @@ internal fun MyQrContent(
                     color = colors.text.body,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
+                )
+                Spacer(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .fillMaxWidth()
+                        .height(2.dp)
+                        .background(
+                            color = colors.text.body,
+                            shape = RoundedCornerShape(10.dp)
+                        )
                 )
             }
             Image(
