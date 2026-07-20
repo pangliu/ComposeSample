@@ -31,10 +31,16 @@ data class AppAssets(
     @DrawableRes val voucherTicketBg: Int,
     @DrawableRes val subPageBackground: Int?,    // 子頁面全屏背景圖（null = 純色 bg.page）
     @DrawableRes val scanPayBackground: Int?,    // ScanPayScreen 頁面背景圖（null = 純色 bg.page）
+    @DrawableRes val scanPayYellowStarDecor: Int?, // ScanPayScreen 底部左側黃星裝飾圖（null = 不顯示）
+    @DrawableRes val scanPayTreeDecor: Int?,     // ScanPayScreen 底部右側樹裝飾圖（null = 不顯示）
     @DrawableRes val qrCodeBorder: Int,          // MyQrContent QR code 外框圖
     @DrawableRes val myQrPanelBg: Int?,          // MyQrContent MY_QR 模式疊在外框圖上的內層底圖（null = 不顯示）
     @DrawableRes val qrSectionLeftDecor: Int?,   // MyQrContent QR code 區塊左側裝飾圖（null = 不顯示）
     @DrawableRes val qrSectionRightDecor: Int?,  // MyQrContent QR code 區塊右側裝飾圖（null = 不顯示）
+    @DrawableRes val confirmPaymentQrCrownDecor: Int?, // ConfirmPaymentScreen QR code 區塊皇冠裝飾圖（null = 不顯示，僅 Black Gold 顯示）
+    @DrawableRes val confirmPaymentBalanceDecor: Int?, // ConfirmPaymentScreen Balance 區塊左側裝飾圖是否顯示旗標（null = 透明但保留版面空間，僅 Neon 顯示；實際圖片統一用 myQrLeftDecorIcon）
+    @DrawableRes val transactionSuccessfulQrCrownDecor: Int?, // TransactionSuccessfulScreen QR code 區塊皇冠裝飾圖（null = 不顯示，僅 Black Gold 顯示）
+    val transactionSuccessfulBalanceDecorVisible: Boolean, // TransactionSuccessfulScreen Balance 區塊左右裝飾圖（balance_left_image / balance_right_image）是否顯示（false = 透明但保留版面空間，僅 Black Gold 為 false；實際圖片統一用 myQrLeftDecorIcon / myQrRightDecorIcon）
     @DrawableRes val myQrLeftDecorIcon: Int,     // MyQrContent / InputAmountScreen Balance 區塊左側裝飾圖（Neon 車子 / Black Gold 皇冠）
     @DrawableRes val myQrRightDecorIcon: Int,    // MyQrContent / InputAmountScreen Balance 區塊右側裝飾圖（Neon 猴子 / Black Gold 獅子）
     @DrawableRes val myQrActionButtonBg: Int?,   // MyQrActionButton 背景圖（null = 純色 + 邊框）
@@ -82,10 +88,16 @@ val NeonAssets = AppAssets(
     voucherTicketBg = R.drawable.bg_voucher_ticket,
     subPageBackground = R.mipmap.bg_sub_page,
     scanPayBackground = null,
+    scanPayYellowStarDecor = R.mipmap.bg_yellow_star,
+    scanPayTreeDecor = R.mipmap.ic_tree,
     qrCodeBorder = R.drawable.bg_qrcode_border,
     myQrPanelBg = null,
     qrSectionLeftDecor = R.mipmap.bg_left_qrcode,
     qrSectionRightDecor = R.mipmap.bg_right_qrcode,
+    confirmPaymentQrCrownDecor = null,
+    confirmPaymentBalanceDecor = R.mipmap.ic_car,
+    transactionSuccessfulQrCrownDecor = null,
+    transactionSuccessfulBalanceDecorVisible = true,
     myQrLeftDecorIcon = R.mipmap.ic_car,
     myQrRightDecorIcon = R.mipmap.ic_monkey,
     myQrActionButtonBg = null,
@@ -133,10 +145,16 @@ val BlackGoldAssets = AppAssets(
     voucherTicketBg = R.drawable.bg_voucher_ticket_black_gold,
     subPageBackground = null,
     scanPayBackground = R.drawable.bg_scan_pay_black_gold,
+    scanPayYellowStarDecor = null,
+    scanPayTreeDecor = null,
     qrCodeBorder = R.drawable.bg_qrcode_border_black_gold,
     myQrPanelBg = R.drawable.bg_my_qrcode_black_gold,
     qrSectionLeftDecor = null,
     qrSectionRightDecor = null,
+    confirmPaymentQrCrownDecor = R.drawable.ic_crown_black_gold,
+    confirmPaymentBalanceDecor = null,
+    transactionSuccessfulQrCrownDecor = R.drawable.ic_crown_black_gold,
+    transactionSuccessfulBalanceDecorVisible = false,
     myQrLeftDecorIcon = R.drawable.ic_crown_black_gold,
     myQrRightDecorIcon = R.drawable.ic_lion_black_gold,
     myQrActionButtonBg = R.drawable.bg_myqr_action_button_black_gold,

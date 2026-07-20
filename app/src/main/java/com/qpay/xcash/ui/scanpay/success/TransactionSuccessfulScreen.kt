@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,7 +29,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
@@ -152,141 +155,129 @@ private fun TransactionSuccessfulContent(
 //                                        contentScale = ContentScale.FillBounds
                                     )
                                     .padding(bottom = 20.dp)
-                            Column(
+                            Box(
                                 modifier = Modifier
-                                    .testTag("transaction_successful")
-                                    .then(cardModifier)
                                     .align(Alignment.CenterVertically)
                                     .weight(0.7f)
                             ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 25.dp)
-                                        .padding(horizontal = 20.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(60.dp)
-                                            .then(
-                                                if (colors.effect.enableGlow)
-                                                    Modifier.neonGlow(
-                                                        color = colors.accent.primary,
-                                                        alpha = 0.6f,
-                                                        glowRadius = 8.dp,
-                                                        borderRadius = 8.dp
-                                                    )
-                                                else Modifier
-                                            )
-                                            .then(
-                                                colors.scanPay.success.avatarBorder?.let { borderColor ->
-                                                    Modifier.border(
-                                                        width = 1.5.dp,
-                                                        color = borderColor,
-                                                        shape = RoundedCornerShape(12.dp)
-                                                    )
-                                                } ?: Modifier
-                                            )
-                                            .background(
-                                                color = colors.bg.page,
-                                                shape = RoundedCornerShape(12.dp)
-                                            )
-                                    )
-                                    Spacer(Modifier.width(8.dp))
-                                    Column(modifier = Modifier.fillMaxWidth()) {
-                                        Text(
-                                            text = stringResource(R.string.transaction_successful_paid_to),
-                                            color = Color.White,
-                                            fontSize = 14.sp
-                                        )
-                                        Text(
-                                            text = "@${uiState.recipientNickName}",
-                                            color = colors.scanPay.success.nickNameText,
-                                            fontSize = 14.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Text(
-                                            text = uiState.recipientName,
-                                            color = colors.scanPay.success.nameText,
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Normal
-                                        )
-                                    }
-                                }
-                                Spacer(Modifier.height(15.dp))
-                                Spacer(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 30.dp)
-                                    .height(1.5.dp)
-                                    .background(colors.scanPay.success.divider))
-                                Spacer(Modifier.height(8.dp))
-                                val amountGlowShadow = if (colors.effect.enableGlow)
-                                    Shadow(color = colors.accent.primary, blurRadius = 15f)
-                                else null
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.input_amount_currency),
-                                        color = colors.accent.primary,
-                                        fontSize = 32.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        style = TextStyle(shadow = amountGlowShadow)
-                                    )
-                                    Spacer(Modifier.width(5.dp))
-                                    Text(
-                                        text = formatAmount(uiState.amount.toDoubleOrNull() ?: 0.0),
-                                        color = colors.accent.primary,
-                                        fontSize = 32.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        style = TextStyle(shadow = amountGlowShadow)
-                                    )
-                                }
-                                Spacer(Modifier.height(8.dp))
-                                Spacer(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 30.dp)
-                                    .height(1.5.dp)
-                                    .background(colors.scanPay.success.divider))
-                                Spacer(Modifier.height(20.dp))
-
-                                // TODO: 從 API 取得實際數字
-                                val originalTotal = 350.00
-                                val pointsApplied = 50.00
-                                val xPointsUsed = 5000
-                                val finalAmount = originalTotal - pointsApplied
-
                                 Column(
                                     modifier = Modifier
-                                        .testTag("transaction-successful-content")
-                                        .fillMaxWidth(),
-                                    verticalArrangement = Arrangement.spacedBy(1.dp)
+                                        .testTag("transaction_successful")
+                                        .then(cardModifier)
+//                                        .align(Alignment.CenterVertically)
+//                                        .weight(0.7f)
                                 ) {
                                     Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 25.dp)
+                                            .padding(horizontal = 20.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Text(
-                                            text = "Original Total:",
-                                            color = Color.White,
-                                            fontSize = 11.sp,
-                                            lineHeight = 15.sp
+                                        Box(
+                                            modifier = Modifier
+                                                .size(60.dp)
+                                                .then(
+                                                    if (colors.effect.enableGlow)
+                                                        Modifier.neonGlow(
+                                                            color = colors.accent.primary,
+                                                            alpha = 0.6f,
+                                                            glowRadius = 8.dp,
+                                                            borderRadius = 8.dp
+                                                        )
+                                                    else Modifier
+                                                )
+                                                .then(
+                                                    colors.scanPay.success.avatarBorder?.let { borderColor ->
+                                                        Modifier.border(
+                                                            width = 1.5.dp,
+                                                            color = borderColor,
+                                                            shape = RoundedCornerShape(12.dp)
+                                                        )
+                                                    } ?: Modifier
+                                                )
+                                                .background(
+                                                    color = colors.bg.page,
+                                                    shape = RoundedCornerShape(12.dp)
+                                                )
                                         )
+                                        Spacer(Modifier.width(8.dp))
+                                        Column(modifier = Modifier.fillMaxWidth()) {
+                                            Text(
+                                                text = stringResource(R.string.transaction_successful_paid_to),
+                                                color = Color.White,
+                                                fontSize = 14.sp
+                                            )
+                                            Text(
+                                                text = "@${uiState.recipientNickName}",
+                                                color = colors.scanPay.success.nickNameText,
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            Text(
+                                                text = uiState.recipientName,
+                                                color = colors.scanPay.success.nameText,
+                                                fontSize = 12.sp,
+                                                fontWeight = FontWeight.Normal
+                                            )
+                                        }
+                                    }
+                                    Spacer(Modifier.height(15.dp))
+                                    Spacer(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 30.dp)
+                                            .height(1.5.dp)
+                                            .background(colors.scanPay.success.divider)
+                                    )
+                                    Spacer(Modifier.height(8.dp))
+                                    val amountGlowShadow = if (colors.effect.enableGlow)
+                                        Shadow(color = colors.accent.primary, blurRadius = 15f)
+                                    else null
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
                                         Text(
-                                            text = "PHP %,.2f".format(originalTotal),
-                                            color = colors.scanPay.success.detailAmountText,
-                                            fontSize = 11.sp,
+                                            text = stringResource(R.string.input_amount_currency),
+                                            color = colors.accent.primary,
+                                            fontSize = 32.sp,
                                             fontWeight = FontWeight.Bold,
-                                            lineHeight = 15.sp
+                                            style = TextStyle(shadow = amountGlowShadow)
+                                        )
+                                        Spacer(Modifier.width(5.dp))
+                                        Text(
+                                            text = formatAmount(
+                                                uiState.amount.toDoubleOrNull() ?: 0.0
+                                            ),
+                                            color = colors.accent.primary,
+                                            fontSize = 32.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            style = TextStyle(shadow = amountGlowShadow)
                                         )
                                     }
+                                    Spacer(Modifier.height(8.dp))
+                                    Spacer(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 30.dp)
+                                            .height(1.5.dp)
+                                            .background(colors.scanPay.success.divider)
+                                    )
+                                    Spacer(Modifier.height(20.dp))
+
+                                    // TODO: 從 API 取得實際數字
+                                    val originalTotal = 350.00
+                                    val pointsApplied = 50.00
+                                    val xPointsUsed = 5000
+                                    val finalAmount = originalTotal - pointsApplied
+
                                     Column(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        verticalArrangement = Arrangement.spacedBy(0.dp)
+                                        modifier = Modifier
+                                            .testTag("transaction-successful-content")
+                                            .fillMaxWidth(),
+                                        verticalArrangement = Arrangement.spacedBy(1.dp)
                                     ) {
                                         Row(
                                             modifier = Modifier.fillMaxWidth(),
@@ -294,74 +285,108 @@ private fun TransactionSuccessfulContent(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Text(
-                                                text = "Points Applied:",
+                                                text = "Original Total:",
                                                 color = Color.White,
                                                 fontSize = 11.sp,
-                                                lineHeight = 13.sp
+                                                lineHeight = 15.sp
                                             )
                                             Text(
-                                                text = "-PHP %,.2f".format(pointsApplied),
+                                                text = "PHP %,.2f".format(originalTotal),
                                                 color = colors.scanPay.success.detailAmountText,
                                                 fontSize = 11.sp,
                                                 fontWeight = FontWeight.Bold,
-                                                lineHeight = 13.sp
+                                                lineHeight = 15.sp
                                             )
+                                        }
+                                        Column(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            verticalArrangement = Arrangement.spacedBy(0.dp)
+                                        ) {
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.Center,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    text = "Points Applied:",
+                                                    color = Color.White,
+                                                    fontSize = 11.sp,
+                                                    lineHeight = 13.sp
+                                                )
+                                                Text(
+                                                    text = "-PHP %,.2f".format(pointsApplied),
+                                                    color = colors.scanPay.success.detailAmountText,
+                                                    fontSize = 11.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    lineHeight = 13.sp
+                                                )
+                                            }
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.Center
+                                            ) {
+                                                Text(
+                                                    text = buildAnnotatedString {
+                                                        withStyle(
+                                                            SpanStyle(
+                                                                color = Color.White,
+                                                                fontWeight = FontWeight.Bold
+                                                            )
+                                                        ) {
+                                                            append("(via ")
+                                                        }
+                                                        withStyle(
+                                                            SpanStyle(
+                                                                color = colors.scanPay.success.detailAmountText,
+                                                                fontWeight = FontWeight.Bold
+                                                            )
+                                                        ) {
+                                                            append("%,d".format(xPointsUsed))
+                                                        }
+                                                        withStyle(
+                                                            SpanStyle(
+                                                                color = Color.White,
+                                                                fontWeight = FontWeight.Bold
+                                                            )
+                                                        ) {
+                                                            append(" X-points)")
+                                                        }
+                                                    },
+                                                    fontSize = 11.sp,
+                                                    lineHeight = 13.sp
+                                                )
+                                            }
                                         }
                                         Row(
                                             modifier = Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.Center
+                                            horizontalArrangement = Arrangement.Center,
+                                            verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Text(
-                                                text = buildAnnotatedString {
-                                                    withStyle(
-                                                        SpanStyle(
-                                                            color = Color.White,
-                                                            fontWeight = FontWeight.Bold
-                                                        )
-                                                    ) {
-                                                        append("(via ")
-                                                    }
-                                                    withStyle(
-                                                        SpanStyle(
-                                                            color = colors.scanPay.success.detailAmountText,
-                                                            fontWeight = FontWeight.Bold
-                                                        )
-                                                    ) {
-                                                        append("%,d".format(xPointsUsed))
-                                                    }
-                                                    withStyle(
-                                                        SpanStyle(
-                                                            color = Color.White,
-                                                            fontWeight = FontWeight.Bold
-                                                        )
-                                                    ) {
-                                                        append(" X-points)")
-                                                    }
-                                                },
+                                                text = "Final Amount Paid:",
+                                                color = Color.White,
                                                 fontSize = 11.sp,
-                                                lineHeight = 13.sp
+                                                lineHeight = 15.sp
+                                            )
+                                            Text(
+                                                text = "PHP %,.2f".format(finalAmount),
+                                                color = colors.scanPay.success.detailAmountText,
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                lineHeight = 15.sp
                                             )
                                         }
                                     }
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.Center,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = "Final Amount Paid:",
-                                            color = Color.White,
-                                            fontSize = 11.sp,
-                                            lineHeight = 15.sp
-                                        )
-                                        Text(
-                                            text = "PHP %,.2f".format(finalAmount),
-                                            color = colors.scanPay.success.detailAmountText,
-                                            fontSize = 11.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            lineHeight = 15.sp
-                                        )
-                                    }
+                                }
+                                assets.transactionSuccessfulQrCrownDecor?.let { resId ->
+                                    Image(
+                                        painter = painterResource(resId),
+                                        contentDescription = "qrcode_crown",
+                                        modifier = Modifier
+                                            .size(80.dp)
+                                            .offset(x = -35.dp, y = -40.dp)
+                                            .rotate(-35f)
+                                    )
                                 }
                             }
                             val rightDecor = assets.qrSectionRightDecor
@@ -417,9 +442,10 @@ private fun TransactionSuccessfulContent(
             ) {
                 Image(
                     painter = painterResource(assets.myQrLeftDecorIcon),
-                    contentDescription = null,
+                    contentDescription = "balance_left_image",
                     modifier = Modifier
                         .size(80.dp)
+                        .alpha(if (assets.transactionSuccessfulBalanceDecorVisible) 1f else 0f)
                         .then(
                             if (colors.effect.enableGlow)
                                 Modifier.neonGlow(
@@ -502,9 +528,10 @@ private fun TransactionSuccessfulContent(
                 }
                 Image(
                     painter = painterResource(assets.myQrRightDecorIcon),
-                    contentDescription = null,
+                    contentDescription = "balance_right_image",
                     modifier = Modifier
-                        .size(60.dp)
+                        .size(80.dp)
+                        .alpha(if (assets.transactionSuccessfulBalanceDecorVisible) 1f else 0f)
                         .then(
                             if (colors.effect.enableGlow)
                                 Modifier.neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)

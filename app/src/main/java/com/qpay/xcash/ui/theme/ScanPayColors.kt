@@ -3,6 +3,7 @@ package com.qpay.xcash.ui.theme
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import kotlin.collections.listOf
 
 // ui/scanpay/ 資料夾底下畫面專屬顏色
 
@@ -11,6 +12,7 @@ data class ScanPayColors(
     val qrCodeColor: Color,          // MyQrContent QR code 本體顏色
     val qrNickNameText: Color,       // MyQrContent MY_QR 上方 @nickName 文字
     val qrUserNameText: Color,       // MyQrContent MY_QR 下方 userName 文字
+    val balanceDivider: Color,
     val balanceAmountText: Color,    // MyQrContent Balance 金額文字
     val balanceToggleIcon: Color,    // MyQrContent Balance 顯示/隱藏眼睛圖示
     val questCardBackground: Color,  // MyQrContent Daily Quest 卡片底色
@@ -306,11 +308,13 @@ val BlackGoldSplitBillDialogColors = SplitBillDialogColors(
     titleText = paleChampagne,
     // 由左至右：caramelGold → apricotGold → caramelGold（與 QrModeTabSelector 一致）
     toggleBorder = Brush.horizontalGradient(
-        colors = listOf(caramelGold, apricotGold, caramelGold)
+//        colors = listOf(caramelGold, apricotGold, caramelGold)
+        colors = listOf(bronzeGold, paleChampagne, bronzeGold)
     ),
     toggleBackground = richBlack,
     toggleSelectedFill = Brush.horizontalGradient(
-        colors = listOf(camelGold, apricotGold, camelGold)
+//        colors = listOf(camelGold, apricotGold, camelGold)
+        colors = listOf(bronzeGold, paleChampagne, bronzeGold)
     ),
     toggleSelectedText = themeBlack,
     toggleUnselectedText = warmSand,
@@ -328,10 +332,12 @@ val BlackGoldSplitBillDialogColors = SplitBillDialogColors(
     remainingAmountText = antiqueGold,
     // 由左至右：camelGold → apricotGold → camelGold（與 Assign Amounts 按鈕一致）
     confirmButtonFill = Brush.horizontalGradient(
-        colors = listOf(camelGold, apricotGold, camelGold)
+//        colors = listOf(camelGold, apricotGold, camelGold)
+        colors = listOf(bronzeGold, paleChampagne, bronzeGold)
     ),
     confirmButtonDisabledFill = Brush.horizontalGradient(
-        colors = listOf(camelGold, apricotGold, camelGold)
+//        colors = listOf(camelGold, apricotGold, camelGold)
+        colors = listOf(bronzeGold, paleChampagne, bronzeGold)
     ),
     confirmButtonBorder = apricotGold,
     confirmButtonDisabledBorder = apricotGold.copy(alpha = 0.3f),
@@ -385,11 +391,13 @@ val BlackGoldSelectPartnerDialogColors = SelectPartnerDialogColors(
     totalAmountText = antiqueGold,
     // 由左至右：camelGold → apricotGold → camelGold（與 Review Details 按鈕一致）
     confirmButtonFill = Brush.horizontalGradient(
-        colors = listOf(camelGold, apricotGold, camelGold)
+//        colors = listOf(camelGold, apricotGold, camelGold)
+        colors = listOf(bronzeGold, paleChampagne, bronzeGold)
     ),
 //    confirmButtonDisabledFill = SolidColor(deepBronze.copy(alpha = 0.65f)),
     confirmButtonDisabledFill = Brush.horizontalGradient(
-        colors = listOf(camelGold, apricotGold, camelGold)
+        colors = listOf(bronzeGold, paleChampagne, bronzeGold)
+//        colors = listOf(camelGold, apricotGold, camelGold)
     ),
     confirmButtonBorder = apricotGold,
     confirmButtonDisabledBorder = apricotGold.copy(alpha = 0.3f),
@@ -402,6 +410,7 @@ val NeonScanPayColors = ScanPayColors(
     qrCodeColor = neonCyan,
     qrNickNameText = neonCyan,
     qrUserNameText = silverGray,
+    balanceDivider = neonCyan.copy(0.6f),
     balanceAmountText = themeWhite,
     balanceToggleIcon = Color.Gray,
     questCardBackground = themeBlack.copy(alpha = 0.5f),
@@ -429,6 +438,7 @@ val BlackGoldScanPayColors = ScanPayColors(
     qrCodeColor = espressoBrown,
     qrNickNameText = espressoBrown,
     qrUserNameText = espressoBrown,
+    balanceDivider = silverGray.copy(0.6f),
     balanceAmountText = antiqueGold,
     balanceToggleIcon = warmSand,
     questCardBackground = charcoalBlack,

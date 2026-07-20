@@ -315,7 +315,7 @@ internal fun MyQrContent(
                         .fillMaxWidth()
                         .height(2.dp)
                         .background(
-                            color = colors.text.body,
+                            color = colors.scanPay.balanceDivider,
                             shape = RoundedCornerShape(10.dp)
                         )
                 )
@@ -363,7 +363,7 @@ internal fun MyQrContent(
                         .fillMaxWidth()
                         .height(2.dp)
                         .background(
-                            color = colors.text.body,
+                            color = colors.scanPay.balanceDivider,
                             shape = RoundedCornerShape(10.dp)
                         )
                 )

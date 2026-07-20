@@ -27,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.qpay.xcash.R
 import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.components.QrMode
 import com.qpay.xcash.ui.components.QrModeTabSelector
@@ -107,27 +106,31 @@ private fun ScanPayContent(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Image(
-                    painter = painterResource(R.mipmap.bg_yellow_star),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .then(
-                            if (colors.effect.enableGlow)
-                                Modifier.neonGlow(color = lemonYellow, alpha = 0.1f, glowRadius = 30.dp)
-                            else Modifier
-                        )
-                )
-                Image(
-                    painter = painterResource(R.mipmap.ic_tree),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(80.dp)
-                        .then(
-                            if (colors.effect.enableGlow)
-                                Modifier.neonGlow(color = lemonYellow, alpha = 0.2f, glowRadius = 30.dp)
-                            else Modifier
-                        )
-                )
+                assets.scanPayYellowStarDecor?.let { resId ->
+                    Image(
+                        painter = painterResource(resId),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .then(
+                                if (colors.effect.enableGlow)
+                                    Modifier.neonGlow(color = lemonYellow, alpha = 0.1f, glowRadius = 30.dp)
+                                else Modifier
+                            )
+                    )
+                }
+                assets.scanPayTreeDecor?.let { resId ->
+                    Image(
+                        painter = painterResource(resId),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(80.dp)
+                            .then(
+                                if (colors.effect.enableGlow)
+                                    Modifier.neonGlow(color = lemonYellow, alpha = 0.2f, glowRadius = 30.dp)
+                                else Modifier
+                            )
+                    )
+                }
             }
         }
     }
