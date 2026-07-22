@@ -7,6 +7,7 @@ import com.qpay.xcash.R
 
 data class AppAssets(
     @RawRes val centerLogoVideo: Int,           // LoginScreen 中央 logo 影片
+    @RawRes val centerLogoAlphaWebp: Int?,      // LoginScreen 中央 logo 透明背景動畫（優先於 centerLogoVideo，僅 API 28+ 生效；null = 無透明版本）
     @DrawableRes val centerLogoImage: Int?,     // LoginScreen 中央 logo 靜態圖（null = 播影片）
     @DrawableRes val xcashWordmark: Int,        // 頂部 "xcash" 文字 logo
     @DrawableRes val loginBackground: Int?,  // LoginScreen 頁面背景圖（null = 純色）
@@ -41,6 +42,8 @@ data class AppAssets(
     @DrawableRes val confirmPaymentBalanceDecor: Int?, // ConfirmPaymentScreen Balance 區塊左側裝飾圖是否顯示旗標（null = 透明但保留版面空間，僅 Neon 顯示；實際圖片統一用 myQrLeftDecorIcon）
     @DrawableRes val transactionSuccessfulQrCrownDecor: Int?, // TransactionSuccessfulScreen QR code 區塊皇冠裝飾圖（null = 不顯示，僅 Black Gold 顯示）
     val transactionSuccessfulBalanceDecorVisible: Boolean, // TransactionSuccessfulScreen Balance 區塊左右裝飾圖（balance_left_image / balance_right_image）是否顯示（false = 透明但保留版面空間，僅 Black Gold 為 false；實際圖片統一用 myQrLeftDecorIcon / myQrRightDecorIcon）
+    @DrawableRes val inputAmountQrCrownDecor: Int?, // InputAmountScreen QR code 區塊皇冠裝飾圖（null = 不顯示，僅 Black Gold 顯示）
+    val inputAmountBalanceLeftDecorVisible: Boolean, // InputAmountScreen Balance 區塊左側裝飾圖（balance_left_image）是否顯示（false = 透明但保留版面空間，僅 Black Gold 為 false；實際圖片統一用 myQrLeftDecorIcon）
     @DrawableRes val myQrLeftDecorIcon: Int,     // MyQrContent / InputAmountScreen Balance 區塊左側裝飾圖（Neon 車子 / Black Gold 皇冠）
     @DrawableRes val myQrRightDecorIcon: Int,    // MyQrContent / InputAmountScreen Balance 區塊右側裝飾圖（Neon 猴子 / Black Gold 獅子）
     @DrawableRes val myQrActionButtonBg: Int?,   // MyQrActionButton 背景圖（null = 純色 + 邊框）
@@ -64,6 +67,7 @@ data class AppAssets(
 
 val NeonAssets = AppAssets(
     centerLogoVideo = R.raw.bg_type3,
+    centerLogoAlphaWebp = null,
     centerLogoImage = null,
     xcashWordmark = R.drawable.ic_xcash,
     loginBackground = null,
@@ -98,6 +102,8 @@ val NeonAssets = AppAssets(
     confirmPaymentBalanceDecor = R.mipmap.ic_car,
     transactionSuccessfulQrCrownDecor = null,
     transactionSuccessfulBalanceDecorVisible = true,
+    inputAmountQrCrownDecor = null,
+    inputAmountBalanceLeftDecorVisible = true,
     myQrLeftDecorIcon = R.mipmap.ic_car,
     myQrRightDecorIcon = R.mipmap.ic_monkey,
     myQrActionButtonBg = null,
@@ -120,8 +126,9 @@ val NeonAssets = AppAssets(
 )
 
 val BlackGoldAssets = AppAssets(
-    centerLogoVideo = R.raw.bg_type3,           // TODO: 替換為 Black Gold 影片
-    centerLogoImage = R.drawable.ic_xcash_logo_black_gold,
+    centerLogoVideo = R.raw.bg_type3_black_gold,
+    centerLogoAlphaWebp = R.raw.bg_type3_black_gold_alpha4,
+    centerLogoImage = null,
     xcashWordmark = R.drawable.ic_xcash_black_gold,
     loginBackground = R.drawable.bg_login_black_gold,
     balanceCardBackground = R.drawable.bg_balance_card_black_gold,
@@ -155,6 +162,8 @@ val BlackGoldAssets = AppAssets(
     confirmPaymentBalanceDecor = null,
     transactionSuccessfulQrCrownDecor = R.drawable.ic_crown_black_gold,
     transactionSuccessfulBalanceDecorVisible = false,
+    inputAmountQrCrownDecor = R.drawable.ic_crown_black_gold,
+    inputAmountBalanceLeftDecorVisible = false,
     myQrLeftDecorIcon = R.drawable.ic_crown_black_gold,
     myQrRightDecorIcon = R.drawable.ic_lion_black_gold,
     myQrActionButtonBg = R.drawable.bg_myqr_action_button_black_gold,

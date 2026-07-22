@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,8 +36,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -175,83 +178,99 @@ private fun InputAmountContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 50.dp)
-                    .then(
-                        if (colors.effect.enableGlow)
-                            Modifier.neonGlow(
-                                color = colors.accent.primary,
-                                alpha = 0.4f,
-                                glowRadius = 12.dp,
-                                borderRadius = 12.dp
-                            )
-                        else Modifier
-                    )
-                    .background(color = colors.bg.page, shape = RoundedCornerShape(12.dp))
-                    .border(
-                        width = 1.5.dp,
-                        color = colors.scanPay.input.cardOuterBorder,
-                        shape = RoundedCornerShape(12.dp)
-                    )
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+
                         .then(
                             if (colors.effect.enableGlow)
                                 Modifier.neonGlow(
-                                    color = colors.accent.secondary,
-                                    alpha = 0.25f,
+                                    color = colors.accent.primary,
+                                    alpha = 0.4f,
                                     glowRadius = 12.dp,
                                     borderRadius = 12.dp
                                 )
                             else Modifier
                         )
-                        .padding(10.dp)
-//                        .background(colors.bg.page, RoundedCornerShape(12.dp))
-                        .then(
-                            colors.scanPay.input.cardInnerBorder?.let { innerBorder ->
-                                Modifier.border(1.5.dp, innerBorder, RoundedCornerShape(12.dp))
-                            } ?: Modifier
+                        .background(color = colors.bg.page, shape = RoundedCornerShape(12.dp))
+                        .border(
+                            width = 1.5.dp,
+                            color = colors.scanPay.input.cardOuterBorder,
+                            shape = RoundedCornerShape(12.dp)
                         )
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(
+                                if (colors.effect.enableGlow)
+                                    Modifier.neonGlow(
+                                        color = colors.accent.secondary,
+                                        alpha = 0.25f,
+                                        glowRadius = 12.dp,
+                                        borderRadius = 12.dp
+                                    )
+                                else Modifier
+                            )
+                            .padding(10.dp)
+//                        .background(colors.bg.page, RoundedCornerShape(12.dp))
+                            .then(
+                                colors.scanPay.input.cardInnerBorder?.let { innerBorder ->
+                                    Modifier.border(1.5.dp, innerBorder, RoundedCornerShape(12.dp))
+                                } ?: Modifier
+                            )
                     ) {
-                        Spacer(Modifier.height(10.dp))
-                        Box(
-                            modifier = Modifier
-                                .size(80.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(color = colors.bg.page)
-                                .border(
-                                    width = 1.5.dp,
-                                    brush = Brush.linearGradient(
-                                        colors = listOf(
-                                            colors.accent.primary.copy(alpha = 0.7f),
-                                            colors.accent.secondary.copy(alpha = 0.7f)
-                                        )
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(Modifier.height(10.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(color = colors.bg.page)
+                                    .border(
+                                        width = 1.5.dp,
+                                        brush = Brush.linearGradient(
+                                            colors = listOf(
+                                                colors.accent.primary.copy(alpha = 0.7f),
+                                                colors.accent.secondary.copy(alpha = 0.7f)
+                                            )
+                                        ),
+                                        shape = RoundedCornerShape(10.dp)
                                     ),
-                                    shape = RoundedCornerShape(10.dp)
-                                ),
-                            contentAlignment = Alignment.Center
-                        ){
+                                contentAlignment = Alignment.Center
+                            ) {
 
+                            }
+                            Spacer(Modifier.height(5.dp))
+                            Text(
+                                text = "@${uiState.recipientNickName}",
+                                color = colors.scanPay.input.recipientText,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = uiState.recipientName,
+                                color = colors.scanPay.input.recipientText,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(Modifier.height(8.dp))
                         }
-                        Spacer(Modifier.height(5.dp))
-                        Text(
-                            text = "@${uiState.recipientNickName}",
-                            color = colors.scanPay.input.recipientText,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = uiState.recipientName,
-                            color = colors.scanPay.input.recipientText,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(Modifier.height(8.dp))
                     }
+                }
+                assets.inputAmountQrCrownDecor?.let { resId ->
+                    Image(
+                        painter = painterResource(resId),
+                        contentDescription = "qrcode_crown",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .offset(x = -35.dp, y = -40.dp)
+                            .rotate(-35f)
+                    )
                 }
             }
             val inputAmountBg = assets.inputAmountBackground
@@ -321,7 +340,7 @@ private fun InputAmountContent(
                                             Color.Transparent,
                                         fontSize = 40.sp,
                                         fontWeight = FontWeight.Bold,
-                                        style = TextStyle(shadow = amountGlowShadow)
+                                        style = if (amount.isEmpty()) TextStyle(shadow = amountGlowShadow) else TextStyle()
                                     )
                                     innerTextField()
                                 }
@@ -338,9 +357,10 @@ private fun InputAmountContent(
             ) {
                 Image(
                     painter = painterResource(assets.myQrLeftDecorIcon),
-                    contentDescription = null,
+                    contentDescription = "balance_left_image",
                     modifier = Modifier
                         .size(80.dp)
+                        .alpha(if (assets.inputAmountBalanceLeftDecorVisible) 1f else 0f)
                         .then(
                             if (colors.effect.enableGlow)
                                 Modifier.neonGlow(
@@ -405,7 +425,7 @@ private fun InputAmountContent(
                     painter = painterResource(assets.myQrRightDecorIcon),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(60.dp)
+                        .size(80.dp)
                         .then(
                             if (colors.effect.enableGlow)
                                 Modifier.neonGlow(color = colors.accent.primary, alpha = 0.3f, glowRadius = 30.dp)

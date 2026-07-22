@@ -247,6 +247,30 @@ fun LoginScreenContent(
                             contentDescription = stringResource(R.string.center_neon_logo_desc),
                             modifier = Modifier.fillMaxWidth(0.9f)
                         )
+                    } else if (assets.centerLogoAlphaWebp != null &&
+                        android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P
+                    ) {
+                        // 透明背景動畫（去除影片黑底），僅 API 28+ 支援 ImageDecoder 播放 animated WebP
+                        val alphaWebpRes = assets.centerLogoAlphaWebp
+                        AndroidView(
+                            factory = { ctx ->
+                                android.widget.ImageView(ctx).apply {
+                                    scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+                                    val uri = Uri.parse("android.resource://${ctx.packageName}/$alphaWebpRes")
+                                    val source = android.graphics.ImageDecoder.createSource(ctx.contentResolver, uri)
+                                    val drawable = android.graphics.ImageDecoder.decodeDrawable(source)
+                                    setImageDrawable(drawable)
+                                    if (drawable is android.graphics.drawable.AnimatedImageDrawable) {
+//                                        drawable.repeatCount = 0 // 只播放一次，不循環
+                                        drawable.repeatCount = android.graphics.drawable.AnimatedImageDrawable.REPEAT_INFINITE
+                                        drawable.start()
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth(0.9f)
+                                .aspectRatio(1f)
+                        )
                     } else {
                         val exoPlayer = remember(context) {
                             ExoPlayer.Builder(context).build().apply {

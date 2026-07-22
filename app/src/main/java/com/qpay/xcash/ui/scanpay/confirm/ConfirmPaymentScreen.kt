@@ -174,61 +174,89 @@ private fun ConfirmPaymentContent(
                     modifier = Modifier.fillMaxSize()
                 )
             }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            SubPageTopBar(
-                title = stringResource(R.string.confirm_payment_title),
-                onBack = onBack
-            )
-
-            Row(
-                modifier =
-                    Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
             ) {
-                val leftDecor = assets.qrSectionLeftDecor
-                if (leftDecor != null) {
-                    Image(
-                        modifier = Modifier
-                            .weight(0.2f),
-//                        .fillMaxHeight(),
-                        painter = painterResource(leftDecor),
-                        contentScale = ContentScale.Crop,
-                        alignment = Alignment.CenterEnd,
-                        contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc),
-                    )
-                } else {
-                    Spacer(modifier = Modifier.weight(0.2f))
-                }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.Top)
-                        .weight(0.65f)
+                SubPageTopBar(
+                    title = stringResource(R.string.confirm_payment_title),
+                    onBack = onBack
+                )
+
+                Row(
+                    modifier =
+                        Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val confirmCardBg = assets.confirmPaymentCardBg
-                    Column(
+                    val leftDecor = assets.qrSectionLeftDecor
+                    if (leftDecor != null) {
+                        Image(
+                            modifier = Modifier
+                                .weight(0.2f),
+//                        .fillMaxHeight(),
+                            painter = painterResource(leftDecor),
+                            contentScale = ContentScale.Crop,
+                            alignment = Alignment.CenterEnd,
+                            contentDescription = stringResource(R.string.scan_pay_my_qr_left_qr_code_desc),
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.weight(0.2f))
+                    }
+                    Box(
                         modifier = Modifier
-                            .testTag("confirm_payment")
-                            .then(
-                                if (confirmCardBg != null)
-                                // Black Gold：背景圖自帶邊框，不另畫 border / 純色底
-                                // sizeToIntrinsics = false：高度由內容決定，背景圖只鋪滿、不參與量測
-                                    Modifier
-                                        .clip(RoundedCornerShape(15.dp))
-                                        .paint(
-                                            painter = painterResource(confirmCardBg),
+                            .align(Alignment.Top)
+                            .weight(0.65f)
+                    ) {
+                        val confirmCardBg = assets.confirmPaymentCardBg
+                        Column(
+                            modifier = Modifier
+                                .testTag("confirm_payment")
+                                .then(
+                                    if (confirmCardBg != null)
+                                    // Black Gold：背景圖自帶邊框，不另畫 border / 純色底
+                                    // sizeToIntrinsics = false：高度由內容決定，背景圖只鋪滿、不參與量測
+                                        Modifier
+                                            .clip(RoundedCornerShape(15.dp))
+                                            .paint(
+                                                painter = painterResource(confirmCardBg),
 //                                        contentScale = ContentScale.FillBounds
-                                        )
-                                else
-                                    Modifier
-                                        .border(
-                                            width = 1.5.dp,
-                                            color = colors.accent.primary,
-                                            shape = RoundedCornerShape(15.dp)
-                                        )
+                                            )
+                                    else
+                                        Modifier
+                                            .border(
+                                                width = 1.5.dp,
+                                                color = colors.accent.primary,
+                                                shape = RoundedCornerShape(15.dp)
+                                            )
+                                            .then(
+                                                if (colors.effect.enableGlow)
+                                                    Modifier.neonGlow(
+                                                        color = colors.accent.primary,
+                                                        alpha = 0.6f,
+                                                        glowRadius = 8.dp,
+                                                        borderRadius = 8.dp
+                                                    )
+                                                else Modifier
+                                            )
+                                            .background(
+                                                color = colors.scanPay.confirm.cardBackground,
+                                                shape = RoundedCornerShape(15.dp)
+                                            )
+                                )
+//                            .align(Alignment.Top)
+//                            .weight(0.65f)
+                                .aspectRatio(1f)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 20.dp, horizontal = 15.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(60.dp)
                                         .then(
                                             if (colors.effect.enableGlow)
                                                 Modifier.neonGlow(
@@ -239,483 +267,479 @@ private fun ConfirmPaymentContent(
                                                 )
                                             else Modifier
                                         )
-                                        .background(
-                                            color = colors.scanPay.confirm.cardBackground,
-                                            shape = RoundedCornerShape(15.dp)
+                                        .then(
+                                            colors.scanPay.confirm.avatarBorder?.let { borderColor ->
+                                                Modifier.border(
+                                                    width = 1.5.dp,
+                                                    color = borderColor,
+                                                    shape = RoundedCornerShape(12.dp)
+                                                )
+                                            } ?: Modifier
                                         )
-                            )
-//                            .align(Alignment.Top)
-//                            .weight(0.65f)
-                            .aspectRatio(1f)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 20.dp, horizontal = 15.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
+                                        .background(
+                                            color = colors.bg.page,
+                                            shape = RoundedCornerShape(12.dp)
+                                        )
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Column(
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "Pay To:",
+                                        color = Color.White,
+                                        fontSize = 14.sp
+                                    )
+                                    Text(
+                                        text = "@${uiState.recipientNickName}",
+                                        color = colors.scanPay.confirm.nickNameText,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = uiState.recipientName,
+                                        color = colors.scanPay.confirm.nameText,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Normal
+                                    )
+                                }
+                                Spacer(Modifier.height(10.dp))
+                                Text(
+                                    text = "100"
+                                )
+                            }
+                            Row(
                                 modifier = Modifier
-                                    .size(60.dp)
-                                    .then(
-                                        if (colors.effect.enableGlow)
-                                            Modifier.neonGlow(
-                                                color = colors.accent.primary,
-                                                alpha = 0.6f,
-                                                glowRadius = 8.dp,
-                                                borderRadius = 8.dp
-                                            )
-                                        else Modifier
-                                    )
-                                    .then(
-                                        colors.scanPay.confirm.avatarBorder?.let { borderColor ->
-                                            Modifier.border(
-                                                width = 1.5.dp,
-                                                color = borderColor,
-                                                shape = RoundedCornerShape(12.dp)
-                                            )
-                                        } ?: Modifier
-                                    )
-                                    .background(
-                                        color = colors.bg.page,
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Column(
-                                modifier = Modifier.fillMaxWidth()
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp),
+                                horizontalArrangement = Arrangement.Center
                             ) {
+                                val amountGlowShadow = if (colors.effect.enableGlow)
+                                    Shadow(color = colors.accent.primary, blurRadius = 15f)
+                                else null
                                 Text(
-                                    text = "Pay To:",
-                                    color = Color.White,
-                                    fontSize = 14.sp
+                                    text = stringResource(R.string.input_amount_currency),
+                                    color = colors.accent.primary,
+                                    fontSize = 28.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    style = TextStyle(shadow = amountGlowShadow)
                                 )
+                                Spacer(Modifier.width(8.dp))
                                 Text(
-                                    text = "@${uiState.recipientNickName}",
-                                    color = colors.scanPay.confirm.nickNameText,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = uiState.recipientName,
-                                    color = colors.scanPay.confirm.nameText,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Normal
+                                    text = "%,.2f".format(uiState.amount.toDoubleOrNull() ?: 0.0),
+                                    color = colors.accent.primary,
+                                    fontSize = 28.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    style = TextStyle(shadow = amountGlowShadow)
                                 )
                             }
                             Spacer(Modifier.height(10.dp))
-                            Text(
-                                text = "100"
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 15.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                                    text = stringResource(R.string.scan_pay_my_qr_x_points),
+                                    color = colors.scanPay.confirm.hintText,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(8.dp))
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center,
+                                    text = stringResource(R.string.scan_pay_my_qr_confirm_hint),
+                                    color = colors.scanPay.confirm.hintText,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                        assets.confirmPaymentQrCrownDecor?.let { resId ->
+                            Image(
+                                painter = painterResource(resId),
+                                contentDescription = "qrcode_crown",
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .offset(x = -35.dp, y = -40.dp)
+                                    .rotate(-35f)
                             )
                         }
+                    }
+                    val rightDecor = assets.qrSectionRightDecor
+                    if (rightDecor != null) {
+                        Image(
+                            modifier = Modifier
+                                .weight(0.2f),
+//                        .fillMaxHeight(),
+                            painter = painterResource(rightDecor),
+                            contentScale = ContentScale.Crop,
+                            alignment = Alignment.CenterStart,
+                            contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.weight(0.2f))
+                    }
+                }
+//            Spacer(Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 0.dp)
+                ) {
+                    Image(
+                        painter = painterResource(assets.myQrLeftDecorIcon),
+                        contentDescription = "balance_image",
+                        modifier = Modifier
+                            .size(70.dp)
+                            .rotate(-20f)
+                            .alpha(if (assets.confirmPaymentBalanceDecor != null) 1f else 0f)
+                            .then(
+                                if (colors.effect.enableGlow)
+                                    Modifier.neonGlow(
+                                        color = colors.accent.secondary,
+                                        alpha = 0.25f,
+                                        glowRadius = 30.dp
+                                    )
+                                else Modifier
+                            )
+                    )
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .align(Alignment.CenterVertically)
+                    ) {
+                        Spacer(
+                            modifier = Modifier
+                                .padding(bottom = 10.dp)
+                                .fillMaxWidth()
+                                .height(2.dp)
+                                .background(
+                                    color = colors.scanPay.balanceDivider,
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                        )
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 10.dp),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            val amountGlowShadow = if (colors.effect.enableGlow)
-                                Shadow(color = colors.accent.primary, blurRadius = 15f)
-                            else null
-                            Text(
-                                text = stringResource(R.string.input_amount_currency),
-                                color = colors.accent.primary,
-                                fontSize = 28.sp,
-                                fontWeight = FontWeight.Bold,
-                                style = TextStyle(shadow = amountGlowShadow)
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = "%,.2f".format(uiState.amount.toDoubleOrNull() ?: 0.0),
-                                color = colors.accent.primary,
-                                fontSize = 28.sp,
-                                fontWeight = FontWeight.Bold,
-                                style = TextStyle(shadow = amountGlowShadow)
-                            )
-                        }
-                        Spacer(Modifier.height(10.dp))
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 15.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                text = stringResource(R.string.scan_pay_my_qr_x_points),
-                                color = colors.scanPay.confirm.hintText,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold
+                                text = "PAYING FROM:",
+                                color = colors.scanPay.confirm.balanceLabelText,
+                                fontSize = 14.sp,
                             )
-                            Spacer(Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.Center,
-                                text = stringResource(R.string.scan_pay_my_qr_confirm_hint),
-                                color = colors.scanPay.confirm.hintText,
+                                text = "Wallet name",
+                                color = Color.White,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
                             )
+                            Spacer(modifier = Modifier.width(8.dp))
                         }
-                    }
-                    assets.confirmPaymentQrCrownDecor?.let { resId ->
-                        Image(
-                            painter = painterResource(resId),
-                            contentDescription = "qrcode_crown",
-                            modifier = Modifier
-                                .size(80.dp)
-                                .offset(x = -35.dp, y = -40.dp)
-                                .rotate(-35f)
+                        val balanceValue = "%,.2f".format(uiState.balance)
+                        val balanceText = stringResource(
+                            R.string.scan_pay_my_qr_available_balance,
+                            balanceValue
                         )
-                    }
-                }
-                val rightDecor = assets.qrSectionRightDecor
-                if (rightDecor != null) {
-                    Image(
-                        modifier = Modifier
-                            .weight(0.2f),
-//                        .fillMaxHeight(),
-                        painter = painterResource(rightDecor),
-                        contentScale = ContentScale.Crop,
-                        alignment = Alignment.CenterStart,
-                        contentDescription = stringResource(R.string.scan_pay_my_qr_right_qr_code_desc)
-                    )
-                } else {
-                    Spacer(modifier = Modifier.weight(0.2f))
-                }
-            }
-//            Spacer(Modifier.height(20.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 0.dp)
-            ) {
-                Image(
-                    painter = painterResource(assets.myQrLeftDecorIcon),
-                    contentDescription = "balance_image",
-                    modifier = Modifier
-                        .size(70.dp)
-                        .rotate(-20f)
-                        .alpha(if (assets.confirmPaymentBalanceDecor != null) 1f else 0f)
-                        .then(
-                            if (colors.effect.enableGlow)
-                                Modifier.neonGlow(
-                                    color = colors.accent.secondary,
-                                    alpha = 0.25f,
-                                    glowRadius = 30.dp
-                                )
-                            else Modifier
-                        )
-                )
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .align(Alignment.CenterVertically)
-                ) {
-                    Spacer(
-                        modifier = Modifier
-                            .padding(bottom = 10.dp)
-                            .fillMaxWidth()
-                            .height(2.dp)
-                            .background(
-                                color = colors.scanPay.balanceDivider,
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
                         Text(
-                            text = "PAYING FROM:",
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            text = buildAnnotatedString {
+                                append(balanceText)
+                                val valueStart = balanceText.lastIndexOf(balanceValue)
+                                if (valueStart >= 0) {
+                                    addStyle(
+                                        SpanStyle(color = colors.scanPay.confirm.balanceValueText),
+                                        valueStart,
+                                        valueStart + balanceValue.length
+                                    )
+                                }
+                            },
                             color = colors.scanPay.confirm.balanceLabelText,
-                            fontSize = 14.sp,
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Wallet name",
-                            color = Color.White,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                    }
-                    val balanceValue = "%,.2f".format(uiState.balance)
-                    val balanceText = stringResource(
-                        R.string.scan_pay_my_qr_available_balance,
-                        balanceValue
-                    )
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = buildAnnotatedString {
-                            append(balanceText)
-                            val valueStart = balanceText.lastIndexOf(balanceValue)
-                            if (valueStart >= 0) {
-                                addStyle(
-                                    SpanStyle(color = colors.scanPay.confirm.balanceValueText),
-                                    valueStart,
-                                    valueStart + balanceValue.length
+                        Spacer(
+                            modifier = Modifier
+                                .padding(top = 10.dp)
+                                .fillMaxWidth()
+                                .height(2.dp)
+                                .background(
+                                    color = colors.scanPay.balanceDivider,
+                                    shape = RoundedCornerShape(10.dp)
                                 )
-                            }
-                        },
-                        color = colors.scanPay.confirm.balanceLabelText,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(
+                        )
+                    }
+                    Image(
+                        painter = painterResource(assets.myQrRightDecorIcon),
+                        contentDescription = null,
                         modifier = Modifier
-                            .padding(top = 10.dp)
-                            .fillMaxWidth()
-                            .height(2.dp)
-                            .background(
-                                color = colors.scanPay.balanceDivider,
-                                shape = RoundedCornerShape(10.dp)
+                            .size(70.dp)
+                            .then(
+                                if (colors.effect.enableGlow)
+                                    Modifier.neonGlow(
+                                        color = lemonYellow,
+                                        alpha = 0.3f,
+                                        glowRadius = 30.dp
+                                    )
+                                else Modifier
                             )
+                            .align(Alignment.CenterVertically)
                     )
                 }
-                Image(
-                    painter = painterResource(assets.myQrRightDecorIcon),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(70.dp)
-                        .then(
-                            if (colors.effect.enableGlow)
-                                Modifier.neonGlow(color = lemonYellow, alpha = 0.3f, glowRadius = 30.dp)
-                            else Modifier
-                        )
-                        .align(Alignment.CenterVertically)
-                )
-            }
 //            Spacer(Modifier.height(10.dp))
-            if (uiState.confirmErrorMessage.isNotEmpty()) {
-                Text(
-                    text = uiState.confirmErrorMessage,
-                    color = neonRed,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
+                if (uiState.confirmErrorMessage.isNotEmpty()) {
+                    Text(
+                        text = uiState.confirmErrorMessage,
+                        color = neonRed,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp)
+                    )
+                } else {
+                    MyQrActionButton(
+                        iconRes = R.mipmap.ic_money,
+                        label = stringResource(R.string.scan_pay_my_qr_split_bill_btn),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        fillWidth = false,
+                        onClick = onSplitBill
+                    )
+                }
+                if (uiState.confirmedSplitPartners.isNotEmpty()) {
+                    Spacer(Modifier.height(12.dp))
+                    SplitPartnersRow(
+                        myName = uiState.myUserName,
+                        partners = uiState.confirmedSplitPartners,
+                        onEdit = onEditSplit,
+                        onCancel = onCancelSplit
+                    )
+                }
+                Spacer(Modifier.height(20.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                )
-            } else {
-                MyQrActionButton(
-                    iconRes = R.mipmap.ic_money,
-                    label = stringResource(R.string.scan_pay_my_qr_split_bill_btn),
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    fillWidth = false,
-                    onClick = onSplitBill
-                )
-            }
-            if (uiState.confirmedSplitPartners.isNotEmpty()) {
-                Spacer(Modifier.height(12.dp))
-                SplitPartnersRow(
-                    myName = uiState.myUserName,
-                    partners = uiState.confirmedSplitPartners,
-                    onEdit = onEditSplit,
-                    onCancel = onCancelSplit
-                )
-            }
-            Spacer(Modifier.height(20.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 50.dp)
-                    .border(
-                        width = 1.5.dp,
-                        color = colors.accent.primary.copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .then(
-                        if (colors.effect.enableGlow)
-                            Modifier.neonGlow(
-                                color = colors.accent.primary,
-                                alpha = 0.5f,
-                                glowRadius = 8.dp,
-                                borderRadius = 8.dp
-                            )
-                        else Modifier
-                    )
-                    .background(
-                        color = colors.bg.page,
-                        shape = RoundedCornerShape(15.dp)
-                    )
-                    .padding(10.dp)
-            ) {
-                Icon(
-                    painter = painterResource(R.mipmap.ic_balance_coin),
-                    contentDescription = stringResource(id = R.string.balance_coin),
-                    tint = Color.Companion.Unspecified,
-
-                    modifier = Modifier.Companion
-                        .then(
-                            if (colors.effect.enableGlow)
-                                Modifier.neonGlow(
-                                    color = lemonYellow,
-                                    alpha = 0.7f,
-                                    glowRadius = 10.dp
-                                )
-                            else Modifier
-                        )
-                        .size(30.dp)
-                )
-                Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = stringResource(R.string.scan_pay_my_qr_use_points),
-                        color = Color.White,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = stringResource(
-                            R.string.scan_pay_my_qr_points_balance,
-                            formatAmount(uiState.tokenBalance)
-                        ),
-                        color = colors.text.body,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                }
-//                Switch(
-//                    modifier = Modifier.scale(0.8f),
-//                    checked = useXPoints,
-//                    onCheckedChange = { useXPoints = it },
-//                    colors = SwitchDefaults.colors(
-//                        checkedThumbColor = Color.White,
-//                        checkedTrackColor = Color.Gray,
-//                        checkedBorderColor = neonCyan,
-//                        uncheckedThumbColor = Color.White,
-//                        uncheckedTrackColor = Color.White.copy(alpha = 0.3f)
-//                    )
-//                )
-                NeonSwitch(
-                    checked = useXPoints,
-                    onCheckedChange = { useXPoints = it },
-                    activeColor = colors.accent.primary,
-                    showLabel = true
-                )
-            }
-            Spacer(Modifier.height(20.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(55.dp)
+                        .padding(horizontal = 50.dp)
                         .border(
                             width = 1.5.dp,
-                            color = colors.scanPay.confirm.cancelButtonBorder,
-                            shape = RoundedCornerShape(30.dp)
+                            color = colors.accent.primary.copy(alpha = 0.7f),
+                            shape = RoundedCornerShape(12.dp)
                         )
                         .then(
                             if (colors.effect.enableGlow)
                                 Modifier.neonGlow(
-                                    color = colors.accent.secondary,
-                                    alpha = 0.4f,
-                                    glowRadius = 25.dp,
-                                    borderRadius = 25.dp
+                                    color = colors.accent.primary,
+                                    alpha = 0.5f,
+                                    glowRadius = 8.dp,
+                                    borderRadius = 8.dp
                                 )
                             else Modifier
                         )
                         .background(
-                            brush = colors.scanPay.confirm.cancelButtonFill,
-                            shape = RoundedCornerShape(30.dp)
+                            color = colors.bg.page,
+                            shape = RoundedCornerShape(15.dp)
                         )
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) { onBack() }
+                        .padding(10.dp)
                 ) {
                     Icon(
-                        modifier = Modifier.size(24.dp),
-                        imageVector = Icons.Default.Close,
-                        tint = colors.scanPay.confirm.cancelIcon,
-                        contentDescription = null,
+                        painter = painterResource(R.mipmap.ic_balance_coin),
+                        contentDescription = stringResource(id = R.string.balance_coin),
+                        tint = Color.Companion.Unspecified,
+
+                        modifier = Modifier.Companion
+                            .then(
+                                if (colors.effect.enableGlow)
+                                    Modifier.neonGlow(
+                                        color = lemonYellow,
+                                        alpha = 0.7f,
+                                        glowRadius = 10.dp
+                                    )
+                                else Modifier
+                            )
+                            .size(30.dp)
                     )
-                    Text(
-                        text = stringResource(R.string.confirm_payment_cancel),
-                        fontSize = 14.sp,
-                        color = colors.scanPay.confirm.cancelText,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Spacer(Modifier.width(10.dp))
-                val hasError = uiState.confirmErrorMessage.isNotEmpty()
-                val confirmBtnGlowColor = if (hasError) neonPink else colors.accent.primary
-                val confirmBtnFill = if (hasError) SolidColor(neonPink)
-                else colors.scanPay.confirm.payButtonFill
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(55.dp)
-                        .border(
-                            width = 1.5.dp,
-                            color = colors.accent.primary,
-                            shape = RoundedCornerShape(30.dp)
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            text = stringResource(R.string.scan_pay_my_qr_use_points),
+                            color = Color.White,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp
                         )
-                        .then(
-                            if (colors.effect.enableGlow)
-                                Modifier.neonGlow(
-                                    color = confirmBtnGlowColor,
-                                    alpha = 0.6f,
-                                    glowRadius = 25.dp,
-                                    borderRadius = 25.dp
-                                )
-                            else Modifier
-                        )
-                        .clickable(
-                            enabled = !uiState.isConfirming,
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) { onConfirmPay() }
-                        .padding(5.dp)
-                        .background(
-                            brush = confirmBtnFill,
-                            shape = RoundedCornerShape(30.dp),
-                            alpha = if (uiState.isConfirming) 0.4f else 1f
-                        )
-                ) {
-                    if (!hasError) {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            imageVector = Icons.Default.Check,
-                            tint = Color.Black,
-                            contentDescription = null,
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            text = stringResource(
+                                R.string.scan_pay_my_qr_points_balance,
+                                formatAmount(uiState.tokenBalance)
+                            ),
+                            color = colors.text.body,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
                         )
                     }
-                    Text(
-                        text = if (hasError) stringResource(R.string.confirm_payment_try_again)
-                        else stringResource(R.string.confirm_payment_confirm_pay),
-                        color = if (hasError) Color.White
-                        else Color.Black,
-                        fontSize = if (hasError) 12.sp
-                        else 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
+                    NeonSwitch(
+                        checked = useXPoints,
+                        onCheckedChange = { useXPoints = it },
+                        activeColor = colors.accent.primary,
+                        showLabel = true
                     )
                 }
+                Spacer(Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(55.dp)
+                            .border(
+                                width = 1.5.dp,
+                                color = colors.scanPay.confirm.cancelButtonBorder,
+                                shape = RoundedCornerShape(30.dp)
+                            )
+                            .then(
+                                if (colors.effect.enableGlow)
+                                    Modifier.neonGlow(
+                                        color = colors.accent.secondary,
+                                        alpha = 0.4f,
+                                        glowRadius = 25.dp,
+                                        borderRadius = 25.dp
+                                    )
+                                else Modifier
+                            )
+                            .background(
+                                brush = colors.scanPay.confirm.cancelButtonFill,
+                                shape = RoundedCornerShape(30.dp)
+                            )
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) { onBack() }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            imageVector = Icons.Default.Close,
+                            tint = colors.scanPay.confirm.cancelIcon,
+                            contentDescription = null,
+                        )
+                        Text(
+                            text = stringResource(R.string.confirm_payment_cancel),
+                            fontSize = 14.sp,
+                            color = colors.scanPay.confirm.cancelText,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Spacer(Modifier.width(10.dp))
+                    val hasError = uiState.confirmErrorMessage.isNotEmpty()
+                    val confirmBtnGlowColor = if (hasError) neonPink else colors.accent.primary
+                    val confirmBtnFill = if (hasError) SolidColor(neonPink)
+                    else colors.scanPay.confirm.payButtonFill
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(55.dp)
+                            .border(
+                                width = 1.5.dp,
+                                color = colors.accent.primary,
+                                shape = RoundedCornerShape(30.dp)
+                            )
+                            .then(
+                                if (colors.effect.enableGlow)
+                                    Modifier.neonGlow(
+                                        color = confirmBtnGlowColor,
+                                        alpha = 0.6f,
+                                        glowRadius = 25.dp,
+                                        borderRadius = 25.dp
+                                    )
+                                else Modifier
+                            )
+                            .clickable(
+                                enabled = !uiState.isConfirming,
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) { onConfirmPay() }
+                            .padding(5.dp)
+                            .background(
+                                brush = confirmBtnFill,
+                                shape = RoundedCornerShape(30.dp),
+                                alpha = if (uiState.isConfirming) 0.4f else 1f
+                            )
+                    ) {
+                        if (!hasError) {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                imageVector = Icons.Default.Check,
+                                tint = Color.Black,
+                                contentDescription = null,
+                            )
+                        }
+                        Text(
+                            text = if (hasError) stringResource(R.string.confirm_payment_try_again)
+                            else stringResource(R.string.confirm_payment_confirm_pay),
+                            color = if (hasError) Color.White
+                            else Color.Black,
+                            fontSize = if (hasError) 12.sp
+                            else 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    assets.scanPayYellowStarDecor?.let { resId ->
+                        Image(
+                            painter = painterResource(resId),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .then(
+                                    if (colors.effect.enableGlow)
+                                        Modifier.neonGlow(color = lemonYellow, alpha = 0.1f, glowRadius = 30.dp)
+                                    else Modifier
+                                )
+                        )
+                    }
+                    assets.scanPayTreeDecor?.let { resId ->
+                        Image(
+                            painter = painterResource(resId),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(80.dp)
+                                .then(
+                                    if (colors.effect.enableGlow)
+                                        Modifier.neonGlow(color = lemonYellow, alpha = 0.2f, glowRadius = 30.dp)
+                                    else Modifier
+                                )
+                        )
+                    }
+                }
             }
-        }
         }
     }
 }

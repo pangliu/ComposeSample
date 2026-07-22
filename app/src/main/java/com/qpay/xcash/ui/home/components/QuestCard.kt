@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -118,10 +119,10 @@ fun QuestCard() {
         Image(
             painter = painterResource(id = assets.questCardBackground),
             contentDescription = "Quest Card",
+            alignment = Alignment.BottomCenter, // 圖片實際內容在等比縮放後貼齊底部，避免不同長寬比的素材置中留白
             modifier = Modifier
                 .size(150.dp)
                 .align(Alignment.BottomEnd) // 關鍵：設定在 Box 中的對齊方式為右下角
-                .offset(x = 3.dp, y = 0.dp)
         )
     }
 }
