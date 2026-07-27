@@ -406,6 +406,18 @@
     <string name="common_back_desc">Back</string>
     <string name="common_notify_settings_desc">Notification Settings</string>
 
+    <!-- AvatarDialog -->
+    <string name="avatar_dialog_take_photo">Take Photo</string>
+    <string name="avatar_dialog_choose_from_album">Choose from Album</string>
+    <string name="avatar_dialog_cancel">Cancel</string>
+
+    <!-- EditAvatarScreen -->
+    <string name="edit_avatar_hint">Pinch to adjust avatar size &amp; position</string>
+    <string name="edit_avatar_cancel">Cancel</string>
+    <string name="edit_avatar_choose">Choose</string>
+    <string name="edit_avatar_zoom_out_desc">Zoom out</string>
+    <string name="edit_avatar_zoom_in_desc">Zoom in</string>
+
     <!-- InputAmountScreen -->
     <string name="input_amount_title">Enter Amount</string>
     <string name="input_amount_back_desc">Back</string>

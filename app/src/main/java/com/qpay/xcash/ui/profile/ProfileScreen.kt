@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
 import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.UiEvent
+import com.qpay.xcash.ui.components.AvatarDialog
 import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.components.SubPageTopBar
@@ -121,9 +122,20 @@ fun ProfileScreenContent(
     val colors = LocalAppColors.current
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showInviteDialog by remember { mutableStateOf(false) }
+    var showAvatarDialog by remember { mutableStateOf(false) }
 
     if (showInviteDialog) {
         InviteFriendsDialog(onDismiss = { showInviteDialog = false })
+    }
+
+    if (showAvatarDialog) {
+        AvatarDialog(
+            onDismiss = { showAvatarDialog = false },
+            onTakePhoto = {},
+            onAlbumImageSelected = { uri ->
+                onNavigate(Routes.editAvatar(uri.toString()))
+            }
+        )
     }
 
     if (showLogoutDialog) {
@@ -154,7 +166,11 @@ fun ProfileScreenContent(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             ProfileSectionHeader(stringResource(R.string.profile_section_identity))
-            IdentityCard(uiState, onClick = { onNavigate(Routes.VERIFICATION_STATUS) })
+            IdentityCard(
+                uiState,
+                onClick = { onNavigate(Routes.VERIFICATION_STATUS) },
+                onAvatarClick = { showAvatarDialog = true }
+            )
 
             ProfileSectionHeader(stringResource(R.string.profile_section_social))
             SocialRewardsCard(
@@ -251,7 +267,11 @@ private fun ProfileSectionHeader(title: String) {
 }
 
 @Composable
-private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
+private fun IdentityCard(
+    uiState: ProfileUiState,
+    onClick: () -> Unit = {},
+    onAvatarClick: () -> Unit = {}
+) {
     val colors = LocalAppColors.current
     val assets = LocalAppAssets.current
     Row(
@@ -279,19 +299,19 @@ private fun IdentityCard(uiState: ProfileUiState, onClick: () -> Unit = {}) {
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-//        Box(
-//            modifier = Modifier
-//                .size(90.dp),
-//            contentAlignment = Alignment.Center
-//        ) {
-            Icon(
-                modifier = Modifier
-                    .size(75.dp),
-                tint = Color.Unspecified,
-                contentDescription = null,
-                painter = painterResource(assets.friendFemaleAvatar),
-            )
-//        }
+
+        Icon(
+            modifier = Modifier
+                .size(75.dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onAvatarClick
+                ),
+            tint = Color.Unspecified,
+            contentDescription = null,
+            painter = painterResource(assets.friendFemaleAvatar),
+        )
 
         Spacer(Modifier.width(14.dp))
 

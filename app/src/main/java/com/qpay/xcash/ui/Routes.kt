@@ -12,6 +12,9 @@ object Routes {
     const val SECURITY_CENTER = "security_center"
     const val TRANSACTION_HISTORY = "transaction_history"
     const val VERIFICATION_STATUS = "verification_status"
+    const val EDIT_AVATAR = "edit_avatar?imageUri={imageUri}"
+
+    fun editAvatar(imageUri: String) = "edit_avatar?imageUri=${android.net.Uri.encode(imageUri)}"
 
     // ScanPay sub-pages
     const val SCAN_PAY_INPUT_AMOUNT = "scan_pay_input_amount"

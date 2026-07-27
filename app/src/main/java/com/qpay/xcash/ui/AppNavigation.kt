@@ -1,5 +1,6 @@
 package com.qpay.xcash.ui
 
+import android.net.Uri
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import com.qpay.xcash.ui.cards.add.AddNewCardScreen
 import com.qpay.xcash.ui.cards.detail.CardDetailScreen
 import com.qpay.xcash.ui.cards.linked_success.LinkedSuccessScreen
 import com.qpay.xcash.ui.cards.select.SelectCardTypeScreen
+import com.qpay.xcash.ui.components.EditAvatarScreen
 import com.qpay.xcash.ui.home.notifications.NotificationsScreen
 import com.qpay.xcash.ui.home.notifications.NotificationsViewModel
 import com.qpay.xcash.ui.home.transaction_detail.TransactionDetailScreen
@@ -105,6 +107,7 @@ fun AppNavigation(
                         Routes.TRANSACTION_DETAIL -> slideOutHorizontally { -it }
                         Routes.UPDATE_LOG -> slideOutHorizontally { -it }
                         Routes.NOTIFICATIONS -> slideOutHorizontally { -it }
+                        Routes.EDIT_AVATAR -> slideOutHorizontally { -it }
                         else -> null
                     }
                 },
@@ -122,6 +125,7 @@ fun AppNavigation(
                         Routes.TRANSACTION_DETAIL -> slideInHorizontally { -it }
                         Routes.UPDATE_LOG -> slideInHorizontally { -it }
                         Routes.NOTIFICATIONS -> slideInHorizontally { -it }
+                        Routes.EDIT_AVATAR -> slideInHorizontally { -it }
                         else -> null
                     }
                 }
@@ -180,6 +184,20 @@ fun AppNavigation(
                 VerificationStatusScreen(
                     viewModel = viewModel,
                     onBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = Routes.EDIT_AVATAR,
+                arguments = listOf(navArgument("imageUri") { type = NavType.StringType; defaultValue = "" }),
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } }
+            ) { backStackEntry ->
+                val imageUriString = backStackEntry.arguments?.getString("imageUri") ?: ""
+                EditAvatarScreen(
+                    imageUri = Uri.parse(imageUriString),
+                    onCancel = { navController.popBackStack() },
+                    onChoose = { _, _ -> navController.popBackStack() }
                 )
             }
 
