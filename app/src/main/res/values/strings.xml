@@ -418,6 +418,12 @@
     <string name="edit_avatar_zoom_out_desc">Zoom out</string>
     <string name="edit_avatar_zoom_in_desc">Zoom in</string>
 
+    <!-- CameraScreen -->
+    <string name="camera_cancel_desc">Cancel</string>
+    <string name="camera_capture_desc">Take photo</string>
+    <string name="camera_thumbnail_desc">Last captured photo</string>
+    <string name="camera_permission_required">Camera permission is required to take a photo</string>
+
     <!-- UploadAvatarErrorDialog -->
     <string name="upload_avatar_error_dialog_title">Upload Failed</string>
     <string name="upload_avatar_error_dialog_message">Avatar upload failed. Please check your network connection and try again.</string>

@@ -131,7 +131,7 @@ fun ProfileScreenContent(
     if (showAvatarDialog) {
         AvatarDialog(
             onDismiss = { showAvatarDialog = false },
-            onTakePhoto = {},
+            onTakePhoto = { onNavigate(Routes.CAMERA) },
             onAlbumImageSelected = { uri ->
                 onNavigate(Routes.editAvatar(uri.toString()))
             }

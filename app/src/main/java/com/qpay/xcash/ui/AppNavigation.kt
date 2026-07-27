@@ -19,6 +19,7 @@ import com.qpay.xcash.ui.cards.add.AddNewCardScreen
 import com.qpay.xcash.ui.cards.detail.CardDetailScreen
 import com.qpay.xcash.ui.cards.linked_success.LinkedSuccessScreen
 import com.qpay.xcash.ui.cards.select.SelectCardTypeScreen
+import com.qpay.xcash.ui.avatar.CameraScreen
 import com.qpay.xcash.ui.avatar.EditAvatarScreen
 import com.qpay.xcash.ui.home.notifications.NotificationsScreen
 import com.qpay.xcash.ui.home.notifications.NotificationsViewModel
@@ -108,6 +109,7 @@ fun AppNavigation(
                         Routes.UPDATE_LOG -> slideOutHorizontally { -it }
                         Routes.NOTIFICATIONS -> slideOutHorizontally { -it }
                         Routes.EDIT_AVATAR -> slideOutHorizontally { -it }
+                        Routes.CAMERA -> slideOutHorizontally { -it }
                         else -> null
                     }
                 },
@@ -126,6 +128,7 @@ fun AppNavigation(
                         Routes.UPDATE_LOG -> slideInHorizontally { -it }
                         Routes.NOTIFICATIONS -> slideInHorizontally { -it }
                         Routes.EDIT_AVATAR -> slideInHorizontally { -it }
+                        Routes.CAMERA -> slideInHorizontally { -it }
                         else -> null
                     }
                 }
@@ -198,6 +201,20 @@ fun AppNavigation(
                     imageUri = Uri.parse(imageUriString),
                     onCancel = { navController.popBackStack() },
                     onChoose = { _, _ -> navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = Routes.CAMERA,
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } }
+            ) {
+                CameraScreen(
+                    onCancel = { navController.popBackStack() },
+                    onPhotoCaptured = { uri ->
+                        navController.popBackStack()
+                        navController.navigate(Routes.editAvatar(uri.toString()))
+                    }
                 )
             }
 

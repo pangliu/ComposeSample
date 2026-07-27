@@ -13,6 +13,7 @@ object Routes {
     const val TRANSACTION_HISTORY = "transaction_history"
     const val VERIFICATION_STATUS = "verification_status"
     const val EDIT_AVATAR = "edit_avatar?imageUri={imageUri}"
+    const val CAMERA = "camera"
 
     fun editAvatar(imageUri: String) = "edit_avatar?imageUri=${android.net.Uri.encode(imageUri)}"
 
