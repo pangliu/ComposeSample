@@ -1,8 +1,11 @@
 package com.qpay.xcash.network.api
 
 import com.qpay.xcash.network.model.response.BaseResponse
+import okhttp3.MultipartBody
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.network.model.response.NotificationResponse
@@ -17,8 +20,9 @@ interface UserApiService {
     @POST("/api/logout")
     suspend fun logout(): BaseResponse<Unit>
 
+    @Multipart
     @POST("/api/upload/user/image")
-    suspend fun uploadUserImage(): BaseResponse<Any>
+    suspend fun uploadUserImage(@Part image: MultipartBody.Part): BaseResponse<Any>
 
     @GET("/api/user/level_info")
     suspend fun getUserLevelInfo(): BaseResponse<Any>

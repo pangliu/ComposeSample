@@ -1,4 +1,4 @@
-package com.qpay.xcash.ui.components
+package com.qpay.xcash.ui.avatar
 
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -27,6 +27,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -43,8 +45,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.components.LoadingDialog
+import com.qpay.xcash.ui.components.UploadAvatarErrorDialog
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
@@ -61,10 +66,28 @@ private val SLIDER_THUMB_SIZE = 20.dp
 fun EditAvatarScreen(
     imageUri: Uri,
     onCancel: () -> Unit,
-    onChoose: (imageUri: Uri, zoomScale: Float) -> Unit
+    onChoose: (imageUri: Uri, zoomScale: Float) -> Unit,
+    viewModel: EditAvatarViewModel = hiltViewModel()
 ) {
     val colors = LocalAppColors.current
+    val uiState by viewModel.uiState.collectAsState()
     var zoomScale by remember { mutableFloatStateOf(DEFAULT_ZOOM) }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is EditAvatarNavigationEvent.UploadSuccess -> onChoose(imageUri, zoomScale)
+            }
+        }
+    }
+
+    UploadAvatarErrorDialog(
+        isVisible = uiState.showUploadError,
+        onCancel = { viewModel.dismissUploadError() },
+        onTryAgain = { viewModel.uploadUserImage(imageUri) }
+    )
+
+    LoadingDialog(isShowing = uiState.isUploading)
 
     Column(
         modifier = Modifier
@@ -186,7 +209,7 @@ fun EditAvatarScreen(
                 modifier = Modifier.clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = { onChoose(imageUri, zoomScale) }
+                    onClick = { viewModel.uploadUserImage(imageUri) }
                 )
             )
         }

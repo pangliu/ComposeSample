@@ -9,6 +9,7 @@ import com.qpay.xcash.network.model.response.NotificationResponse
 import com.qpay.xcash.network.model.response.OrderHistoryResponse
 import com.qpay.xcash.network.model.response.UpdateLogResponse
 import com.qpay.xcash.network.model.response.UserInfoResponse
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -26,9 +27,9 @@ class UserRepository @Inject constructor(
     }
 
     // 示範 2：上傳圖片
-    suspend fun uploadUserImage(): NetworkResult<Any> {
+    suspend fun uploadUserImage(image: MultipartBody.Part): NetworkResult<Any> {
         return safeApiCall {
-            apiService.uploadUserImage()
+            apiService.uploadUserImage(image)
         }
     }
 

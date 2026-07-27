@@ -19,7 +19,7 @@ import com.qpay.xcash.ui.cards.add.AddNewCardScreen
 import com.qpay.xcash.ui.cards.detail.CardDetailScreen
 import com.qpay.xcash.ui.cards.linked_success.LinkedSuccessScreen
 import com.qpay.xcash.ui.cards.select.SelectCardTypeScreen
-import com.qpay.xcash.ui.components.EditAvatarScreen
+import com.qpay.xcash.ui.avatar.EditAvatarScreen
 import com.qpay.xcash.ui.home.notifications.NotificationsScreen
 import com.qpay.xcash.ui.home.notifications.NotificationsViewModel
 import com.qpay.xcash.ui.home.transaction_detail.TransactionDetailScreen

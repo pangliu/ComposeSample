@@ -12,6 +12,7 @@ import com.qpay.xcash.network.model.response.OrderType
 import com.qpay.xcash.network.model.response.UpdateLogResponse
 import com.qpay.xcash.network.model.response.UserInfoResponse
 import kotlinx.coroutines.delay
+import okhttp3.MultipartBody
 
 class FakeUserApiService : UserApiService {
     override suspend fun getUserInfo(): BaseResponse<UserInfoResponse> {
@@ -78,9 +79,10 @@ class FakeUserApiService : UserApiService {
         return BaseResponse(code = 200, errorMsg = "登出成功", result = null)
     }
 
-    override suspend fun uploadUserImage(): BaseResponse<Any> {
-        delay(1500)
+    override suspend fun uploadUserImage(image: MultipartBody.Part): BaseResponse<Any> {
+        delay(1500) // 模擬網路延遲（目前無真實 API，僅模擬上傳成功）
         return BaseResponse(code = 200, errorMsg = "上傳成功", result = null)
+//        return BaseResponse(code = 202, errorMsg = "上傳失敗", result = null)
     }
 
     override suspend fun getUserLevelInfo(): BaseResponse<Any> {
