@@ -3,6 +3,9 @@ package com.qpay.xcash.ui.avatar
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -24,13 +27,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -39,9 +45,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +56,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import coil.compose.AsyncImage
 import com.qpay.xcash.R
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
@@ -69,11 +74,16 @@ fun CameraScreen(
     val isPreview = LocalInspectionMode.current
     val hasCameraPermission = remember {
         ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
-            PackageManager.PERMISSION_GRANTED
+                PackageManager.PERMISSION_GRANTED
     }
-    var lastCapturedUri by remember { mutableStateOf<Uri?>(null) }
+    var lensFacing by remember { mutableIntStateOf(CameraSelector.LENS_FACING_BACK) }
     var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
     val mainExecutor = remember { ContextCompat.getMainExecutor(context) }
+    val onPhotoCapturedState = rememberUpdatedState(onPhotoCaptured)
+
+    val albumLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri -> uri?.let { onPhotoCapturedState.value(it) } }
 
     fun takePhoto() {
         val capture = imageCapture ?: return
@@ -84,7 +94,7 @@ fun CameraScreen(
             mainExecutor,
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    lastCapturedUri = Uri.fromFile(file)
+                    onPhotoCapturedState.value(Uri.fromFile(file))
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -109,6 +119,7 @@ fun CameraScreen(
             if (hasCameraPermission && !isPreview) {
                 CameraLensPreview(
                     modifier = Modifier.fillMaxSize(),
+                    lensFacing = lensFacing,
                     onImageCaptureReady = { imageCapture = it }
                 )
             } else {
@@ -146,9 +157,19 @@ fun CameraScreen(
 
         CameraControlsBar(
             modifier = Modifier.align(Alignment.BottomCenter),
-            lastCapturedUri = lastCapturedUri,
+            onFlipCamera = {
+                lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK) {
+                    CameraSelector.LENS_FACING_FRONT
+                } else {
+                    CameraSelector.LENS_FACING_BACK
+                }
+            },
             onCapture = { takePhoto() },
-            onThumbnailClick = { lastCapturedUri?.let(onPhotoCaptured) }
+            onThumbnailClick = {
+                albumLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            }
         )
     }
 }
@@ -156,7 +177,7 @@ fun CameraScreen(
 @Composable
 private fun CameraControlsBar(
     modifier: Modifier = Modifier,
-    lastCapturedUri: Uri? = null,
+    onFlipCamera: () -> Unit = {},
     onCapture: () -> Unit = {},
     onThumbnailClick: () -> Unit = {}
 ) {
@@ -167,14 +188,17 @@ private fun CameraControlsBar(
             .padding(horizontal = 40.dp, vertical = 32.dp)
     ) {
         Icon(
-            imageVector = Icons.Default.AutoAwesome,
-            contentDescription = null,
-            tint = colors.camera.bottomIconTint,
+            painter = painterResource(R.drawable.ic_turn_camera),
+            contentDescription = stringResource(R.string.camera_flip_desc),
+            tint = Color.Unspecified,
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .size(44.dp)
-                .border(1.5.dp, colors.camera.bottomIconBorder, RoundedCornerShape(12.dp))
-                .padding(10.dp)
+                .size(42.dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onFlipCamera
+                )
         )
 
         Box(
@@ -182,13 +206,15 @@ private fun CameraControlsBar(
                 .align(Alignment.Center)
                 .size(64.dp)
                 .border(
-                    width = 1.5.dp,
+                    width = 3.dp,
                     color = colors.camera.shutterBorder,
-                    shape = CircleShape)
-                .padding(5.dp)
+                    shape = CircleShape
+                )
+                .padding(7.dp)
                 .background(
                     color = colors.camera.shutterFill,
-                    shape = CircleShape)
+                    shape = CircleShape
+                )
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
@@ -196,38 +222,26 @@ private fun CameraControlsBar(
                 )
         )
 
-        Box(
+        Icon(
+            painter = painterResource(R.drawable.ic_photo),
+            contentDescription = stringResource(R.string.camera_thumbnail_desc),
+            tint = Color.Unspecified,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .size(44.dp)
-                .clip(RoundedCornerShape(10.dp))
-//                .border(1.5.dp, colors.camera.thumbnailBorder, RoundedCornerShape(10.dp))
-                .background(colors.camera.thumbnailPlaceholderBackground)
-                .then(
-                    if (lastCapturedUri != null) {
-                        Modifier.clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = onThumbnailClick
-                        )
-                    } else Modifier
+                .size(42.dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onThumbnailClick
                 )
-        ) {
-            lastCapturedUri?.let { uri ->
-                AsyncImage(
-                    model = uri,
-                    contentDescription = stringResource(R.string.camera_thumbnail_desc),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-        }
+        )
     }
 }
 
 @Composable
 private fun CameraLensPreview(
     modifier: Modifier = Modifier,
+    lensFacing: Int,
     onImageCaptureReady: (ImageCapture) -> Unit
 ) {
     val context = LocalContext.current
@@ -235,42 +249,46 @@ private fun CameraLensPreview(
     val providerRef = remember { arrayOfNulls<ProcessCameraProvider>(1) }
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
     val onReadyRef = rememberUpdatedState(onImageCaptureReady)
+    val lensFacingRef = rememberUpdatedState(lensFacing)
+    val previewView = remember {
+        PreviewView(context).apply {
+            implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+        }
+    }
+
+    fun bindCamera(provider: ProcessCameraProvider) {
+        val preview = CameraXPreview.Builder().build().also {
+            it.setSurfaceProvider(previewView.surfaceProvider)
+        }
+        val imageCapture = ImageCapture.Builder().build()
+        val selector = CameraSelector.Builder().requireLensFacing(lensFacingRef.value).build()
+        try {
+            provider.unbindAll()
+            provider.bindToLifecycle(lifecycleOwner, selector, preview, imageCapture)
+            onReadyRef.value(imageCapture)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     DisposableEffect(Unit) {
+        val future = ProcessCameraProvider.getInstance(context)
+        future.addListener({
+            val provider = future.get().also { providerRef[0] = it }
+            bindCamera(provider)
+        }, ContextCompat.getMainExecutor(context))
+
         onDispose {
             providerRef[0]?.unbindAll()
             cameraExecutor.shutdown()
         }
     }
 
-    AndroidView(
-        factory = { ctx ->
-            PreviewView(ctx).apply {
-                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-                val future = ProcessCameraProvider.getInstance(ctx)
-                future.addListener({
-                    val provider = future.get().also { providerRef[0] = it }
-                    val preview = CameraXPreview.Builder().build().also {
-                        it.setSurfaceProvider(surfaceProvider)
-                    }
-                    val imageCapture = ImageCapture.Builder().build()
-                    try {
-                        provider.unbindAll()
-                        provider.bindToLifecycle(
-                            lifecycleOwner,
-                            CameraSelector.DEFAULT_BACK_CAMERA,
-                            preview,
-                            imageCapture
-                        )
-                        onReadyRef.value(imageCapture)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }, ContextCompat.getMainExecutor(ctx))
-            }
-        },
-        modifier = modifier
-    )
+    LaunchedEffect(lensFacing) {
+        providerRef[0]?.let { bindCamera(it) }
+    }
+
+    AndroidView(factory = { previewView }, modifier = modifier)
 }
 
 @Preview(name = "Controls - Neon", showBackground = true, backgroundColor = 0xFF000000)

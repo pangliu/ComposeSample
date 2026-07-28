@@ -421,7 +421,8 @@
     <!-- CameraScreen -->
     <string name="camera_cancel_desc">Cancel</string>
     <string name="camera_capture_desc">Take photo</string>
-    <string name="camera_thumbnail_desc">Last captured photo</string>
+    <string name="camera_flip_desc">Flip camera</string>
+    <string name="camera_thumbnail_desc">Choose from album</string>
     <string name="camera_permission_required">Camera permission is required to take a photo</string>
 
     <!-- UploadAvatarErrorDialog -->
