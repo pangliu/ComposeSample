@@ -1,6 +1,7 @@
 package com.qpay.xcash.ui.avatar
 
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -38,6 +39,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +57,7 @@ import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.slateGray
 
 private const val MIN_ZOOM = 1f
 private const val MAX_ZOOM = 3f
@@ -61,7 +65,6 @@ private const val DEFAULT_ZOOM = (MIN_ZOOM + MAX_ZOOM) / 2f
 private val SLIDER_TRACK_HEIGHT = 6.dp
 private val SLIDER_THUMB_SIZE = 20.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditAvatarScreen(
     imageUri: Uri,
@@ -69,7 +72,6 @@ fun EditAvatarScreen(
     onChoose: (imageUri: Uri, zoomScale: Float) -> Unit,
     viewModel: EditAvatarViewModel = hiltViewModel()
 ) {
-    val colors = LocalAppColors.current
     val uiState by viewModel.uiState.collectAsState()
     var zoomScale by remember { mutableFloatStateOf(DEFAULT_ZOOM) }
 
@@ -89,6 +91,27 @@ fun EditAvatarScreen(
 
     LoadingDialog(isShowing = uiState.isUploading)
 
+    EditAvatarContent(
+        imageUri = imageUri,
+        zoomScale = zoomScale,
+        onZoomScaleChange = { zoomScale = it },
+        onCancel = onCancel,
+        onChoose = { viewModel.uploadUserImage(imageUri) }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EditAvatarContent(
+    imageUri: Uri,
+    zoomScale: Float,
+    onZoomScaleChange: (Float) -> Unit,
+    onCancel: () -> Unit,
+    onChoose: () -> Unit
+) {
+    val colors = LocalAppColors.current
+    val isPreview = LocalInspectionMode.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -101,22 +124,42 @@ fun EditAvatarScreen(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
+                .border(
+                    width = 20.dp,
+                    color = slateGray.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(24.dp)
+                )
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(24.dp)),
             contentAlignment = Alignment.Center
         ) {
-            AsyncImage(
-                model = imageUri,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer(scaleX = zoomScale, scaleY = zoomScale)
-            )
+            if (isPreview) {
+                Image(
+                    painter = painterResource(R.drawable.ic_man),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer(scaleX = zoomScale, scaleY = zoomScale)
+                )
+            } else {
+                AsyncImage(
+                    model = imageUri,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer(scaleX = zoomScale, scaleY = zoomScale)
+                )
+            }
             Box(
                 modifier = Modifier
                     .fillMaxSize(0.82f)
-                    .border(3.dp, colors.editAvatar.circleBorder, CircleShape)
+                    .border(
+                        width = 3.dp,
+                        color = colors.editAvatar.circleBorder,
+                        shape = CircleShape
+                    )
             )
         }
 
@@ -145,7 +188,7 @@ fun EditAvatarScreen(
             )
             Slider(
                 value = zoomScale,
-                onValueChange = { zoomScale = it },
+                onValueChange = onZoomScaleChange,
                 valueRange = MIN_ZOOM..MAX_ZOOM,
                 thumb = {
                     Box(
@@ -157,7 +200,7 @@ fun EditAvatarScreen(
                 },
                 track = { sliderState ->
                     val fraction = ((sliderState.value - sliderState.valueRange.start) /
-                        (sliderState.valueRange.endInclusive - sliderState.valueRange.start))
+                            (sliderState.valueRange.endInclusive - sliderState.valueRange.start))
                         .coerceIn(0f, 1f)
                     Box(
                         modifier = Modifier
@@ -209,7 +252,7 @@ fun EditAvatarScreen(
                 modifier = Modifier.clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = { viewModel.uploadUserImage(imageUri) }
+                    onClick = onChoose
                 )
             )
         }
@@ -221,7 +264,13 @@ fun EditAvatarScreen(
 @Composable
 private fun EditAvatarScreenPreviewNeon() {
     AppTheme(colors = NeonColors) {
-        EditAvatarScreen(imageUri = Uri.EMPTY, onCancel = {}, onChoose = { _, _ -> })
+        EditAvatarContent(
+            imageUri = Uri.EMPTY,
+            zoomScale = DEFAULT_ZOOM,
+            onZoomScaleChange = {},
+            onCancel = {},
+            onChoose = {}
+        )
     }
 }
 
@@ -229,6 +278,12 @@ private fun EditAvatarScreenPreviewNeon() {
 @Composable
 private fun EditAvatarScreenPreviewBlackGold() {
     AppTheme(colors = BlackGoldColors) {
-        EditAvatarScreen(imageUri = Uri.EMPTY, onCancel = {}, onChoose = { _, _ -> })
+        EditAvatarContent(
+            imageUri = Uri.EMPTY,
+            zoomScale = DEFAULT_ZOOM,
+            onZoomScaleChange = {},
+            onCancel = {},
+            onChoose = {}
+        )
     }
 }

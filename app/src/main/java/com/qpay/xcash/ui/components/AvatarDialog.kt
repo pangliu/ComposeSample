@@ -143,27 +143,29 @@ private fun AvatarDialogContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colors.bg.surface, RoundedCornerShape(14.dp))
-                .border(
-                    1.5.dp,
-                    colors.accent.primary,
-                    RoundedCornerShape(14.dp)
-                )
+                .background(colors.avatarDialog.cardBackground, RoundedCornerShape(14.dp))
+//                .border(
+//                    1.5.dp,
+//                    colors.avatarDialog.cardBorder,
+//                    RoundedCornerShape(14.dp)
+//                )
         ) {
             AvatarDialogActionRow(
                 text = stringResource(R.string.avatar_dialog_take_photo),
                 icon = Icons.Default.CameraAlt,
-                textColor = colors.accent.primary,
+                textColor = colors.avatarDialog.actionText,
+                iconColor = colors.avatarDialog.actionIcon,
                 onClick = onTakePhoto
             )
             HorizontalDivider(
-                color = colors.accent.primary.copy(alpha = 0.8f),
+                color = colors.avatarDialog.divider,
                 thickness = 0.5.dp
             )
             AvatarDialogActionRow(
                 text = stringResource(R.string.avatar_dialog_choose_from_album),
                 icon = Icons.Default.PhotoLibrary,
-                textColor = colors.accent.primary,
+                textColor = colors.avatarDialog.actionText,
+                iconColor = colors.avatarDialog.actionIcon,
                 onClick = onChooseFromAlbum
             )
         }
@@ -172,8 +174,8 @@ private fun AvatarDialogContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .background(colors.bg.surface, RoundedCornerShape(14.dp))
-                .border(1.5.dp, colors.accent.primary, RoundedCornerShape(14.dp))
+                .background(colors.avatarDialog.cancelBackground, RoundedCornerShape(14.dp))
+//                .border(1.5.dp, colors.avatarDialog.cancelBorder, RoundedCornerShape(14.dp))
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
@@ -183,7 +185,7 @@ private fun AvatarDialogContent(
         ) {
             Text(
                 text = stringResource(R.string.avatar_dialog_cancel),
-                color = colors.accent.primary,
+                color = colors.avatarDialog.cancelText,
                 fontSize = 17.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -196,6 +198,7 @@ private fun AvatarDialogActionRow(
     text: String,
     icon: ImageVector,
     textColor: Color,
+    iconColor: Color,
     onClick: () -> Unit
 ) {
     Row(
@@ -220,7 +223,7 @@ private fun AvatarDialogActionRow(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = textColor,
+            tint = iconColor,
             modifier = Modifier.size(22.dp)
         )
     }

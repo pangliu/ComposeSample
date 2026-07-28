@@ -77,3 +77,38 @@ val BlackGoldEditAvatarColors = EditAvatarColors(
     ),
     errorDialogTryAgainText = Color.Black,
 )
+
+// ui/components/AvatarDialog 專屬顏色
+
+data class AvatarDialogColors(
+    val cardBackground: Color,   // 「拍照 / 從相簿選擇」卡片底色
+    val cardBorder: Color,       // 「拍照 / 從相簿選擇」卡片邊框
+    val actionText: Color,       // 選項文字（拍照 / 從相簿選擇）
+    val actionIcon: Color,       // 選項 icon（拍照 / 從相簿選擇）
+    val divider: Color,          // 選項間分隔線
+    val cancelBackground: Color, // Cancel 按鈕底色
+    val cancelBorder: Color,     // Cancel 按鈕邊框
+    val cancelText: Color,       // Cancel 按鈕文字
+)
+
+val NeonAvatarDialogColors = AvatarDialogColors(
+    cardBackground = twilightNavy,
+    cardBorder = neonCyan,
+    actionText = neonCyan,
+    actionIcon = neonCyan,
+    divider = slateGray.copy(alpha = 0.8f),
+    cancelBackground = twilightNavy,
+    cancelBorder = neonCyan,
+    cancelText = neonCyan,
+)
+
+val BlackGoldAvatarDialogColors = AvatarDialogColors(
+    cardBackground = charcoalGray,
+    cardBorder = antiqueGold,
+    actionText = neonBlue,
+    actionIcon = neonBlue,
+    divider = slateGray.copy(alpha = 0.8f),
+    cancelBackground = charcoalGray,
+    cancelBorder = antiqueGold,
+    cancelText = neonBlue,
+)
