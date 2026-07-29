@@ -196,10 +196,10 @@ private fun SplitPartnersRowFullPreviewContent() {
     SplitPartnersRow(
         myName = "Hank Liu",
         partners = listOf(
-            FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK),
-            FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM),
-            FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "blackwidow", contactType = ContactType.FACEBOOK),
-            FriendResponse(id = "F004", name = "Steve Rogers", nickName = "cap", contactType = ContactType.PHONE_NUM)
+            FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK, avatarUrl = "", isFavorite = false),
+            FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM, avatarUrl = "", isFavorite = false),
+            FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "blackwidow", contactType = ContactType.FACEBOOK, avatarUrl = "", isFavorite = false),
+            FriendResponse(id = "F004", name = "Steve Rogers", nickName = "cap", contactType = ContactType.PHONE_NUM, avatarUrl = "", isFavorite = false)
         )
     )
 }
@@ -209,8 +209,8 @@ private fun SplitPartnersRowPartialPreviewContent() {
     SplitPartnersRow(
         myName = "Hank Liu",
         partners = listOf(
-            FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK),
-            FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM)
+            FriendResponse(id = "F001", name = "Bruce Banner", nickName = "bruceb", contactType = ContactType.FACEBOOK, avatarUrl = "", isFavorite = false),
+            FriendResponse(id = "F002", name = "Tony Stark", nickName = "ironman", contactType = ContactType.PHONE_NUM, avatarUrl = "", isFavorite = false)
         )
     )
 }

@@ -425,8 +425,8 @@ private fun SplitBillDialogPreviewContent() {
     SplitBillDialog(
         totalAmount = 350.0,
         friendList = listOf(
-            FriendResponse(id = "F001", name = "Friend A", nickName = "frienda", contactType = ContactType.FACEBOOK),
-            FriendResponse(id = "F002", name = "Friend B", nickName = "friendb", contactType = ContactType.PHONE_NUM)
+            FriendResponse(id = "F001", name = "Friend A", nickName = "frienda", contactType = ContactType.FACEBOOK, avatarUrl = "", isFavorite = false),
+            FriendResponse(id = "F002", name = "Friend B", nickName = "friendb", contactType = ContactType.PHONE_NUM, avatarUrl = "", isFavorite = false)
         ),
         myName = "Hank Liu",
         onDismiss = {}

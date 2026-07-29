@@ -379,7 +379,9 @@ private fun SelectPartnerItemPreviewContent() {
                 id = "F001",
                 name = "Bruce Banner",
                 nickName = "bruceb",
-                contactType = ContactType.FACEBOOK
+                contactType = ContactType.FACEBOOK,
+                avatarUrl = "",
+                isFavorite = false
             ),
             isSelected = true,
             onClick = {}
@@ -389,7 +391,9 @@ private fun SelectPartnerItemPreviewContent() {
                 id = "F002",
                 name = "Tony Stark",
                 nickName = "ironman",
-                contactType = ContactType.PHONE_NUM
+                contactType = ContactType.PHONE_NUM,
+                avatarUrl = "",
+                isFavorite = false
             ),
             isSelected = false,
             onClick = {}
@@ -421,37 +425,49 @@ private fun SelectSplitPartnerDialogPreviewContent() {
                 id = "F001",
                 name = "Bruce Banner",
                 nickName = "bruceb",
-                contactType = ContactType.FACEBOOK
+                contactType = ContactType.FACEBOOK,
+                avatarUrl = "",
+                isFavorite = false
             ),
             FriendResponse(
                 id = "F002",
                 name = "Bruce Banner",
                 nickName = "bruceb",
-                contactType = ContactType.FACEBOOK
+                contactType = ContactType.FACEBOOK,
+                avatarUrl = "",
+                isFavorite = false
             ),
             FriendResponse(
                 id = "F003",
                 name = "Bruce Banner",
                 nickName = "bruceb",
-                contactType = ContactType.FACEBOOK
+                contactType = ContactType.FACEBOOK,
+                avatarUrl = "",
+                isFavorite = false
             ),
             FriendResponse(
                 id = "F004",
                 name = "Bruce Banner",
                 nickName = "bruceb",
-                contactType = ContactType.FACEBOOK
+                contactType = ContactType.FACEBOOK,
+                avatarUrl = "",
+                isFavorite = false
             ),
             FriendResponse(
                 id = "F005",
                 name = "Tony Stark",
                 nickName = "ironman",
-                contactType = ContactType.PHONE_NUM
+                contactType = ContactType.PHONE_NUM,
+                avatarUrl = "",
+                isFavorite = false
             ),
             FriendResponse(
                 id = "F006",
                 name = "Natasha Romanoff",
                 nickName = "blackwidow",
-                contactType = ContactType.FACEBOOK
+                contactType = ContactType.FACEBOOK,
+                avatarUrl = "",
+                isFavorite = false
             )
         ),
         totalAmount = 350.0,
