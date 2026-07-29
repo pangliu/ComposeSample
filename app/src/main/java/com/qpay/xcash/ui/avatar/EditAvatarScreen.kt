@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,13 +33,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +52,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -112,6 +119,19 @@ private fun EditAvatarContent(
     val colors = LocalAppColors.current
     val isPreview = LocalInspectionMode.current
 
+    var imageOffset by remember { mutableStateOf(Offset.Zero) }
+    var boxSize by remember { mutableStateOf(IntSize.Zero) }
+    val zoomScaleState = rememberUpdatedState(zoomScale)
+
+    LaunchedEffect(zoomScale, boxSize) {
+        val maxOffsetX = boxSize.width * (zoomScale - 1f) / 2f
+        val maxOffsetY = boxSize.height * (zoomScale - 1f) / 2f
+        imageOffset = Offset(
+            x = imageOffset.x.coerceIn(-maxOffsetX, maxOffsetX),
+            y = imageOffset.y.coerceIn(-maxOffsetY, maxOffsetY)
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -149,7 +169,25 @@ private fun EditAvatarContent(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
-                        .graphicsLayer(scaleX = zoomScale, scaleY = zoomScale)
+                        .onSizeChanged { boxSize = it }
+                        .pointerInput(Unit) {
+                            detectDragGestures { change, dragAmount ->
+                                change.consume()
+                                val scale = zoomScaleState.value
+                                val maxOffsetX = boxSize.width * (scale - 1f) / 2f
+                                val maxOffsetY = boxSize.height * (scale - 1f) / 2f
+                                imageOffset = Offset(
+                                    x = (imageOffset.x + dragAmount.x).coerceIn(-maxOffsetX, maxOffsetX),
+                                    y = (imageOffset.y + dragAmount.y).coerceIn(-maxOffsetY, maxOffsetY)
+                                )
+                            }
+                        }
+                        .graphicsLayer(
+                            scaleX = zoomScale,
+                            scaleY = zoomScale,
+                            translationX = imageOffset.x,
+                            translationY = imageOffset.y
+                        )
                 )
             }
             Box(
