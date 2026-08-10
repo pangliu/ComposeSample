@@ -10,7 +10,9 @@ data class FriendResponse(
     @Json(name = "nick_name") val nickName: String,
     @Json(name = "contact_type") val contactType: ContactType,
     @Json(name = "avatar_url") val avatarUrl: String,
-    @Json(name = "is_favorite") val isFavorite: Boolean
+    @Json(name = "is_favorite") val isFavorite: Boolean,
+    @Json(name = "tag_label") val tagLabel: String? = null,
+    @Json(name = "is_recent") val isRecent: Boolean = false
 )
 
 enum class ContactType {

@@ -206,6 +206,16 @@ fun ProfileScreenContent(
                     iconTint = colors.profile.menuAccountIconTint,
                     onClick = { onNavigate(Routes.TRANSACTION_HISTORY) }
                 )
+                HorizontalDivider(
+                    color = colors.profile.menuAccountBorder.copy(alpha = 0.15f),
+                    thickness = 0.5.dp
+                )
+                ProfileMenuItem(
+                    icon = ProfileIcon.Vector(Icons.Outlined.Person),
+                    label = stringResource(R.string.profile_friends),
+                    iconTint = colors.profile.menuAccountIconTint,
+                    onClick = { onNavigate(Routes.FRIEND) }
+                )
             }
 
             ProfileSectionHeader(stringResource(R.string.profile_section_security))

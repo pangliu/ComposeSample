@@ -100,13 +100,13 @@ class FakeUserApiService : UserApiService {
             code = 200,
             errorMsg = "success",
             result = listOf(
-                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "Hulk", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F001", isFavorite = true),
-                FriendResponse(id = "F002", name = "Tony Stark", nickName = "Iron Man", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F002", isFavorite = true),
-                FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "Black Widow", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F003", isFavorite = false),
-                FriendResponse(id = "F004", name = "Steve Rogers", nickName = "Captain America", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F004", isFavorite = true),
-                FriendResponse(id = "F005", name = "Thor Odinson", nickName = "Thor", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F005", isFavorite = false),
-                FriendResponse(id = "F006", name = "Clint Barton", nickName = "Hawkeye", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F006", isFavorite = false),
-                FriendResponse(id = "F007", name = "Peter Parker", nickName = "Spider-Man", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F007", isFavorite = true)
+                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "Hulk", contactType = ContactType.FACEBOOK, avatarUrl = "ㄏ", isFavorite = true, tagLabel = "Besties", isRecent = true),
+                FriendResponse(id = "F002", name = "Tony Stark", nickName = "Iron Man", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F002", isFavorite = true, tagLabel = "Family", isRecent = false),
+                FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "Black Widow", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F003", isFavorite = false, tagLabel = null, isRecent = true),
+                FriendResponse(id = "F004", name = "Steve Rogers", nickName = "Captain America", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F004", isFavorite = true, tagLabel = "Family", isRecent = false),
+                FriendResponse(id = "F005", name = "Thor Odinson", nickName = "Thor", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F005", isFavorite = false, tagLabel = null, isRecent = false),
+                FriendResponse(id = "F006", name = "Clint Barton", nickName = "Hawkeye", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F006", isFavorite = false, tagLabel = "Besties", isRecent = false),
+                FriendResponse(id = "F007", name = "Peter Parker", nickName = "Spider-Man", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F007", isFavorite = true, tagLabel = null, isRecent = true)
             )
         )
     }

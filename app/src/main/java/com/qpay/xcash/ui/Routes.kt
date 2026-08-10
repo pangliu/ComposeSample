@@ -27,6 +27,10 @@ object Routes {
     const val UPDATE_LOG = "update_log"
     const val NOTIFICATIONS = "notifications"
 
+    // Friend sub-pages
+    const val FRIEND = "friend"
+    const val FRIEND_LIST = "friend_list"
+
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"
     const val ADD_NEW_CARD = "add_new_card"

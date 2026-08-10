@@ -262,6 +262,7 @@
     <string name="profile_edit">Profile Edit</string>
     <string name="profile_recurring">Edit Recurring Accounts</string>
     <string name="profile_transaction_history">Transaction History</string>
+    <string name="profile_friends">Friends</string>
     <string name="profile_section_security">Security &amp; Settings</string>
     <string name="profile_security_center">Security Center</string>
     <string name="profile_section_support">Support &amp; About</string>
@@ -490,6 +491,29 @@
     <string name="tx_detail_total">Total</string>
     <string name="tx_detail_reference_no">Reference No.</string>
     <string name="tx_detail_date">Date</string>
+
+    <!-- FriendScreen -->
+    <string name="friend_title">Friends</string>
+    <string name="friend_action_invite">Invite</string>
+    <string name="friend_action_qr_code">QR Code</string>
+    <string name="friend_action_search">Search</string>
+    <string name="friend_third_party_title">Add Friends via Third Party</string>
+    <string name="friend_third_party_subtitle">Sync from Phone, Telegram, WhatsApp, etc.</string>
+    <string name="friend_my_list_title">My Friend List</string>
+    <string name="friend_my_list_subtitle">View all your friends here</string>
+    <string name="friend_feature_coming_soon">Coming soon</string>
+
+    <!-- FriendListScreen -->
+    <string name="friend_add_desc">Add Friend</string>
+    <string name="friend_search_hint">Search friends…</string>
+    <string name="friend_tab_all">All</string>
+    <string name="friend_tab_favorites">Favorites</string>
+    <string name="friend_tab_recent">Recent</string>
+    <string name="friend_category_all">All</string>
+    <string name="friend_results_count">Results · %d</string>
+    <string name="friend_sort_a_to_z">A-Z</string>
+    <string name="friend_sort_z_to_a">Z-A</string>
+    <string name="friend_empty">No friends found</string>
 
     <!-- Error Messages (HomeViewModel / LoginViewModel) -->
     <string name="error_fetch_user_data">無法取得使用者資料</string>

@@ -21,6 +21,9 @@ import com.qpay.xcash.ui.cards.linked_success.LinkedSuccessScreen
 import com.qpay.xcash.ui.cards.select.SelectCardTypeScreen
 import com.qpay.xcash.ui.avatar.CameraScreen
 import com.qpay.xcash.ui.avatar.EditAvatarScreen
+import com.qpay.xcash.ui.friend.FriendScreen
+import com.qpay.xcash.ui.friend.list.FriendListScreen
+import com.qpay.xcash.ui.friend.list.FriendListViewModel
 import com.qpay.xcash.ui.home.notifications.NotificationsScreen
 import com.qpay.xcash.ui.home.notifications.NotificationsViewModel
 import com.qpay.xcash.ui.home.transaction_detail.TransactionDetailScreen
@@ -110,6 +113,7 @@ fun AppNavigation(
                         Routes.NOTIFICATIONS -> slideOutHorizontally { -it }
                         Routes.EDIT_AVATAR -> slideOutHorizontally { -it }
                         Routes.CAMERA -> slideOutHorizontally { -it }
+                        Routes.FRIEND -> slideOutHorizontally { -it }
                         else -> null
                     }
                 },
@@ -129,6 +133,7 @@ fun AppNavigation(
                         Routes.NOTIFICATIONS -> slideInHorizontally { -it }
                         Routes.EDIT_AVATAR -> slideInHorizontally { -it }
                         Routes.CAMERA -> slideInHorizontally { -it }
+                        Routes.FRIEND -> slideInHorizontally { -it }
                         else -> null
                     }
                 }
@@ -215,6 +220,31 @@ fun AppNavigation(
                         navController.popBackStack()
                         navController.navigate(Routes.editAvatar(uri.toString()))
                     }
+                )
+            }
+
+            composable(
+                route = Routes.FRIEND,
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } },
+                exitTransition = { slideOutHorizontally { -it } },
+                popEnterTransition = { slideInHorizontally { -it } }
+            ) {
+                FriendScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigateFriendList = { navController.navigate(Routes.FRIEND_LIST) }
+                )
+            }
+
+            composable(
+                route = Routes.FRIEND_LIST,
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } }
+            ) {
+                val viewModel = hiltViewModel<FriendListViewModel>()
+                FriendListScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() }
                 )
             }
 
