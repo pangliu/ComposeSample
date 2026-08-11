@@ -1,6 +1,7 @@
 package com.qpay.xcash.network.fake
 
 import com.qpay.xcash.network.api.UserApiService
+import com.qpay.xcash.network.model.request.FindFriendRequest
 import com.qpay.xcash.network.model.response.BaseResponse
 import com.qpay.xcash.network.model.response.ContactType
 import com.qpay.xcash.network.model.response.FriendResponse
@@ -109,6 +110,28 @@ class FakeUserApiService : UserApiService {
                 FriendResponse(id = "F007", name = "Peter Parker", nickName = "Spider-Man", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F007", isFavorite = true, tagLabel = null, isRecent = true)
             )
         )
+    }
+
+    override suspend fun findFriend(request: FindFriendRequest): BaseResponse<FriendResponse> {
+        delay(600)
+        return if (request.phoneNumber == "9123456789") {
+            BaseResponse(
+                code = 200,
+                errorMsg = "success",
+                result = FriendResponse(
+                    id = "F002",
+                    name = "Tony Stark",
+                    nickName = "Iron Man",
+                    contactType = ContactType.PHONE_NUM,
+                    avatarUrl = "https://i.pravatar.cc/150?u=F002",
+                    isFavorite = false,
+                    tagLabel = null,
+                    isRecent = false
+                )
+            )
+        } else {
+            BaseResponse(code = 404, errorMsg = "User not found", result = null)
+        }
     }
 
     override suspend fun getUpdateLog(): BaseResponse<List<UpdateLogResponse>> {

@@ -515,6 +515,13 @@
     <string name="friend_sort_z_to_a">Z-A</string>
     <string name="friend_empty">No friends found</string>
 
+    <!-- AddFriendScreen -->
+    <string name="add_friend_title">Friend</string>
+    <string name="add_friend_phone_label">Phone Number</string>
+    <string name="add_friend_phone_hint">Enter phone number</string>
+    <string name="add_friend_country_code_desc">Select Country Code</string>
+    <string name="add_friend_search_desc">Search</string>
+
     <!-- Error Messages (HomeViewModel / LoginViewModel) -->
     <string name="error_fetch_user_data">無法取得使用者資料</string>
     <string name="error_network_fetch">無法取得資料：網路異常</string>

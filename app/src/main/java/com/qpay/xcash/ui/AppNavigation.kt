@@ -22,6 +22,7 @@ import com.qpay.xcash.ui.cards.select.SelectCardTypeScreen
 import com.qpay.xcash.ui.avatar.CameraScreen
 import com.qpay.xcash.ui.avatar.EditAvatarScreen
 import com.qpay.xcash.ui.friend.FriendScreen
+import com.qpay.xcash.ui.friend.addFriend.AddFriendScreen
 import com.qpay.xcash.ui.friend.list.FriendListScreen
 import com.qpay.xcash.ui.friend.list.FriendListViewModel
 import com.qpay.xcash.ui.home.notifications.NotificationsScreen
@@ -232,7 +233,8 @@ fun AppNavigation(
             ) {
                 FriendScreen(
                     onBack = { navController.popBackStack() },
-                    onNavigateFriendList = { navController.navigate(Routes.FRIEND_LIST) }
+                    onNavigateFriendList = { navController.navigate(Routes.FRIEND_LIST) },
+                    onNavigateAddFriend = { navController.navigate(Routes.ADD_FRIEND) }
                 )
             }
 
@@ -246,6 +248,14 @@ fun AppNavigation(
                     viewModel = viewModel,
                     onBack = { navController.popBackStack() }
                 )
+            }
+
+            composable(
+                route = Routes.ADD_FRIEND,
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } }
+            ) {
+                AddFriendScreen(onBack = { navController.popBackStack() })
             }
 
             // ── Home sub-pages ────────────────────────────────────────────────

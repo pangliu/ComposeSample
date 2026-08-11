@@ -1,7 +1,9 @@
 package com.qpay.xcash.network.api
 
+import com.qpay.xcash.network.model.request.FindFriendRequest
 import com.qpay.xcash.network.model.response.BaseResponse
 import okhttp3.MultipartBody
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -32,6 +34,9 @@ interface UserApiService {
 
     @GET("/api/user/friend_list")
     suspend fun getFriendList(): BaseResponse<List<FriendResponse>>
+
+    @POST("/api/user/find_friend")
+    suspend fun findFriend(@Body request: FindFriendRequest): BaseResponse<FriendResponse>
 
     @GET("/api/update_log")
     suspend fun getUpdateLog(): BaseResponse<List<UpdateLogResponse>>

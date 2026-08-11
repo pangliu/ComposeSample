@@ -55,7 +55,8 @@ import io.github.alexzhirkevich.qrose.options.brush
 @Composable
 fun FriendScreen(
     onBack: () -> Unit,
-    onNavigateFriendList: () -> Unit
+    onNavigateFriendList: () -> Unit,
+    onNavigateAddFriend: () -> Unit
 ) {
     val colors = LocalAppColors.current
     Scaffold(
@@ -65,7 +66,8 @@ fun FriendScreen(
         FriendContent(
             paddingValues = paddingValues,
             onBack = onBack,
-            onNavigateFriendList = onNavigateFriendList
+            onNavigateFriendList = onNavigateFriendList,
+            onNavigateAddFriend = onNavigateAddFriend
         )
     }
 }
@@ -74,7 +76,8 @@ fun FriendScreen(
 private fun FriendContent(
     paddingValues: PaddingValues,
     onBack: () -> Unit,
-    onNavigateFriendList: () -> Unit
+    onNavigateFriendList: () -> Unit,
+    onNavigateAddFriend: () -> Unit
 ) {
     val context = LocalContext.current
     val comingSoon = stringResource(R.string.friend_feature_coming_soon)
@@ -107,7 +110,7 @@ private fun FriendContent(
             FriendActionButton(
                 icon = Icons.Default.Search,
                 label = stringResource(R.string.friend_action_search),
-                onClick = { Toast.makeText(context, comingSoon, Toast.LENGTH_SHORT).show() }
+                onClick = onNavigateAddFriend
             )
         }
 
@@ -293,7 +296,7 @@ private fun FriendMenuItem(
 @Composable
 private fun FriendScreenPreviewNeon() {
     AppTheme(colors = NeonColors) {
-        FriendContent(paddingValues = PaddingValues(), onBack = {}, onNavigateFriendList = {})
+        FriendContent(paddingValues = PaddingValues(), onBack = {}, onNavigateFriendList = {}, onNavigateAddFriend = {})
     }
 }
 
@@ -301,6 +304,6 @@ private fun FriendScreenPreviewNeon() {
 @Composable
 private fun FriendScreenPreviewBlackGold() {
     AppTheme(colors = BlackGoldColors) {
-        FriendContent(paddingValues = PaddingValues(), onBack = {}, onNavigateFriendList = {})
+        FriendContent(paddingValues = PaddingValues(), onBack = {}, onNavigateFriendList = {}, onNavigateAddFriend = {})
     }
 }

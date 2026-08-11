@@ -30,6 +30,7 @@ object Routes {
     // Friend sub-pages
     const val FRIEND = "friend"
     const val FRIEND_LIST = "friend_list"
+    const val ADD_FRIEND = "add_friend"
 
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"

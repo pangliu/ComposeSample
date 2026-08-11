@@ -4,6 +4,7 @@ import com.qpay.xcash.network.api.UserApiService
 import com.qpay.xcash.network.manager.SessionManager
 import com.qpay.xcash.network.manager.UserInfoManager
 import com.qpay.xcash.network.model.NetworkResult
+import com.qpay.xcash.network.model.request.FindFriendRequest
 import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.network.model.response.NotificationResponse
 import com.qpay.xcash.network.model.response.OrderHistoryResponse
@@ -49,6 +50,12 @@ class UserRepository @Inject constructor(
     suspend fun fetchFriendList(): NetworkResult<List<FriendResponse>> {
         return safeApiCall {
             apiService.getFriendList()
+        }
+    }
+
+    suspend fun findFriend(countryCode: String, phoneNumber: String): NetworkResult<FriendResponse> {
+        return safeApiCall {
+            apiService.findFriend(FindFriendRequest(countryCode = countryCode, phoneNumber = phoneNumber))
         }
     }
 
