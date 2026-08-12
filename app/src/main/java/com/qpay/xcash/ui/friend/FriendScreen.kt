@@ -56,7 +56,8 @@ import io.github.alexzhirkevich.qrose.options.brush
 fun FriendScreen(
     onBack: () -> Unit,
     onNavigateFriendList: () -> Unit,
-    onNavigateAddFriend: () -> Unit
+    onNavigateAddFriend: () -> Unit,
+    onNavigateQrCode: () -> Unit
 ) {
     val colors = LocalAppColors.current
     Scaffold(
@@ -67,7 +68,8 @@ fun FriendScreen(
             paddingValues = paddingValues,
             onBack = onBack,
             onNavigateFriendList = onNavigateFriendList,
-            onNavigateAddFriend = onNavigateAddFriend
+            onNavigateAddFriend = onNavigateAddFriend,
+            onNavigateQrCode = onNavigateQrCode
         )
     }
 }
@@ -77,7 +79,8 @@ private fun FriendContent(
     paddingValues: PaddingValues,
     onBack: () -> Unit,
     onNavigateFriendList: () -> Unit,
-    onNavigateAddFriend: () -> Unit
+    onNavigateAddFriend: () -> Unit,
+    onNavigateQrCode: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val comingSoon = stringResource(R.string.friend_feature_coming_soon)
@@ -105,7 +108,7 @@ private fun FriendContent(
             FriendActionButton(
                 icon = Icons.Outlined.QrCode2,
                 label = stringResource(R.string.friend_action_qr_code),
-                onClick = { Toast.makeText(context, comingSoon, Toast.LENGTH_SHORT).show() }
+                onClick = onNavigateQrCode
             )
             FriendActionButton(
                 icon = Icons.Default.Search,

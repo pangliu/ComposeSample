@@ -21,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,7 +50,9 @@ enum class QrMode { SCAN_QR, MY_QR }
 fun QrModeTabSelector(
     selectedMode: QrMode,
     onModeChange: (QrMode) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    borderBrush: Brush? = null,       // 不傳時使用 colors.scanPay.qrTabBorder（供個別頁面覆寫外框漸層）
+    selectedFillBrush: Brush? = null  // 不傳時使用 colors.scanPay.qrTabSelectedFill（供個別頁面覆寫選中底色漸層）
 ) {
     val colors = LocalAppColors.current
     Row(
@@ -70,7 +73,7 @@ fun QrModeTabSelector(
                 shape = RoundedCornerShape(22.dp))
             .border(
                 width = 1.5.dp,
-                brush = colors.scanPay.qrTabBorder,
+                brush = borderBrush ?: colors.scanPay.qrTabBorder,
                 shape = RoundedCornerShape(22.dp)
             )
             .padding(5.dp),                 // 外框與內圈之間的留白
@@ -79,11 +82,13 @@ fun QrModeTabSelector(
         QrTab(
             label = stringResource(R.string.scan_pay_tab_scan_qr),
             isSelected = selectedMode == QrMode.SCAN_QR,
+            selectedFillBrush = selectedFillBrush ?: colors.scanPay.qrTabSelectedFill,
             onClick = { onModeChange(QrMode.SCAN_QR) }
         )
         QrTab(
             label = stringResource(R.string.scan_pay_tab_my_qr),
             isSelected = selectedMode == QrMode.MY_QR,
+            selectedFillBrush = selectedFillBrush ?: colors.scanPay.qrTabSelectedFill,
             onClick = { onModeChange(QrMode.MY_QR) }
         )
     }
@@ -93,6 +98,7 @@ fun QrModeTabSelector(
 private fun RowScope.QrTab(
     label: String,
     isSelected: Boolean,
+    selectedFillBrush: Brush,
     onClick: () -> Unit
 ) {
     val colors = LocalAppColors.current
@@ -109,7 +115,7 @@ private fun RowScope.QrTab(
                         else Modifier
                     )
                     .background(
-                        brush = colors.scanPay.qrTabSelectedFill, shape = innerCapsuleShape)
+                        brush = selectedFillBrush, shape = innerCapsuleShape)
 //                    .border(1.dp, colors.accent.primary, innerCapsuleShape)
                 else Modifier
             )

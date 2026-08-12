@@ -31,6 +31,7 @@ object Routes {
     const val FRIEND = "friend"
     const val FRIEND_LIST = "friend_list"
     const val ADD_FRIEND = "add_friend"
+    const val FRIEND_QR_CODE = "friend_qr_code"
 
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"

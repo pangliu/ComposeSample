@@ -522,6 +522,15 @@
     <string name="add_friend_country_code_desc">Select Country Code</string>
     <string name="add_friend_search_desc">Search</string>
 
+    <!-- QRCodeScreen -->
+    <string name="qr_code_title">QR Code</string>
+    <string name="qr_code_permission_required">Camera permission is required to scan QR codes.</string>
+    <string name="qr_code_go_to_setting">Go To Setting</string>
+    <string name="qr_code_check_setting_hint">Please check your setting</string>
+    <string name="qr_code_share_profile">Share Profile</string>
+    <string name="qr_code_desc">QR Code</string>
+    <string name="qr_code_share_text">Add me on XCash! @%1$s</string>
+
     <!-- Error Messages (HomeViewModel / LoginViewModel) -->
     <string name="error_fetch_user_data">無法取得使用者資料</string>
     <string name="error_network_fetch">無法取得資料：網路異常</string>

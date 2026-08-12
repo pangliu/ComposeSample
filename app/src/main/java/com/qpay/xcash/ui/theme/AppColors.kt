@@ -58,6 +58,7 @@ data class AppColors(
     val friendList: FriendListColors,
     val addFriend: AddFriendColors,
     val foundFriend: FoundFriendColors,
+    val qrCode: QrCodeColors,
 )
 
 val NeonColors = AppColors(
@@ -105,6 +106,7 @@ val NeonColors = AppColors(
     friendList = NeonFriendListColors,
     addFriend = NeonAddFriendColors,
     foundFriend = NeonFoundFriendColors,
+    qrCode = NeonQrCodeColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -156,4 +158,5 @@ val BlackGoldColors = AppColors(
     friendList = BlackGoldFriendListColors,
     addFriend = BlackGoldAddFriendColors,
     foundFriend = BlackGoldFoundFriendColors,
+    qrCode = BlackGoldQrCodeColors,
 )
