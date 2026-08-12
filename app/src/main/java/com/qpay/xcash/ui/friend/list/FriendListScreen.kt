@@ -28,8 +28,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -58,6 +56,7 @@ import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.friend.components.FriendListItem
+import com.qpay.xcash.ui.friend.components.FriendSortDialog
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
@@ -98,7 +97,7 @@ fun FriendListScreen(
             onSearchQueryChange = viewModel::onSearchQueryChange,
             onTabSelected = viewModel::onTabSelected,
             onCategorySelected = viewModel::onCategorySelected,
-            onSortOrderToggle = viewModel::onSortOrderToggle,
+            onSortOrderSelected = viewModel::onSortOrderSelected,
             onToggleFavorite = viewModel::onToggleFavorite
         )
     }
@@ -113,7 +112,7 @@ private fun FriendListContent(
     onSearchQueryChange: (String) -> Unit,
     onTabSelected: (FriendListTab) -> Unit,
     onCategorySelected: (String?) -> Unit,
-    onSortOrderToggle: () -> Unit,
+    onSortOrderSelected: (FriendListSortOrder) -> Unit,
     onToggleFavorite: (String) -> Unit
 ) {
     Column(
@@ -151,7 +150,7 @@ private fun FriendListContent(
         FriendListResultsHeader(
             resultCount = uiState.filteredFriends.size,
             sortOrder = uiState.sortOrder,
-            onSortOrderToggle = onSortOrderToggle,
+            onSortOrderSelected = onSortOrderSelected,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
@@ -377,11 +376,11 @@ private fun FriendListCategoryChip(
 private fun FriendListResultsHeader(
     resultCount: Int,
     sortOrder: FriendListSortOrder,
-    onSortOrderToggle: () -> Unit,
+    onSortOrderSelected: (FriendListSortOrder) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val colors = LocalAppColors.current.friendList
-    var isMenuExpanded by remember { mutableStateOf(false) }
+    var isSortDialogShowing by remember { mutableStateOf(false) }
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -392,46 +391,40 @@ private fun FriendListResultsHeader(
             brush = colors.resultsCountText,
             fontSize = 13.sp
         )
-        Box {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { isMenuExpanded = true }
-            ) {
-                Text(
-                    text = stringResource(
-                        if (sortOrder == FriendListSortOrder.A_TO_Z) R.string.friend_sort_a_to_z else R.string.friend_sort_z_to_a
-                    ),
-                    color = colors.sortText,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = colors.sortText,
-                    modifier = Modifier.size(18.dp)
-                )
-            }
-            DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.friend_sort_a_to_z)) },
-                    onClick = {
-                        isMenuExpanded = false
-                        if (sortOrder != FriendListSortOrder.A_TO_Z) onSortOrderToggle()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) { isSortDialogShowing = true }
+        ) {
+            Text(
+                text = stringResource(
+                    when (sortOrder) {
+                        FriendListSortOrder.A_TO_Z -> R.string.friend_sort_a_to_z
+                        FriendListSortOrder.Z_TO_A -> R.string.friend_sort_z_to_a
+                        FriendListSortOrder.RECENTLY_CONTACTED -> R.string.friend_sort_recently_contacted
                     }
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.friend_sort_z_to_a)) },
-                    onClick = {
-                        isMenuExpanded = false
-                        if (sortOrder != FriendListSortOrder.Z_TO_A) onSortOrderToggle()
-                    }
-                )
-            }
+                ),
+                color = colors.sortText,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = null,
+                tint = colors.sortText,
+                modifier = Modifier.size(18.dp)
+            )
         }
+    }
+
+    if (isSortDialogShowing) {
+        FriendSortDialog(
+            currentSortOrder = sortOrder,
+            onDismiss = { isSortDialogShowing = false },
+            onConfirm = onSortOrderSelected
+        )
     }
 }
 
@@ -506,7 +499,7 @@ private fun FriendListScreenPreviewNeon() {
             onSearchQueryChange = {},
             onTabSelected = {},
             onCategorySelected = {},
-            onSortOrderToggle = {},
+            onSortOrderSelected = {},
             onToggleFavorite = {}
         )
     }
@@ -524,7 +517,7 @@ private fun FriendListScreenPreviewBlackGold() {
             onSearchQueryChange = {},
             onTabSelected = {},
             onCategorySelected = {},
-            onSortOrderToggle = {},
+            onSortOrderSelected = {},
             onToggleFavorite = {}
         )
     }

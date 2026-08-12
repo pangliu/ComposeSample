@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 enum class FriendListTab { ALL, FAVORITES, RECENT }
 
-enum class FriendListSortOrder { A_TO_Z, Z_TO_A }
+enum class FriendListSortOrder { A_TO_Z, Z_TO_A, RECENTLY_CONTACTED }
 
 data class FriendListUiState(
     val isLoadingFriends: Boolean = true,
@@ -53,6 +53,9 @@ data class FriendListUiState(
             return when (sortOrder) {
                 FriendListSortOrder.A_TO_Z -> result.sortedBy { it.name }
                 FriendListSortOrder.Z_TO_A -> result.sortedByDescending { it.name }
+                FriendListSortOrder.RECENTLY_CONTACTED -> result.sortedWith(
+                    compareByDescending<FriendResponse> { it.isRecent }.thenBy { it.name }
+                )
             }
         }
 }
@@ -102,12 +105,8 @@ class FriendListViewModel @Inject constructor(
         _uiState.update { it.copy(selectedCategory = category) }
     }
 
-    fun onSortOrderToggle() {
-        _uiState.update {
-            it.copy(
-                sortOrder = if (it.sortOrder == FriendListSortOrder.A_TO_Z) FriendListSortOrder.Z_TO_A else FriendListSortOrder.A_TO_Z
-            )
-        }
+    fun onSortOrderSelected(sortOrder: FriendListSortOrder) {
+        _uiState.update { it.copy(sortOrder = sortOrder) }
     }
 
     fun onToggleFavorite(friendId: String) {

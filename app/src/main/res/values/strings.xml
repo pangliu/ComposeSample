@@ -513,7 +513,13 @@
     <string name="friend_results_count">Results · %d</string>
     <string name="friend_sort_a_to_z">A-Z</string>
     <string name="friend_sort_z_to_a">Z-A</string>
+    <string name="friend_sort_recently_contacted">Recently Contacted</string>
     <string name="friend_empty">No friends found</string>
+
+    <!-- FriendSortDialog -->
+    <string name="friend_sort_dialog_title">Sort By</string>
+    <string name="friend_sort_dialog_cancel">Cancel</string>
+    <string name="friend_sort_dialog_confirm">Confirm</string>
 
     <!-- AddFriendScreen -->
     <string name="add_friend_title">Friend</string>
