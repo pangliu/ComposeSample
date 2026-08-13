@@ -515,11 +515,25 @@
     <string name="friend_sort_z_to_a">Z-A</string>
     <string name="friend_sort_recently_contacted">Recently Contacted</string>
     <string name="friend_empty">No friends found</string>
+    <string name="friend_list_item_remove">Remove</string>
 
     <!-- FriendSortDialog -->
     <string name="friend_sort_dialog_title">Sort By</string>
     <string name="friend_sort_dialog_cancel">Cancel</string>
     <string name="friend_sort_dialog_confirm">Confirm</string>
+
+    <!-- FriendDetailScreen -->
+    <string name="friend_detail_refresh_desc">Refresh</string>
+    <string name="friend_detail_name_reset_desc">Cancel Edit</string>
+    <string name="friend_detail_name_save_desc">Save Name</string>
+    <string name="friend_detail_copy_desc">Copy</string>
+    <string name="friend_detail_tags_label">Tags</string>
+    <string name="friend_detail_xcash_id_label">Xcash ID</string>
+    <string name="friend_detail_memo_label">Memo</string>
+    <string name="friend_detail_memo_hint">Add a note about this friend</string>
+    <string name="friend_detail_save_btn">Save</string>
+    <string name="friend_detail_remove_btn">Remove</string>
+    <string name="friend_detail_copied_toast">Copied to clipboard</string>
 
     <!-- AddFriendScreen -->
     <string name="add_friend_title">Friend</string>

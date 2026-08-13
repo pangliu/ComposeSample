@@ -119,6 +119,16 @@ class FriendListViewModel @Inject constructor(
         }
     }
 
+    fun onRemoveFriend(friendId: String) {
+        _uiState.update { state ->
+            state.copy(friends = state.friends.filterNot { it.id == friendId })
+        }
+    }
+
+    fun selectFriend(friend: FriendResponse) {
+        userRepository.selectedFriend = friend
+    }
+
     fun onAddFriendClick() {
         viewModelScope.launch {
             _eventFlow.emit(UiEvent.ShowToast("好友邀請功能即將推出"))

@@ -12,12 +12,16 @@ import com.qpay.xcash.network.model.response.UpdateLogResponse
 import com.qpay.xcash.network.model.response.UserInfoResponse
 import okhttp3.MultipartBody
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserRepository @Inject constructor(
     private val apiService: UserApiService,
     private val userInfoManager: UserInfoManager,
     sessionManager: SessionManager
 ) : BaseRepository(sessionManager) {
+
+    var selectedFriend: FriendResponse? = null
 
     suspend fun fetchUserInfo(): NetworkResult<UserInfoResponse> {
         return safeApiCall { apiService.getUserInfo() }.also { result ->

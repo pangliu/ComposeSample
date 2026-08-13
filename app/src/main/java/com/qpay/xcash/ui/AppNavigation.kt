@@ -23,6 +23,8 @@ import com.qpay.xcash.ui.avatar.CameraScreen
 import com.qpay.xcash.ui.avatar.EditAvatarScreen
 import com.qpay.xcash.ui.friend.FriendScreen
 import com.qpay.xcash.ui.friend.addFriend.AddFriendScreen
+import com.qpay.xcash.ui.friend.detail.FriendDetailScreen
+import com.qpay.xcash.ui.friend.detail.FriendDetailViewModel
 import com.qpay.xcash.ui.friend.list.FriendListScreen
 import com.qpay.xcash.ui.friend.list.FriendListViewModel
 import com.qpay.xcash.ui.friend.qrcode.QRCodeScreen
@@ -243,10 +245,26 @@ fun AppNavigation(
             composable(
                 route = Routes.FRIEND_LIST,
                 enterTransition = { slideInHorizontally { it } },
-                popExitTransition = { slideOutHorizontally { it } }
+                popExitTransition = { slideOutHorizontally { it } },
+                exitTransition = { slideOutHorizontally { -it } },
+                popEnterTransition = { slideInHorizontally { -it } }
             ) {
                 val viewModel = hiltViewModel<FriendListViewModel>()
                 FriendListScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() },
+                    onNavigate = { navController.navigate(it) }
+                )
+            }
+
+            composable(
+                route = Routes.FRIEND_DETAIL,
+                arguments = listOf(navArgument("friendId") { type = NavType.StringType }),
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } }
+            ) {
+                val viewModel = hiltViewModel<FriendDetailViewModel>()
+                FriendDetailScreen(
                     viewModel = viewModel,
                     onBack = { navController.popBackStack() }
                 )

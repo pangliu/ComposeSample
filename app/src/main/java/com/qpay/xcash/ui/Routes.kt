@@ -32,6 +32,9 @@ object Routes {
     const val FRIEND_LIST = "friend_list"
     const val ADD_FRIEND = "add_friend"
     const val FRIEND_QR_CODE = "friend_qr_code"
+    const val FRIEND_DETAIL = "friend_detail/{friendId}"
+
+    fun friendDetail(friendId: String) = "friend_detail/${android.net.Uri.encode(friendId)}"
 
     // Cards sub-pages
     const val SELECT_CARD_TYPE = "select_card_type"

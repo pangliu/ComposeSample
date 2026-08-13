@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.ContactType
 import com.qpay.xcash.network.model.response.FriendResponse
+import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.LoadingDialog
@@ -66,7 +67,8 @@ import com.qpay.xcash.ui.theme.NeonColors
 @Composable
 fun FriendListScreen(
     viewModel: FriendListViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onNavigate: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -98,7 +100,12 @@ fun FriendListScreen(
             onTabSelected = viewModel::onTabSelected,
             onCategorySelected = viewModel::onCategorySelected,
             onSortOrderSelected = viewModel::onSortOrderSelected,
-            onToggleFavorite = viewModel::onToggleFavorite
+            onToggleFavorite = viewModel::onToggleFavorite,
+            onRemoveFriend = viewModel::onRemoveFriend,
+            onFriendClick = { friend ->
+                viewModel.selectFriend(friend)
+                onNavigate(Routes.friendDetail(friend.id))
+            }
         )
     }
 }
@@ -113,7 +120,9 @@ private fun FriendListContent(
     onTabSelected: (FriendListTab) -> Unit,
     onCategorySelected: (String?) -> Unit,
     onSortOrderSelected: (FriendListSortOrder) -> Unit,
-    onToggleFavorite: (String) -> Unit
+    onToggleFavorite: (String) -> Unit,
+    onRemoveFriend: (String) -> Unit,
+    onFriendClick: (FriendResponse) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -171,7 +180,10 @@ private fun FriendListContent(
                 items(filteredFriends, key = { it.id }) { friend ->
                     FriendListItem(
                         friend = friend,
-                        onToggleFavorite = { onToggleFavorite(friend.id) })
+                        onToggleFavorite = { onToggleFavorite(friend.id) },
+                        onRemove = { onRemoveFriend(friend.id) },
+                        onClick = { onFriendClick(friend) }
+                    )
                 }
             }
         }
@@ -500,7 +512,8 @@ private fun FriendListScreenPreviewNeon() {
             onTabSelected = {},
             onCategorySelected = {},
             onSortOrderSelected = {},
-            onToggleFavorite = {}
+            onToggleFavorite = {},
+            onRemoveFriend = {}
         )
     }
 }
@@ -518,7 +531,8 @@ private fun FriendListScreenPreviewBlackGold() {
             onTabSelected = {},
             onCategorySelected = {},
             onSortOrderSelected = {},
-            onToggleFavorite = {}
+            onToggleFavorite = {},
+            onRemoveFriend = {}
         )
     }
 }

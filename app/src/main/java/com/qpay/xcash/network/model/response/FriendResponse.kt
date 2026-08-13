@@ -12,7 +12,9 @@ data class FriendResponse(
     @Json(name = "avatar_url") val avatarUrl: String,
     @Json(name = "is_favorite") val isFavorite: Boolean,
     @Json(name = "tag_label") val tagLabel: String? = null,
-    @Json(name = "is_recent") val isRecent: Boolean = false
+    @Json(name = "is_recent") val isRecent: Boolean = false,
+    @Json(name = "phone_number") val phoneNumber: String? = null,
+    @Json(name = "memo") val memo: String? = null
 )
 
 enum class ContactType {
