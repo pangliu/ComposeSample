@@ -524,6 +524,7 @@
 
     <!-- FriendDetailScreen -->
     <string name="friend_detail_refresh_desc">Refresh</string>
+    <string name="friend_detail_name_edit_desc">Edit Name</string>
     <string name="friend_detail_name_reset_desc">Cancel Edit</string>
     <string name="friend_detail_name_save_desc">Save Name</string>
     <string name="friend_detail_copy_desc">Copy</string>
@@ -534,6 +535,12 @@
     <string name="friend_detail_save_btn">Save</string>
     <string name="friend_detail_remove_btn">Remove</string>
     <string name="friend_detail_copied_toast">Copied to clipboard</string>
+
+    <!-- FriendRemoveConfirmDialog -->
+    <string name="friend_remove_dialog_title">Are you sure you want to remove this account?</string>
+    <string name="friend_remove_dialog_message">You will no longer see this contact in your friend list. You can still transfer by entering their details manually.</string>
+    <string name="friend_remove_dialog_cancel">Cancel</string>
+    <string name="friend_remove_dialog_confirm">Confirm</string>
 
     <!-- AddFriendScreen -->
     <string name="add_friend_title">Friend</string>

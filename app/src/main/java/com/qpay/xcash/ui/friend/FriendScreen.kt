@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Person
@@ -44,8 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
-import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.gradientTint
+import com.qpay.xcash.ui.friend.components.FriendTopBar
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
@@ -90,7 +89,7 @@ private fun FriendContent(
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        FriendTopBar(onBack = onBack)
+        FriendTopBar(title = stringResource(R.string.friend_title), onBack = onBack)
 
         Spacer(Modifier.height(24.dp))
 
@@ -138,38 +137,6 @@ private fun FriendContent(
             )
             HorizontalDivider(color = menuDividerColor, thickness = 0.5.dp)
         }
-    }
-}
-
-@Composable
-private fun FriendTopBar(onBack: () -> Unit) {
-    val colors = LocalAppColors.current
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBackIosNew,
-            contentDescription = stringResource(R.string.common_back_desc),
-            tint = colors.accent.primary,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 16.dp)
-                .size(20.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onBack() }
-        )
-        GradientText(
-            text = stringResource(R.string.friend_title),
-            color = colors.accent.primary,
-            brush = colors.gradient.goldShimmer,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Center)
-        )
     }
 }
 

@@ -51,8 +51,9 @@ fun QrModeTabSelector(
     selectedMode: QrMode,
     onModeChange: (QrMode) -> Unit,
     modifier: Modifier = Modifier,
-    borderBrush: Brush? = null,       // 不傳時使用 colors.scanPay.qrTabBorder（供個別頁面覆寫外框漸層）
-    selectedFillBrush: Brush? = null  // 不傳時使用 colors.scanPay.qrTabSelectedFill（供個別頁面覆寫選中底色漸層）
+    borderBrush: Brush? = null,        // 不傳時使用 colors.scanPay.qrTabBorder（供個別頁面覆寫外框漸層）
+    selectedFillBrush: Brush? = null,  // 不傳時使用 colors.scanPay.qrTabSelectedFill（供個別頁面覆寫選中底色漸層）
+    backgroundColor: Color? = null     // 不傳時使用 colors.bg.page（供個別頁面覆寫外層底色）
 ) {
     val colors = LocalAppColors.current
     Row(
@@ -69,7 +70,7 @@ fun QrModeTabSelector(
                 else Modifier
             )
             .background(
-                color = colors.bg.page,
+                color = backgroundColor ?: colors.bg.page,
                 shape = RoundedCornerShape(22.dp))
             .border(
                 width = 1.5.dp,

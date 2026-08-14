@@ -25,10 +25,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Autorenew
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,15 +38,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -64,7 +70,8 @@ import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.ContactType
 import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.ui.UiEvent
-import com.qpay.xcash.ui.components.GradientText
+import com.qpay.xcash.ui.friend.components.FriendRemoveConfirmDialog
+import com.qpay.xcash.ui.friend.components.FriendTopBar
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppAssets
@@ -119,6 +126,8 @@ fun FriendDetailContent(
     onRemove: () -> Unit = {}
 ) {
     val colors = LocalAppColors.current
+    var isRemoveDialogVisible by remember { mutableStateOf(false) }
+
     Scaffold(
         containerColor = colors.bg.page,
         contentColor = Color.White
@@ -127,158 +136,146 @@ fun FriendDetailContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
         ) {
-            FriendDetailTopBar(onBack = onBack)
-
-            uiState.friend?.let { friend ->
-                Spacer(modifier = Modifier.height(16.dp))
-
-                FriendDetailAvatar(friend = friend)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                FriendDetailNameField(
-                    nameInput = uiState.nameInput,
-                    onNameChange = onNameChange,
-                    onNameReset = onNameReset,
-                    onNameConfirm = onNameConfirm
-                )
-
-                friend.phoneNumber?.let { phoneNumber ->
-                    Spacer(modifier = Modifier.height(6.dp))
-                    FriendDetailCopyableValue(
-                        value = phoneNumber,
-                        textColor = colors.friendDetail.infoValueText,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal
+            FriendTopBar(
+                title = stringResource(R.string.friend_title),
+                onBack = onBack,
+                trailingContent = {
+                    val colors = LocalAppColors.current
+                    Icon(
+                        imageVector = Icons.Default.Autorenew,
+                        contentDescription = stringResource(R.string.friend_detail_refresh_desc),
+                        tint = colors.accent.primary,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 16.dp)
+                            .size(24.dp)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) { /* TODO: 重新整理好友資料 */ }
                     )
                 }
+            )
 
-                Spacer(modifier = Modifier.height(28.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                uiState.friend?.let { friend ->
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                    Text(
-                        text = stringResource(R.string.friend_detail_tags_label),
-                        color = colors.friendDetail.infoLabelText,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
+                    FriendDetailAvatar(friend = friend)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    FriendDetailNameField(
+                        nameInput = uiState.nameInput,
+                        onNameChange = onNameChange,
+                        onNameReset = onNameReset,
+                        onNameConfirm = onNameConfirm
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        uiState.availableTags.forEach { tag ->
-                            FriendDetailTagChip(
-                                label = tag,
-                                isSelected = tag == uiState.selectedTag,
-                                onClick = { onTagSelected(tag) }
-                            )
-                        }
+
+                    friend.phoneNumber?.let { phoneNumber ->
+                        Spacer(modifier = Modifier.height(6.dp))
+                        FriendDetailCopyableValue(
+                            value = phoneNumber,
+                            textColor = colors.friendDetail.infoValueText,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Normal
+                        )
                     }
-                }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                friend.phoneNumber?.let { xcashId ->
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                         Text(
-                            text = stringResource(R.string.friend_detail_xcash_id_label),
+                            text = stringResource(R.string.friend_detail_tags_label),
                             color = colors.friendDetail.infoLabelText,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        FriendDetailCopyableValue(
-                            value = xcashId,
-                            textColor = Color.White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            horizontalArrangement = Arrangement.Start
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            uiState.availableTags.forEach { tag ->
+                                FriendDetailTagChip(
+                                    label = tag,
+                                    isSelected = tag == uiState.selectedTag,
+                                    onClick = { onTagSelected(tag) }
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    friend.phoneNumber?.let { xcashId ->
+                        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                            Text(
+                                text = stringResource(R.string.friend_detail_xcash_id_label),
+                                color = colors.friendDetail.infoLabelText,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            FriendDetailCopyableValue(
+                                value = xcashId,
+                                textColor = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                horizontalArrangement = Arrangement.Start
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    HorizontalDivider(
+                        color = Color.Transparent,
+                        modifier = Modifier
+                            .padding(horizontal = 24.dp)
+                            .background(
+                                brush = colors.friendDetail.divider)
+
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                        Text(
+                            text = stringResource(R.string.friend_detail_memo_label),
+                            color = colors.friendDetail.infoLabelText,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        FriendDetailMemoField(
+                            value = uiState.memoInput,
+                            onValueChange = onMemoChange
                         )
                     }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                        FriendDetailSaveButton(onClick = onSave)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        FriendDetailRemoveButton(onClick = { isRemoveDialogVisible = true })
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                HorizontalDivider(
-//                    color = colors.friendDetail.divider,
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .background(
-                            brush = colors.friendDetail.divider)
-
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                    Text(
-                        text = stringResource(R.string.friend_detail_memo_label),
-                        color = colors.friendDetail.infoLabelText,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    FriendDetailMemoField(
-                        value = uiState.memoInput,
-                        onValueChange = onMemoChange
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                    FriendDetailSaveButton(onClick = onSave)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    FriendDetailRemoveButton(onClick = onRemove)
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
             }
         }
-    }
-}
 
-@Composable
-private fun FriendDetailTopBar(onBack: () -> Unit) {
-    val colors = LocalAppColors.current
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBackIosNew,
-            contentDescription = stringResource(R.string.common_back_desc),
-            tint = colors.accent.primary,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 16.dp)
-                .size(20.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onBack() }
-        )
-        GradientText(
-            text = stringResource(R.string.friend_title),
-            color = colors.accent.primary,
-            brush = colors.gradient.goldShimmer,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Center)
-        )
-        Icon(
-            imageVector = Icons.Default.Autorenew,
-            contentDescription = stringResource(R.string.friend_detail_refresh_desc),
-            tint = colors.accent.primary,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 16.dp)
-                .size(24.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { /* TODO: 重新整理好友資料 */ }
+        FriendRemoveConfirmDialog(
+            isVisible = isRemoveDialogVisible,
+            onCancel = { isRemoveDialogVisible = false },
+            onConfirm = {
+                isRemoveDialogVisible = false
+                onRemove()
+            }
         )
     }
 }
@@ -310,49 +307,92 @@ private fun FriendDetailNameField(
     onNameConfirm: () -> Unit
 ) {
     val colors = LocalAppColors.current.friendDetail
+    var isEditing by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    fun exitEditing() {
+        isEditing = false
+        focusManager.clearFocus()
+        keyboardController?.hide()
+    }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        BasicTextField(
-            value = nameInput,
-            onValueChange = onNameChange,
-            singleLine = true,
-            textStyle = TextStyle(
+        if (isEditing) {
+            BasicTextField(
+                value = nameInput,
+                onValueChange = onNameChange,
+                singleLine = true,
+                textStyle = TextStyle(
+                    color = colors.nameText,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                ),
+                cursorBrush = SolidColor(colors.nameCursor),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    onNameConfirm()
+                    exitEditing()
+                }),
+                modifier = Modifier.focusRequester(focusRequester)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = stringResource(R.string.friend_detail_name_reset_desc),
+                tint = colors.nameResetIcon,
+                modifier = Modifier
+                    .size(16.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onNameReset()
+                        exitEditing()
+                    }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.Save,
+                contentDescription = stringResource(R.string.friend_detail_name_save_desc),
+                tint = colors.nameSaveIcon,
+                modifier = Modifier
+                    .size(18.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onNameConfirm()
+                        exitEditing()
+                    }
+            )
+            LaunchedEffect(Unit) { focusRequester.requestFocus() }
+        } else {
+            Text(
+                text = nameInput,
                 color = colors.nameText,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            ),
-            cursorBrush = SolidColor(colors.nameCursor),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { onNameConfirm() })
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Icon(
-            imageVector = Icons.Default.Close,
-            contentDescription = stringResource(R.string.friend_detail_name_reset_desc),
-            tint = colors.nameResetIcon,
-            modifier = Modifier
-                .size(16.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onNameReset() }
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Icon(
-            imageVector = Icons.Default.Save,
-            contentDescription = stringResource(R.string.friend_detail_name_save_desc),
-            tint = colors.nameSaveIcon,
-            modifier = Modifier
-                .size(18.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onNameConfirm() }
-        )
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = stringResource(R.string.friend_detail_name_edit_desc),
+                tint = colors.nameEditIcon,
+                modifier = Modifier
+                    .size(16.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { isEditing = true }
+            )
+        }
     }
 }
 

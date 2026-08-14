@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.IosShare
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -73,10 +72,10 @@ import com.google.zxing.NotFoundException
 import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import com.qpay.xcash.R
-import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.QrMode
 import com.qpay.xcash.ui.components.QrModeTabSelector
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.friend.components.FriendTopBar
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
@@ -143,7 +142,7 @@ private fun QRCodeContent(
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        QRCodeTopBar(onBack = onBack)
+        FriendTopBar(title = stringResource(R.string.qr_code_title), onBack = onBack)
 
         Spacer(Modifier.height(24.dp))
 
@@ -152,7 +151,8 @@ private fun QRCodeContent(
             onModeChange = { selectedMode = it },
             modifier = Modifier.padding(horizontal = 24.dp),
             borderBrush = colors.tabBorder,
-            selectedFillBrush = colors.tabSelectedFill
+            selectedFillBrush = colors.tabSelectedFill,
+            backgroundColor = colors.tabBackground
         )
 
         Spacer(Modifier.height(32.dp))
@@ -245,38 +245,6 @@ private fun QRCodeContent(
                     )
                 )
             }
-        )
-    }
-}
-
-@Composable
-private fun QRCodeTopBar(onBack: () -> Unit) {
-    val colors = LocalAppColors.current
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBackIosNew,
-            contentDescription = stringResource(R.string.common_back_desc),
-            tint = colors.accent.primary,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 16.dp)
-                .size(20.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onBack() }
-        )
-        GradientText(
-            text = stringResource(R.string.qr_code_title),
-            color = colors.accent.primary,
-            brush = colors.gradient.goldShimmer,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Center)
         )
     }
 }
@@ -568,13 +536,14 @@ private fun QRCodeScreenPreviewBlackGoldScanNoPermission() {
 private fun QRCodeScreenPreviewBlackGoldMyQr() {
     AppTheme(colors = BlackGoldColors) {
         Column {
-            QRCodeTopBar(onBack = {})
+            FriendTopBar(title = stringResource(R.string.qr_code_title), onBack = {})
             QrModeTabSelector(
                 selectedMode = QrMode.MY_QR,
                 onModeChange = {},
                 modifier = Modifier.padding(horizontal = 24.dp),
                 borderBrush = LocalAppColors.current.qrCode.tabBorder,
-                selectedFillBrush = LocalAppColors.current.qrCode.tabSelectedFill
+                selectedFillBrush = LocalAppColors.current.qrCode.tabSelectedFill,
+                backgroundColor = LocalAppColors.current.qrCode.tabBackground
             )
             Spacer(Modifier.height(32.dp))
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -607,13 +576,14 @@ private fun QRCodeScreenPreviewNeonScanNoPermission() {
 private fun QRCodeScreenPreviewNeonMyQr() {
     AppTheme(colors = NeonColors) {
         Column {
-            QRCodeTopBar(onBack = {})
+            FriendTopBar(title = stringResource(R.string.qr_code_title), onBack = {})
             QrModeTabSelector(
                 selectedMode = QrMode.MY_QR,
                 onModeChange = {},
                 modifier = Modifier.padding(horizontal = 24.dp),
                 borderBrush = LocalAppColors.current.qrCode.tabBorder,
-                selectedFillBrush = LocalAppColors.current.qrCode.tabSelectedFill
+                selectedFillBrush = LocalAppColors.current.qrCode.tabSelectedFill,
+                backgroundColor = LocalAppColors.current.qrCode.tabBackground
             )
             Spacer(Modifier.height(32.dp))
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {

@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.SolidColor
 
 data class QrCodeColors(
     // ── SCAN QR / MY QR Tab（QRCodeScreen 專屬漸層，不影響其他頁面共用的 QrModeTabSelector）──
+    val tabBackground: Color,        // QrModeTabSelector 外層（黑底）底色
     val tabBorder: Brush,            // QrModeTabSelector 外框漸層
     val tabSelectedFill: Brush,      // QrModeTabSelector 選中 Tab 底色漸層
 
@@ -34,9 +35,9 @@ data class QrCodeColors(
 )
 
 val NeonQrCodeColors = QrCodeColors(
+    tabBackground = neonCyan.copy(0.2f),
     tabBorder = Brush.horizontalGradient(
-//        colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold
-        colors = listOf(neonDarkPurple, neonPurple)
+        colors = listOf(neonPurple, neonCyan)
     ),
     tabSelectedFill = SolidColor(neonCyan),
 //        Brush.horizontalGradient(
@@ -60,6 +61,7 @@ val NeonQrCodeColors = QrCodeColors(
 )
 
 val BlackGoldQrCodeColors = QrCodeColors(
+    tabBackground = antiqueGold.copy(alpha = 0.3f),
     tabBorder = Brush.horizontalGradient(
         colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
     ),

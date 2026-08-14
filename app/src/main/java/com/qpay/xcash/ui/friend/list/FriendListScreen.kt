@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -58,6 +57,7 @@ import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.friend.components.FriendListItem
 import com.qpay.xcash.ui.friend.components.FriendSortDialog
+import com.qpay.xcash.ui.friend.components.FriendTopBar
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
@@ -129,8 +129,27 @@ private fun FriendListContent(
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        FriendListTopBar(onBack = onBack, onAddFriendClick = onAddFriendClick)
-
+        FriendTopBar(
+            title = stringResource(R.string.friend_title),
+            onBack = onBack,
+            trailingContent = {
+                val colors = LocalAppColors.current
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.friend_add_desc),
+                    tint = colors.accent.primary,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 16.dp)
+                        .size(28.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { onAddFriendClick() }
+                )
+            }
+        )
+        Spacer(Modifier.height(15.dp))
         FriendListSearchBar(
             query = uiState.searchQuery,
             onQueryChange = onSearchQueryChange,
@@ -187,54 +206,6 @@ private fun FriendListContent(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun FriendListTopBar(
-    onBack: () -> Unit,
-    onAddFriendClick: () -> Unit
-) {
-    val colors = LocalAppColors.current
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBackIosNew,
-            contentDescription = stringResource(R.string.common_back_desc),
-            tint = colors.accent.primary,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 16.dp)
-                .size(20.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onBack() }
-        )
-        GradientText(
-            text = stringResource(R.string.friend_title),
-            color = colors.accent.primary,
-            brush = colors.gradient.goldShimmer,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Center)
-        )
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = stringResource(R.string.friend_add_desc),
-            tint = colors.accent.primary,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 16.dp)
-                .size(28.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onAddFriendClick() }
-        )
     }
 }
 

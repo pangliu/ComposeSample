@@ -10,6 +10,7 @@ data class FriendDetailColors(
     val avatarBorder: Color,          // 頭像邊框
     val nameText: Color,               // 姓名輸入文字
     val nameCursor: Color,             // 姓名輸入游標
+    val nameEditIcon: Color,           // 編輯姓名（pencil）icon
     val nameResetIcon: Color,          // 取消編輯（X）icon
     val nameSaveIcon: Color,           // 儲存姓名（disk）icon
     val infoLabelText: Color,          // Tags / Xcash ID / Memo 標題文字
@@ -26,12 +27,22 @@ data class FriendDetailColors(
     val memoCursor: Color,             // Memo 輸入游標
     val saveButtonBackground: Brush,   // Save 按鈕底色；Black Gold = 金色橫向漸層
     val saveButtonText: Color,         // Save 按鈕文字；Black Gold = 黑色
+    // FriendRemoveConfirmDialog（ui/friend/components/）
+    val removeDialogBackground: Color,     // Dialog 底色
+    val removeDialogBorder: Color,         // Dialog 邊框
+    val removeDialogTitleText: Color,      // 標題文字
+    val removeDialogMessageText: Color,    // 說明文字
+    val removeDialogCancelBorder: Color,   // Cancel 按鈕邊框
+    val removeDialogCancelText: Color,     // Cancel 按鈕文字
+    val removeDialogConfirmFill: Brush,    // Confirm 按鈕底色；Black Gold = 金色橫向漸層
+    val removeDialogConfirmText: Color,    // Confirm 按鈕文字；Black Gold = 黑色
 )
 
 val NeonFriendDetailColors = FriendDetailColors(
     avatarBorder = neonCyan,
     nameText = Color.White,
     nameCursor = neonCyanLight,
+    nameEditIcon = neonCyanLight,
     nameResetIcon = silverGray,
     nameSaveIcon = neonCyanLight,
     infoLabelText = neonPurpleLight,
@@ -48,12 +59,24 @@ val NeonFriendDetailColors = FriendDetailColors(
     memoCursor = neonCyanLight,
     saveButtonBackground = SolidColor(neonCyan),
     saveButtonText = deepNavy,
+    // Neon 版設計稿尚未提供，暫沿用既有 Neon 色票，維持與 remove 按鈕一致的警示色（neonRed）
+    removeDialogBackground = twilightNavy,
+    removeDialogBorder = neonCyan.copy(alpha = 0.4f),
+    removeDialogTitleText = Color.White,
+    removeDialogMessageText = silverGray.copy(alpha = 0.85f),
+    removeDialogCancelBorder = neonCyan,
+    removeDialogCancelText = neonCyan,
+    removeDialogConfirmFill = Brush.horizontalGradient(
+        colors = listOf(neonPurple, cyberPurple)
+    ),
+    removeDialogConfirmText = Color.White,
 )
 
 val BlackGoldFriendDetailColors = FriendDetailColors(
     avatarBorder = antiqueGold,
     nameText = Color.White,
     nameCursor = antiqueGold,
+    nameEditIcon = antiqueGold,
     nameResetIcon = warmSand,
     nameSaveIcon = antiqueGold,
     infoLabelText = antiqueGold,
@@ -78,4 +101,15 @@ val BlackGoldFriendDetailColors = FriendDetailColors(
         colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
     ),
     saveButtonText = themeBlack,
+    removeDialogBackground = charcoalBlack,
+    removeDialogBorder = antiqueGold.copy(alpha = 0.4f),
+    removeDialogTitleText = Color.White,
+    removeDialogMessageText = silverGray.copy(alpha = 0.8f),
+    removeDialogCancelBorder = antiqueGold,
+    removeDialogCancelText = antiqueGold,
+    // 由左至右：oldGold → amberGold → champagneGold → amberGold → oldGold（與 gradient.goldShimmer 一致）
+    removeDialogConfirmFill = Brush.horizontalGradient(
+        colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
+    ),
+    removeDialogConfirmText = themeBlack,
 )
