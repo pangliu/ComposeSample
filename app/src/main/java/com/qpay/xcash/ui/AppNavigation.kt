@@ -22,9 +22,11 @@ import com.qpay.xcash.ui.cards.select.SelectCardTypeScreen
 import com.qpay.xcash.ui.avatar.CameraScreen
 import com.qpay.xcash.ui.avatar.EditAvatarScreen
 import com.qpay.xcash.ui.friend.FriendScreen
+import com.qpay.xcash.ui.friend.FriendViewModel
 import com.qpay.xcash.ui.friend.addFriend.AddFriendScreen
 import com.qpay.xcash.ui.friend.detail.FriendDetailScreen
 import com.qpay.xcash.ui.friend.detail.FriendDetailViewModel
+import com.qpay.xcash.ui.friend.emptylist.EmptyListScreen
 import com.qpay.xcash.ui.friend.list.FriendListScreen
 import com.qpay.xcash.ui.friend.list.FriendListViewModel
 import com.qpay.xcash.ui.friend.qrcode.QRCodeScreen
@@ -234,11 +236,27 @@ fun AppNavigation(
                 exitTransition = { slideOutHorizontally { -it } },
                 popEnterTransition = { slideInHorizontally { -it } }
             ) {
+                val viewModel = hiltViewModel<FriendViewModel>()
                 FriendScreen(
+                    viewModel = viewModel,
                     onBack = { navController.popBackStack() },
                     onNavigateFriendList = { navController.navigate(Routes.FRIEND_LIST) },
+                    onNavigateEmptyList = { navController.navigate(Routes.EMPTY_LIST) },
                     onNavigateAddFriend = { navController.navigate(Routes.ADD_FRIEND) },
                     onNavigateQrCode = { navController.navigate(Routes.FRIEND_QR_CODE) }
+                )
+            }
+
+            composable(
+                route = Routes.EMPTY_LIST,
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } },
+                exitTransition = { slideOutHorizontally { -it } },
+                popEnterTransition = { slideInHorizontally { -it } }
+            ) {
+                EmptyListScreen(
+                    onBack = { navController.popBackStack() },
+                    onAddFriend = { navController.navigate(Routes.ADD_FRIEND) }
                 )
             }
 
@@ -273,7 +291,9 @@ fun AppNavigation(
             composable(
                 route = Routes.ADD_FRIEND,
                 enterTransition = { slideInHorizontally { it } },
-                popExitTransition = { slideOutHorizontally { it } }
+                popExitTransition = { slideOutHorizontally { it } },
+                exitTransition = { slideOutHorizontally { -it } },
+                popEnterTransition = { slideInHorizontally { -it } }
             ) {
                 AddFriendScreen(onBack = { navController.popBackStack() })
             }

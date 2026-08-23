@@ -119,7 +119,8 @@ private fun HomeScreenContent(
                     Spacer(modifier = Modifier.height(10.dp))
                     XEssentialsCard(
                         myMenuItems = myMenuItems,
-                        onSaveMyMenu = onSaveMyMenu
+                        onSaveMyMenu = onSaveMyMenu,
+                        onNavigate = onNavigate
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     // TODO: D. 任務與行銷橫幅

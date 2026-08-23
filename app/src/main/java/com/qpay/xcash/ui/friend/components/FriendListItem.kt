@@ -50,6 +50,7 @@ import coil.compose.AsyncImage
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.ContactType
 import com.qpay.xcash.network.model.response.FriendResponse
+import com.qpay.xcash.ui.components.gradientTint
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
@@ -157,7 +158,7 @@ private fun RowScope.FriendListItemContent(
         modifier = Modifier
             .size(48.dp)
             .clip(CircleShape)
-            .border(1.5.dp, colors.accent.primary, CircleShape)
+            .border(1.5.dp, friendListColors.avatarBorder, CircleShape)
     )
 
     Spacer(Modifier.width(12.dp))
@@ -177,14 +178,18 @@ private fun RowScope.FriendListItemContent(
     }
 
     friend.tagLabel?.let { tag ->
+        val (tagBackground, tagText) = when (tag) {
+            "Family" -> friendListColors.tagFamilyBackground to friendListColors.tagFamilyText
+            else -> friendListColors.tagBestiesBackground to friendListColors.tagBestiesText
+        }
         Box(
             modifier = Modifier
-                .background(friendListColors.tagBackground, RoundedCornerShape(50))
+                .background(tagBackground, RoundedCornerShape(50))
                 .padding(horizontal = 12.dp, vertical = 5.dp)
         ) {
             Text(
                 text = tag,
-                color = friendListColors.tagText,
+                color = tagText,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -193,11 +198,12 @@ private fun RowScope.FriendListItemContent(
     }
 
     Icon(
-        imageVector = if (friend.isFavorite) Icons.Default.Star else Icons.Outlined.StarBorder,
+        imageVector = Icons.Outlined.StarBorder,
         contentDescription = null,
-        tint = if (friend.isFavorite) colors.accent.primary else friendListColors.starInactive,
+        tint = if (friend.isFavorite) Color.White else friendListColors.starInactive,
         modifier = Modifier
             .size(22.dp)
+            .then(if (friend.isFavorite) Modifier.gradientTint(friendListColors.starSelected) else Modifier)
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }

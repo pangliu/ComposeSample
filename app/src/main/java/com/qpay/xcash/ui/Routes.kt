@@ -33,6 +33,7 @@ object Routes {
     const val ADD_FRIEND = "add_friend"
     const val FRIEND_QR_CODE = "friend_qr_code"
     const val FRIEND_DETAIL = "friend_detail/{friendId}"
+    const val EMPTY_LIST = "empty_list"
 
     fun friendDetail(friendId: String) = "friend_detail/${android.net.Uri.encode(friendId)}"
 

@@ -7,6 +7,9 @@ import androidx.compose.ui.graphics.SolidColor
 // ui/friend/list/ FriendListScreen 專屬顏色
 
 data class FriendListColors(
+    // ── Friend Avatar ──────────────────────────────────
+    val avatarBorder: Brush,            // 頭像外框；Neon = 紫→青→紫橫向漸層
+
     // ── SearchBar ────────────────────────────────────
     val searchBarBackground: Color,     // 搜尋框底色
     val searchBarBorder: Color,         // 搜尋框邊框
@@ -27,9 +30,12 @@ data class FriendListColors(
     val resultsCountText: Brush,        // "Results · N" 文字
     val sortText: Color,                // 排序文字 + 箭頭 icon
 
-    // ── Friend List Item ───────────────────────────────
-    val tagBackground: Color,           // Family / Besties 標籤底色
-    val tagText: Color,                 // 標籤文字
+    // ── Friend List Item · Tag ──────────────────────────
+    val tagFamilyBackground: Color,     // "Family" 標籤底色
+    val tagFamilyText: Color,           // "Family" 標籤文字
+    val tagBestiesBackground: Color,    // "Besties" 標籤底色（其他未知標籤也沿用此樣式）
+    val tagBestiesText: Color,          // "Besties" 標籤文字
+    val starSelected: Brush,            // 已收藏星星顏色；橫向漸層
     val starInactive: Color,            // 未收藏星星顏色
     val listDivider: Color,             // 項目分隔線
 
@@ -46,7 +52,7 @@ data class FriendSortDialogColors(
     val optionBorder: Color,             // 選項列邊框
     val optionText: Color,               // 選項文字
     val radioBorder: Color,              // 未選中 radio 外框
-    val radioSelectedBorder: Color,      // 選中 radio 外框
+    val radioSelectedBorder: Brush,      // 選中 radio 外框；橫向漸層
     val radioSelectedDot: Brush,         // 選中 radio 內部圓點；Black Gold = 金色橫向漸層
     val cancelButtonBorder: Color,       // Cancel 按鈕邊框
     val cancelButtonText: Color,         // Cancel 按鈕文字
@@ -58,17 +64,21 @@ val NeonFriendSortDialogColors = FriendSortDialogColors(
     dialogBackground = deepMidnight,
     dialogBorder = neonCyan.copy(alpha = 0.7f),
     dragHandle = silverGray.copy(alpha = 0.4f),
-    titleText = neonPurple,
+    titleText = neonCyan,
     optionBackground = Color.Transparent,
     optionBorder = neonCyan.copy(alpha = 0.35f),
     optionText = Color.White,
     radioBorder = silverGray.copy(alpha = 0.5f),
-    radioSelectedBorder = neonCyan,
+    radioSelectedBorder = Brush.horizontalGradient(
+        colors = listOf(neonPurple, neonCyan, neonPurple)
+    ),
     radioSelectedDot = SolidColor(neonCyan),
-    cancelButtonBorder = neonPurple,
-    cancelButtonText = neonPurpleLight,
-    confirmButtonFill = SolidColor(neonCyan),
-    confirmButtonText = deepNavy,
+    cancelButtonBorder = neonCyan,
+    cancelButtonText = neonCyan,
+    confirmButtonFill = Brush.horizontalGradient(
+        colors = listOf(neonPurple, neonDarkBlue)
+    ),
+    confirmButtonText = themeWhite,
 )
 
 val BlackGoldFriendSortDialogColors = FriendSortDialogColors(
@@ -80,7 +90,10 @@ val BlackGoldFriendSortDialogColors = FriendSortDialogColors(
     optionBorder = antiqueGold.copy(alpha = 0.4f),
     optionText = warmSand,
     radioBorder = warmSand.copy(alpha = 0.5f),
-    radioSelectedBorder = antiqueGold,
+    // 由左至右：oldGold → amberGold → champagneGold → amberGold → oldGold（與 gradient.goldShimmer 一致）
+    radioSelectedBorder = Brush.horizontalGradient(
+        colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
+    ),
     // 由左至右：oldGold → amberGold → champagneGold → amberGold → oldGold（與 gradient.goldShimmer 一致）
     radioSelectedDot = Brush.horizontalGradient(
         colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
@@ -95,26 +108,37 @@ val BlackGoldFriendSortDialogColors = FriendSortDialogColors(
 )
 
 val NeonFriendListColors = FriendListColors(
+    avatarBorder = Brush.horizontalGradient(
+        colors = listOf(neonPurple, neonCyan, neonPurple)
+    ),
     searchBarBackground = twilightNavy,
     searchBarBorder = neonCyan,
     searchPlaceholderText = silverGray,
     tabSelectedText = neonCyan,
     tabUnselectedText = silverGray,
     tabIndicator = SolidColor(neonCyan),
-    chipSelectedFill = SolidColor(neonCyan.copy(alpha = 0.15f)),
-    chipSelectedText = neonCyan,
+    chipSelectedFill = SolidColor(neonCyan.copy(alpha = 1f)),
+    chipSelectedText = deepNavy,
     chipUnselectedBorder = neonCyan.copy(alpha = 0.4f),
-    chipUnselectedText = silverGray,
+    chipUnselectedText = neonCyan.copy(alpha = 0.7f),
     resultsCountText = SolidColor(silverGray),
     sortText = neonCyanLight,
-    tagBackground = neonDarkPurple.copy(alpha = 0.4f),
-    tagText = neonPurpleLight,
+    tagFamilyBackground = steelTeal.copy(alpha = 0.4f),
+    tagFamilyText = neonCyan,
+    tagBestiesBackground = neonDarkPurple.copy(alpha = 0.6f),
+    tagBestiesText = neonPurpleLight,
+    starSelected = Brush.horizontalGradient(
+        colors = listOf(neonPurple, neonCyan)
+    ),
     starInactive = silverGray.copy(alpha = 0.5f),
     listDivider = neonCyan.copy(alpha = 0.08f),
     sortDialog = NeonFriendSortDialogColors,
 )
 
 val BlackGoldFriendListColors = FriendListColors(
+    avatarBorder = Brush.horizontalGradient(
+        colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
+    ),
     searchBarBackground = charcoalBlack,
     searchBarBorder = antiqueGold,
     searchPlaceholderText = warmSand,
@@ -134,8 +158,15 @@ val BlackGoldFriendListColors = FriendListColors(
         colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
     ),
     sortText = antiqueGold,
-    tagBackground = charcoalGray,
-    tagText = amberGold,
+    // Black Gold 設計稿尚未提供 Family / Besties 差異化樣式，暫沿用同一組顏色
+    tagFamilyBackground = charcoalGray,
+    tagFamilyText = amberGold,
+    tagBestiesBackground = graphiteGray.copy(alpha = 0.6f),
+    tagBestiesText = Color.White,
+    // 由左至右：oldGold → amberGold → champagneGold → amberGold → oldGold（與 gradient.goldShimmer 一致）
+    starSelected = Brush.horizontalGradient(
+        colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
+    ),
     starInactive = coolGray,
     listDivider = antiqueGold.copy(alpha = 0.15f),
     sortDialog = BlackGoldFriendSortDialogColors,

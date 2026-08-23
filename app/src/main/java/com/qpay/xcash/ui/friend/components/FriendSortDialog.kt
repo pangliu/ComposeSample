@@ -166,7 +166,7 @@ private fun FriendSortDialogContent(
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp)
-                    .border(1.5.dp, colors.cancelButtonBorder, RoundedCornerShape(50.dp))
+                    .border(1.5.dp, colors.cancelButtonBorder, RoundedCornerShape(10.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -184,7 +184,7 @@ private fun FriendSortDialogContent(
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp)
-                    .background(colors.confirmButtonFill, RoundedCornerShape(50.dp))
+                    .background(colors.confirmButtonFill, RoundedCornerShape(10.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -212,8 +212,13 @@ private fun FriendSortOptionRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(colors.optionBackground, RoundedCornerShape(14.dp))
-            .border(1.dp, colors.optionBorder, RoundedCornerShape(14.dp))
+            .background(
+                color = colors.optionBackground,
+                shape = RoundedCornerShape(14.dp))
+            .border(
+                width = 1.dp,
+                color = colors.optionBorder.copy(alpha = if (isSelected) 1f else 0.3f),
+                shape = RoundedCornerShape(14.dp))
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
@@ -230,10 +235,12 @@ private fun FriendSortOptionRow(
         Box(
             modifier = Modifier
                 .size(20.dp)
-                .border(
-                    width = 1.5.dp,
-                    color = if (isSelected) colors.radioSelectedBorder else colors.radioBorder,
-                    shape = CircleShape
+                .then(
+                    if (isSelected) {
+                        Modifier.border(width = 1.5.dp, brush = colors.radioSelectedBorder, shape = CircleShape)
+                    } else {
+                        Modifier.border(width = 1.5.dp, color = colors.radioBorder, shape = CircleShape)
+                    }
                 ),
             contentAlignment = Alignment.Center
         ) {

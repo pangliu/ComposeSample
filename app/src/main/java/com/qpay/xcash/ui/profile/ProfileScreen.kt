@@ -32,7 +32,6 @@ import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.material.icons.outlined.CreditCard
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Receipt
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material3.HorizontalDivider
@@ -205,16 +204,6 @@ fun ProfileScreenContent(
                     label = stringResource(R.string.profile_transaction_history),
                     iconTint = colors.profile.menuAccountIconTint,
                     onClick = { onNavigate(Routes.TRANSACTION_HISTORY) }
-                )
-                HorizontalDivider(
-                    color = colors.profile.menuAccountBorder.copy(alpha = 0.15f),
-                    thickness = 0.5.dp
-                )
-                ProfileMenuItem(
-                    icon = ProfileIcon.Vector(Icons.Outlined.Person),
-                    label = stringResource(R.string.profile_friends),
-                    iconTint = colors.profile.menuAccountIconTint,
-                    onClick = { onNavigate(Routes.FRIEND) }
                 )
             }
 

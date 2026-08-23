@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.SolidColor
 // ui/friend/detail/ FriendDetailScreen 專屬顏色
 
 data class FriendDetailColors(
-    val avatarBorder: Color,          // 頭像邊框
+    val avatarBorder: Brush,          // 頭像邊框；橫向漸層
     val nameText: Color,               // 姓名輸入文字
     val nameCursor: Color,             // 姓名輸入游標
     val nameEditIcon: Color,           // 編輯姓名（pencil）icon
@@ -26,6 +26,9 @@ data class FriendDetailColors(
     val memoText: Color,               // Memo 輸入文字
     val memoCursor: Color,             // Memo 輸入游標
     val saveButtonBackground: Brush,   // Save 按鈕底色；Black Gold = 金色橫向漸層
+    val removeButtonBackground: Color,
+    val removeButtonBorder: Color,     // Remove 按鈕邊框；Neon = neonCyan，Black Gold = antiqueGold
+    val removeButtonText: Color,       // Remove 按鈕文字；Neon = neonCyan，Black Gold = antiqueGold
     val saveButtonText: Color,         // Save 按鈕文字；Black Gold = 黑色
     // FriendRemoveConfirmDialog（ui/friend/components/）
     val removeDialogBackground: Color,     // Dialog 底色
@@ -39,13 +42,15 @@ data class FriendDetailColors(
 )
 
 val NeonFriendDetailColors = FriendDetailColors(
-    avatarBorder = neonCyan,
+    avatarBorder = Brush.horizontalGradient(
+        colors = listOf(neonPurple, neonCyan, neonPurple)
+    ),
     nameText = Color.White,
     nameCursor = neonCyanLight,
     nameEditIcon = neonCyanLight,
     nameResetIcon = silverGray,
     nameSaveIcon = neonCyanLight,
-    infoLabelText = neonPurpleLight,
+    infoLabelText = neonCyan,
     infoValueText = silverGray,
     copyIconTint = neonCyanLight,
     tagSelectedFill = SolidColor(neonCyan.copy(alpha = 0.15f)),
@@ -58,6 +63,9 @@ val NeonFriendDetailColors = FriendDetailColors(
     memoText = Color.White,
     memoCursor = neonCyanLight,
     saveButtonBackground = SolidColor(neonCyan),
+    removeButtonBackground = steelNavy,
+    removeButtonBorder = neonCyan,
+    removeButtonText = neonCyan,
     saveButtonText = deepNavy,
     // Neon 版設計稿尚未提供，暫沿用既有 Neon 色票，維持與 remove 按鈕一致的警示色（neonRed）
     removeDialogBackground = twilightNavy,
@@ -73,7 +81,10 @@ val NeonFriendDetailColors = FriendDetailColors(
 )
 
 val BlackGoldFriendDetailColors = FriendDetailColors(
-    avatarBorder = antiqueGold,
+    // 由左至右：oldGold → amberGold → champagneGold → amberGold → oldGold（與 gradient.goldShimmer 一致）
+    avatarBorder = Brush.horizontalGradient(
+        colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
+    ),
     nameText = Color.White,
     nameCursor = antiqueGold,
     nameEditIcon = antiqueGold,
@@ -100,6 +111,9 @@ val BlackGoldFriendDetailColors = FriendDetailColors(
     saveButtonBackground = Brush.horizontalGradient(
         colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
     ),
+    removeButtonBackground = deepNavy,
+    removeButtonBorder = neonRed,
+    removeButtonText = neonRed,
     saveButtonText = themeBlack,
     removeDialogBackground = charcoalBlack,
     removeDialogBorder = antiqueGold.copy(alpha = 0.4f),

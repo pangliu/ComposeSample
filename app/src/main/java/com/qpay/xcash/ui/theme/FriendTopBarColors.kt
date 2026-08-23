@@ -11,7 +11,7 @@ data class FriendTopBarColors(
 val NeonFriendTopBarColors = FriendTopBarColors(
     // 由左至右：neonPurple → neonCyan → neonPurple
     titleGradient = Brush.horizontalGradient(
-        colors = listOf(neonPurpleLight, neonCyan, neonPurpleLight)
+        colors = listOf(neonPurple, neonCyan, neonPurple)
     ),
 )
 

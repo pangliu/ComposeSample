@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.Routes
 
 /**
  * X-Essentials 功能項目的資料模型
@@ -13,7 +14,7 @@ import com.qpay.xcash.R
 data class EssentialItem(
     val iconVector: ImageVector? = null,
     val label: String,
-    val onClick: () -> Unit = {},
+    val route: String? = null,
     @DrawableRes val iconRes: Int? = null,
     val useOriginalColor: Boolean = false
 )
@@ -23,8 +24,10 @@ data class EssentialItem(
  *
  * - XEssentialsCard 顯示前 16 個
  * - EditEssentialsDialog 顯示全部
+ * - route 為 null 的項目尚無設計稿，點擊不會有反應
  */
 val allEssentialItems = listOf(
+    EssentialItem(iconVector = null, label = "Friend", iconRes = R.mipmap.ic_essent_friend, route = Routes.FRIEND, useOriginalColor = false),
     EssentialItem(iconVector = null, label = "Send", iconRes = R.mipmap.ic_essent_send, useOriginalColor = false),
     EssentialItem(iconVector = null, label = "Bills", iconRes = R.mipmap.ic_essent_bills, useOriginalColor = false),
     EssentialItem(iconVector = null, label = "Load Up", iconRes = R.mipmap.ic_essent_load_up, useOriginalColor = false),

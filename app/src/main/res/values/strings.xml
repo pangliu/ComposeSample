@@ -262,7 +262,6 @@
     <string name="profile_edit">Profile Edit</string>
     <string name="profile_recurring">Edit Recurring Accounts</string>
     <string name="profile_transaction_history">Transaction History</string>
-    <string name="profile_friends">Friends</string>
     <string name="profile_section_security">Security &amp; Settings</string>
     <string name="profile_security_center">Security Center</string>
     <string name="profile_section_support">Support &amp; About</string>
@@ -516,6 +515,11 @@
     <string name="friend_sort_recently_contacted">Recently Contacted</string>
     <string name="friend_empty">No friends found</string>
     <string name="friend_list_item_remove">Remove</string>
+
+    <!-- EmptyListScreen -->
+    <string name="empty_list_friends_title">No Friends Yet</string>
+    <string name="empty_list_friends_subtitle">Start building your network! Add friends to send and receive payments easily.</string>
+    <string name="empty_list_add_friend">Add Friend</string>
 
     <!-- FriendSortDialog -->
     <string name="friend_sort_dialog_title">Sort By</string>

@@ -77,7 +77,6 @@ import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
-import com.qpay.xcash.ui.theme.neonRed
 
 @Composable
 fun FriendDetailScreen(
@@ -521,11 +520,13 @@ private fun FriendDetailSaveButton(onClick: () -> Unit) {
 
 @Composable
 private fun FriendDetailRemoveButton(onClick: () -> Unit) {
+    val colors = LocalAppColors.current.friendDetail
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(52.dp)
-            .border(1.5.dp, neonRed, RoundedCornerShape(8.dp))
+            .background(color = colors.removeButtonBackground)
+            .border(1.5.dp, colors.removeButtonBorder, RoundedCornerShape(8.dp))
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
@@ -534,7 +535,7 @@ private fun FriendDetailRemoveButton(onClick: () -> Unit) {
     ) {
         Text(
             text = stringResource(R.string.friend_detail_remove_btn),
-            color = neonRed,
+            color = colors.removeButtonText,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )

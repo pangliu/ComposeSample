@@ -59,6 +59,7 @@ private val essentialEdit = Color(0xFF3E4155)
 fun XEssentialsCard(
     myMenuItems: List<EssentialItem>,
     onSaveMyMenu: (List<EssentialItem>) -> Unit,
+    onNavigate: (String) -> Unit = {},
 ) {
     val colors = LocalAppColors.current
     val assets = LocalAppAssets.current
@@ -151,13 +152,13 @@ fun XEssentialsCard(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
                         ) {
-                            firstRow.forEach { item -> EssentialItemView(item) }
+                            firstRow.forEach { item -> EssentialItemView(item, onNavigate) }
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
                         ) {
-                            secondRow.forEach { item -> EssentialItemView(item) }
+                            secondRow.forEach { item -> EssentialItemView(item, onNavigate) }
                         }
                     }
                 }
@@ -210,13 +211,13 @@ fun XEssentialsCard(
 }
 
 @Composable
-fun EssentialItemView(item: EssentialItem?) {
+fun EssentialItemView(item: EssentialItem?, onNavigate: (String) -> Unit = {}) {
     val colors = LocalAppColors.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .width(70.dp)
-            .then(if (item != null) Modifier.clickable { item.onClick() } else Modifier)
+            .then(if (item?.route != null) Modifier.clickable { onNavigate(item.route) } else Modifier)
             .then(if (item == null) Modifier.alpha(0f) else Modifier)
     ) {
         // 圖示方塊

@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +43,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.gradientTint
 import com.qpay.xcash.ui.friend.components.FriendTopBar
 import com.qpay.xcash.ui.theme.AppTheme
@@ -53,12 +56,34 @@ import io.github.alexzhirkevich.qrose.options.brush
 
 @Composable
 fun FriendScreen(
+    viewModel: FriendViewModel = hiltViewModel(),
     onBack: () -> Unit,
     onNavigateFriendList: () -> Unit,
+    onNavigateEmptyList: () -> Unit,
     onNavigateAddFriend: () -> Unit,
     onNavigateQrCode: () -> Unit
 ) {
     val colors = LocalAppColors.current
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowDialog -> Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is FriendNavigationEvent.ToFriendList -> onNavigateFriendList()
+                is FriendNavigationEvent.ToEmptyList -> onNavigateEmptyList()
+            }
+        }
+    }
+
     Scaffold(
         containerColor = colors.bg.page,
         contentColor = Color.White
@@ -66,7 +91,7 @@ fun FriendScreen(
         FriendContent(
             paddingValues = paddingValues,
             onBack = onBack,
-            onNavigateFriendList = onNavigateFriendList,
+            onMyListClick = viewModel::onMyListClick,
             onNavigateAddFriend = onNavigateAddFriend,
             onNavigateQrCode = onNavigateQrCode
         )
@@ -77,7 +102,7 @@ fun FriendScreen(
 private fun FriendContent(
     paddingValues: PaddingValues,
     onBack: () -> Unit,
-    onNavigateFriendList: () -> Unit,
+    onMyListClick: () -> Unit,
     onNavigateAddFriend: () -> Unit,
     onNavigateQrCode: () -> Unit = {}
 ) {
@@ -133,7 +158,7 @@ private fun FriendContent(
                 title = stringResource(R.string.friend_my_list_title),
                 subtitle = stringResource(R.string.friend_my_list_subtitle),
                 showChevron = true,
-                onClick = onNavigateFriendList
+                onClick = onMyListClick
             )
             HorizontalDivider(color = menuDividerColor, thickness = 0.5.dp)
         }
@@ -266,7 +291,7 @@ private fun FriendMenuItem(
 @Composable
 private fun FriendScreenPreviewNeon() {
     AppTheme(colors = NeonColors) {
-        FriendContent(paddingValues = PaddingValues(), onBack = {}, onNavigateFriendList = {}, onNavigateAddFriend = {})
+        FriendContent(paddingValues = PaddingValues(), onBack = {}, onMyListClick = {}, onNavigateAddFriend = {})
     }
 }
 
@@ -274,6 +299,6 @@ private fun FriendScreenPreviewNeon() {
 @Composable
 private fun FriendScreenPreviewBlackGold() {
     AppTheme(colors = BlackGoldColors) {
-        FriendContent(paddingValues = PaddingValues(), onBack = {}, onNavigateFriendList = {}, onNavigateAddFriend = {})
+        FriendContent(paddingValues = PaddingValues(), onBack = {}, onMyListClick = {}, onNavigateAddFriend = {})
     }
 }
