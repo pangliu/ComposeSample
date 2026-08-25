@@ -22,6 +22,9 @@ enum class FriendListTab { ALL, FAVORITES, RECENT }
 
 enum class FriendListSortOrder { A_TO_Z, Z_TO_A, RECENTLY_CONTACTED }
 
+// "All" chip 固定顯示在最前面（見 FriendListCategoryChips），這裡只需排序 tagLabel 分類；不在清單內的標籤排到最後
+private val CATEGORY_DISPLAY_ORDER = listOf("Family", "Besties")
+
 data class FriendListUiState(
     val isLoadingFriends: Boolean = true,
     val isRefreshing: Boolean = false,
@@ -35,7 +38,9 @@ data class FriendListUiState(
     val isLoading: Boolean get() = isLoadingFriends
 
     val categories: List<String>
-        get() = friends.mapNotNull { it.tagLabel }.distinct().sorted()
+        get() = friends.mapNotNull { it.tagLabel }.distinct().sortedBy { tag ->
+            CATEGORY_DISPLAY_ORDER.indexOf(tag).let { if (it == -1) CATEGORY_DISPLAY_ORDER.size else it }
+        }
 
     val filteredFriends: List<FriendResponse>
         get() {
