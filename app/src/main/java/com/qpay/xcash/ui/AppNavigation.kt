@@ -30,6 +30,7 @@ import com.qpay.xcash.ui.friend.emptylist.EmptyListScreen
 import com.qpay.xcash.ui.friend.list.FriendListScreen
 import com.qpay.xcash.ui.friend.list.FriendListViewModel
 import com.qpay.xcash.ui.friend.qrcode.QRCodeScreen
+import com.qpay.xcash.ui.components.QrMode
 import com.qpay.xcash.ui.home.notifications.NotificationsScreen
 import com.qpay.xcash.ui.home.notifications.NotificationsViewModel
 import com.qpay.xcash.ui.home.transaction_detail.TransactionDetailScreen
@@ -243,7 +244,7 @@ fun AppNavigation(
                     onNavigateFriendList = { navController.navigate(Routes.FRIEND_LIST) },
                     onNavigateEmptyList = { navController.navigate(Routes.EMPTY_LIST) },
                     onNavigateAddFriend = { navController.navigate(Routes.ADD_FRIEND) },
-                    onNavigateQrCode = { navController.navigate(Routes.FRIEND_QR_CODE) }
+                    onNavigateQrCode = { mode -> navController.navigate(Routes.friendQrCode(mode.name)) }
                 )
             }
 
@@ -300,10 +301,16 @@ fun AppNavigation(
 
             composable(
                 route = Routes.FRIEND_QR_CODE,
+                arguments = listOf(navArgument("mode") { type = NavType.StringType; defaultValue = "SCAN_QR" }),
                 enterTransition = { slideInHorizontally { it } },
                 popExitTransition = { slideOutHorizontally { it } }
-            ) {
-                QRCodeScreen(onBack = { navController.popBackStack() })
+            ) { backStackEntry ->
+                val modeArg = backStackEntry.arguments?.getString("mode") ?: "SCAN_QR"
+                val initialMode = runCatching { QrMode.valueOf(modeArg) }.getOrDefault(QrMode.SCAN_QR)
+                QRCodeScreen(
+                    onBack = { navController.popBackStack() },
+                    initialMode = initialMode
+                )
             }
 
             // ── Home sub-pages ────────────────────────────────────────────────

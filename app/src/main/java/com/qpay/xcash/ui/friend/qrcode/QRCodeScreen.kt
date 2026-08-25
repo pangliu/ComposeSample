@@ -96,6 +96,7 @@ import java.util.concurrent.Executors
 @Composable
 fun QRCodeScreen(
     onBack: () -> Unit,
+    initialMode: QrMode = QrMode.SCAN_QR,
     viewModel: QRCodeViewModel = hiltViewModel()
 ) {
     val colors = LocalAppColors.current
@@ -107,7 +108,8 @@ fun QRCodeScreen(
         QRCodeContent(
             paddingValues = paddingValues,
             uiState = uiState,
-            onBack = onBack
+            onBack = onBack,
+            initialMode = initialMode
         )
     }
 }
@@ -116,13 +118,14 @@ fun QRCodeScreen(
 private fun QRCodeContent(
     paddingValues: PaddingValues,
     uiState: QRCodeUiState = QRCodeUiState(),
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    initialMode: QrMode = QrMode.SCAN_QR
 ) {
     val colors = LocalAppColors.current.qrCode
     val context = LocalContext.current
     val isPreview = LocalInspectionMode.current
     val comingSoon = stringResource(R.string.friend_feature_coming_soon)
-    var selectedMode by rememberSaveable { mutableStateOf(QrMode.SCAN_QR) }
+    var selectedMode by rememberSaveable { mutableStateOf(initialMode) }
     var hasCameraPermission by remember { mutableStateOf(hasCameraPermission(context)) }
 
     // 從系統設定頁返回時重新檢查相機權限

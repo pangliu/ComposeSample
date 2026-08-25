@@ -2,6 +2,7 @@ package com.qpay.xcash.ui.friend.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.qpay.xcash.network.manager.RecentFriendManager
 import com.qpay.xcash.network.model.NetworkResult
 import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.repository.UserRepository
@@ -23,7 +24,9 @@ enum class FriendListSortOrder { A_TO_Z, Z_TO_A, RECENTLY_CONTACTED }
 
 data class FriendListUiState(
     val isLoadingFriends: Boolean = true,
+    val isRefreshing: Boolean = false,
     val friends: List<FriendResponse> = emptyList(),
+    val recentFriends: List<FriendResponse> = emptyList(),
     val searchQuery: String = "",
     val selectedTab: FriendListTab = FriendListTab.ALL,
     val selectedCategory: String? = null, // null = "All"
@@ -39,7 +42,7 @@ data class FriendListUiState(
             var result = when (selectedTab) {
                 FriendListTab.ALL -> friends
                 FriendListTab.FAVORITES -> friends.filter { it.isFavorite }
-                FriendListTab.RECENT -> friends.filter { it.isRecent }
+                FriendListTab.RECENT -> recentFriends
             }
             selectedCategory?.let { category ->
                 result = result.filter { it.tagLabel == category }
@@ -62,7 +65,8 @@ data class FriendListUiState(
 
 @HiltViewModel
 class FriendListViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val recentFriendManager: RecentFriendManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FriendListUiState())
@@ -73,22 +77,38 @@ class FriendListViewModel @Inject constructor(
 
     init {
         fetchFriendList()
+        loadRecentFriends()
+    }
+
+    private fun loadRecentFriends() {
+        _uiState.update { it.copy(recentFriends = recentFriendManager.load().asReversed()) }
     }
 
     private fun fetchFriendList() {
         viewModelScope.launch {
-            when (val result = userRepository.fetchFriendList()) {
-                is NetworkResult.Success -> {
-                    _uiState.update { it.copy(isLoadingFriends = false, friends = result.data ?: emptyList()) }
-                }
-                is NetworkResult.Error -> {
-                    _uiState.update { it.copy(isLoadingFriends = false) }
-                    _eventFlow.emit(UiEvent.ShowToast(result.message))
-                }
-                is NetworkResult.Exception -> {
-                    _uiState.update { it.copy(isLoadingFriends = false) }
-                    _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
-                }
+            loadFriends()
+            _uiState.update { it.copy(isLoadingFriends = false) }
+        }
+    }
+
+    fun onRefresh() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isRefreshing = true) }
+            loadFriends()
+            _uiState.update { it.copy(isRefreshing = false) }
+        }
+    }
+
+    private suspend fun loadFriends() {
+        when (val result = userRepository.fetchFriendList()) {
+            is NetworkResult.Success -> {
+                _uiState.update { it.copy(friends = result.data ?: emptyList()) }
+            }
+            is NetworkResult.Error -> {
+                _eventFlow.emit(UiEvent.ShowToast(result.message))
+            }
+            is NetworkResult.Exception -> {
+                _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
             }
         }
     }
@@ -99,6 +119,9 @@ class FriendListViewModel @Inject constructor(
 
     fun onTabSelected(tab: FriendListTab) {
         _uiState.update { it.copy(selectedTab = tab) }
+        if (tab == FriendListTab.RECENT) {
+            loadRecentFriends()
+        }
     }
 
     fun onCategorySelected(category: String?) {
@@ -129,9 +152,4 @@ class FriendListViewModel @Inject constructor(
         userRepository.selectedFriend = friend
     }
 
-    fun onAddFriendClick() {
-        viewModelScope.launch {
-            _eventFlow.emit(UiEvent.ShowToast("好友邀請功能即將推出"))
-        }
-    }
 }

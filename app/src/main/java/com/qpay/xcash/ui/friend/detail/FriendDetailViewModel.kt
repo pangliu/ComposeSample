@@ -2,6 +2,7 @@ package com.qpay.xcash.ui.friend.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.qpay.xcash.network.manager.RecentFriendManager
 import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.repository.UserRepository
 import com.qpay.xcash.ui.UiEvent
@@ -28,7 +29,8 @@ data class FriendDetailUiState(
 
 @HiltViewModel
 class FriendDetailViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val recentFriendManager: RecentFriendManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FriendDetailUiState())
@@ -50,6 +52,7 @@ class FriendDetailViewModel @Inject constructor(
                     memoInput = friend.memo.orEmpty()
                 )
             }
+            recentFriendManager.save(friend)
         }
     }
 

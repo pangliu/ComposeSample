@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
 import com.qpay.xcash.ui.UiEvent
+import com.qpay.xcash.ui.components.QrMode
 import com.qpay.xcash.ui.components.gradientTint
 import com.qpay.xcash.ui.friend.components.FriendTopBar
 import com.qpay.xcash.ui.theme.AppTheme
@@ -61,7 +62,7 @@ fun FriendScreen(
     onNavigateFriendList: () -> Unit,
     onNavigateEmptyList: () -> Unit,
     onNavigateAddFriend: () -> Unit,
-    onNavigateQrCode: () -> Unit
+    onNavigateQrCode: (QrMode) -> Unit
 ) {
     val colors = LocalAppColors.current
     val context = LocalContext.current
@@ -104,7 +105,7 @@ private fun FriendContent(
     onBack: () -> Unit,
     onMyListClick: () -> Unit,
     onNavigateAddFriend: () -> Unit,
-    onNavigateQrCode: () -> Unit = {}
+    onNavigateQrCode: (QrMode) -> Unit = {}
 ) {
     val context = LocalContext.current
     val comingSoon = stringResource(R.string.friend_feature_coming_soon)
@@ -127,12 +128,12 @@ private fun FriendContent(
             FriendActionButton(
                 icon = Icons.Default.Add,
                 label = stringResource(R.string.friend_action_invite),
-                onClick = { Toast.makeText(context, comingSoon, Toast.LENGTH_SHORT).show() }
+                onClick = { onNavigateQrCode(QrMode.MY_QR) }
             )
             FriendActionButton(
                 icon = Icons.Outlined.QrCode2,
                 label = stringResource(R.string.friend_action_qr_code),
-                onClick = onNavigateQrCode
+                onClick = { onNavigateQrCode(QrMode.SCAN_QR) }
             )
             FriendActionButton(
                 icon = Icons.Default.Search,

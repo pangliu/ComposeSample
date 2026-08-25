@@ -27,9 +27,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -95,13 +97,14 @@ fun FriendListScreen(
             uiState = uiState,
             paddingValues = paddingValues,
             onBack = onBack,
-            onAddFriendClick = viewModel::onAddFriendClick,
+            onAddFriendClick = { onNavigate(Routes.ADD_FRIEND) },
             onSearchQueryChange = viewModel::onSearchQueryChange,
             onTabSelected = viewModel::onTabSelected,
             onCategorySelected = viewModel::onCategorySelected,
             onSortOrderSelected = viewModel::onSortOrderSelected,
             onToggleFavorite = viewModel::onToggleFavorite,
             onRemoveFriend = viewModel::onRemoveFriend,
+            onRefresh = viewModel::onRefresh,
             onFriendClick = { friend ->
                 viewModel.selectFriend(friend)
                 onNavigate(Routes.friendDetail(friend.id))
@@ -110,6 +113,7 @@ fun FriendListScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FriendListContent(
     uiState: FriendListUiState,
@@ -122,6 +126,7 @@ private fun FriendListContent(
     onSortOrderSelected: (FriendListSortOrder) -> Unit,
     onToggleFavorite: (String) -> Unit,
     onRemoveFriend: (String) -> Unit,
+    onRefresh: () -> Unit = {},
     onFriendClick: (FriendResponse) -> Unit = {}
 ) {
     Column(
@@ -183,26 +188,32 @@ private fun FriendListContent(
         )
 
         val filteredFriends = uiState.filteredFriends
-        if (filteredFriends.isEmpty() && !uiState.isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = stringResource(R.string.friend_empty),
-                    color = LocalAppColors.current.text.body,
-                    fontSize = 14.sp
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
-            ) {
-                items(filteredFriends, key = { it.id }) { friend ->
-                    FriendListItem(
-                        friend = friend,
-                        onToggleFavorite = { onToggleFavorite(friend.id) },
-                        onRemove = { onRemoveFriend(friend.id) },
-                        onClick = { onFriendClick(friend) }
+        PullToRefreshBox(
+            isRefreshing = uiState.isRefreshing,
+            onRefresh = onRefresh,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (filteredFriends.isEmpty() && !uiState.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = stringResource(R.string.friend_empty),
+                        color = LocalAppColors.current.text.body,
+                        fontSize = 14.sp
                     )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
+                ) {
+                    items(filteredFriends, key = { it.id }) { friend ->
+                        FriendListItem(
+                            friend = friend,
+                            onToggleFavorite = { onToggleFavorite(friend.id) },
+                            onRemove = { onRemoveFriend(friend.id) },
+                            onClick = { onFriendClick(friend) }
+                        )
+                    }
                 }
             }
         }

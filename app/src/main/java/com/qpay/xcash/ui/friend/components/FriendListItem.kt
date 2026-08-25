@@ -209,6 +209,7 @@ private fun RowScope.FriendListItemContent(
                 interactionSource = remember { MutableInteractionSource() }
             ) { onToggleFavorite() }
     )
+    Spacer(Modifier.width(10.dp))
 }
 
 @Composable
