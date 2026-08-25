@@ -21,12 +21,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.CardGiftcard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -47,6 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,6 +69,7 @@ import com.qpay.xcash.ui.theme.BlackGoldAssets
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.theme.slateGray
 
 @Composable
 fun FriendListScreen(
@@ -194,12 +199,19 @@ private fun FriendListContent(
             modifier = Modifier.fillMaxSize()
         ) {
             if (filteredFriends.isEmpty() && !uiState.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(
-                        text = stringResource(R.string.friend_empty),
-                        color = LocalAppColors.current.text.body,
-                        fontSize = 14.sp
+                if (uiState.searchQuery.isNotBlank()) {
+                    FriendListSearchNoRecords(
+                        onInviteClick = onAddFriendClick,
+//                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
+                } else {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = stringResource(R.string.friend_empty),
+                            color = LocalAppColors.current.text.body,
+                            fontSize = 14.sp
+                        )
+                    }
                 }
             } else {
                 LazyColumn(
@@ -221,6 +233,85 @@ private fun FriendListContent(
 }
 
 @Composable
+private fun FriendListSearchNoRecords(
+    onInviteClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Spacer(Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = slateGray.copy(0.5f)
+                )
+                .height(35.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                modifier = Modifier.padding(start = 16.dp),
+                text = stringResource(R.string.friend_search_no_records),
+                color = LocalAppColors.current.friendList.notFoundHintText,
+                fontSize = 13.sp
+            )
+        }
+        Spacer(Modifier.height(8.dp))
+        FriendListNotFoundInviteCard(onClick = onInviteClick)
+    }
+}
+
+@Composable
+private fun FriendListNotFoundInviteCard(onClick: () -> Unit) {
+    val colors = LocalAppColors.current.friendList
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+            .border(1.dp, colors.notFoundCardBorder, RoundedCornerShape(16.dp))
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) { onClick() }
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(colors.notFoundIconBackground, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.CardGiftcard,
+                contentDescription = stringResource(R.string.friend_not_found_gift_desc),
+                tint = colors.notFoundIconTint,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = stringResource(R.string.friend_not_found_title),
+                color = colors.notFoundTitleText,
+                fontSize = 13.sp
+            )
+            Text(
+                text = stringResource(R.string.friend_not_found_invite),
+                color = colors.notFoundActionText,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+            contentDescription = null,
+            tint = colors.notFoundArrowTint,
+            modifier = Modifier.size(18.dp)
+        )
+    }
+}
+
+@Composable
 private fun FriendListSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
@@ -230,8 +321,8 @@ private fun FriendListSearchBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, colors.searchBarBorder.copy(alpha = 0.6f), RoundedCornerShape(24.dp))
-            .background(colors.searchBarBackground, RoundedCornerShape(24.dp))
+            .border(1.dp, colors.searchBarBorder.copy(alpha = 0.6f), RoundedCornerShape(10.dp))
+            .background(colors.searchBarBackground, RoundedCornerShape(10.dp))
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -481,6 +572,12 @@ private val previewFriends = listOf(
 
 private val previewUiState = FriendListUiState(isLoadingFriends = false, friends = previewFriends)
 
+private val previewNoRecordsUiState = FriendListUiState(
+    isLoadingFriends = false,
+    friends = previewFriends,
+    searchQuery = "zzz"
+)
+
 @Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
 @Composable
 private fun FriendListScreenPreviewNeon() {
@@ -506,6 +603,44 @@ private fun FriendListScreenPreviewBlackGold() {
     AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         FriendListContent(
             uiState = previewUiState,
+            paddingValues = PaddingValues(),
+            onBack = {},
+            onAddFriendClick = {},
+            onSearchQueryChange = {},
+            onTabSelected = {},
+            onCategorySelected = {},
+            onSortOrderSelected = {},
+            onToggleFavorite = {},
+            onRemoveFriend = {}
+        )
+    }
+}
+
+@Preview(name = "Neon - No Records", showBackground = true, backgroundColor = 0xFF030F1B)
+@Composable
+private fun FriendListScreenPreviewNeonNoRecords() {
+    AppTheme(colors = NeonColors) {
+        FriendListContent(
+            uiState = previewNoRecordsUiState,
+            paddingValues = PaddingValues(),
+            onBack = {},
+            onAddFriendClick = {},
+            onSearchQueryChange = {},
+            onTabSelected = {},
+            onCategorySelected = {},
+            onSortOrderSelected = {},
+            onToggleFavorite = {},
+            onRemoveFriend = {}
+        )
+    }
+}
+
+@Preview(name = "Black Gold - No Records", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun FriendListScreenPreviewBlackGoldNoRecords() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        FriendListContent(
+            uiState = previewNoRecordsUiState,
             paddingValues = PaddingValues(),
             onBack = {},
             onAddFriendClick = {},

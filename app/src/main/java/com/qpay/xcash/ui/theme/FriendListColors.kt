@@ -39,6 +39,15 @@ data class FriendListColors(
     val starInactive: Color,            // 未收藏星星顏色
     val listDivider: Color,             // 項目分隔線
 
+    // ── Not Found Card（搜尋無結果時的邀請卡片）──────────
+    val notFoundCardBorder: Brush,      // 卡片外框
+    val notFoundIconBackground: Color,  // 禮物 icon 圓形底色
+    val notFoundIconTint: Color,        // 禮物 icon 顏色
+    val notFoundHintText: Color,        // "No records found" 文字
+    val notFoundTitleText: Color,       // "Not found?" 文字
+    val notFoundActionText: Color,      // "Invite them to xCash" 文字
+    val notFoundArrowTint: Color,       // 右側箭頭
+
     val sortDialog: FriendSortDialogColors, // FriendSortDialog 專屬顏色
 )
 
@@ -132,6 +141,15 @@ val NeonFriendListColors = FriendListColors(
     ),
     starInactive = silverGray.copy(alpha = 0.5f),
     listDivider = neonCyan.copy(alpha = 0.08f),
+    notFoundCardBorder = Brush.horizontalGradient(
+        colors = listOf(neonPurple, neonCyan, neonPurple)
+    ),
+    notFoundIconBackground = neonCyan.copy(alpha = 0.15f),
+    notFoundIconTint = neonCyan,
+    notFoundHintText = themeWhite.copy(0.8f),
+    notFoundTitleText = Color.White,
+    notFoundActionText = neonCyan,
+    notFoundArrowTint = neonCyan,
     sortDialog = NeonFriendSortDialogColors,
 )
 
@@ -169,5 +187,15 @@ val BlackGoldFriendListColors = FriendListColors(
     ),
     starInactive = coolGray,
     listDivider = antiqueGold.copy(alpha = 0.15f),
+    // 由左至右：oldGold → amberGold → champagneGold → amberGold → oldGold（與 gradient.goldShimmer 一致）
+    notFoundCardBorder = Brush.horizontalGradient(
+        colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
+    ),
+    notFoundIconBackground = antiqueGold.copy(alpha = 0.15f),
+    notFoundIconTint = antiqueGold,
+    notFoundHintText = themeWhite.copy(0.8f),
+    notFoundTitleText = warmSand,
+    notFoundActionText = antiqueGold,
+    notFoundArrowTint = antiqueGold,
     sortDialog = BlackGoldFriendSortDialogColors,
 )

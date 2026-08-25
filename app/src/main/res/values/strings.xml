@@ -515,6 +515,10 @@
     <string name="friend_sort_recently_contacted">Recently Contacted</string>
     <string name="friend_empty">No friends found</string>
     <string name="friend_list_item_remove">Remove</string>
+    <string name="friend_search_no_records">No records found</string>
+    <string name="friend_not_found_title">Not found?</string>
+    <string name="friend_not_found_invite">Invite them to xCash</string>
+    <string name="friend_not_found_gift_desc">Invite</string>
 
     <!-- EmptyListScreen -->
     <string name="empty_list_friends_title">No Friends Yet</string>
