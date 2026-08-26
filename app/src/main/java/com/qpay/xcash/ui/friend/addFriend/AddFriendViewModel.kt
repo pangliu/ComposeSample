@@ -19,9 +19,10 @@ import javax.inject.Inject
 
 data class AddFriendUiState(
     val isLoadingFindFriend: Boolean = false,
+    val isLoadingAddFriend: Boolean = false,
     val foundFriend: FriendResponse? = null,
 ) {
-    val isLoading: Boolean get() = isLoadingFindFriend
+    val isLoading: Boolean get() = isLoadingFindFriend || isLoadingAddFriend
 }
 
 @HiltViewModel
@@ -59,8 +60,23 @@ class AddFriendViewModel @Inject constructor(
     }
 
     fun onAddFriendClick() {
+        val friendId = _uiState.value.foundFriend?.id ?: return
         viewModelScope.launch {
-            _eventFlow.emit(UiEvent.ShowToast("好友新增功能即將推出"))
+            _uiState.update { it.copy(isLoadingAddFriend = true) }
+            when (val result = userRepository.addFriend(friendId)) {
+                is NetworkResult.Success -> {
+                    _uiState.update { it.copy(isLoadingAddFriend = false, foundFriend = null) }
+                    _eventFlow.emit(UiEvent.ShowToast("好友新增成功"))
+                }
+                is NetworkResult.Error -> {
+                    _uiState.update { it.copy(isLoadingAddFriend = false) }
+                    _eventFlow.emit(UiEvent.ShowToast(result.message))
+                }
+                is NetworkResult.Exception -> {
+                    _uiState.update { it.copy(isLoadingAddFriend = false) }
+                    _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
+                }
+            }
         }
     }
 }

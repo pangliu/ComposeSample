@@ -1,6 +1,7 @@
 package com.qpay.xcash.network.fake
 
 import com.qpay.xcash.network.api.UserApiService
+import com.qpay.xcash.network.model.request.AddFriendRequest
 import com.qpay.xcash.network.model.request.FindFriendRequest
 import com.qpay.xcash.network.model.response.BaseResponse
 import com.qpay.xcash.network.model.response.ContactType
@@ -16,6 +17,92 @@ import kotlinx.coroutines.delay
 import okhttp3.MultipartBody
 
 class FakeUserApiService : UserApiService {
+
+    // 🎯 findFriend 可搜尋到的假資料池（依 phone_number 搜尋，依 id 加入好友）
+    private val searchableFriends = listOf(
+        FriendResponse(
+            id = "F002",
+            name = "Tony Stark",
+            nickName = "Iron Man",
+            contactType = ContactType.PHONE_NUM,
+            avatarUrl = "https://i.pravatar.cc/150?u=F002",
+            isFavorite = false,
+            tagLabel = null,
+            isRecent = false,
+            phoneNumber = "0910123123"
+        ),
+        FriendResponse(
+            id = "F007",
+            name = "Peter Parker",
+            nickName = "Spider-Man",
+            contactType = ContactType.PHONE_NUM,
+            avatarUrl = "https://i.pravatar.cc/150?u=F007",
+            isFavorite = true,
+            tagLabel = null,
+            isRecent = true,
+            phoneNumber = "0911123123"
+        ),
+        FriendResponse(
+            id = "F001",
+            name = "Bruce Banner",
+            nickName = "Hulk",
+            contactType = ContactType.FACEBOOK,
+            avatarUrl = "ㄏ",
+            isFavorite = true,
+            tagLabel = "Besties",
+            isRecent = true,
+            phoneNumber = "0912123123",
+            memo = "Gets grumpy when hungry."
+        ),
+        FriendResponse(
+            id = "F003",
+            name = "Natasha Romanoff",
+            nickName = "Black Widow",
+            contactType = ContactType.FACEBOOK,
+            avatarUrl = "https://i.pravatar.cc/150?u=F003",
+            isFavorite = false,
+            tagLabel = null,
+            isRecent = true,
+            phoneNumber = "0913123123"
+        ),
+        FriendResponse(
+            id = "F004",
+            name = "Steve Rogers",
+            nickName = "Captain America",
+            contactType = ContactType.FACEBOOK,
+            avatarUrl = "https://i.pravatar.cc/150?u=F004",
+            isFavorite = true,
+            tagLabel = "Family",
+            isRecent = false,
+            phoneNumber = "0914123123"
+        ),
+        FriendResponse(
+            id = "F005",
+            name = "Thor Odinson",
+            nickName = "Thor",
+            contactType = ContactType.PHONE_NUM,
+            avatarUrl = "https://i.pravatar.cc/150?u=F005",
+            isFavorite = false,
+            tagLabel = null,
+            isRecent = false,
+            phoneNumber = "0915123123"
+        ),
+        FriendResponse(
+            id = "F006",
+            name = "Clint Barton",
+            nickName = "Hawkeye",
+            contactType = ContactType.FACEBOOK,
+            avatarUrl = "https://i.pravatar.cc/150?u=F006",
+            isFavorite = false,
+            tagLabel = "Besties",
+            isRecent = false,
+            phoneNumber = "0916123123"
+        ),
+    )
+
+    // 🎯 暫存已加入的好友名單（addFriend 寫入，getFriendList 讀出）
+    private val addedFriends = mutableListOf<FriendResponse>()
+
     override suspend fun getUserInfo(): BaseResponse<UserInfoResponse> {
         delay(2000) // 模擬網路延遲
         return BaseResponse(
@@ -100,38 +187,28 @@ class FakeUserApiService : UserApiService {
         return BaseResponse(
             code = 200,
             errorMsg = "success",
-            result = listOf(
-                FriendResponse(id = "F001", name = "Bruce Banner", nickName = "Hulk", contactType = ContactType.FACEBOOK, avatarUrl = "ㄏ", isFavorite = true, tagLabel = "Besties", isRecent = true, phoneNumber = "09171234001", memo = "Gets grumpy when hungry."),
-                FriendResponse(id = "F002", name = "Tony Stark", nickName = "Iron Man", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F002", isFavorite = true, tagLabel = "Family", isRecent = false, phoneNumber = "09171234002", memo = "Splits the dinner bill fairly."),
-                FriendResponse(id = "F003", name = "Natasha Romanoff", nickName = "Black Widow", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F003", isFavorite = false, tagLabel = null, isRecent = true, phoneNumber = "09171234003"),
-                FriendResponse(id = "F004", name = "Steve Rogers", nickName = "Captain America", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F004", isFavorite = true, tagLabel = "Family", isRecent = false, phoneNumber = "09171234004"),
-                FriendResponse(id = "F005", name = "Thor Odinson", nickName = "Thor", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F005", isFavorite = false, tagLabel = null, isRecent = false, phoneNumber = "09171234005"),
-                FriendResponse(id = "F006", name = "Clint Barton", nickName = "Hawkeye", contactType = ContactType.FACEBOOK, avatarUrl = "https://i.pravatar.cc/150?u=F006", isFavorite = false, tagLabel = "Besties", isRecent = false, phoneNumber = "09171234006"),
-                FriendResponse(id = "F007", name = "Peter Parker", nickName = "Spider-Man", contactType = ContactType.PHONE_NUM, avatarUrl = "https://i.pravatar.cc/150?u=F007", isFavorite = true, tagLabel = null, isRecent = true, phoneNumber = "09171234007")
-            )
+            result = addedFriends.toList()
         )
     }
 
     override suspend fun findFriend(request: FindFriendRequest): BaseResponse<FriendResponse> {
         delay(600)
-        return if (request.phoneNumber == "9123456789") {
-            BaseResponse(
-                code = 200,
-                errorMsg = "success",
-                result = FriendResponse(
-                    id = "F002",
-                    name = "Tony Stark",
-                    nickName = "Iron Man",
-                    contactType = ContactType.PHONE_NUM,
-                    avatarUrl = "https://i.pravatar.cc/150?u=F002",
-                    isFavorite = false,
-                    tagLabel = null,
-                    isRecent = false
-                )
-            )
+        val friend = searchableFriends.find { it.phoneNumber == request.phoneNumber }
+        return if (friend != null) {
+            BaseResponse(code = 200, errorMsg = "success", result = friend)
         } else {
             BaseResponse(code = 404, errorMsg = "User not found", result = null)
         }
+    }
+
+    override suspend fun addFriend(request: AddFriendRequest): BaseResponse<Unit> {
+        delay(600)
+        val friend = searchableFriends.find { it.id == request.friendId }
+            ?: return BaseResponse(code = 404, errorMsg = "User not found", result = null)
+        if (addedFriends.none { it.id == friend.id }) {
+            addedFriends.add(friend)
+        }
+        return BaseResponse(code = 200, errorMsg = "success", result = Unit)
     }
 
     override suspend fun getUpdateLog(): BaseResponse<List<UpdateLogResponse>> {

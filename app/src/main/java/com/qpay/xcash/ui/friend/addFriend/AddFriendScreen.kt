@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
 import com.qpay.xcash.ui.UiEvent
+import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.friend.components.FoundFriendItem
 import com.qpay.xcash.ui.friend.components.FriendTopBar
 import com.qpay.xcash.ui.theme.AppTheme
@@ -87,6 +88,8 @@ fun AddFriendScreen(onBack: () -> Unit, viewModel: AddFriendViewModel = hiltView
             onDismissFoundFriend = viewModel::clearFoundFriend
         )
     }
+
+    LoadingDialog(isShowing = uiState.isLoading)
 }
 
 @Composable
