@@ -114,7 +114,8 @@ private fun HomeScreenContent(
 //                    Spacer(modifier = Modifier.height(8.dp))
                     BalanceCard(
                         cashBalance = uiState.userInfo.cashBalance,
-                        tokenBalance = uiState.userInfo.tokenBalance
+                        tokenBalance = uiState.userInfo.tokenBalance,
+                        onNavigate = onNavigate
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     XEssentialsCard(

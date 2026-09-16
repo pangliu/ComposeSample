@@ -115,7 +115,9 @@ class FakeUserApiService : UserApiService {
                 userPhone = "0912345678",
                 userEmail = "hank.fake@gmail.com",
                 cashBalance = 12500.50,
-                tokenBalance = 8888.0
+                tokenBalance = 8888.0,
+                defaultBankName = "gcash",
+                defaultCardNumber = "5353"
             )
 //            result = null
         )

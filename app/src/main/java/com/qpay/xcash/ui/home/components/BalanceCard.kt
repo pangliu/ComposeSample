@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.components.GradientText
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.theme.AppTheme
@@ -55,7 +56,7 @@ import com.qpay.xcash.ui.theme.mistGray
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
+fun BalanceCard(cashBalance: Double, tokenBalance: Double, onNavigate: (String) -> Unit = {}) {
     val colors = LocalAppColors.current
     val assets = LocalAppAssets.current
     var isBalanceHidden by remember { mutableStateOf(false) }
@@ -138,7 +139,7 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double) {
                                 brush = colors.gradient.goldShimmer ?: SolidColor(colors.home.balanceCard.cashInBorder),
                                 shape = RoundedCornerShape(8.dp)
                             )
-                            .clickable { /* TODO: Cash In */ }
+                            .clickable { onNavigate(Routes.CASH_IN) }
                             .padding(horizontal = 14.dp, vertical = 6.dp)
                     ) {
                         Row(verticalAlignment = Alignment.Companion.CenterVertically) {

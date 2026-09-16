@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +33,7 @@ import com.qpay.xcash.ui.theme.NeonColors
     showBack: Boolean = true,
     showNotifySettings: Boolean = false,
     onNotifySettingsClick: () -> Unit = {},
+    titleBrush: Brush? = null,
     modifier: Modifier = Modifier
 ) {
     val colors = LocalAppColors.current
@@ -64,7 +66,7 @@ import com.qpay.xcash.ui.theme.NeonColors
         GradientText(
             text = title,
             color = Color.White,
-            brush = colors.gradient.silverShimmer,
+            brush = titleBrush ?: colors.gradient.silverShimmer,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Center)

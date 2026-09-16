@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.qpay.xcash.ui.cards.add.AddNewCardScreen
+import com.qpay.xcash.ui.cashin.CashInScreen
 import com.qpay.xcash.ui.cards.detail.CardDetailScreen
 import com.qpay.xcash.ui.cards.linked_success.LinkedSuccessScreen
 import com.qpay.xcash.ui.cards.select.SelectCardTypeScreen
@@ -121,6 +122,7 @@ fun AppNavigation(
                         Routes.EDIT_AVATAR -> slideOutHorizontally { -it }
                         Routes.CAMERA -> slideOutHorizontally { -it }
                         Routes.FRIEND -> slideOutHorizontally { -it }
+                        Routes.CASH_IN -> slideOutHorizontally { -it }
                         else -> null
                     }
                 },
@@ -141,6 +143,7 @@ fun AppNavigation(
                         Routes.EDIT_AVATAR -> slideInHorizontally { -it }
                         Routes.CAMERA -> slideInHorizontally { -it }
                         Routes.FRIEND -> slideInHorizontally { -it }
+                        Routes.CASH_IN -> slideInHorizontally { -it }
                         else -> null
                     }
                 }
@@ -353,6 +356,14 @@ fun AppNavigation(
                     onBack = { navController.popBackStack() },
                     onNavigate = { navController.navigate(it) }
                 )
+            }
+
+            composable(
+                route = Routes.CASH_IN,
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } }
+            ) {
+                CashInScreen(onBack = { navController.popBackStack() })
             }
 
             // ── ScanPay sub-pages (ScanPayViewModel scoped to MAIN) ──────────
