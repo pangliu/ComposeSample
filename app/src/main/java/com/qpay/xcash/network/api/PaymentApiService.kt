@@ -1,5 +1,6 @@
 package com.qpay.xcash.network.api
 
+import com.qpay.xcash.network.model.request.CashInPaymentRequest
 import com.qpay.xcash.network.model.request.ConfirmPaymentRequest
 import com.qpay.xcash.network.model.response.BaseResponse
 import com.qpay.xcash.network.model.response.ConfirmPaymentResponse
@@ -18,4 +19,7 @@ interface PaymentApiService {
 
     @GET("/api/payment/detail/{orderId}")
     suspend fun getTransactionDetail(@Path("orderId") orderId: String): BaseResponse<TransactionDetailResponse>
+
+    @POST("/api/payment/cashin")
+    suspend fun cashIn(@Body request: CashInPaymentRequest): BaseResponse<ConfirmPaymentResponse>
 }

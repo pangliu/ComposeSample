@@ -1,6 +1,7 @@
 package com.qpay.xcash.network.fake
 
 import com.qpay.xcash.network.api.PaymentApiService
+import com.qpay.xcash.network.model.request.CashInPaymentRequest
 import com.qpay.xcash.network.model.request.ConfirmPaymentRequest
 import com.qpay.xcash.network.model.response.BaseResponse
 import com.qpay.xcash.network.model.response.ConfirmPaymentResponse
@@ -25,6 +26,20 @@ class FakePaymentApiService : PaymentApiService {
             )
 //            errorMsg = "failed to payment，test xxxx",
 //            result = null
+        )
+    }
+
+    override suspend fun cashIn(request: CashInPaymentRequest): BaseResponse<ConfirmPaymentResponse> {
+        delay(1500)
+        return BaseResponse(
+            code = 200,
+            errorMsg = "success",
+            result = ConfirmPaymentResponse(
+                transactionId = "TXN${System.currentTimeMillis()}",
+                status = "SUCCESS"
+                // 🎯 測試「業務性失敗」（HTTP 200 但交易被拒）時，改用下面這組：
+                // status = "FAILED"
+            )
         )
     }
 

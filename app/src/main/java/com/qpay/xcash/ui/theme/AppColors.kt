@@ -64,6 +64,7 @@ data class AppColors(
     val emptyList: EmptyListColors,
     val cashIn: CashInColors,
     val paymentMethod: PaymentMethodColors,
+    val cashInResult: CashInResultColors,
 )
 
 val NeonColors = AppColors(
@@ -117,6 +118,7 @@ val NeonColors = AppColors(
     emptyList = NeonEmptyListColors,
     cashIn = NeonCashInColors,
     paymentMethod = NeonPaymentMethodColors,
+    cashInResult = NeonCashInResultColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -174,4 +176,5 @@ val BlackGoldColors = AppColors(
     emptyList = BlackGoldEmptyListColors,
     cashIn = BlackGoldCashInColors,
     paymentMethod = BlackGoldPaymentMethodColors,
+    cashInResult = BlackGoldCashInResultColors,
 )

@@ -574,9 +574,24 @@
     <string name="cash_in_currency">PHP</string>
     <string name="cash_in_amount_hint">0.00</string>
     <string name="cash_in_current_balance_label">Current Balance</string>
-    <string name="cash_in_current_balance_value">NT$ 0</string>
     <string name="cash_in_backspace_desc">Backspace</string>
     <string name="cash_in_top_up_button">Top Up</string>
+    <string name="biometric_prompt_cashin_title">Verify Top Up</string>
+    <string name="biometric_prompt_cashin_subtitle">Verify your identity to complete this top up</string>
+
+    <!-- CashInResultScreen -->
+    <string name="cash_in_result_failed_title">Cash In Failed</string>
+    <string name="cash_in_result_success_title">Cash In Successful</string>
+    <string name="cash_in_result_failed_subtitle">Cash In failed on %1$s</string>
+    <string name="cash_in_result_success_subtitle">Cash in successful on %1$s</string>
+    <string name="cash_in_result_wallet_label">My Xcash Wallet</string>
+    <string name="cash_in_result_wallet_subtitle">Xcash Wallet</string>
+    <string name="cash_in_result_balance_after_label">Balance After Transaction</string>
+    <string name="cash_in_result_transaction_history">Transaction History</string>
+    <string name="cash_in_result_ref_no">Ref No. %1$s</string>
+    <string name="cash_in_result_confirm_button">Confirm</string>
+    <string name="cash_in_result_status_icon_desc">Status</string>
+    <string name="cash_in_result_transfer_arrow_desc">Transfer To</string>
 
     <!-- PaymentMethodScreen -->
     <string name="payment_method_title">Payment Method</string>

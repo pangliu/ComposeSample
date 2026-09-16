@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +33,10 @@ import com.qpay.xcash.R
 import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.components.neonGlow
+import com.qpay.xcash.ui.theme.AppTheme
+import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
+import com.qpay.xcash.ui.theme.NeonColors
 
 @Composable
 fun SelectCardTypeScreen(onBack: () -> Unit, onNavigate: (String) -> Unit = {}) {
@@ -109,7 +111,11 @@ private fun CardTypeItem(option: CardTypeOption, onClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .neonGlow(color = colors.accent.primary, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 12.dp)
+                .then(
+                    if (colors.effect.enableGlow)
+                        Modifier.neonGlow(color = colors.accent.primary, alpha = 0.4f, glowRadius = 12.dp, borderRadius = 12.dp)
+                    else Modifier
+                )
                 .background(colors.bg.page, RoundedCornerShape(12.dp))
                 .border(1.5.dp, colors.accent.primary.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
                 .clickable(onClick = onClick)
@@ -141,10 +147,18 @@ private fun CardTypeItem(option: CardTypeOption, onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0B1327)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0B1327)
 @Composable
-private fun SelectCardTypePreview() {
-    MaterialTheme {
+private fun SelectCardTypePreviewNeon() {
+    AppTheme(colors = NeonColors) {
+        SelectCardTypeContent()
+    }
+}
+
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun SelectCardTypePreviewBlackGold() {
+    AppTheme(colors = BlackGoldColors) {
         SelectCardTypeContent()
     }
 }

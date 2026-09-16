@@ -19,6 +19,7 @@ import com.qpay.xcash.ui.cards.add.AddNewCardScreen
 import com.qpay.xcash.ui.cashin.CashInScreen
 import com.qpay.xcash.ui.cashin.CashInViewModel
 import com.qpay.xcash.ui.cashin.paymentmethod.PaymentMethodScreen
+import com.qpay.xcash.ui.cashin.result.CashInResultScreen
 import com.qpay.xcash.ui.cards.detail.CardDetailScreen
 import com.qpay.xcash.ui.cards.linked_success.LinkedSuccessScreen
 import com.qpay.xcash.ui.cards.select.SelectCardTypeScreen
@@ -126,6 +127,7 @@ fun AppNavigation(
                         Routes.FRIEND -> slideOutHorizontally { -it }
                         Routes.CASH_IN -> slideOutHorizontally { -it }
                         Routes.PAYMENT_METHOD -> slideOutHorizontally { -it }
+                        Routes.CASH_IN_RESULT -> slideOutHorizontally { -it }
                         else -> null
                     }
                 },
@@ -148,6 +150,7 @@ fun AppNavigation(
                         Routes.FRIEND -> slideInHorizontally { -it }
                         Routes.CASH_IN -> slideInHorizontally { -it }
                         Routes.PAYMENT_METHOD -> slideInHorizontally { -it }
+                        Routes.CASH_IN_RESULT -> slideInHorizontally { -it }
                         else -> null
                     }
                 }
@@ -397,6 +400,26 @@ fun AppNavigation(
                 )
             }
 
+            composable(
+                route = Routes.CASH_IN_RESULT,
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } }
+            ) { backStackEntry ->
+                val mainEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(Routes.MAIN)
+                }
+                val viewModel = hiltViewModel<CashInViewModel>(mainEntry)
+                CashInResultScreen(
+                    onConfirm = {
+                        navController.navigate(Routes.mainAtTab(0)) {
+                            popUpTo(Routes.MAIN) { inclusive = true }
+                        }
+                    },
+                    onTransactionHistoryClick = { navController.navigate(Routes.TRANSACTION_HISTORY) },
+                    viewModel = viewModel
+                )
+            }
+
             // ── ScanPay sub-pages (ScanPayViewModel scoped to MAIN) ──────────
             composable(
                 route = Routes.SCAN_PAY_INPUT_AMOUNT,
@@ -482,15 +505,29 @@ fun AppNavigation(
                 enterTransition = { slideInHorizontally { it } },
                 popExitTransition = { slideOutHorizontally { it } }
             ) {
+                // 若這個新增卡片流程是從 PaymentMethod 進來的（PAYMENT_METHOD 仍留在 back stack 上），
+                // 完成後就跳回 PaymentMethod，而不是重置到 Home/Cards tab
+                fun returnToPaymentMethodIfPresent(): Boolean {
+                    return try {
+                        navController.getBackStackEntry(Routes.PAYMENT_METHOD)
+                        navController.popBackStack(Routes.PAYMENT_METHOD, false)
+                    } catch (e: IllegalArgumentException) {
+                        false
+                    }
+                }
                 LinkedSuccessScreen(
                     onSetupPrimary = {
-                        navController.navigate(Routes.mainAtTab(0)) {
-                            popUpTo(Routes.MAIN) { inclusive = true }
+                        if (!returnToPaymentMethodIfPresent()) {
+                            navController.navigate(Routes.mainAtTab(0)) {
+                                popUpTo(Routes.MAIN) { inclusive = true }
+                            }
                         }
                     },
                     onNotNow = {
-                        navController.navigate(Routes.mainAtTab(1)) {
-                            popUpTo(Routes.MAIN) { inclusive = true }
+                        if (!returnToPaymentMethodIfPresent()) {
+                            navController.navigate(Routes.mainAtTab(1)) {
+                                popUpTo(Routes.MAIN) { inclusive = true }
+                            }
                         }
                     }
                 )

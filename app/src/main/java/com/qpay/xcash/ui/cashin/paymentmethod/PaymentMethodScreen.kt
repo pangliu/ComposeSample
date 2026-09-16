@@ -85,7 +85,7 @@ fun PaymentMethodScreen(
             selectedCardId?.let { viewModel.selectCard(it) }
             onBack()
         },
-        onLinkCard = { onNavigate(Routes.ADD_NEW_CARD) }
+        onLinkCard = { onNavigate(Routes.SELECT_CARD_TYPE) }
     )
 }
 

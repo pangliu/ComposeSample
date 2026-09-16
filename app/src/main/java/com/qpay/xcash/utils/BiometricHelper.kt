@@ -30,7 +30,9 @@ object BiometricHelper {
         activity: FragmentActivity,
         title: String,
         subtitle: String,
-        negativeText: String,
+        negativeText: String = "",
+        // true 時允許在沒有生物辨識（或辨識失敗）時，退回手機系統鎖屏 PIN/圖案/密碼驗證
+        allowDeviceCredential: Boolean = false,
         onSuccess: () -> Unit,
         onError: (String) -> Unit = {}
     ) {
@@ -48,14 +50,23 @@ object BiometricHelper {
             override fun onAuthenticationFailed() {}
         }
 
+        val authenticators = if (allowDeviceCredential) {
+            BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        } else {
+            BiometricManager.Authenticators.BIOMETRIC_WEAK
+        }
+
+        val promptInfoBuilder = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(title)
+            .setSubtitle(subtitle)
+            .setAllowedAuthenticators(authenticators)
+
+        // Android 規定 DEVICE_CREDENTIAL 不能跟 setNegativeButtonText 同時設定（退回系統驗證本身就取代了取消鈕）
+        if (!allowDeviceCredential) {
+            promptInfoBuilder.setNegativeButtonText(negativeText)
+        }
+
         BiometricPrompt(activity, ContextCompat.getMainExecutor(activity), callback)
-            .authenticate(
-                BiometricPrompt.PromptInfo.Builder()
-                    .setTitle(title)
-                    .setSubtitle(subtitle)
-                    .setNegativeButtonText(negativeText)
-                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
-                    .build()
-            )
+            .authenticate(promptInfoBuilder.build())
     }
 }

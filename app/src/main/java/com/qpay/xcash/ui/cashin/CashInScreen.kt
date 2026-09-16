@@ -49,6 +49,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.CreditCardResponse
@@ -62,6 +63,7 @@ import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonAssets
 import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.utils.BiometricHelper
 
 private val quickAmounts = listOf(100L, 5000L, 3000L)
 
@@ -90,7 +92,30 @@ fun CashInScreen(
         }
     }
 
-    CashInContent(uiState = uiState, onBack = onBack, onNavigate = onNavigate)
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is CashInNavigationEvent.NavigateToResult -> onNavigate(Routes.CASH_IN_RESULT)
+            }
+        }
+    }
+
+    CashInContent(
+        uiState = uiState,
+        onBack = onBack,
+        onNavigate = onNavigate,
+        onTopUpClick = { amount ->
+            // allowDeviceCredential = true：有生物辨識就跳生物辨識，沒有就自動退回手機系統 PIN/圖案/密碼，交給系統處理
+            BiometricHelper.showPrompt(
+                activity = context as FragmentActivity,
+                title = context.getString(R.string.biometric_prompt_cashin_title),
+                subtitle = context.getString(R.string.biometric_prompt_cashin_subtitle),
+                allowDeviceCredential = true,
+                onSuccess = { viewModel.submitTopUp(amount) },
+                onError = { message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show() }
+            )
+        }
+    )
 }
 
 @SuppressLint("DefaultLocale")
@@ -98,7 +123,8 @@ fun CashInScreen(
 private fun CashInContent(
     uiState: CashInUiState = CashInUiState(),
     onBack: () -> Unit = {},
-    onNavigate: (String) -> Unit = {}
+    onNavigate: (String) -> Unit = {},
+    onTopUpClick: (Long) -> Unit = {}
 ) {
     val colors = LocalAppColors.current
     var amount by rememberSaveable { mutableLongStateOf(0L) }
@@ -129,7 +155,7 @@ private fun CashInContent(
 
             Spacer(Modifier.height(30.dp))
 
-            AmountSection(amount = amount)
+            AmountSection(amount = amount, cashBalance = uiState.cashBalance)
 
             Spacer(Modifier.height(16.dp))
 
@@ -160,6 +186,7 @@ private fun CashInContent(
 
             TopUpButton(
                 isEnabled = amount > 0,
+                onClick = { onTopUpClick(amount) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 16.dp)
@@ -287,7 +314,7 @@ private fun TransferRow(
 
 @SuppressLint("DefaultLocale")
 @Composable
-private fun AmountSection(amount: Long) {
+private fun AmountSection(amount: Long, cashBalance: Double) {
     val colors = LocalAppColors.current
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -326,7 +353,7 @@ private fun AmountSection(amount: Long) {
                 fontSize = 13.sp
             )
             Text(
-                text = stringResource(R.string.cash_in_current_balance_value),
+                text = stringResource(R.string.cash_in_currency) + " " + String.format("%,.0f", cashBalance),
                 color = colors.cashIn.currentBalanceValueText,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
@@ -391,7 +418,7 @@ private fun CashInKeypad(
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .aspectRatio(4f)
+                            .aspectRatio(2f)
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
@@ -427,7 +454,7 @@ private fun CashInKeypad(
 }
 
 @Composable
-private fun TopUpButton(isEnabled: Boolean, modifier: Modifier = Modifier) {
+private fun TopUpButton(isEnabled: Boolean, onClick: () -> Unit = {}, modifier: Modifier = Modifier) {
     val colors = LocalAppColors.current
     Box(
         modifier = modifier
@@ -436,7 +463,12 @@ private fun TopUpButton(isEnabled: Boolean, modifier: Modifier = Modifier) {
                 brush = if (isEnabled) colors.cashIn.topUpButtonEnabledFill
                 else SolidColor(colors.cashIn.topUpButtonDisabledFill),
                 shape = RoundedCornerShape(10.dp)
-            ),
+            )
+            .clickable(
+                enabled = isEnabled,
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -460,7 +492,8 @@ private val previewCard = CreditCardResponse(
 private val previewUiState = CashInUiState(
     isLoadingCards = false,
     cards = listOf(previewCard),
-    selectedCardId = previewCard.id
+    selectedCardId = previewCard.id,
+    cashBalance = 12500.0
 )
 
 @Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
