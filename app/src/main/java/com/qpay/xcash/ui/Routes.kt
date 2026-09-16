@@ -27,6 +27,7 @@ object Routes {
     const val UPDATE_LOG = "update_log"
     const val NOTIFICATIONS = "notifications"
     const val CASH_IN = "cash_in"
+    const val PAYMENT_METHOD = "payment_method"
 
     // Friend sub-pages
     const val FRIEND = "friend"

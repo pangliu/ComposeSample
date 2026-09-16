@@ -578,6 +578,14 @@
     <string name="cash_in_backspace_desc">Backspace</string>
     <string name="cash_in_top_up_button">Top Up</string>
 
+    <!-- PaymentMethodScreen -->
+    <string name="payment_method_title">Payment Method</string>
+    <string name="payment_method_premium_tag">PREMIUM</string>
+    <string name="payment_method_expired_hint">Card expired.</string>
+    <string name="payment_method_link_card_hint">Can\'t find your card?</string>
+    <string name="payment_method_link_card_button">Link Card Now</string>
+    <string name="payment_method_confirm_button">Confirm</string>
+
     <!-- Error Messages (HomeViewModel / LoginViewModel) -->
     <string name="error_fetch_user_data">無法取得使用者資料</string>
     <string name="error_network_fetch">無法取得資料：網路異常</string>

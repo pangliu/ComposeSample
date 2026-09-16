@@ -63,6 +63,7 @@ data class AppColors(
     val qrCode: QrCodeColors,
     val emptyList: EmptyListColors,
     val cashIn: CashInColors,
+    val paymentMethod: PaymentMethodColors,
 )
 
 val NeonColors = AppColors(
@@ -115,6 +116,7 @@ val NeonColors = AppColors(
     qrCode = NeonQrCodeColors,
     emptyList = NeonEmptyListColors,
     cashIn = NeonCashInColors,
+    paymentMethod = NeonPaymentMethodColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -171,4 +173,5 @@ val BlackGoldColors = AppColors(
     qrCode = BlackGoldQrCodeColors,
     emptyList = BlackGoldEmptyListColors,
     cashIn = BlackGoldCashInColors,
+    paymentMethod = BlackGoldPaymentMethodColors,
 )

@@ -17,6 +17,8 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.qpay.xcash.ui.cards.add.AddNewCardScreen
 import com.qpay.xcash.ui.cashin.CashInScreen
+import com.qpay.xcash.ui.cashin.CashInViewModel
+import com.qpay.xcash.ui.cashin.paymentmethod.PaymentMethodScreen
 import com.qpay.xcash.ui.cards.detail.CardDetailScreen
 import com.qpay.xcash.ui.cards.linked_success.LinkedSuccessScreen
 import com.qpay.xcash.ui.cards.select.SelectCardTypeScreen
@@ -123,6 +125,7 @@ fun AppNavigation(
                         Routes.CAMERA -> slideOutHorizontally { -it }
                         Routes.FRIEND -> slideOutHorizontally { -it }
                         Routes.CASH_IN -> slideOutHorizontally { -it }
+                        Routes.PAYMENT_METHOD -> slideOutHorizontally { -it }
                         else -> null
                     }
                 },
@@ -144,6 +147,7 @@ fun AppNavigation(
                         Routes.CAMERA -> slideInHorizontally { -it }
                         Routes.FRIEND -> slideInHorizontally { -it }
                         Routes.CASH_IN -> slideInHorizontally { -it }
+                        Routes.PAYMENT_METHOD -> slideInHorizontally { -it }
                         else -> null
                     }
                 }
@@ -358,12 +362,39 @@ fun AppNavigation(
                 )
             }
 
+            // ── CashIn sub-pages (CashInViewModel scoped to MAIN) ────────────
             composable(
                 route = Routes.CASH_IN,
                 enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } },
+                exitTransition = { slideOutHorizontally { -it } },
+                popEnterTransition = { slideInHorizontally { -it } }
+            ) { backStackEntry ->
+                val mainEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(Routes.MAIN)
+                }
+                val viewModel = hiltViewModel<CashInViewModel>(mainEntry)
+                CashInScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigate = { navController.navigate(it) },
+                    viewModel = viewModel
+                )
+            }
+
+            composable(
+                route = Routes.PAYMENT_METHOD,
+                enterTransition = { slideInHorizontally { it } },
                 popExitTransition = { slideOutHorizontally { it } }
-            ) {
-                CashInScreen(onBack = { navController.popBackStack() })
+            ) { backStackEntry ->
+                val mainEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(Routes.MAIN)
+                }
+                val viewModel = hiltViewModel<CashInViewModel>(mainEntry)
+                PaymentMethodScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigate = { navController.navigate(it) },
+                    viewModel = viewModel
+                )
             }
 
             // ── ScanPay sub-pages (ScanPayViewModel scoped to MAIN) ──────────

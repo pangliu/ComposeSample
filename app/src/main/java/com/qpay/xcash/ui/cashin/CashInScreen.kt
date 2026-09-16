@@ -25,6 +25,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Backspace
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.AccountBalanceWallet
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -44,12 +45,14 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.CreditCardResponse
+import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.components.SubPageTopBar
@@ -70,7 +73,11 @@ private val keypadKeys = listOf(
 )
 
 @Composable
-fun CashInScreen(onBack: () -> Unit = {}, viewModel: CashInViewModel = hiltViewModel()) {
+fun CashInScreen(
+    onBack: () -> Unit = {},
+    onNavigate: (String) -> Unit = {},
+    viewModel: CashInViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
@@ -83,12 +90,16 @@ fun CashInScreen(onBack: () -> Unit = {}, viewModel: CashInViewModel = hiltViewM
         }
     }
 
-    CashInContent(uiState = uiState, onBack = onBack)
+    CashInContent(uiState = uiState, onBack = onBack, onNavigate = onNavigate)
 }
 
 @SuppressLint("DefaultLocale")
 @Composable
-private fun CashInContent(uiState: CashInUiState = CashInUiState(), onBack: () -> Unit = {}) {
+private fun CashInContent(
+    uiState: CashInUiState = CashInUiState(),
+    onBack: () -> Unit = {},
+    onNavigate: (String) -> Unit = {}
+) {
     val colors = LocalAppColors.current
     var amount by rememberSaveable { mutableLongStateOf(0L) }
 
@@ -109,7 +120,12 @@ private fun CashInContent(uiState: CashInUiState = CashInUiState(), onBack: () -
 
             Spacer(Modifier.height(15.dp))
 
-            TransferRow(primaryCard = uiState.primaryCard)
+            TransferRow(
+                bankName = uiState.displayBankName,
+                cardNumber = uiState.displayCardNumber,
+                hasBankCard = uiState.hasBankCardToDisplay,
+                onEditClick = { onNavigate(Routes.PAYMENT_METHOD) }
+            )
 
             Spacer(Modifier.height(30.dp))
 
@@ -159,14 +175,19 @@ private const val MAX_AMOUNT = 9_999_999L
 
 private fun digitCount(amount: Long): Int = if (amount == 0L) 0 else amount.toString().length
 
-private fun formatBankLabel(card: CreditCardResponse): String {
-    val cleanNumber = card.cardNumber.replace(" ", "").replace("-", "")
+private fun formatBankLabel(bankName: String, cardNumber: String): String {
+    val cleanNumber = cardNumber.replace(" ", "").replace("-", "")
     val last4 = if (cleanNumber.length >= 4) cleanNumber.takeLast(4) else cleanNumber
-    return "${card.bankName.uppercase()} ****$last4"
+    return "${bankName.uppercase()} ****$last4"
 }
 
 @Composable
-private fun TransferRow(primaryCard: CreditCardResponse? = null) {
+private fun TransferRow(
+    bankName: String = "",
+    cardNumber: String = "",
+    hasBankCard: Boolean = false,
+    onEditClick: () -> Unit = {}
+) {
     val colors = LocalAppColors.current
     Row(
         modifier = Modifier
@@ -177,7 +198,7 @@ private fun TransferRow(primaryCard: CreditCardResponse? = null) {
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.Center
         ) {
-            if (primaryCard != null) {
+            if (hasBankCard) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(
                         modifier = Modifier
@@ -194,16 +215,27 @@ private fun TransferRow(primaryCard: CreditCardResponse? = null) {
                         )
                     }
                     Spacer(Modifier.height(6.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) { onEditClick() }
+                    ) {
                         Text(
-                            text = formatBankLabel(primaryCard),
+                            text = formatBankLabel(bankName, cardNumber),
                             color = colors.cashIn.bankLabelText,
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false)
                         )
                         Spacer(Modifier.width(4.dp))
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
+                            imageVector = Icons.Default.Edit,
                             contentDescription = stringResource(R.string.cash_in_bank_select_desc),
                             tint = colors.cashIn.bankChevronTint,
                             modifier = Modifier.size(20.dp)
@@ -416,16 +448,19 @@ private fun TopUpButton(isEnabled: Boolean, modifier: Modifier = Modifier) {
     }
 }
 
+private val previewCard = CreditCardResponse(
+    id = 1,
+    cardType = "visa",
+    cardName = "Sample Card",
+    cardNumber = "0000",
+    bankName = "sample bank",
+    isPrimary = true
+)
+
 private val previewUiState = CashInUiState(
     isLoadingCards = false,
-    primaryCard = CreditCardResponse(
-        id = 1,
-        cardType = "Mastercard",
-        cardName = "My Main Card",
-        cardNumber = "5353",
-        bankName = "gcash",
-        isPrimary = true
-    )
+    cards = listOf(previewCard),
+    selectedCardId = previewCard.id
 )
 
 @Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
