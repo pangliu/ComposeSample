@@ -65,7 +65,7 @@ import com.qpay.xcash.ui.theme.NeonColors
 @Composable
 fun GeneralTransferScreen(
     onBack: () -> Unit = {},
-    onNext: (accountName: String, fee: Int, accountNumber: String) -> Unit = { _, _, _ -> },
+    onNext: (accountName: String, fee: Int, accountNumber: String, recipient: FriendResponse?) -> Unit = { _, _, _, _ -> },
     onManualInput: () -> Unit = {},
     viewModel: GeneralTransferViewModel = hiltViewModel()
 ) {
@@ -96,7 +96,7 @@ private fun GeneralTransferContent(
     onBack: () -> Unit = {},
     onSelectAccount: (Int?) -> Unit = {},
     onManualInput: () -> Unit = {},
-    onNext: (accountName: String, fee: Int, accountNumber: String) -> Unit = { _, _, _ -> }
+    onNext: (accountName: String, fee: Int, accountNumber: String, recipient: FriendResponse?) -> Unit = { _, _, _, _ -> }
 ) {
     val colors = LocalAppColors.current
     val assets = LocalAppAssets.current
@@ -191,9 +191,14 @@ private fun GeneralTransferContent(
                     onClick = {
                         val card = uiState.cards.firstOrNull { it.id == uiState.selectedCardId }
                         if (card == null) {
-                            onNext(walletName, 0, uiState.selfPhoneNumber)
+                            onNext(walletName, 0, uiState.selfPhoneNumber, uiState.recipient)
                         } else {
-                            onNext(card.bankName.replaceFirstChar { it.uppercase() }, card.fee, "**** ${card.cardNumber}")
+                            onNext(
+                                card.bankName.replaceFirstChar { it.uppercase() },
+                                card.fee,
+                                "**** ${card.cardNumber}",
+                                uiState.recipient
+                            )
                         }
                     },
                     modifier = Modifier

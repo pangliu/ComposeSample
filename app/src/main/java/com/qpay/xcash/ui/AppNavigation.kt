@@ -12,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import com.qpay.xcash.ui.theme.AppTheme
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -57,6 +58,7 @@ import com.qpay.xcash.ui.transfer.GeneralTransferScreen
 import com.qpay.xcash.ui.transfer.GeneralTransferViewModel
 import com.qpay.xcash.ui.transfer.wallet.WalletTransferScreen
 import com.qpay.xcash.ui.transfer.wallet.WalletTransferViewModel
+import com.qpay.xcash.ui.transfer.confirm.ConfirmTransferScreen
 import com.qpay.xcash.ui.welcome.WelcomeScreen
 import com.qpay.xcash.ui.welcome.WelcomeViewModel
 
@@ -133,6 +135,7 @@ fun AppNavigation(
                         Routes.PAYMENT_METHOD -> slideOutHorizontally { -it }
                         Routes.CASH_IN_RESULT -> slideOutHorizontally { -it }
                         Routes.GENERAL_TRANSFER -> slideOutHorizontally { -it }
+                        Routes.WALLET_TRANSFER -> slideOutHorizontally { -it }
                         else -> null
                     }
                 },
@@ -157,6 +160,7 @@ fun AppNavigation(
                         Routes.PAYMENT_METHOD -> slideInHorizontally { -it }
                         Routes.CASH_IN_RESULT -> slideInHorizontally { -it }
                         Routes.GENERAL_TRANSFER -> slideInHorizontally { -it }
+                        Routes.WALLET_TRANSFER -> slideInHorizontally { -it }
                         else -> null
                     }
                 }
@@ -441,28 +445,73 @@ fun AppNavigation(
                 val viewModel = hiltViewModel<GeneralTransferViewModel>()
                 GeneralTransferScreen(
                     onBack = { navController.popBackStack() },
-                    onNext = { accountName, fee, accountNumber ->
-                        navController.navigate(Routes.walletTransfer(accountName, fee, accountNumber))
+                    onNext = { accountName, fee, accountNumber, recipient ->
+                        navController.navigate(
+                            Routes.walletTransfer(
+                                accountName = accountName,
+                                fee = fee,
+                                accountNumber = accountNumber,
+                                recipientName = recipient?.name.orEmpty(),
+                                recipientPhone = recipient?.phoneNumber.orEmpty(),
+                                recipientTag = recipient?.tagLabel.orEmpty()
+                            )
+                        )
                     },
                     viewModel = viewModel
                 )
             }
 
-            composable(
-                route = Routes.WALLET_TRANSFER,
-                arguments = listOf(
-                    navArgument("accountName") { type = NavType.StringType; defaultValue = "" },
-                    navArgument("fee") { type = NavType.IntType; defaultValue = 0 },
-                    navArgument("accountNumber") { type = NavType.StringType; defaultValue = "" }
-                ),
-                enterTransition = { slideInHorizontally { it } },
-                popExitTransition = { slideOutHorizontally { it } }
+            // WalletTransferViewModel scope 到 WALLET_TRANSFER_FLOW，WalletTransferScreen 與 ConfirmTransferScreen 共用同一個 instance
+            navigation(
+                startDestination = Routes.WALLET_TRANSFER,
+                route = Routes.WALLET_TRANSFER_FLOW
             ) {
-                val viewModel = hiltViewModel<WalletTransferViewModel>()
-                WalletTransferScreen(
-                    onBack = { navController.popBackStack() },
-                    viewModel = viewModel
-                )
+                composable(
+                    route = Routes.WALLET_TRANSFER,
+                    arguments = listOf(
+                        navArgument("accountName") { type = NavType.StringType; defaultValue = "" },
+                        navArgument("fee") { type = NavType.IntType; defaultValue = 0 },
+                        navArgument("accountNumber") { type = NavType.StringType; defaultValue = "" },
+                        navArgument("accountNumberLocked") { type = NavType.BoolType; defaultValue = false },
+                        navArgument("recipientName") { type = NavType.StringType; defaultValue = "" },
+                        navArgument("recipientPhone") { type = NavType.StringType; defaultValue = "" },
+                        navArgument("recipientTag") { type = NavType.StringType; defaultValue = "" }
+                    ),
+                    enterTransition = { slideInHorizontally { it } },
+                    popExitTransition = { slideOutHorizontally { it } },
+                    exitTransition = { slideOutHorizontally { -it } },
+                    popEnterTransition = { slideInHorizontally { -it } }
+                ) { backStackEntry ->
+                    val flowEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry(Routes.WALLET_TRANSFER_FLOW)
+                    }
+                    val viewModel = hiltViewModel<WalletTransferViewModel>(flowEntry)
+                    WalletTransferScreen(
+                        onBack = { navController.popBackStack() },
+                        onNext = { navController.navigate(Routes.CONFIRM_TRANSFER) },
+                        viewModel = viewModel
+                    )
+                }
+
+                composable(
+                    route = Routes.CONFIRM_TRANSFER,
+                    enterTransition = { slideInHorizontally { it } },
+                    popExitTransition = { slideOutHorizontally { it } }
+                ) { backStackEntry ->
+                    val flowEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry(Routes.WALLET_TRANSFER_FLOW)
+                    }
+                    val viewModel = hiltViewModel<WalletTransferViewModel>(flowEntry)
+                    ConfirmTransferScreen(
+                        onBack = { navController.popBackStack() },
+                        onNext = {
+                            navController.navigate(Routes.mainAtTab(0)) {
+                                popUpTo(Routes.MAIN) { inclusive = true }
+                            }
+                        },
+                        viewModel = viewModel
+                    )
+                }
             }
 
             // ── ScanPay sub-pages (ScanPayViewModel scoped to MAIN) ──────────

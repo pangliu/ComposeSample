@@ -33,10 +33,27 @@ object Routes {
     // Transfer sub-pages
     const val GENERAL_TRANSFER = "general_transfer?countryCode={countryCode}&phoneNumber={phoneNumber}"
 
-    const val WALLET_TRANSFER = "wallet_transfer?accountName={accountName}&fee={fee}&accountNumber={accountNumber}"
+    // WalletTransfer flow（WalletTransferViewModel scope 到 WALLET_TRANSFER_FLOW，WALLET_TRANSFER 為 flow 入口）
+    const val WALLET_TRANSFER_FLOW = "wallet_transfer_flow"
 
-    fun walletTransfer(accountName: String, fee: Int, accountNumber: String = "") =
-        "wallet_transfer?accountName=${android.net.Uri.encode(accountName)}&fee=$fee&accountNumber=${android.net.Uri.encode(accountNumber)}"
+    const val WALLET_TRANSFER = "wallet_transfer?accountName={accountName}&fee={fee}&accountNumber={accountNumber}" +
+        "&accountNumberLocked={accountNumberLocked}&recipientName={recipientName}&recipientPhone={recipientPhone}" +
+        "&recipientTag={recipientTag}"
+
+    const val CONFIRM_TRANSFER = "confirm_transfer"
+
+    fun walletTransfer(
+        accountName: String,
+        fee: Int,
+        accountNumber: String = "",
+        accountNumberLocked: Boolean = false,
+        recipientName: String = "",
+        recipientPhone: String = "",
+        recipientTag: String = ""
+    ) = "wallet_transfer?accountName=${android.net.Uri.encode(accountName)}&fee=$fee" +
+        "&accountNumber=${android.net.Uri.encode(accountNumber)}&accountNumberLocked=$accountNumberLocked" +
+        "&recipientName=${android.net.Uri.encode(recipientName)}&recipientPhone=${android.net.Uri.encode(recipientPhone)}" +
+        "&recipientTag=${android.net.Uri.encode(recipientTag)}"
 
     fun generalTransfer(countryCode: String, phoneNumber: String) =
         "general_transfer?countryCode=${android.net.Uri.encode(countryCode)}&phoneNumber=${android.net.Uri.encode(phoneNumber)}"

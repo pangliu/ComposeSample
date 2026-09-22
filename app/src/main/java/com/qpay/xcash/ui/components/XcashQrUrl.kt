@@ -15,6 +15,8 @@ object XcashQrUrl {
     // 測試用假資料：商家 QR，掃到會轉跳 InputAmountScreen（用任何 QR 產生器把這串網址轉成 QR 即可測試）
     const val FAKE_STORE = "http://xcash_store.io/pay?account=hank_001&to=hank&name=hank+liu"
 
-    // 測試用假資料：個人 QR，掃到會轉跳 GeneralTransferScreen（電話 0914123123 對應 FakeUserApiService 的 Steve Rogers，Family 標籤）
-    const val FAKE_PERSONAL = "http://xcash_personal.io/pay?country_code=%2B63&phone_number=0914123123"
+    // 測試用假資料：個人 QR，掃到會直接轉跳 WalletTransferContent
+    // payment_gateway 帶入 accountName、account_no 帶入 accountNo
+    const val FAKE_PERSONAL =
+        "http://xcash_personal.io/pay?payment_gateway=BDO+Unibank&account_no=1234567890"
 }

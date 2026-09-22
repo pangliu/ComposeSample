@@ -63,6 +63,7 @@ data class AppAssets(
     @DrawableRes val verificationAvatar: Int,    // VerificationStatusScreen IdentityCard 頭像（女）
     @DrawableRes val securityAvatar: Int,        // SecurityCenterScreen IdentityCard 頭像（女）
     @DrawableRes val profileEditBanner: Int,     // ProfileEditScreen 頂部 PromoBanner 背景圖
+    @DrawableRes val confirmTransferAccountIcon: Int, // ConfirmTransferScreen 帳戶卡片方塊 icon
 )
 
 val NeonAssets = AppAssets(
@@ -123,6 +124,7 @@ val NeonAssets = AppAssets(
     verificationAvatar = R.drawable.ic_girl,
     securityAvatar = R.drawable.ic_girl,
     profileEditBanner = R.drawable.bg_profile_edit_top,
+    confirmTransferAccountIcon = R.drawable.ic_xcash_logo,
 )
 
 val BlackGoldAssets = AppAssets(
@@ -183,6 +185,7 @@ val BlackGoldAssets = AppAssets(
     verificationAvatar = R.drawable.ic_friend_female_black_gold,    // TODO: 替換為 ic_girl_black_gold（資源尚未加入 res/drawable）
     securityAvatar = R.drawable.ic_friend_female_black_gold,    // TODO: 替換為 ic_girl_black_gold（資源尚未加入 res/drawable）
     profileEditBanner = R.drawable.bg_profile_edit_top_black_gold,    // TODO: 替換為 bg_profile_edit_top_black_gold（資源尚未加入）
+    confirmTransferAccountIcon = R.drawable.ic_xcash_logo_black_gold,
 )
 
 val LocalAppAssets = staticCompositionLocalOf { NeonAssets }

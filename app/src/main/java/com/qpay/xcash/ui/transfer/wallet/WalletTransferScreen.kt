@@ -71,7 +71,13 @@ fun WalletTransferScreen(
     viewModel: WalletTransferViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    WalletTransferContent(uiState = uiState, onBack = onBack, onNext = onNext)
+    WalletTransferContent(
+        uiState = uiState,
+        onBack = onBack,
+        onNext = onNext,
+        onAccountNumberChange = viewModel::updateAccountNumber,
+        onAmountChange = viewModel::updateAmount
+    )
 }
 
 @SuppressLint("DefaultLocale")
@@ -79,7 +85,9 @@ fun WalletTransferScreen(
 private fun WalletTransferContent(
     uiState: WalletTransferUiState = WalletTransferUiState(),
     onBack: () -> Unit = {},
-    onNext: () -> Unit = {}
+    onNext: () -> Unit = {},
+    onAccountNumberChange: (String) -> Unit = {},
+    onAmountChange: (String) -> Unit = {}
 ) {
     val colors = LocalAppColors.current
     val assets = LocalAppAssets.current
@@ -88,8 +96,6 @@ private fun WalletTransferContent(
     var selectedTab by rememberSaveable { mutableIntStateOf(TAB_INSTANT) }
     var selectedMode by rememberSaveable { mutableIntStateOf(MODE_MANUAL) }
     var isBalanceHidden by rememberSaveable { mutableStateOf(false) }
-    var accountNo by rememberSaveable { mutableStateOf(uiState.accountNumber) }
-    var amount by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         containerColor = colors.bg.page,
@@ -190,23 +196,26 @@ private fun WalletTransferContent(
 
                     TransferField {
                         FieldInput(
-                            value = accountNo,
-                            onValueChange = { accountNo = it },
+                            value = uiState.accountNumber,
+                            onValueChange = onAccountNumberChange,
                             placeholder = stringResource(R.string.wallet_transfer_account_hint),
+                            readOnly = uiState.isAccountNumberLocked,
                             modifier = Modifier.weight(1f)
                         )
-                        Icon(
-                            imageVector = Icons.Default.QrCodeScanner,
-                            contentDescription = stringResource(R.string.wallet_transfer_scan_desc),
-                            tint = transferColors.fieldIconTint,
-                            modifier = Modifier.size(22.dp)
-                        )
+                        if (!uiState.isAccountNumberLocked) {
+                            Icon(
+                                imageVector = Icons.Default.QrCodeScanner,
+                                contentDescription = stringResource(R.string.wallet_transfer_scan_desc),
+                                tint = transferColors.fieldIconTint,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
                     }
 
                     TransferField {
                         FieldInput(
-                            value = amount,
-                            onValueChange = { newValue -> if (newValue.all(Char::isDigit)) amount = newValue },
+                            value = uiState.amount,
+                            onValueChange = { newValue -> if (newValue.all(Char::isDigit)) onAmountChange(newValue) },
                             placeholder = stringResource(R.string.wallet_transfer_amount_hint),
                             modifier = Modifier.weight(1f)
                         )
@@ -241,7 +250,7 @@ private fun WalletTransferContent(
 
                 Spacer(Modifier.weight(1f))
 
-                val isAmountEntered = (amount.toLongOrNull() ?: 0L) > 0L
+                val isAmountEntered = (uiState.amount.toLongOrNull() ?: 0L) > 0L
 
                 Box(
                     modifier = Modifier
@@ -373,12 +382,14 @@ private fun FieldInput(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
+    readOnly: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val colors = LocalAppColors.current.walletTransfer
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
+        readOnly = readOnly,
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         textStyle = TextStyle(color = colors.fieldText, fontSize = 14.sp),

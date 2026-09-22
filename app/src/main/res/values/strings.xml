@@ -630,6 +630,18 @@
     <string name="wallet_transfer_fee_label">Fee</string>
     <string name="wallet_transfer_next_button">Next</string>
 
+    <!-- ConfirmTransferScreen -->
+    <string name="confirm_transfer_title">General Transfer</string>
+    <string name="confirm_transfer_subtitle">Please confirm your transfer details</string>
+    <string name="confirm_transfer_my_xcash">My Xcash</string>
+    <string name="confirm_transfer_pay_label">Pay</string>
+    <string name="confirm_transfer_to_label">To</string>
+    <string name="confirm_transfer_currency">PHP</string>
+    <string name="confirm_transfer_currency_symbol">P</string>
+    <string name="confirm_transfer_fee_label">Fee</string>
+    <string name="confirm_transfer_total_payment_label">Total Payment</string>
+    <string name="confirm_transfer_next_button">Next</string>
+
     <!-- Error Messages (HomeViewModel / LoginViewModel) -->
     <string name="error_fetch_user_data">無法取得使用者資料</string>
     <string name="error_network_fetch">無法取得資料：網路異常</string>

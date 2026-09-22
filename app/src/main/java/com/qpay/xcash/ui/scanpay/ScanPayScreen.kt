@@ -59,9 +59,16 @@ fun ScanPayScreen(
                     onNavigate(Routes.SCAN_PAY_INPUT_AMOUNT)
                 }
                 url.contains(XcashQrUrl.PERSONAL_PREFIX) -> {
-                    val (countryCode, phoneNumber) = parseXcashPersonalQrCode(url)
-                    if (countryCode.isNotEmpty() && phoneNumber.isNotEmpty()) {
-                        onNavigate(Routes.generalTransfer(countryCode = countryCode, phoneNumber = phoneNumber))
+                    val (paymentGateway, accountNo) = parseXcashPersonalQrCode(url)
+                    if (paymentGateway.isNotEmpty() && accountNo.isNotEmpty()) {
+                        onNavigate(
+                            Routes.walletTransfer(
+                                accountName = paymentGateway,
+                                fee = 0,
+                                accountNumber = accountNo,
+                                accountNumberLocked = true
+                            )
+                        )
                     }
                 }
             }
@@ -175,17 +182,21 @@ private fun parseXcashQrCode(url: String): Triple<String, String, String> {
 }
 
 /**
- * 解析個人轉帳 QR code（http://xcash_personal）URL。
+ * 解析個人轉帳 QR code（http://xcash_personal）URL，取出直接轉入 WalletTransferContent 的帳戶資訊。
  *
  * URL 格式：
- *   http://xcash_personal.io/pay?country_code={countryCode}&phone_number={phoneNumber}
+ *   http://xcash_personal.io/pay?payment_gateway={paymentGateway}&account_no={accountNo}
  *
- * @return Pair(countryCode, phoneNumber)，解析失敗時兩個值皆為空字串
+ * Query 參數對應：
+ *   payment_gateway → 帶入 WalletTransferContent 的 accountName
+ *   account_no      → 帶入 WalletTransferContent 的 accountNo
+ *
+ * @return Pair(paymentGateway, accountNo)，解析失敗時兩個值皆為空字串
  */
 private fun parseXcashPersonalQrCode(url: String): Pair<String, String> {
     return try {
         val uri = Uri.parse(url)
-        Pair(uri.getQueryParameter("country_code") ?: "", uri.getQueryParameter("phone_number") ?: "")
+        Pair(uri.getQueryParameter("payment_gateway") ?: "", uri.getQueryParameter("account_no") ?: "")
     } catch (e: Exception) {
         Pair("", "")
     }
