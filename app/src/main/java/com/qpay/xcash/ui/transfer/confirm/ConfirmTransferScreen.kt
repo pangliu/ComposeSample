@@ -103,8 +103,8 @@ private fun ConfirmTransferContent(
 
             AccountSummaryCard(
                 iconRes = assets.confirmTransferAccountIcon,
-                name = uiState.accountName,
-                subText = uiState.accountNumber,
+                name = uiState.selfDefaultBankName.replaceFirstChar { it.uppercase() },
+                subText = if (uiState.selfDefaultCardNumber.isEmpty()) "" else "**** ${uiState.selfDefaultCardNumber}",
                 colors = confirmColors,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,9 +158,8 @@ private fun ConfirmTransferContent(
 
             AccountSummaryCard(
                 iconRes = assets.confirmTransferAccountIcon,
-                name = uiState.recipientName,
-                subText = maskPhone(uiState.recipientPhone),
-                tag = uiState.recipientTag,
+                name = uiState.accountName,
+                subText = uiState.accountNumber,
                 colors = confirmColors,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -240,8 +239,7 @@ private fun AccountSummaryCard(
     name: String,
     subText: String,
     colors: ConfirmTransferColors,
-    modifier: Modifier = Modifier,
-    tag: String = ""
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -275,50 +273,24 @@ private fun AccountSummaryCard(
             fontWeight = FontWeight.Bold
         )
 
-        if (subText.isNotEmpty() || tag.isNotEmpty()) {
+        if (subText.isNotEmpty()) {
             Spacer(Modifier.height(4.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (subText.isNotEmpty()) {
-                    Text(
-                        text = subText,
-                        color = colors.subText,
-                        fontSize = 12.sp
-                    )
-                }
-                if (tag.isNotEmpty()) {
-                    Spacer(Modifier.width(8.dp))
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(colors.tagBackground)
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = tag,
-                            color = colors.tagText,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-            }
+            Text(
+                text = subText,
+                color = colors.subText,
+                fontSize = 12.sp
+            )
         }
     }
 }
 
-private fun maskPhone(phone: String): String {
-    if (phone.isEmpty()) return ""
-    return if (phone.length >= 7) phone.take(3) + "****" + phone.takeLast(3) else phone
-}
-
 private val previewUiState = WalletTransferUiState(
-    accountName = "My Xcash",
-    accountNumber = "**** 1234",
+    accountName = "I. Torres",
+    accountNumber = "091*****687",
     amount = "500",
     fee = 0,
-    recipientName = "I. Torres",
-    recipientPhone = "09112345687",
-    recipientTag = "Family"
+    selfDefaultBankName = "gcash",
+    selfDefaultCardNumber = "5353"
 )
 
 @Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)

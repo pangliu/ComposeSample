@@ -3,17 +3,15 @@ package com.qpay.xcash.ui.theme
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
-// ui/transfer/wallet/confirm/ ConfirmTransferScreen 專屬顏色
+// ui/transfer/confirm/ ConfirmTransferScreen 專屬顏色
 
 data class ConfirmTransferColors(
     val subtitleText: Color,      // 「Please confirm your transfer details」提示文字
-    val cardBackground: Color,    // My Xcash / 收款人 帳戶卡片底色
+    val cardBackground: Color,    // 帳戶卡片底色（使用者自己的預設帳戶 / WalletTransferScreen 帶入的帳戶）
     val cardBorder: Brush,        // 帳戶卡片邊框；Black Gold = 金色橫向漸層
     val iconBackground: Color,    // 卡片內 icon 方塊底色
-    val nameText: Color,          // 帳戶名稱（My Xcash / 收款人姓名）
-    val subText: Color,           // 遮罩帳號 / 遮罩電話
-    val tagBackground: Color,     // Family 等標籤底色
-    val tagText: Color,           // 標籤文字
+    val nameText: Color,          // 帳戶名稱
+    val subText: Color,           // 遮罩帳號
     val sectionLabelText: Color,  // 「Pay」「To」標籤
     val amountText: Color,        // 金額文字
     val feeLabelText: Color,      // Fee / Total Payment 標籤
@@ -29,8 +27,6 @@ val NeonConfirmTransferColors = ConfirmTransferColors(
     iconBackground = deepMidnight,
     nameText = themeWhite,
     subText = silverGray,
-    tagBackground = neonPurple.copy(alpha = 0.25f),
-    tagText = neonPurple,
     sectionLabelText = themeWhite,
     amountText = neonCyan,
     feeLabelText = silverGray,
@@ -49,8 +45,6 @@ val BlackGoldConfirmTransferColors = ConfirmTransferColors(
     iconBackground = midnightIndigo,
     nameText = themeWhite,
     subText = warmSand,
-    tagBackground = antiqueGold.copy(alpha = 0.2f),
-    tagText = antiqueGold,
     sectionLabelText = themeWhite,
     amountText = antiqueGold,
     feeLabelText = warmSand,

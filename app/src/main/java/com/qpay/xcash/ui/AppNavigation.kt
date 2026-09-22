@@ -445,17 +445,8 @@ fun AppNavigation(
                 val viewModel = hiltViewModel<GeneralTransferViewModel>()
                 GeneralTransferScreen(
                     onBack = { navController.popBackStack() },
-                    onNext = { accountName, fee, accountNumber, recipient ->
-                        navController.navigate(
-                            Routes.walletTransfer(
-                                accountName = accountName,
-                                fee = fee,
-                                accountNumber = accountNumber,
-                                recipientName = recipient?.name.orEmpty(),
-                                recipientPhone = recipient?.phoneNumber.orEmpty(),
-                                recipientTag = recipient?.tagLabel.orEmpty()
-                            )
-                        )
+                    onNext = { accountName, fee, accountNumber ->
+                        navController.navigate(Routes.walletTransfer(accountName, fee, accountNumber))
                     },
                     viewModel = viewModel
                 )
@@ -472,10 +463,7 @@ fun AppNavigation(
                         navArgument("accountName") { type = NavType.StringType; defaultValue = "" },
                         navArgument("fee") { type = NavType.IntType; defaultValue = 0 },
                         navArgument("accountNumber") { type = NavType.StringType; defaultValue = "" },
-                        navArgument("accountNumberLocked") { type = NavType.BoolType; defaultValue = false },
-                        navArgument("recipientName") { type = NavType.StringType; defaultValue = "" },
-                        navArgument("recipientPhone") { type = NavType.StringType; defaultValue = "" },
-                        navArgument("recipientTag") { type = NavType.StringType; defaultValue = "" }
+                        navArgument("accountNumberLocked") { type = NavType.BoolType; defaultValue = false }
                     ),
                     enterTransition = { slideInHorizontally { it } },
                     popExitTransition = { slideOutHorizontally { it } },
