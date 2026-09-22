@@ -601,6 +601,35 @@
     <string name="payment_method_link_card_button">Link Card Now</string>
     <string name="payment_method_confirm_button">Confirm</string>
 
+    <!-- GeneralTransferScreen -->
+    <string name="general_transfer_title">General Transfer</string>
+    <string name="general_transfer_avatar_label">To</string>
+    <string name="general_transfer_select_account_hint">Please select an account to transfer to this user</string>
+    <string name="general_transfer_xcash_wallet">Xcash Wallet</string>
+    <string name="general_transfer_no_fee">No Fee</string>
+    <string name="general_transfer_fee">Fee: %1$d</string>
+    <string name="general_transfer_expired_hint">Card expired.</string>
+    <string name="general_transfer_manual_input_hint">Can\'t find the account?</string>
+    <string name="general_transfer_manual_input_button">Manual Input</string>
+    <string name="general_transfer_next_button">Next</string>
+
+    <!-- WalletTransferScreen -->
+    <string name="wallet_transfer_title">General Transfer</string>
+    <string name="wallet_transfer_tab_instant">Instant Transfer</string>
+    <string name="wallet_transfer_tab_scheduled">Scheduled Transfer</string>
+    <string name="wallet_transfer_available_balance">Available Balance: %1$s</string>
+    <string name="wallet_transfer_currency_symbol">P</string>
+    <string name="wallet_transfer_balance_toggle_desc">Toggle balance visibility</string>
+    <string name="wallet_transfer_bonus">Transfer Bonus: %1$d remaining</string>
+    <string name="wallet_transfer_mode_manual">Manual Input</string>
+    <string name="wallet_transfer_mode_friends">Friends</string>
+    <string name="wallet_transfer_account_hint">Enter Account No.</string>
+    <string name="wallet_transfer_scan_desc">Scan QR code</string>
+    <string name="wallet_transfer_amount_hint">Enter Amount</string>
+    <string name="wallet_transfer_limit">Limit</string>
+    <string name="wallet_transfer_fee_label">Fee</string>
+    <string name="wallet_transfer_next_button">Next</string>
+
     <!-- Error Messages (HomeViewModel / LoginViewModel) -->
     <string name="error_fetch_user_data">無法取得使用者資料</string>
     <string name="error_network_fetch">無法取得資料：網路異常</string>

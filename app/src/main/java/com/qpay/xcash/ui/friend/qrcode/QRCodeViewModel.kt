@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class QRCodeUiState(
+    val countryCode: String = "",
     val userName: String = "",
     val nickName: String = "",
     val userPhone: String = ""
@@ -29,6 +30,7 @@ class QRCodeViewModel @Inject constructor(
             userInfoManager.userInfoFlow.collect { userInfo ->
                 _uiState.update {
                     it.copy(
+                        countryCode = userInfo?.countryCode ?: "",
                         userName = userInfo?.userName ?: "",
                         nickName = userInfo?.nickName ?: "",
                         userPhone = userInfo?.userPhone ?: ""

@@ -65,6 +65,8 @@ data class AppColors(
     val cashIn: CashInColors,
     val paymentMethod: PaymentMethodColors,
     val cashInResult: CashInResultColors,
+    val generalTransfer: GeneralTransferColors,
+    val walletTransfer: WalletTransferColors,
 )
 
 val NeonColors = AppColors(
@@ -119,6 +121,8 @@ val NeonColors = AppColors(
     cashIn = NeonCashInColors,
     paymentMethod = NeonPaymentMethodColors,
     cashInResult = NeonCashInResultColors,
+    generalTransfer = NeonGeneralTransferColors,
+    walletTransfer = NeonWalletTransferColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -177,4 +181,6 @@ val BlackGoldColors = AppColors(
     cashIn = BlackGoldCashInColors,
     paymentMethod = BlackGoldPaymentMethodColors,
     cashInResult = BlackGoldCashInResultColors,
+    generalTransfer = BlackGoldGeneralTransferColors,
+    walletTransfer = BlackGoldWalletTransferColors,
 )

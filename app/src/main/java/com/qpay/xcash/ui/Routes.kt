@@ -30,6 +30,17 @@ object Routes {
     const val PAYMENT_METHOD = "payment_method"
     const val CASH_IN_RESULT = "cash_in_result"
 
+    // Transfer sub-pages
+    const val GENERAL_TRANSFER = "general_transfer?countryCode={countryCode}&phoneNumber={phoneNumber}"
+
+    const val WALLET_TRANSFER = "wallet_transfer?accountName={accountName}&fee={fee}&accountNumber={accountNumber}"
+
+    fun walletTransfer(accountName: String, fee: Int, accountNumber: String = "") =
+        "wallet_transfer?accountName=${android.net.Uri.encode(accountName)}&fee=$fee&accountNumber=${android.net.Uri.encode(accountNumber)}"
+
+    fun generalTransfer(countryCode: String, phoneNumber: String) =
+        "general_transfer?countryCode=${android.net.Uri.encode(countryCode)}&phoneNumber=${android.net.Uri.encode(phoneNumber)}"
+
     // Friend sub-pages
     const val FRIEND = "friend"
     const val FRIEND_LIST = "friend_list"

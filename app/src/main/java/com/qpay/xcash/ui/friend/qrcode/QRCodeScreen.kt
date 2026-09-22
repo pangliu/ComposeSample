@@ -74,6 +74,7 @@ import com.google.zxing.common.HybridBinarizer
 import com.qpay.xcash.R
 import com.qpay.xcash.ui.components.QrMode
 import com.qpay.xcash.ui.components.QrModeTabSelector
+import com.qpay.xcash.ui.components.XcashQrUrl
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.friend.components.FriendTopBar
 import com.qpay.xcash.ui.theme.AppTheme
@@ -210,8 +211,7 @@ private fun QRCodeContent(
                     MyQrCard(
                         modifier = Modifier
                             .fillMaxWidth(0.8f),
-                        qrCodeUrl = "http://xcash.io/pay?account=${Uri.encode(uiState.userName)}" +
-                                "&to=${Uri.encode(uiState.nickName)}&name=${Uri.encode(uiState.userName)}",
+                        qrCodeUrl = XcashQrUrl.personal(countryCode = uiState.countryCode, phoneNumber = uiState.userPhone),
                         phoneNumber = uiState.userPhone
                     )
                 }
@@ -552,7 +552,7 @@ private fun QRCodeScreenPreviewBlackGoldMyQr() {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 MyQrCard(
                     modifier = Modifier.fillMaxWidth(0.8f),
-                    qrCodeUrl = "http://xcash.io/pay?account=hank_liu&to=hank&name=hank_liu",
+                    qrCodeUrl = XcashQrUrl.personal(countryCode = "+63", phoneNumber = "09174798166"),
                     phoneNumber = previewUiState.userPhone
                 )
             }
@@ -592,7 +592,7 @@ private fun QRCodeScreenPreviewNeonMyQr() {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 MyQrCard(
                     modifier = Modifier.fillMaxWidth(0.8f),
-                    qrCodeUrl = "http://xcash.io/pay?account=hank_liu&to=hank&name=hank_liu",
+                    qrCodeUrl = XcashQrUrl.personal(countryCode = "+63", phoneNumber = "09174798166"),
                     phoneNumber = previewUiState.userPhone
                 )
             }

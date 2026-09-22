@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.components.QrMode
 import com.qpay.xcash.ui.components.QrModeTabSelector
+import com.qpay.xcash.ui.components.XcashQrUrl
 import com.qpay.xcash.ui.components.neonGlow
 import com.qpay.xcash.ui.scanpay.components.MyQrContent
 import com.qpay.xcash.ui.theme.AppTheme
@@ -48,12 +49,21 @@ fun ScanPayScreen(
     val uiState by viewModel.uiState.collectAsState()
     ScanPayContent(
         uiState = uiState,
+        qrCodeUrl = XcashQrUrl.FAKE_STORE,
         onQrCodeScanned = { url ->
             Log.e("tag", "onQrCodeScanned: $url")
-            if (url.contains("http://xcash")) {
-                val (account, nickName, name) = parseXcashQrCode(url)
-                viewModel.setRecipientInfo(account = account, nickName = nickName, name = name)
-                onNavigate(Routes.SCAN_PAY_INPUT_AMOUNT)
+            when {
+                url.contains(XcashQrUrl.STORE_PREFIX) -> {
+                    val (account, nickName, name) = parseXcashQrCode(url)
+                    viewModel.setRecipientInfo(account = account, nickName = nickName, name = name)
+                    onNavigate(Routes.SCAN_PAY_INPUT_AMOUNT)
+                }
+                url.contains(XcashQrUrl.PERSONAL_PREFIX) -> {
+                    val (countryCode, phoneNumber) = parseXcashPersonalQrCode(url)
+                    if (countryCode.isNotEmpty() && phoneNumber.isNotEmpty()) {
+                        onNavigate(Routes.generalTransfer(countryCode = countryCode, phoneNumber = phoneNumber))
+                    }
+                }
             }
         }
     )
@@ -62,12 +72,12 @@ fun ScanPayScreen(
 @Composable
 private fun ScanPayContent(
     uiState: ScanPayUiState,
+    qrCodeUrl: String,
     onQrCodeScanned: (String) -> Unit = {}
 ) {
     val colors = LocalAppColors.current
     val assets = LocalAppAssets.current
     var selectedMode by rememberSaveable { mutableStateOf(QrMode.MY_QR) }
-    val qrCodeUrl = "http://xcash.io/pay?account=hank_001&to=hank&name=hank+liu"
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -137,13 +147,13 @@ private fun ScanPayContent(
 }
 
 /**
- * 解析 XCash QR code URL，取出收款人資訊。
+ * 解析商家 QR code（http://xcash_store）URL，取出收款人資訊。
  *
  * URL 格式：
- *   http://xcash.io/pay?account={account}&to={nickName}&name={name}
+ *   http://xcash_store.io/pay?account={account}&to={nickName}&name={name}
  *
  * 範例：
- *   http://xcash.io/pay?account=bruceb_001&to=bruceb&name=Bruce+Banner
+ *   http://xcash_store.io/pay?account=bruceb_001&to=bruceb&name=Bruce+Banner
  *
  * Query 參數對應：
  *   account → 收款人帳號（用於實際付款，例如 "bruceb_001"）
@@ -164,11 +174,31 @@ private fun parseXcashQrCode(url: String): Triple<String, String, String> {
     }
 }
 
+/**
+ * 解析個人轉帳 QR code（http://xcash_personal）URL。
+ *
+ * URL 格式：
+ *   http://xcash_personal.io/pay?country_code={countryCode}&phone_number={phoneNumber}
+ *
+ * @return Pair(countryCode, phoneNumber)，解析失敗時兩個值皆為空字串
+ */
+private fun parseXcashPersonalQrCode(url: String): Pair<String, String> {
+    return try {
+        val uri = Uri.parse(url)
+        Pair(uri.getQueryParameter("country_code") ?: "", uri.getQueryParameter("phone_number") ?: "")
+    } catch (e: Exception) {
+        Pair("", "")
+    }
+}
+
 @Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0B1327)
 @Composable
 private fun ScanPayScreenPreviewNeon() {
     AppTheme(colors = NeonColors) {
-        ScanPayContent(uiState = ScanPayUiState(myUserName = "Hank Liu", myNickName = "Hank"))
+        ScanPayContent(
+            uiState = ScanPayUiState(myUserName = "Hank Liu", myNickName = "Hank"),
+            qrCodeUrl = XcashQrUrl.FAKE_PERSONAL
+        )
     }
 }
 
@@ -176,6 +206,9 @@ private fun ScanPayScreenPreviewNeon() {
 @Composable
 private fun ScanPayScreenPreviewBlackGold() {
     AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
-        ScanPayContent(uiState = ScanPayUiState(myUserName = "Hank Liu", myNickName = "Hank"))
+        ScanPayContent(
+            uiState = ScanPayUiState(myUserName = "Hank Liu", myNickName = "Hank"),
+            qrCodeUrl = XcashQrUrl.FAKE_PERSONAL
+        )
     }
 }

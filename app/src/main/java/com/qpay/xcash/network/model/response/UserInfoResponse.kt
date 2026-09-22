@@ -13,9 +13,10 @@ data class UserInfoResponse(
     @Json(name = "cash_balance") val cashBalance: Double,
     @Json(name = "token_balance") val tokenBalance: Double,
     @Json(name = "default_bank_name") val defaultBankName: String = "",
-    @Json(name = "default_card_number") val defaultCardNumber: String = ""
+    @Json(name = "default_card_number") val defaultCardNumber: String = "",
+    @Json(name = "country_code") val countryCode: String = ""
 ) {
     companion object {
-        fun empty() = UserInfoResponse("", "", "", "", "", 0.0, 0.0, "", "")
+        fun empty() = UserInfoResponse("", "", "", "", "", 0.0, 0.0, "", "", "")
     }
 }

@@ -10,12 +10,12 @@ class FakeCardApiService : CardApiService {
 
     companion object {
         val sampleCards = listOf(
-            CreditCardResponse(1, "Mastercard", "My Main Card", "5353", "gcash", isPrimary = true, nickName = "Daily Card"),
-            CreditCardResponse(2, "Visa", "Travel Card", "4242", "bpi", isPrimary = false, nickName = "Travel Card"),
-            CreditCardResponse(3, "Visa", "Shopping Card", "1111", "metrobank", isPrimary = false, nickName = "", isExpired = true),
-            CreditCardResponse(4, "Visa", "Sample Card", "0000", "sample bank", isPrimary = false, nickName = ""),
-            CreditCardResponse(5, "Visa", "Shopping Card", "2222", "pnb", isPrimary = false, nickName = "", isExpired = true),
-            CreditCardResponse(6, "Visa", "Sample Card", "0000", "sample bank", isPrimary = false, nickName = "")
+            CreditCardResponse(1, "Mastercard", "My Main Card", "5353", "gcash", isPrimary = true, nickName = "Daily Card", fee = 10),
+            CreditCardResponse(2, "Visa", "Travel Card", "4242", "bpi", isPrimary = false, nickName = "Travel Card", fee = 10),
+            CreditCardResponse(3, "Visa", "Shopping Card", "1111", "metrobank", isPrimary = false, nickName = "", isExpired = true, fee = 10),
+            CreditCardResponse(4, "Visa", "Sample Card", "0000", "sample bank", isPrimary = false, nickName = "", fee = 10),
+            CreditCardResponse(5, "Visa", "Shopping Card", "2222", "pnb", isPrimary = false, nickName = "", isExpired = true, fee = 10),
+            CreditCardResponse(6, "Visa", "Sample Card", "0000", "sample bank", isPrimary = false, nickName = "", fee = 10)
         )
     }
 

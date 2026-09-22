@@ -24,6 +24,8 @@ sealed class ScanPayNavigationEvent {
 }
 
 data class ScanPayUiState(
+    val myCountryCode: String = "",
+    val myPhoneNumber: String = "",
     val myUserName: String = "",
     val myNickName: String = "",
     val balance: Double = 0.0,
@@ -61,6 +63,8 @@ class ScanPayViewModel @Inject constructor(
         viewModelScope.launch {
             userInfoManager.userInfoFlow.collect { userInfo ->
                 _uiState.update { it.copy(
+                    myCountryCode = userInfo?.countryCode ?: "",
+                    myPhoneNumber = userInfo?.userPhone ?: "",
                     myUserName = userInfo?.userName ?: "",
                     myNickName = userInfo?.nickName ?: "",
                     balance = userInfo?.cashBalance ?: 0.0,

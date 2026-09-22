@@ -12,5 +12,6 @@ data class CreditCardResponse(
     @Json(name = "bank_name") val bankName: String,
     @Json(name = "is_primary") val isPrimary: Boolean = false,
     @Json(name = "nick_name") val nickName: String = "",
-    @Json(name = "is_expired") val isExpired: Boolean = false
+    @Json(name = "is_expired") val isExpired: Boolean = false,
+    @Json(name = "fee") val fee: Int = 0
 )

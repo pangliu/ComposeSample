@@ -53,6 +53,10 @@ import com.qpay.xcash.ui.scanpay.ScanPayViewModel
 import com.qpay.xcash.ui.scanpay.confirm.ConfirmPaymentScreen
 import com.qpay.xcash.ui.scanpay.input.InputAmountScreen
 import com.qpay.xcash.ui.scanpay.success.TransactionSuccessfulScreen
+import com.qpay.xcash.ui.transfer.GeneralTransferScreen
+import com.qpay.xcash.ui.transfer.GeneralTransferViewModel
+import com.qpay.xcash.ui.transfer.wallet.WalletTransferScreen
+import com.qpay.xcash.ui.transfer.wallet.WalletTransferViewModel
 import com.qpay.xcash.ui.welcome.WelcomeScreen
 import com.qpay.xcash.ui.welcome.WelcomeViewModel
 
@@ -128,6 +132,7 @@ fun AppNavigation(
                         Routes.CASH_IN -> slideOutHorizontally { -it }
                         Routes.PAYMENT_METHOD -> slideOutHorizontally { -it }
                         Routes.CASH_IN_RESULT -> slideOutHorizontally { -it }
+                        Routes.GENERAL_TRANSFER -> slideOutHorizontally { -it }
                         else -> null
                     }
                 },
@@ -151,6 +156,7 @@ fun AppNavigation(
                         Routes.CASH_IN -> slideInHorizontally { -it }
                         Routes.PAYMENT_METHOD -> slideInHorizontally { -it }
                         Routes.CASH_IN_RESULT -> slideInHorizontally { -it }
+                        Routes.GENERAL_TRANSFER -> slideInHorizontally { -it }
                         else -> null
                     }
                 }
@@ -416,6 +422,45 @@ fun AppNavigation(
                         }
                     },
                     onTransactionHistoryClick = { navController.navigate(Routes.TRANSACTION_HISTORY) },
+                    viewModel = viewModel
+                )
+            }
+
+            // ── Transfer sub-pages ────────────────────────────────────────────
+            composable(
+                route = Routes.GENERAL_TRANSFER,
+                arguments = listOf(
+                    navArgument("countryCode") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("phoneNumber") { type = NavType.StringType; defaultValue = "" }
+                ),
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } },
+                exitTransition = { slideOutHorizontally { -it } },
+                popEnterTransition = { slideInHorizontally { -it } }
+            ) {
+                val viewModel = hiltViewModel<GeneralTransferViewModel>()
+                GeneralTransferScreen(
+                    onBack = { navController.popBackStack() },
+                    onNext = { accountName, fee, accountNumber ->
+                        navController.navigate(Routes.walletTransfer(accountName, fee, accountNumber))
+                    },
+                    viewModel = viewModel
+                )
+            }
+
+            composable(
+                route = Routes.WALLET_TRANSFER,
+                arguments = listOf(
+                    navArgument("accountName") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("fee") { type = NavType.IntType; defaultValue = 0 },
+                    navArgument("accountNumber") { type = NavType.StringType; defaultValue = "" }
+                ),
+                enterTransition = { slideInHorizontally { it } },
+                popExitTransition = { slideOutHorizontally { it } }
+            ) {
+                val viewModel = hiltViewModel<WalletTransferViewModel>()
+                WalletTransferScreen(
+                    onBack = { navController.popBackStack() },
                     viewModel = viewModel
                 )
             }
