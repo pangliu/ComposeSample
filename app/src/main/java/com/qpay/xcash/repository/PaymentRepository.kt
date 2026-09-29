@@ -5,6 +5,7 @@ import com.qpay.xcash.network.manager.SessionManager
 import com.qpay.xcash.network.model.NetworkResult
 import com.qpay.xcash.network.model.request.CashInPaymentRequest
 import com.qpay.xcash.network.model.request.ConfirmPaymentRequest
+import com.qpay.xcash.network.model.request.TransferRequest
 import com.qpay.xcash.network.model.response.ConfirmPaymentResponse
 import com.qpay.xcash.network.model.response.CreditCardResponse
 import com.qpay.xcash.network.model.response.TransactionDetailResponse
@@ -46,6 +47,12 @@ class PaymentRepository @Inject constructor(
                     bankName = card.bankName
                 )
             )
+        }
+    }
+
+    suspend fun transfer(accountNumber: String, amount: String): NetworkResult<ConfirmPaymentResponse> {
+        return safeApiCall {
+            apiService.transfer(TransferRequest(accountNumber = accountNumber, amount = amount))
         }
     }
 }

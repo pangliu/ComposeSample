@@ -40,6 +40,7 @@ object Routes {
         "wallet_transfer?accountName={accountName}&fee={fee}&accountNumber={accountNumber}&accountNumberLocked={accountNumberLocked}"
 
     const val CONFIRM_TRANSFER = "confirm_transfer"
+    const val TRANSFER_RESULT = "transfer_result"
 
     fun walletTransfer(accountName: String, fee: Int, accountNumber: String = "", accountNumberLocked: Boolean = false) =
         "wallet_transfer?accountName=${android.net.Uri.encode(accountName)}&fee=$fee" +

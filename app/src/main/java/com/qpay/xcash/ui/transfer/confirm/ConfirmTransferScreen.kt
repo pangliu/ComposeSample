@@ -1,6 +1,7 @@
 package com.qpay.xcash.ui.transfer.confirm
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,8 +38,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.Routes
+import com.qpay.xcash.ui.UiEvent
+import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldAssets
@@ -46,17 +53,54 @@ import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonAssets
 import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.transfer.wallet.WalletTransferNavigationEvent
 import com.qpay.xcash.ui.transfer.wallet.WalletTransferUiState
 import com.qpay.xcash.ui.transfer.wallet.WalletTransferViewModel
+import com.qpay.xcash.utils.BiometricHelper
 
 @Composable
 fun ConfirmTransferScreen(
     onBack: () -> Unit = {},
-    onNext: () -> Unit = {},
+    onNavigate: (String) -> Unit = {},
     viewModel: WalletTransferViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    ConfirmTransferContent(uiState = uiState, onBack = onBack, onNext = onNext)
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowDialog -> Unit
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is WalletTransferNavigationEvent.NavigateToResult -> onNavigate(Routes.TRANSFER_RESULT)
+            }
+        }
+    }
+
+    ConfirmTransferContent(
+        uiState = uiState,
+        onBack = onBack,
+        onNext = {
+            // allowDeviceCredential = true：有生物辨識就跳生物辨識，沒有就自動退回手機系統 PIN/圖案/密碼，交給系統處理
+            BiometricHelper.showPrompt(
+                activity = context as FragmentActivity,
+                title = context.getString(R.string.biometric_prompt_transfer_title),
+                subtitle = context.getString(R.string.biometric_prompt_transfer_subtitle),
+                allowDeviceCredential = true,
+                onSuccess = { viewModel.submitTransfer() },
+                onError = { message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show() }
+            )
+        }
+    )
+
+    LoadingDialog(isShowing = uiState.isLoading)
 }
 
 @SuppressLint("DefaultLocale")

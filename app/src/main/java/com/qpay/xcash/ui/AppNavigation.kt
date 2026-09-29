@@ -59,6 +59,7 @@ import com.qpay.xcash.ui.transfer.GeneralTransferViewModel
 import com.qpay.xcash.ui.transfer.wallet.WalletTransferScreen
 import com.qpay.xcash.ui.transfer.wallet.WalletTransferViewModel
 import com.qpay.xcash.ui.transfer.confirm.ConfirmTransferScreen
+import com.qpay.xcash.ui.transfer.result.TransferResultScreen
 import com.qpay.xcash.ui.welcome.WelcomeScreen
 import com.qpay.xcash.ui.welcome.WelcomeViewModel
 
@@ -484,7 +485,9 @@ fun AppNavigation(
                 composable(
                     route = Routes.CONFIRM_TRANSFER,
                     enterTransition = { slideInHorizontally { it } },
-                    popExitTransition = { slideOutHorizontally { it } }
+                    popExitTransition = { slideOutHorizontally { it } },
+                    exitTransition = { slideOutHorizontally { -it } },
+                    popEnterTransition = { slideInHorizontally { -it } }
                 ) { backStackEntry ->
                     val flowEntry = remember(backStackEntry) {
                         navController.getBackStackEntry(Routes.WALLET_TRANSFER_FLOW)
@@ -492,11 +495,30 @@ fun AppNavigation(
                     val viewModel = hiltViewModel<WalletTransferViewModel>(flowEntry)
                     ConfirmTransferScreen(
                         onBack = { navController.popBackStack() },
-                        onNext = {
+                        onNavigate = { navController.navigate(it) },
+                        viewModel = viewModel
+                    )
+                }
+
+                composable(
+                    route = Routes.TRANSFER_RESULT,
+                    enterTransition = { slideInHorizontally { it } },
+                    popExitTransition = { slideOutHorizontally { it } },
+                    exitTransition = { slideOutHorizontally { -it } },
+                    popEnterTransition = { slideInHorizontally { -it } }
+                ) { backStackEntry ->
+                    val flowEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry(Routes.WALLET_TRANSFER_FLOW)
+                    }
+                    val viewModel = hiltViewModel<WalletTransferViewModel>(flowEntry)
+                    TransferResultScreen(
+                        onDone = {
                             navController.navigate(Routes.mainAtTab(0)) {
                                 popUpTo(Routes.MAIN) { inclusive = true }
                             }
                         },
+                        onTransactionHistoryClick = { navController.navigate(Routes.TRANSACTION_HISTORY) },
+                        onAddFriendClick = { navController.navigate(Routes.ADD_FRIEND) },
                         viewModel = viewModel
                     )
                 }

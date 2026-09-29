@@ -68,6 +68,7 @@ data class AppColors(
     val generalTransfer: GeneralTransferColors,
     val walletTransfer: WalletTransferColors,
     val confirmTransfer: ConfirmTransferColors,
+    val transferResult: TransferResultColors,
 )
 
 val NeonColors = AppColors(
@@ -125,6 +126,7 @@ val NeonColors = AppColors(
     generalTransfer = NeonGeneralTransferColors,
     walletTransfer = NeonWalletTransferColors,
     confirmTransfer = NeonConfirmTransferColors,
+    transferResult = NeonTransferResultColors,
 )
 
 val BlackGoldColors = AppColors(
@@ -186,4 +188,5 @@ val BlackGoldColors = AppColors(
     generalTransfer = BlackGoldGeneralTransferColors,
     walletTransfer = BlackGoldWalletTransferColors,
     confirmTransfer = BlackGoldConfirmTransferColors,
+    transferResult = BlackGoldTransferResultColors,
 )
