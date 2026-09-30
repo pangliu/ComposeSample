@@ -29,9 +29,9 @@ data class WalletTransferColors(
     val feeLabelText: Color,             // Fee 標籤
     val feeValueText: Color,             // Fee 數值
     val nextButtonEnabledFill: Brush,    // Next 按鈕啟用時填滿；Black Gold = 金色橫向漸層
-    val nextButtonDisabledFill: Color,   // Next 按鈕未輸入金額時的底色
+    val nextButtonDisabledFill: Color,   // Next 按鈕欄位未填齊時的底色
     val nextButtonEnabledText: Color,    // Next 按鈕啟用時文字
-    val nextButtonDisabledText: Color,   // Next 按鈕未輸入金額時文字
+    val nextButtonDisabledText: Color,   // Next 按鈕欄位未填齊時文字
 )
 
 val NeonWalletTransferColors = WalletTransferColors(

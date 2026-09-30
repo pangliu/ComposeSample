@@ -39,6 +39,7 @@ object Routes {
     const val WALLET_TRANSFER =
         "wallet_transfer?accountName={accountName}&fee={fee}&accountNumber={accountNumber}&accountNumberLocked={accountNumberLocked}"
 
+    const val TRANSFER_CHANNEL = "transfer_channel"
     const val CONFIRM_TRANSFER = "confirm_transfer"
     const val TRANSFER_RESULT = "transfer_result"
 

@@ -41,7 +41,7 @@ data class WalletTransferUiState(
     val fee: Int = 0,
     // 選卡片帶卡號、選 Xcash Wallet 帶使用者手機號碼，預填 account number 欄位
     val accountNumber: String = "",
-    // 從掃碼進入時鎖定 account number 欄位，不可編輯且隱藏掃碼 icon
+    // 從掃碼進入時鎖定 accountName / account number 欄位：皆由 QR code 帶入，不可編輯且隱藏下拉箭頭與掃碼 icon
     val isAccountNumberLocked: Boolean = false,
     // 使用者輸入的轉帳金額，與 ConfirmTransferScreen 共用同一個 ViewModel 所以放在 UiState
     val amount: String = "",
@@ -57,6 +57,12 @@ data class WalletTransferUiState(
     val transferResult: TransferResultInfo? = null,
 ) {
     val isLoading: Boolean get() = isSubmittingTransfer
+
+    // 收款方式、帳號、金額三個欄位都有值才可按 Next
+    val isNextEnabled: Boolean
+        get() = accountName.isNotBlank() &&
+            accountNumber.isNotBlank() &&
+            (amount.toLongOrNull() ?: 0L) > 0L
 }
 
 @HiltViewModel
@@ -92,6 +98,11 @@ class WalletTransferViewModel @Inject constructor(
 
     fun updateAccountNumber(value: String) {
         _uiState.update { it.copy(accountNumber = value) }
+    }
+
+    // TransferChannelScreen 選定渠道後回填收款方式
+    fun selectReceivingChannel(channelName: String) {
+        _uiState.update { it.copy(accountName = channelName) }
     }
 
     // ConfirmTransferScreen 按下 Next、且生物辨識／PIN 驗證通過後呼叫

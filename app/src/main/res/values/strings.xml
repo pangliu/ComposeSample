@@ -623,12 +623,22 @@
     <string name="wallet_transfer_bonus">Transfer Bonus: %1$d remaining</string>
     <string name="wallet_transfer_mode_manual">Manual Input</string>
     <string name="wallet_transfer_mode_friends">Friends</string>
+    <string name="wallet_transfer_receiving_method_hint">Select a receiving method</string>
+    <string name="wallet_transfer_receiving_method_desc">Select receiving method</string>
     <string name="wallet_transfer_account_hint">Enter Account No.</string>
     <string name="wallet_transfer_scan_desc">Scan QR code</string>
     <string name="wallet_transfer_amount_hint">Enter Amount</string>
     <string name="wallet_transfer_limit">Limit</string>
     <string name="wallet_transfer_fee_label">Fee</string>
     <string name="wallet_transfer_next_button">Next</string>
+
+    <!-- TransferChannelScreen -->
+    <string name="transfer_channel_title">General Transfer</string>
+    <string name="transfer_channel_e_wallet_section">E-Wallet</string>
+    <string name="transfer_channel_bank_section">Bank</string>
+    <string name="transfer_channel_loading_failed_dots">•••</string>
+    <string name="transfer_channel_loading_failed">loading failed</string>
+    <string name="transfer_channel_next_button">Next</string>
 
     <!-- ConfirmTransferScreen -->
     <string name="confirm_transfer_title">General Transfer</string>

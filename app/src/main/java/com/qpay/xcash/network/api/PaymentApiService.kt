@@ -6,6 +6,7 @@ import com.qpay.xcash.network.model.request.TransferRequest
 import com.qpay.xcash.network.model.response.BaseResponse
 import com.qpay.xcash.network.model.response.ConfirmPaymentResponse
 import com.qpay.xcash.network.model.response.TransactionDetailResponse
+import com.qpay.xcash.network.model.response.TransferChannelResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -26,4 +27,7 @@ interface PaymentApiService {
 
     @POST("/api/payment/transfer")
     suspend fun transfer(@Body request: TransferRequest): BaseResponse<ConfirmPaymentResponse>
+
+    @GET("/api/payment/channel")
+    suspend fun getTransferChannels(): BaseResponse<TransferChannelResponse>
 }

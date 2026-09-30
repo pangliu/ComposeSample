@@ -60,6 +60,7 @@ import com.qpay.xcash.ui.transfer.wallet.WalletTransferScreen
 import com.qpay.xcash.ui.transfer.wallet.WalletTransferViewModel
 import com.qpay.xcash.ui.transfer.confirm.ConfirmTransferScreen
 import com.qpay.xcash.ui.transfer.result.TransferResultScreen
+import com.qpay.xcash.ui.transfer.transferChannel.TransferChannelScreen
 import com.qpay.xcash.ui.welcome.WelcomeScreen
 import com.qpay.xcash.ui.welcome.WelcomeViewModel
 
@@ -478,7 +479,26 @@ fun AppNavigation(
                     WalletTransferScreen(
                         onBack = { navController.popBackStack() },
                         onNext = { navController.navigate(Routes.CONFIRM_TRANSFER) },
+                        onSelectReceivingMethod = { navController.navigate(Routes.TRANSFER_CHANNEL) },
                         viewModel = viewModel
+                    )
+                }
+
+                composable(
+                    route = Routes.TRANSFER_CHANNEL,
+                    enterTransition = { slideInHorizontally { it } },
+                    popExitTransition = { slideOutHorizontally { it } }
+                ) { backStackEntry ->
+                    val flowEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry(Routes.WALLET_TRANSFER_FLOW)
+                    }
+                    val walletTransferViewModel = hiltViewModel<WalletTransferViewModel>(flowEntry)
+                    TransferChannelScreen(
+                        onBack = { navController.popBackStack() },
+                        onNext = { channel ->
+                            walletTransferViewModel.selectReceivingChannel(channel.name)
+                            navController.popBackStack()
+                        }
                     )
                 }
 

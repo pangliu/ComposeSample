@@ -201,7 +201,8 @@ fun BalanceCard(cashBalance: Double, tokenBalance: Double, onNavigate: (String) 
                             brush = colors.gradient.silverShimmer ?: SolidColor(colors.home.balanceCard.sendBorder),
                             shape = RoundedCornerShape(8.dp)
                         )
-                        .clickable { /* TODO: Send */ }
+                        // 從首頁進入不帶收款方式與帳號，WalletTransferScreen 顯示 placeholder 讓使用者自行選擇／輸入
+                        .clickable { onNavigate(Routes.walletTransfer(accountName = "", fee = 0)) }
                         .padding(horizontal = 14.dp, vertical = 6.dp)
                 ) {
                     Row(verticalAlignment = Alignment.Companion.CenterVertically) {

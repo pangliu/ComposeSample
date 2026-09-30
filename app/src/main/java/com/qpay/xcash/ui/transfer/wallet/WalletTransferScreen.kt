@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -68,6 +69,7 @@ private const val MODE_MANUAL = 0
 fun WalletTransferScreen(
     onBack: () -> Unit = {},
     onNext: () -> Unit = {},
+    onSelectReceivingMethod: () -> Unit = {},
     viewModel: WalletTransferViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -75,6 +77,7 @@ fun WalletTransferScreen(
         uiState = uiState,
         onBack = onBack,
         onNext = onNext,
+        onSelectReceivingMethod = onSelectReceivingMethod,
         onAccountNumberChange = viewModel::updateAccountNumber,
         onAmountChange = viewModel::updateAmount
     )
@@ -86,6 +89,7 @@ private fun WalletTransferContent(
     uiState: WalletTransferUiState = WalletTransferUiState(),
     onBack: () -> Unit = {},
     onNext: () -> Unit = {},
+    onSelectReceivingMethod: () -> Unit = {},
     onAccountNumberChange: (String) -> Unit = {},
     onAmountChange: (String) -> Unit = {}
 ) {
@@ -185,13 +189,33 @@ private fun WalletTransferContent(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    TransferField {
+                    // 從掃碼進入時 accountName 由 QR code 帶入且鎖定，不可點擊、不顯示下拉箭頭
+                    TransferField(
+                        modifier = Modifier.clickable(
+                            enabled = !uiState.isAccountNumberLocked,
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { onSelectReceivingMethod() }
+                    ) {
+                        // 從首頁 Send 進入時 accountName 為空，顯示 placeholder 提示使用者選擇收款方式
                         Text(
-                            text = uiState.accountName,
-                            color = transferColors.fieldSelectedText,
+                            text = uiState.accountName.ifEmpty {
+                                stringResource(R.string.wallet_transfer_receiving_method_hint)
+                            },
+                            color = if (uiState.accountName.isEmpty()) transferColors.fieldPlaceholderText
+                            else transferColors.fieldSelectedText,
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.weight(1f)
                         )
+                        if (!uiState.isAccountNumberLocked) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowDown,
+                                contentDescription = stringResource(R.string.wallet_transfer_receiving_method_desc),
+                                tint = transferColors.fieldIconTint,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
                     }
 
                     TransferField {
@@ -250,7 +274,7 @@ private fun WalletTransferContent(
 
                 Spacer(Modifier.weight(1f))
 
-                val isAmountEntered = (uiState.amount.toLongOrNull() ?: 0L) > 0L
+                val isNextEnabled = uiState.isNextEnabled
 
                 Box(
                     modifier = Modifier
@@ -259,11 +283,11 @@ private fun WalletTransferContent(
                         .height(52.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .background(
-                            if (isAmountEntered) transferColors.nextButtonEnabledFill
+                            if (isNextEnabled) transferColors.nextButtonEnabledFill
                             else SolidColor(transferColors.nextButtonDisabledFill)
                         )
                         .clickable(
-                            enabled = isAmountEntered,
+                            enabled = isNextEnabled,
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) { onNext() },
@@ -271,7 +295,7 @@ private fun WalletTransferContent(
                 ) {
                     Text(
                         text = stringResource(R.string.wallet_transfer_next_button),
-                        color = if (isAmountEntered) transferColors.nextButtonEnabledText else transferColors.nextButtonDisabledText,
+                        color = if (isNextEnabled) transferColors.nextButtonEnabledText else transferColors.nextButtonDisabledText,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -362,10 +386,13 @@ private fun ModeChip(text: String, isSelected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun TransferField(content: @Composable RowScope.() -> Unit) {
+private fun TransferField(
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit
+) {
     val colors = LocalAppColors.current.walletTransfer
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -430,5 +457,25 @@ private fun WalletTransferScreenPreviewNeon() {
 private fun WalletTransferScreenPreviewBlackGold() {
     AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         WalletTransferContent(uiState = previewUiState)
+    }
+}
+
+// 從掃碼進入：accountName / account number 由 QR code 帶入並鎖定
+@Preview(name = "Black Gold - From Scan", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun WalletTransferScreenPreviewBlackGoldFromScan() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        WalletTransferContent(
+            uiState = previewUiState.copy(accountNumber = "09123456687", isAccountNumberLocked = true)
+        )
+    }
+}
+
+// 從首頁 Send 進入：未選收款方式、未輸入帳號
+@Preview(name = "Black Gold - From Home", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun WalletTransferScreenPreviewBlackGoldFromHome() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        WalletTransferContent(uiState = previewUiState.copy(accountName = ""))
     }
 }
