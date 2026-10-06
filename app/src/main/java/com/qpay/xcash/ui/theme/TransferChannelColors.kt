@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Color
 // ui/transfer/transferChannel/ TransferChannelScreen 專屬顏色
 
 data class TransferChannelColors(
+    val pageBackground: Color?,         // 頁面底色；Black Gold = null（沿用 bg.page）
+    val titleBrush: Brush?,             // 標題文字漸層；Black Gold = null（沿用 gradient.goldShimmer）
     val sectionTitleText: Color,        // E-Wallet / Bank 分類標題
     val tilePlaceholderBackground: Color, // 渠道圖片未提供 / 載入中的預設白框底色
     val tilePlaceholderText: Color,     // 預設白框內的渠道名稱文字
@@ -19,19 +21,26 @@ data class TransferChannelColors(
 )
 
 val NeonTransferChannelColors = TransferChannelColors(
-    sectionTitleText = neonCyan,
+    pageBackground = neonInkBlack,
+    // 由左至右：neonOrchid → neonSkyCyan（與 WalletTransferScreen 標題一致）
+    titleBrush = Brush.horizontalGradient(colors = listOf(neonOrchid, neonSkyCyan)),
+    sectionTitleText = neonSkyCyan,
     tilePlaceholderBackground = themeWhite,
     tilePlaceholderText = deepMidnight,
-    tileSelectedBorder = Brush.horizontalGradient(colors = listOf(neonPurple, neonCyan, neonPurple)),
-    tileFailedBackground = twilightNavy,
-    tileFailedText = silverGray,
-    nextButtonEnabledFill = Brush.horizontalGradient(colors = listOf(neonPurple, neonDarkBlue)),
+    // 設計稿未提供選中狀態，沿用 WalletTransferScreen 分頁底線配色
+    tileSelectedBorder = Brush.horizontalGradient(colors = listOf(neonOrchid, neonSkyCyan, neonOrchid)),
+    tileFailedBackground = charcoalLightBlack,
+    tileFailedText = steelGray,
+    // 設計稿未包含 Next 按鈕，沿用 WalletTransferScreen Next 按鈕配色
+    nextButtonEnabledFill = Brush.horizontalGradient(colors = listOf(neonMagenta, neonViolet)),
     nextButtonDisabledFill = twilightNavy,
     nextButtonEnabledText = themeWhite,
     nextButtonDisabledText = silverGray,
 )
 
 val BlackGoldTransferChannelColors = TransferChannelColors(
+    pageBackground = null,
+    titleBrush = null,
     sectionTitleText = champagneGold,
     tilePlaceholderBackground = themeWhite,
     tilePlaceholderText = themeBlack,

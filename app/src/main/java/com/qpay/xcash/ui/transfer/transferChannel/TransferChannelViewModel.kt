@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.qpay.xcash.network.model.NetworkResult
 import com.qpay.xcash.network.model.response.TransferChannelItem
+import com.qpay.xcash.network.model.response.TransferChannelType
 import com.qpay.xcash.repository.PaymentRepository
 import com.qpay.xcash.ui.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,13 +20,17 @@ import javax.inject.Inject
 
 data class TransferChannelUiState(
     val isLoadingChannels: Boolean = true,
-    val eWallets: List<TransferChannelItem> = emptyList(),
-    val banks: List<TransferChannelItem> = emptyList(),
+    val channels: List<TransferChannelItem> = emptyList(),
     val selectedChannelId: String? = null,
 ) {
     val isLoading: Boolean get() = isLoadingChannels
+
+    // API 回傳單一清單，畫面依 channel 類別拆成 E-Wallet / Bank 兩區
+    val eWallets: List<TransferChannelItem> get() = channels.filter { it.channel == TransferChannelType.E_WALLET }
+    val banks: List<TransferChannelItem> get() = channels.filter { it.channel == TransferChannelType.BANK }
+
     val selectedChannel: TransferChannelItem?
-        get() = (eWallets + banks).firstOrNull { it.id == selectedChannelId }
+        get() = channels.firstOrNull { it.id == selectedChannelId }
 }
 
 @HiltViewModel
@@ -51,8 +56,7 @@ class TransferChannelViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoadingChannels = false,
-                            eWallets = result.data?.eWallet ?: emptyList(),
-                            banks = result.data?.bank ?: emptyList()
+                            channels = result.data ?: emptyList()
                         )
                     }
                 }

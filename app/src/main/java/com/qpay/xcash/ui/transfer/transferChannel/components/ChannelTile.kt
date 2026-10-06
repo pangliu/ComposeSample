@@ -1,5 +1,8 @@
 package com.qpay.xcash.ui.transfer.transferChannel.components
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,11 +31,15 @@ import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.TransferChannelItem
+import com.qpay.xcash.ui.components.channelIconRes
 import com.qpay.xcash.ui.theme.LocalAppColors
 
 private val TileShape = RoundedCornerShape(10.dp)
 
-// 渠道方塊：imageUrl 為空或載入中顯示預設白框（含渠道名稱），載入失敗顯示 loading failed
+// 渠道方塊圖片優先順序：
+// 1. imageUrl 有值 → 網路圖（載入中 / 失敗時先退回本地 icon，沒有本地 icon 才顯示白框 / loading failed）
+// 2. imageUrl 為空 → 本地 icon（channelIconRes 依 id 對應）
+// 3. 都沒有 → 預設白框（含渠道名稱）
 @Composable
 fun ChannelTile(
     channel: TransferChannelItem,
@@ -56,19 +63,36 @@ fun ChannelTile(
                 interactionSource = remember { MutableInteractionSource() }
             ) { onClick() }
     ) {
-        if (channel.imageUrl.isEmpty()) {
-            PlaceholderTile(name = channel.name)
-        } else {
-            SubcomposeAsyncImage(
+        val localIconRes = channelIconRes(channel.id)
+        when {
+            channel.imageUrl.isNotEmpty() -> SubcomposeAsyncImage(
                 model = channel.imageUrl,
                 contentDescription = channel.name,
                 contentScale = ContentScale.Crop,
-                loading = { PlaceholderTile(name = channel.name) },
-                error = { FailedTile() },
+                loading = { LocalIconOrPlaceholder(localIconRes, channel.name) },
+                error = {
+                    if (localIconRes != null) LocalIconTile(localIconRes, channel.name) else FailedTile()
+                },
                 modifier = Modifier.fillMaxSize()
             )
+            else -> LocalIconOrPlaceholder(localIconRes, channel.name)
         }
     }
+}
+
+@Composable
+private fun LocalIconOrPlaceholder(@DrawableRes iconRes: Int?, name: String) {
+    if (iconRes != null) LocalIconTile(iconRes, name) else PlaceholderTile(name = name)
+}
+
+@Composable
+private fun LocalIconTile(@DrawableRes iconRes: Int, name: String) {
+    Image(
+        painter = painterResource(iconRes),
+        contentDescription = name,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier.fillMaxSize()
+    )
 }
 
 @Composable

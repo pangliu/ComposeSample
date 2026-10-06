@@ -2,6 +2,8 @@ package com.qpay.xcash.ui.transfer.confirm
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,6 +48,7 @@ import com.qpay.xcash.R
 import com.qpay.xcash.ui.Routes
 import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.LoadingDialog
+import com.qpay.xcash.ui.components.channelIconResByName
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldAssets
@@ -200,8 +205,10 @@ private fun ConfirmTransferContent(
 
             Spacer(Modifier.height(14.dp))
 
+            // 收款方 icon 依 accountName 對應 TransferChannelScreen 的渠道 icon，對應不到時沿用預設 icon
             AccountSummaryCard(
                 iconRes = assets.confirmTransferAccountIcon,
+                channelIconRes = channelIconResByName(uiState.accountName),
                 name = uiState.accountName,
                 subText = uiState.accountNumber,
                 colors = confirmColors,
@@ -283,7 +290,8 @@ private fun AccountSummaryCard(
     name: String,
     subText: String,
     colors: ConfirmTransferColors,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @DrawableRes channelIconRes: Int? = null  // 有值時改顯示渠道 logo（橫向長方形，與 TransferChannelScreen 方塊同比例）
 ) {
     Column(
         modifier = modifier
@@ -293,19 +301,31 @@ private fun AccountSummaryCard(
             .padding(vertical = 18.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(colors.iconBackground),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(iconRes),
+        if (channelIconRes != null) {
+            Image(
+                painter = painterResource(channelIconRes),
                 contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier.size(26.dp)
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .height(44.dp)
+                    .aspectRatio(1.9f)
+                    .clip(RoundedCornerShape(8.dp))
             )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(colors.iconBackground),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(iconRes),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(26.dp)
+                )
+            }
         }
 
         Spacer(Modifier.height(10.dp))
@@ -350,5 +370,14 @@ private fun ConfirmTransferScreenPreviewNeon() {
 private fun ConfirmTransferScreenPreviewBlackGold() {
     AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
         ConfirmTransferContent(uiState = previewUiState)
+    }
+}
+
+// 收款方式為已知渠道時，第二張卡片顯示渠道 logo
+@Preview(name = "Black Gold - Channel Icon", showBackground = true, backgroundColor = 0xFF050505)
+@Composable
+private fun ConfirmTransferScreenPreviewBlackGoldChannelIcon() {
+    AppTheme(colors = BlackGoldColors, assets = BlackGoldAssets) {
+        ConfirmTransferContent(uiState = previewUiState.copy(accountName = "GCash"))
     }
 }

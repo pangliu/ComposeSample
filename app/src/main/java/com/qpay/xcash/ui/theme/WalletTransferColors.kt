@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Color
 // ui/transfer/ WalletTransferScreen 專屬顏色
 
 data class WalletTransferColors(
+    val pageBackground: Color?,          // 頁面底色；Black Gold = null（沿用 bg.page）
+    val titleBrush: Brush?,              // 標題文字漸層；Black Gold = null（沿用 gradient.goldShimmer）
     val tabSelectedText: Color,          // 選中的分頁文字
     val tabUnselectedText: Color,        // 未選中的分頁文字
     val tabIndicator: Brush,             // 選中分頁底線；Black Gold = 金色橫向漸層
@@ -35,35 +37,42 @@ data class WalletTransferColors(
 )
 
 val NeonWalletTransferColors = WalletTransferColors(
-    tabSelectedText = neonCyan,
-    tabUnselectedText = silverGray,
-    tabIndicator = Brush.horizontalGradient(colors = listOf(neonPurple, neonCyan, neonPurple)),
-    tabDivider = neonCyan.copy(alpha = 0.2f),
-    balanceText = neonCyan,
-    balanceIconTint = silverGray,
+    pageBackground = neonPageNavy,
+    // 由左至右：neonOrchid → neonSkyCyan
+    titleBrush = Brush.horizontalGradient(colors = listOf(neonOrchid, neonSkyCyan)),
+    tabSelectedText = neonSkyCyan,
+    tabUnselectedText = silverGray.copy(alpha = 0.7f),
+    // 由左至右：neonOrchid → neonSkyCyan → neonOrchid
+    tabIndicator = Brush.horizontalGradient(colors = listOf(neonOrchid, neonSkyCyan, neonOrchid)),
+    tabDivider = Color.Transparent,
+    balanceText = neonSkyCyan,
+    balanceIconTint = neonSkyCyan,
     bonusText = silverGray,
-    chipSelectedBackground = twilightNavy,
-    chipSelectedBorder = neonCyan,
-    chipSelectedText = neonCyan,
-    chipUnselectedBackground = twilightNavy,
-    chipUnselectedBorder = neonCyan.copy(alpha = 0.2f),
-    chipUnselectedText = themeWhite,
-    fieldBackground = twilightNavy,
-    fieldBorder = neonCyan.copy(alpha = 0.5f),
-    fieldSelectedText = neonCyan,
+    chipSelectedBackground = neonSkyCyan,
+    chipSelectedBorder = neonSkyCyan,
+    chipSelectedText = darkSlate,
+    chipUnselectedBackground = Color.Transparent,
+    chipUnselectedBorder = neonSkyCyan.copy(alpha = 0.3f),
+    chipUnselectedText = neonSkyCyan.copy(alpha = 0.5f),
+    fieldBackground = neonFieldBlack,
+    fieldBorder = neonSkyCyan.copy(alpha = 0.65f),
+    fieldSelectedText = neonSkyCyan,
     fieldText = themeWhite,
-    fieldPlaceholderText = silverGray,
-    fieldIconTint = neonCyan,
-    fieldSideText = silverGray,
-    feeLabelText = silverGray,
-    feeValueText = neonCyan,
-    nextButtonEnabledFill = Brush.horizontalGradient(colors = listOf(neonPurple, neonDarkBlue)),
+    fieldPlaceholderText = neonSkyCyan,
+    fieldIconTint = neonSkyCyan,
+    fieldSideText = neonSkyCyan.copy(alpha = 0.5f),
+    feeLabelText = neonSkyCyan,
+    feeValueText = neonSkyCyan,
+    // 由左至右：neonMagenta → neonViolet
+    nextButtonEnabledFill = Brush.horizontalGradient(colors = listOf(neonMagenta, neonViolet)),
     nextButtonDisabledFill = twilightNavy,
     nextButtonEnabledText = themeWhite,
     nextButtonDisabledText = silverGray,
 )
 
 val BlackGoldWalletTransferColors = WalletTransferColors(
+    pageBackground = null,
+    titleBrush = null,
     tabSelectedText = antiqueGold,
     tabUnselectedText = warmSand.copy(alpha = 0.6f),
     // 由左至右：oldGold → amberGold → champagneGold → amberGold → oldGold（與 gradient.goldShimmer 一致）

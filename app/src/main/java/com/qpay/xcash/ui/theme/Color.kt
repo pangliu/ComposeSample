@@ -33,6 +33,13 @@ val duskNavy = Color(0xFF0F1828)       // UnlinkCardDialog 底色（Neon）
 val indigoLine = Color(0xFF1E2D4A)     // UnlinkCardDialog 邊框（Neon）
 val midnightNavy = Color(0xFF0E1A2E)   // FullyVerifiedBadge 盾牌 icon 圓形底色（Neon）
 val steelTeal = Color(0xFF39A3BF)      // TransactionHistoryScreen 分類篩選外框 / 選中底色（Neon）
+val neonSkyCyan = Color(0xFF20DEFC)    // WalletTransferScreen 主要青色：分頁 / 餘額 / 欄位文字 / Fee / 選中模式標籤底色（Neon）
+val neonOrchid = Color(0xFFAC2FCC)     // WalletTransferScreen 標題漸層左端 / 分頁底線兩端（Neon）
+val neonFieldBlack = Color(0xFF131313) // WalletTransferScreen 輸入欄位底色（Neon）
+val neonPageNavy = Color(0xFF0B1423)   // WalletTransferScreen 頁面底色（Neon）
+val neonInkBlack = Color(0xFF0C0906)   // TransferChannelScreen 頁面底色（Neon）
+val neonMagenta = Color(0xFFC700F9)    // WalletTransferScreen Next 按鈕漸層左端（Neon）
+val neonViolet = Color(0xFF864DF0)     // WalletTransferScreen Next 按鈕漸層右端（Neon）
 // ========== transaction detail ===========
 val neonMint = Color(0xFF85EEAC)
 val neonBlushPink = Color(0xFFEFA2A8)

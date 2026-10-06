@@ -9,7 +9,7 @@ import com.qpay.xcash.network.model.response.ConfirmPaymentResponse
 import com.qpay.xcash.network.model.response.OrderStatus
 import com.qpay.xcash.network.model.response.TransactionDetailResponse
 import com.qpay.xcash.network.model.response.TransferChannelItem
-import com.qpay.xcash.network.model.response.TransferChannelResponse
+import com.qpay.xcash.network.model.response.TransferChannelType
 import kotlinx.coroutines.delay
 
 class FakePaymentApiService : PaymentApiService {
@@ -60,35 +60,32 @@ class FakePaymentApiService : PaymentApiService {
         )
     }
 
-    override suspend fun getTransferChannels(): BaseResponse<TransferChannelResponse> {
+    override suspend fun getTransferChannels(): BaseResponse<List<TransferChannelItem>> {
         delay(800)
         // 🎯 API 尚未完成，image_url 先給空字串，畫面顯示預設白框
+        val eWallet = TransferChannelType.E_WALLET
+        val bank = TransferChannelType.BANK
         return BaseResponse(
             code = 200,
             errorMsg = "success",
-            result = TransferChannelResponse(
-                eWallet = listOf(
-                    TransferChannelItem(id = "xcash", name = "Xcash"),
-                    TransferChannelItem(id = "gcash", name = "GCash"),
-                    TransferChannelItem(id = "maya", name = "Maya"),
-                    TransferChannelItem(id = "gotyme", name = "GoTyme"),
-                    TransferChannelItem(id = "grab", name = "Grab"),
-                    TransferChannelItem(id = "qrph", name = "QRPh"),
-                    TransferChannelItem(id = "shopee_pay", name = "ShopeePay"),
-                ),
-                bank = listOf(
-                    TransferChannelItem(id = "bdo_business", name = "BDO Business"),
-                    TransferChannelItem(id = "uno_digital_bank", name = "UNO Digital Bank"),
-                    TransferChannelItem(id = "komo", name = "Komo"),
-                    TransferChannelItem(id = "metrobank", name = "Metrobank"),
-                    TransferChannelItem(id = "tayocash", name = "TayoCash"),
-                    TransferChannelItem(id = "landbank", name = "LANDBANK"),
-                    TransferChannelItem(id = "coin_ph", name = "Coins.ph"),
-                    TransferChannelItem(id = "star_pay", name = "StarPay"),
-                    TransferChannelItem(id = "union_digital_bank", name = "UnionDigital Bank"),
-                    TransferChannelItem(id = "cimb_bank", name = "CIMB Bank"),
-                    TransferChannelItem(id = "rcbc", name = "RCBC"),
-                )
+            result = listOf(
+                TransferChannelItem(id = "xcash", name = "Xcash", channel = eWallet),
+                TransferChannelItem(id = "gcash", name = "GCash", channel = eWallet),
+                TransferChannelItem(id = "maya", name = "Maya", channel = eWallet),
+                TransferChannelItem(id = "gotyme", name = "GoTyme", channel = eWallet),
+                TransferChannelItem(id = "grab", name = "Grab", channel = eWallet),
+                TransferChannelItem(id = "qrph", name = "QRPh", channel = eWallet),
+                TransferChannelItem(id = "shopee_pay", name = "ShopeePay", channel = eWallet),
+                TransferChannelItem(id = "bdo_business", name = "BDO Business", channel = bank),
+                TransferChannelItem(id = "uno_digital_bank", name = "UNO Digital Bank", channel = bank),
+                TransferChannelItem(id = "komo", name = "Komo", channel = bank),
+                TransferChannelItem(id = "metrobank", name = "Metrobank", channel = bank),
+                TransferChannelItem(id = "tayocash", name = "TayoCash", channel = bank),
+                TransferChannelItem(id = "landbank", name = "LANDBANK", channel = bank),
+                TransferChannelItem(id = "coin_ph", name = "Coins.ph", channel = bank),
+                TransferChannelItem(id = "star_pay", name = "StarPay", channel = bank),
+                TransferChannelItem(id = "union_digital_bank", name = "UnionDigital Bank", channel = bank),
+                TransferChannelItem(id = "cimb_bank", name = "CIMB Bank", channel = bank),
             )
         )
     }

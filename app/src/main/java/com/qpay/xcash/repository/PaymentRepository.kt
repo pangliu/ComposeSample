@@ -9,7 +9,7 @@ import com.qpay.xcash.network.model.request.TransferRequest
 import com.qpay.xcash.network.model.response.ConfirmPaymentResponse
 import com.qpay.xcash.network.model.response.CreditCardResponse
 import com.qpay.xcash.network.model.response.TransactionDetailResponse
-import com.qpay.xcash.network.model.response.TransferChannelResponse
+import com.qpay.xcash.network.model.response.TransferChannelItem
 import javax.inject.Inject
 
 class PaymentRepository @Inject constructor(
@@ -51,7 +51,7 @@ class PaymentRepository @Inject constructor(
         }
     }
 
-    suspend fun fetchTransferChannels(): NetworkResult<TransferChannelResponse> {
+    suspend fun fetchTransferChannels(): NetworkResult<List<TransferChannelItem>> {
         return safeApiCall { apiService.getTransferChannels() }
     }
 

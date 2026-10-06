@@ -102,11 +102,11 @@ private fun WalletTransferContent(
     var isBalanceHidden by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
-        containerColor = colors.bg.page,
+        containerColor = transferColors.pageBackground ?: colors.bg.page,
         contentColor = colors.text.body
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
-            (assets.subPageBackground ?: assets.scanPayBackground)?.let { resId ->
+            assets.walletTransferBackground?.let { resId ->
                 Image(
                     painter = painterResource(resId),
                     contentDescription = null,
@@ -123,7 +123,7 @@ private fun WalletTransferContent(
                 SubPageTopBar(
                     title = stringResource(R.string.wallet_transfer_title),
                     onBack = onBack,
-                    titleBrush = colors.gradient.goldShimmer
+                    titleBrush = transferColors.titleBrush ?: colors.gradient.goldShimmer
                 )
 
                 TransferTabs(selectedTab = selectedTab, onTabSelected = { selectedTab = it })
@@ -226,14 +226,14 @@ private fun WalletTransferContent(
                             readOnly = uiState.isAccountNumberLocked,
                             modifier = Modifier.weight(1f)
                         )
-                        if (!uiState.isAccountNumberLocked) {
-                            Icon(
-                                imageVector = Icons.Default.QrCodeScanner,
-                                contentDescription = stringResource(R.string.wallet_transfer_scan_desc),
-                                tint = transferColors.fieldIconTint,
-                                modifier = Modifier.size(22.dp)
-                            )
-                        }
+//                        if (!uiState.isAccountNumberLocked) {
+//                            Icon(
+//                                imageVector = Icons.Default.QrCodeScanner,
+//                                contentDescription = stringResource(R.string.wallet_transfer_scan_desc),
+//                                tint = transferColors.fieldIconTint,
+//                                modifier = Modifier.size(22.dp)
+//                            )
+//                        }
                     }
 
                     TransferField {

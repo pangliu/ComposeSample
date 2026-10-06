@@ -31,6 +31,8 @@ data class AppAssets(
     val cardDetailAspectRatio: Float,            // cardDetailBg 圖片寬高比（width / height）
     @DrawableRes val voucherTicketBg: Int,
     @DrawableRes val subPageBackground: Int?,    // 子頁面全屏背景圖（null = 純色 bg.page）
+    @DrawableRes val walletTransferBackground: Int?, // WalletTransferScreen 全屏背景圖（null = 純色，Neon 設計稿無背景圖）
+    @DrawableRes val transferChannelBackground: Int?, // TransferChannelScreen 全屏背景圖（null = 純色，Neon 設計稿無背景圖）
     @DrawableRes val scanPayBackground: Int?,    // ScanPayScreen 頁面背景圖（null = 純色 bg.page）
     @DrawableRes val scanPayYellowStarDecor: Int?, // ScanPayScreen 底部左側黃星裝飾圖（null = 不顯示）
     @DrawableRes val scanPayTreeDecor: Int?,     // ScanPayScreen 底部右側樹裝飾圖（null = 不顯示）
@@ -92,6 +94,8 @@ val NeonAssets = AppAssets(
     cardDetailAspectRatio = 1113f / 561f,
     voucherTicketBg = R.drawable.bg_voucher_ticket,
     subPageBackground = R.mipmap.bg_sub_page,
+    walletTransferBackground = null,
+    transferChannelBackground = null,
     scanPayBackground = null,
     scanPayYellowStarDecor = R.mipmap.bg_yellow_star,
     scanPayTreeDecor = R.mipmap.ic_tree,
@@ -153,6 +157,8 @@ val BlackGoldAssets = AppAssets(
     cardDetailAspectRatio = 954f / 561f,
     voucherTicketBg = R.drawable.bg_voucher_ticket_black_gold,
     subPageBackground = null,
+    walletTransferBackground = R.drawable.bg_scan_pay_black_gold, // 與原本 subPageBackground ?: scanPayBackground 結果相同
+    transferChannelBackground = R.drawable.bg_scan_pay_black_gold, // 與原本 subPageBackground ?: scanPayBackground 結果相同
     scanPayBackground = R.drawable.bg_scan_pay_black_gold,
     scanPayYellowStarDecor = null,
     scanPayTreeDecor = null,

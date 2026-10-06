@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
 import com.qpay.xcash.network.model.response.TransferChannelItem
+import com.qpay.xcash.network.model.response.TransferChannelType
 import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.components.SubPageTopBar
@@ -94,11 +95,11 @@ private fun TransferChannelContent(
     val isChannelSelected = uiState.selectedChannel != null
 
     Scaffold(
-        containerColor = colors.bg.page,
+        containerColor = channelColors.pageBackground ?: colors.bg.page,
         contentColor = colors.text.body
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
-            (assets.subPageBackground ?: assets.scanPayBackground)?.let { resId ->
+            assets.transferChannelBackground?.let { resId ->
                 Image(
                     painter = painterResource(resId),
                     contentDescription = null,
@@ -115,7 +116,7 @@ private fun TransferChannelContent(
                 SubPageTopBar(
                     title = stringResource(R.string.transfer_channel_title),
                     onBack = onBack,
-                    titleBrush = colors.gradient.goldShimmer
+                    titleBrush = channelColors.titleBrush ?: colors.gradient.goldShimmer
                 )
 
                 LazyVerticalGrid(
@@ -198,28 +199,16 @@ private fun LazyGridScope.channelSection(
 
 private val previewUiState = TransferChannelUiState(
     isLoadingChannels = false,
-    eWallets = listOf(
-        TransferChannelItem(id = "xcash", name = "Xcash"),
-        TransferChannelItem(id = "gcash", name = "GCash"),
-        TransferChannelItem(id = "maya", name = "Maya"),
-        TransferChannelItem(id = "gotyme", name = "GoTyme"),
-        TransferChannelItem(id = "grab", name = "Grab"),
-        TransferChannelItem(id = "qrph", name = "QRPh"),
-        TransferChannelItem(id = "shopee_pay", name = "ShopeePay"),
-    ),
-    banks = listOf(
-        TransferChannelItem(id = "bdo_business", name = "BDO Business"),
-        TransferChannelItem(id = "uno_digital_bank", name = "UNO Digital Bank"),
-        TransferChannelItem(id = "komo", name = "Komo"),
-        TransferChannelItem(id = "metrobank", name = "Metrobank"),
-        TransferChannelItem(id = "tayocash", name = "TayoCash"),
-        TransferChannelItem(id = "landbank", name = "LANDBANK"),
-        TransferChannelItem(id = "coin_ph", name = "Coins.ph"),
-        TransferChannelItem(id = "star_pay", name = "StarPay"),
-        TransferChannelItem(id = "union_digital_bank", name = "UnionDigital Bank"),
-        TransferChannelItem(id = "cimb_bank", name = "CIMB Bank"),
-        TransferChannelItem(id = "rcbc", name = "RCBC"),
-    ),
+    channels = listOf(
+        "xcash" to "Xcash", "gcash" to "GCash", "maya" to "Maya", "gotyme" to "GoTyme",
+        "grab" to "Grab", "qrph" to "QRPh", "shopee_pay" to "ShopeePay",
+    ).map { (id, name) -> TransferChannelItem(id = id, name = name, channel = TransferChannelType.E_WALLET) } +
+        listOf(
+            "bdo_business" to "BDO Business", "uno_digital_bank" to "UNO Digital Bank", "komo" to "Komo",
+            "metrobank" to "Metrobank", "tayocash" to "TayoCash", "landbank" to "LANDBANK",
+            "coin_ph" to "Coins.ph", "star_pay" to "StarPay", "union_digital_bank" to "UnionDigital Bank",
+            "cimb_bank" to "CIMB Bank",
+        ).map { (id, name) -> TransferChannelItem(id = id, name = name, channel = TransferChannelType.BANK) },
     selectedChannelId = "gotyme"
 )
 
