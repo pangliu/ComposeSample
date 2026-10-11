@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.qpay.xcash.network.manager.UserInfoManager
 import com.qpay.xcash.network.model.NetworkResult
+import com.qpay.xcash.network.model.response.FriendResponse
 import com.qpay.xcash.repository.PaymentRepository
+import com.qpay.xcash.repository.UserRepository
 import com.qpay.xcash.ui.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -55,8 +57,14 @@ data class WalletTransferUiState(
     val transferBonusRemaining: Int = 10,
     val isSubmittingTransfer: Boolean = false,
     val transferResult: TransferResultInfo? = null,
+    // Friends 模式：friend_list API 取得的好友清單，取得成功後才顯示 SelectFriendDialog
+    val isFetchingFriends: Boolean = false,
+    val friendList: List<FriendResponse> = emptyList(),
+    val showSelectFriendDialog: Boolean = false,
+    // 收款方式模式：false = Manual Input、true = Friends；取消 / 取得好友失敗時退回 Manual Input
+    val isFriendsMode: Boolean = false,
 ) {
-    val isLoading: Boolean get() = isSubmittingTransfer
+    val isLoading: Boolean get() = isSubmittingTransfer || isFetchingFriends
 
     // 收款方式、帳號、金額三個欄位都有值才可按 Next
     val isNextEnabled: Boolean
@@ -69,7 +77,8 @@ data class WalletTransferUiState(
 class WalletTransferViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     userInfoManager: UserInfoManager,
-    private val paymentRepository: PaymentRepository
+    private val paymentRepository: PaymentRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -103,6 +112,52 @@ class WalletTransferViewModel @Inject constructor(
     // TransferChannelScreen 選定渠道後回填收款方式
     fun selectReceivingChannel(channelName: String) {
         _uiState.update { it.copy(accountName = channelName) }
+    }
+
+    fun selectManualMode() {
+        _uiState.update { it.copy(isFriendsMode = false) }
+    }
+
+    // 點選 Friends 模式：呼叫 friend_list API，成功後顯示 SelectFriendDialog；失敗則退回 Manual Input
+    fun fetchFriendListAndShowDialog() {
+        if (_uiState.value.isFetchingFriends) return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isFetchingFriends = true, isFriendsMode = true) }
+            when (val result = userRepository.fetchFriendList()) {
+                is NetworkResult.Success -> _uiState.update {
+                    it.copy(
+                        isFetchingFriends = false,
+                        friendList = result.data ?: emptyList(),
+                        showSelectFriendDialog = true
+                    )
+                }
+                is NetworkResult.Error -> {
+                    _uiState.update { it.copy(isFetchingFriends = false, isFriendsMode = false) }
+                    _eventFlow.emit(UiEvent.ShowToast(result.message))
+                }
+                is NetworkResult.Exception -> {
+                    _uiState.update { it.copy(isFetchingFriends = false, isFriendsMode = false) }
+                    _eventFlow.emit(UiEvent.ShowToast(result.e.message ?: "網路異常"))
+                }
+            }
+        }
+    }
+
+    // 未選好友就關閉彈窗：ModeChip 退回 Manual Input
+    fun dismissSelectFriendDialog() {
+        _uiState.update { it.copy(showSelectFriendDialog = false, isFriendsMode = false) }
+    }
+
+    // SelectFriendDialog 選定好友後回填收款方名稱與帳號（手機號碼）；已選好友即解除掃碼鎖定
+    fun selectFriend(friend: FriendResponse) {
+        _uiState.update {
+            it.copy(
+                showSelectFriendDialog = false,
+                accountName = friend.name,
+                accountNumber = friend.phoneNumber.orEmpty(),
+                isAccountNumberLocked = false
+            )
+        }
     }
 
     // ConfirmTransferScreen 按下 Next、且生物辨識／PIN 驗證通過後呼叫

@@ -101,7 +101,8 @@ class FakeUserApiService : UserApiService {
     )
 
     // 🎯 暫存已加入的好友名單（addFriend 寫入，getFriendList 讀出）
-    private val addedFriends = mutableListOf<FriendResponse>()
+    // 開發用：預設把 searchableFriends 全部視為已是好友；要測空名單（EmptyListScreen）時改回 mutableListOf()
+    private val addedFriends = searchableFriends.toMutableList()
 
     override suspend fun getUserInfo(): BaseResponse<UserInfoResponse> {
         delay(2000) // 模擬網路延遲

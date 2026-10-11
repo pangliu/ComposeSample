@@ -623,6 +623,12 @@
     <string name="wallet_transfer_bonus">Transfer Bonus: %1$d remaining</string>
     <string name="wallet_transfer_mode_manual">Manual Input</string>
     <string name="wallet_transfer_mode_friends">Friends</string>
+
+    <!-- SelectFriendDialog -->
+    <string name="select_friend_search_hint">Search friends...</string>
+    <string name="select_friend_search_desc">Search</string>
+    <string name="select_friend_xcash_account">Xcash Account</string>
+    <string name="select_friend_empty">No friends found</string>
     <string name="wallet_transfer_receiving_method_hint">Select a receiving method</string>
     <string name="wallet_transfer_receiving_method_desc">Select receiving method</string>
     <string name="wallet_transfer_account_hint">Enter Account No.</string>

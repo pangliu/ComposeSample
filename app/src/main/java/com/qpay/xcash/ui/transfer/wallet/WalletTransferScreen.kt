@@ -1,6 +1,7 @@
 package com.qpay.xcash.ui.transfer.wallet
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -42,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -53,6 +56,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.qpay.xcash.R
+import com.qpay.xcash.ui.UiEvent
+import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.components.SubPageTopBar
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldAssets
@@ -61,9 +66,9 @@ import com.qpay.xcash.ui.theme.LocalAppAssets
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonAssets
 import com.qpay.xcash.ui.theme.NeonColors
+import com.qpay.xcash.ui.transfer.wallet.dialog.SelectFriendDialog
 
 private const val TAB_INSTANT = 0
-private const val MODE_MANUAL = 0
 
 @Composable
 fun WalletTransferScreen(
@@ -73,14 +78,37 @@ fun WalletTransferScreen(
     viewModel: WalletTransferViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is UiEvent.ShowDialog -> Unit
+            }
+        }
+    }
+
     WalletTransferContent(
         uiState = uiState,
         onBack = onBack,
         onNext = onNext,
         onSelectReceivingMethod = onSelectReceivingMethod,
+        onManualModeClick = viewModel::selectManualMode,
+        onFriendsModeClick = viewModel::fetchFriendListAndShowDialog,
         onAccountNumberChange = viewModel::updateAccountNumber,
         onAmountChange = viewModel::updateAmount
     )
+
+    if (uiState.showSelectFriendDialog) {
+        SelectFriendDialog(
+            friendList = uiState.friendList,
+            onDismiss = viewModel::dismissSelectFriendDialog,
+            onSelect = viewModel::selectFriend
+        )
+    }
+
+    LoadingDialog(isShowing = uiState.isFetchingFriends)
 }
 
 @SuppressLint("DefaultLocale")
@@ -90,6 +118,8 @@ private fun WalletTransferContent(
     onBack: () -> Unit = {},
     onNext: () -> Unit = {},
     onSelectReceivingMethod: () -> Unit = {},
+    onManualModeClick: () -> Unit = {},
+    onFriendsModeClick: () -> Unit = {},
     onAccountNumberChange: (String) -> Unit = {},
     onAmountChange: (String) -> Unit = {}
 ) {
@@ -98,7 +128,6 @@ private fun WalletTransferContent(
     val transferColors = colors.walletTransfer
 
     var selectedTab by rememberSaveable { mutableIntStateOf(TAB_INSTANT) }
-    var selectedMode by rememberSaveable { mutableIntStateOf(MODE_MANUAL) }
     var isBalanceHidden by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -173,13 +202,13 @@ private fun WalletTransferContent(
                 ) {
                     ModeChip(
                         text = stringResource(R.string.wallet_transfer_mode_manual),
-                        isSelected = selectedMode == MODE_MANUAL,
-                        onClick = { selectedMode = MODE_MANUAL }
+                        isSelected = !uiState.isFriendsMode,
+                        onClick = onManualModeClick
                     )
                     ModeChip(
                         text = stringResource(R.string.wallet_transfer_mode_friends),
-                        isSelected = selectedMode != MODE_MANUAL,
-                        onClick = { selectedMode = 1 }
+                        isSelected = uiState.isFriendsMode,
+                        onClick = onFriendsModeClick
                     )
                 }
 
