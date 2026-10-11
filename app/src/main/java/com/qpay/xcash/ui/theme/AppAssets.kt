@@ -58,6 +58,9 @@ data class AppAssets(
     @DrawableRes val successCardBg: Int,            // TransactionSuccessfulScreen 明細卡片背景圖
     @DrawableRes val successLeftFireDecor: Int?,    // TransactionSuccessfulScreen Points balance 左側火焰裝飾（null = 不顯示）
     @DrawableRes val successRightFireDecor: Int?,   // TransactionSuccessfulScreen Points balance 右側火焰裝飾（null = 不顯示）
+    @DrawableRes val transferResultMonkeyIcon: Int?,   // TransferResultScreen 成功時日期文字右側猴子裝飾（null = 不顯示）
+    @DrawableRes val transferResultTreeIcon: Int?,     // TransferResultScreen 成功時右下角椰子樹裝飾（null = 不顯示）
+    @DrawableRes val transferResultStarsBackground: Int?, // TransferResultScreen 成功時左下角星點裝飾（null = 不顯示）
     @DrawableRes val contactFacebookIcon: Int,   // SelectPartnerItem contact_type = facebook 圖示
     @DrawableRes val contactPhoneIcon: Int,      // SelectPartnerItem contact_type = phone_num 圖示
     @DrawableRes val friendMaleAvatar: Int,      // SelectPartnerItem 好友頭像（男）
@@ -121,6 +124,9 @@ val NeonAssets = AppAssets(
     successCardBg = R.mipmap.bg_success_payment_border,
     successLeftFireDecor = R.mipmap.ic_left_sigal_fire,
     successRightFireDecor = R.mipmap.ic_right_sigal_fire,
+    transferResultMonkeyIcon = R.mipmap.ic_monkey,
+    transferResultTreeIcon = R.mipmap.ic_tree,
+    transferResultStarsBackground = R.mipmap.bg_yellow_star,
     contactFacebookIcon = R.drawable.ic_facebook_friend,
     contactPhoneIcon = R.drawable.ic_phone_friend,
     friendMaleAvatar = R.drawable.ic_friend_male,
@@ -184,6 +190,9 @@ val BlackGoldAssets = AppAssets(
     successCardBg = R.drawable.bg_confirm_payment_black_gold,
     successLeftFireDecor = null,
     successRightFireDecor = null,
+    transferResultMonkeyIcon = null,
+    transferResultTreeIcon = null,
+    transferResultStarsBackground = null,
     contactFacebookIcon = R.drawable.ic_facebook_friend_black_gold,
     contactPhoneIcon = R.drawable.ic_phone_friend_black_gold,
     friendMaleAvatar = R.drawable.ic_friend_male_black_gold,

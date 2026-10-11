@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.SolidColor
 // ui/transfer/result/ TransferResultScreen 專屬顏色
 
 data class TransferResultColors(
+    val statusIconBackground: Color,      // 成功 / 失敗圓形圖示內部底色；Black Gold = 透明
     val successIconTint: Color,           // 成功圖示（勾勾）
     val successIconBorder: Color,         // 成功圓形外框
     val failIconTint: Color,              // 失敗圖示（X）
@@ -16,8 +17,10 @@ data class TransferResultColors(
     val failAmountText: Color,            // 失敗時的金額文字
     val subtitleText: Color,              // 日期時間文字
     val failureReasonText: Color,         // 失敗原因文字
-    val cardBackground: Color,            // 付款方 / 收款方卡片底色
-    val cardBorder: Brush,                // 付款方 / 收款方卡片邊框；Black Gold = 金色橫向漸層
+    val payCardBackground: Color,         // 付款方卡片底色
+    val payCardBorder: Brush,             // 付款方卡片邊框；Black Gold = 金色橫向漸層
+    val toCardBackground: Color,          // 收款方卡片底色
+    val toCardBorder: Brush,              // 收款方卡片邊框；Black Gold = 金色橫向漸層
     val cardIconBackground: Color,        // 卡片內 icon 方塊底色
     val cardNameText: Color,              // 帳戶名稱文字
     val cardSubText: Color,               // 遮罩帳號文字
@@ -38,37 +41,41 @@ data class TransferResultColors(
 )
 
 val NeonTransferResultColors = TransferResultColors(
-    successIconTint = neonCyan,
-    successIconBorder = neonCyan,
+    statusIconBackground = neonIconDark,
+    successIconTint = neonAzure,
+    successIconBorder = neonAzure,
     failIconTint = neonRed,
     failIconBorder = neonRed,
     titleText = themeWhite,
-    successAmountText = neonCyan,
+    successAmountText = neonAzure,
     failAmountText = neonRed,
-    subtitleText = silverGray,
+    subtitleText = neonMistGray,
     failureReasonText = neonRed,
-    cardBackground = twilightNavy,
-    cardBorder = Brush.horizontalGradient(colors = listOf(neonPurple, neonCyan, neonPurple)),
-    cardIconBackground = deepMidnight,
+    payCardBackground = neonCardNavy,
+    payCardBorder = SolidColor(neonAzure),
+    toCardBackground = neonCardIndigo,
+    toCardBorder = SolidColor(neonAmethyst),
+    cardIconBackground = neonIconGray,
     cardNameText = themeWhite,
-    cardSubText = silverGray,
-    transferArrowTint = neonCyan,
-    balanceLabelText = silverGray,
+    cardSubText = neonSlateText,
+    transferArrowTint = neonAzure,
+    balanceLabelText = themeWhite,
     balanceValueText = themeWhite,
-    transactionHistoryLinkText = neonCyan,
-    refNoText = silverGray,
-    addFriendButtonFill = twilightNavy,
-    addFriendButtonBorder = neonCyan.copy(alpha = 0.5f),
+    transactionHistoryLinkText = neonAzure,
+    refNoText = themeWhite,
+    addFriendButtonFill = neonButtonGray,
+    addFriendButtonBorder = neonButtonGray,
     addFriendButtonText = themeWhite,
-    doneButtonFill = SolidColor(neonCyan),
-    doneButtonBorder = neonCyan,
-    doneButtonText = themeBlack,
-    shareButtonFill = SolidColor(Color.Transparent),
-    shareButtonBorder = neonPurple,
-    shareButtonText = neonPurpleLight,
+    doneButtonFill = SolidColor(neonSkyBlue),
+    doneButtonBorder = neonAzure,
+    doneButtonText = neonDeepNavyText,
+    shareButtonFill = SolidColor(neonShareFill),
+    shareButtonBorder = neonLilac,
+    shareButtonText = neonLilac,
 )
 
 val BlackGoldTransferResultColors = TransferResultColors(
+    statusIconBackground = Color.Transparent,
     successIconTint = antiqueGold,
     successIconBorder = antiqueGold,
     failIconTint = coralRed,
@@ -78,9 +85,13 @@ val BlackGoldTransferResultColors = TransferResultColors(
     failAmountText = coralRed,
     subtitleText = warmSand,
     failureReasonText = coralRed,
-    cardBackground = charcoalBlack,
+    payCardBackground = charcoalBlack,
     // 由左至右：oldGold → amberGold → champagneGold → amberGold → oldGold（與 ConfirmTransferScreen 卡片一致）
-    cardBorder = Brush.horizontalGradient(
+    payCardBorder = Brush.horizontalGradient(
+        colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
+    ),
+    toCardBackground = charcoalBlack,
+    toCardBorder = Brush.horizontalGradient(
         colors = listOf(oldGold, amberGold, champagneGold, amberGold, oldGold)
     ),
     cardIconBackground = midnightIndigo,

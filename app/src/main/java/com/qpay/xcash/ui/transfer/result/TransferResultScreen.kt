@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -141,6 +143,7 @@ private fun TransferResultContent(
                 Box(
                     modifier = Modifier
                         .size(56.dp)
+                        .background(resultColors.statusIconBackground, CircleShape)
                         .border(
                             1.5.dp,
                             if (isSuccess) resultColors.successIconBorder else resultColors.failIconBorder,
@@ -184,14 +187,34 @@ private fun TransferResultContent(
                 val dateText = remember(result.timestampMillis) {
                     SimpleDateFormat("yyyy/M/d HH:mm", Locale.getDefault()).format(Date(result.timestampMillis))
                 }
-                Text(
-                    text = stringResource(
-                        if (isSuccess) R.string.transfer_result_success_subtitle else R.string.transfer_result_failed_subtitle,
-                        dateText
-                    ),
-                    color = resultColors.subtitleText,
-                    fontSize = 12.sp
-                )
+                // 猴子裝飾（Neon 成功時才有）疊在日期文字右側，zIndex 讓它蓋在下方收款卡片之上
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .zIndex(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(
+                            if (isSuccess) R.string.transfer_result_success_subtitle else R.string.transfer_result_failed_subtitle,
+                            dateText
+                        ),
+                        color = resultColors.subtitleText,
+                        fontSize = 12.sp
+                    )
+                    val monkeyRes = assets.transferResultMonkeyIcon
+                    if (isSuccess && monkeyRes != null) {
+                        Image(
+                            painter = painterResource(monkeyRes),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .offset(x = 8.dp, y = 12.dp)
+                                .height(46.dp)
+                        )
+                    }
+                }
 
                 if (!isSuccess && result.failureReason.isNotEmpty()) {
                     Text(
@@ -207,7 +230,9 @@ private fun TransferResultContent(
                     iconRes = assets.confirmTransferAccountIcon,
                     name = stringResource(R.string.transfer_result_wallet_label),
                     subText = maskAccountNumber(uiState.selfPhoneNumber),
-                    colors = resultColors
+                    colors = resultColors,
+                    cardBackground = resultColors.payCardBackground,
+                    cardBorder = resultColors.payCardBorder
                 )
 
                 Icon(
@@ -223,7 +248,9 @@ private fun TransferResultContent(
                     iconRes = assets.confirmTransferAccountIcon,
                     name = result.recipientName,
                     subText = maskAccountNumber(result.recipientAccountNumber),
-                    colors = resultColors
+                    colors = resultColors,
+                    cardBackground = resultColors.toCardBackground,
+                    cardBorder = resultColors.toCardBorder
                 )
 
                 Spacer(Modifier.height(20.dp))
@@ -269,7 +296,36 @@ private fun TransferResultContent(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
+                // 空白區塊：Neon 成功時左下角放星點、右下角放椰子樹；Black Gold 兩者皆為 null，等同原本的 Spacer
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) {
+                    val starsRes = assets.transferResultStarsBackground
+                    val treeRes = assets.transferResultTreeIcon
+                    if (isSuccess && starsRes != null) {
+                        Image(
+                            painter = painterResource(starsRes),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .width(80.dp)
+                        )
+                    }
+                    if (isSuccess && treeRes != null) {
+                        Image(
+                            painter = painterResource(treeRes),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(bottom = 4.dp)
+                                .height(54.dp)
+                        )
+                    }
+                }
 
                 Row(
                     modifier = Modifier
@@ -335,14 +391,16 @@ private fun AccountCard(
     iconRes: Int,
     name: String,
     subText: String,
-    colors: TransferResultColors
+    colors: TransferResultColors,
+    cardBackground: Color,
+    cardBorder: Brush
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(colors.cardBackground)
-            .border(1.dp, colors.cardBorder, RoundedCornerShape(12.dp))
+            .background(cardBackground)
+            .border(1.dp, cardBorder, RoundedCornerShape(12.dp))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
