@@ -41,7 +41,7 @@ val NeonCashInColors = CashInColors(
     walletIconTint = neonPurple,
     walletLabelText = themeWhite,
     amountCurrencyText = neonCyan,
-    amountValueText = themeWhite,
+    amountValueText = neonPurple,
     amountPlaceholderText = silverGray.copy(alpha = 0.4f),
     currentBalanceLabelText = silverGray,
     currentBalanceValueText = themeWhite,

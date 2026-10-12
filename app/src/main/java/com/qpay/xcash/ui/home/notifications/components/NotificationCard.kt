@@ -59,21 +59,21 @@ fun formatRelativeTime(ts: Long): String {
 }
 
 private fun iconResFor(type: NotificationType, assets: AppAssets): Int = when (type) {
-    NotificationType.PROMO -> assets.notifyGiftIcon
+    NotificationType.PROMOTIONS -> assets.notifyGiftIcon
     NotificationType.SYSTEM -> assets.notifySecurityIcon
-    NotificationType.ACTIVITY -> assets.notifyRocketIcon
+    NotificationType.TRANSACTION, NotificationType.TODO -> assets.notifyRocketIcon
 }
 
 private fun borderColorFor(type: NotificationType, colors: NotificationCardColors): Color = when (type) {
-    NotificationType.PROMO -> colors.promoBorder
+    NotificationType.PROMOTIONS -> colors.promoBorder
     NotificationType.SYSTEM -> colors.systemBorder
-    NotificationType.ACTIVITY -> colors.activityBorder
+    NotificationType.TRANSACTION, NotificationType.TODO -> colors.activityBorder
 }
 
 private fun backgroundColorFor(type: NotificationType, colors: NotificationCardColors): Color = when (type) {
-    NotificationType.PROMO -> colors.promoBackground
+    NotificationType.PROMOTIONS -> colors.promoBackground
     NotificationType.SYSTEM -> colors.systemBackground
-    NotificationType.ACTIVITY -> colors.activityBackground
+    NotificationType.TRANSACTION, NotificationType.TODO -> colors.activityBackground
 }
 
 @Composable
@@ -132,7 +132,7 @@ fun NotificationCard(notification: NotificationResponse) {
 private val previewCardNotifications = listOf(
     NotificationResponse(
         id = "1",
-        type = NotificationType.PROMO,
+        type = NotificationType.PROMOTIONS,
         title = "Double Rewards Weekend",
         message = "Earn 2x tokens on every scan & pay transaction this weekend only.",
         isRead = false,
@@ -148,7 +148,7 @@ private val previewCardNotifications = listOf(
     ),
     NotificationResponse(
         id = "3",
-        type = NotificationType.ACTIVITY,
+        type = NotificationType.TRANSACTION,
         title = "Payment Sent",
         message = "Your payment of PHP 500.00 to John Cruz was completed successfully.",
         isRead = false,
@@ -156,7 +156,7 @@ private val previewCardNotifications = listOf(
     ),
     NotificationResponse(
         id = "4",
-        type = NotificationType.PROMO,
+        type = NotificationType.PROMOTIONS,
         title = "Cash In Bonus Unlocked",
         message = "Cash in PHP 1,000 or more today and receive a free reward voucher.",
         isRead = true,
@@ -172,7 +172,7 @@ private val previewCardNotifications = listOf(
     ),
     NotificationResponse(
         id = "6",
-        type = NotificationType.ACTIVITY,
+        type = NotificationType.TODO,
         title = "Weekly Summary Ready",
         message = "Check out your spending summary and quest progress from last week.",
         isRead = true,

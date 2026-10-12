@@ -2,7 +2,6 @@ package com.qpay.xcash.ui.home.notifications
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -15,9 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,13 +40,20 @@ import com.qpay.xcash.network.model.response.NotificationType
 import com.qpay.xcash.ui.UiEvent
 import com.qpay.xcash.ui.components.LoadingDialog
 import com.qpay.xcash.ui.components.SubPageTopBar
-import com.qpay.xcash.ui.home.notifications.components.NotificationCard
+import com.qpay.xcash.ui.home.notifications.components.NotificationAdBanner
+import com.qpay.xcash.ui.home.notifications.components.NotificationCategoryCard
 import com.qpay.xcash.ui.home.notifications.dialog.NotificationSettingsDialog
 import com.qpay.xcash.ui.home.notifications.dialog.NotificationSettingsState
 import com.qpay.xcash.ui.theme.AppTheme
 import com.qpay.xcash.ui.theme.BlackGoldColors
 import com.qpay.xcash.ui.theme.LocalAppColors
 import com.qpay.xcash.ui.theme.NeonColors
+
+// 2×2 類別卡片排列順序（依設計稿）
+private val categoryRows = listOf(
+    listOf(NotificationType.SYSTEM, NotificationType.TRANSACTION),
+    listOf(NotificationType.PROMOTIONS, NotificationType.TODO)
+)
 
 @Composable
 fun NotificationsScreen(
@@ -75,7 +80,7 @@ fun NotificationsScreen(
 
     val colors = LocalAppColors.current
     Scaffold(
-        containerColor = colors.bg.page,
+        containerColor = colors.notification.pageBackground,
         contentColor = colors.text.onPrimary
     ) { paddingValues ->
         LoadingDialog(isShowing = uiState.isLoading)
@@ -85,7 +90,10 @@ fun NotificationsScreen(
             onBack = onBack,
             onSettingsClick = { showSettingsDialog = true },
             onTabSelected = viewModel::setTab,
-            onCategorySelected = viewModel::setCategoryFilter
+            // TODO: 類別通知列表頁尚未設計，待補上路由後導向
+            onCategoryClick = {},
+            // TODO: Banner 活動內容尚未定義
+            onClaimClick = {}
         )
 
         if (showSettingsDialog) {
@@ -105,8 +113,11 @@ private fun NotificationsContent(
     onBack: () -> Unit,
     onSettingsClick: () -> Unit,
     onTabSelected: (NotificationTab) -> Unit,
-    onCategorySelected: (NotificationCategoryFilter) -> Unit
+    onCategoryClick: (NotificationType) -> Unit,
+    onClaimClick: () -> Unit
 ) {
+    val colors = LocalAppColors.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -116,35 +127,34 @@ private fun NotificationsContent(
             title = stringResource(R.string.notifications_title),
             onBack = onBack,
             showNotifySettings = true,
-            onNotifySettingsClick = onSettingsClick
+            onNotifySettingsClick = onSettingsClick,
+            titleBrush = colors.notification.titleBrush ?: colors.gradient.goldShimmer
         )
         NotificationTabRow(selectedTab = uiState.selectedTab, onTabSelected = onTabSelected)
-        Spacer(modifier = Modifier.height(12.dp))
-        NotificationFilterRow(
-            selectedCategory = uiState.selectedCategory,
-            onCategorySelected = onCategorySelected
-        )
-        Spacer(modifier = Modifier.height(8.dp))
 
-        val filtered = uiState.filteredNotifications
-        if (filtered.isEmpty() && !uiState.isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = stringResource(R.string.notifications_empty),
-                    color = LocalAppColors.current.text.body,
-                    fontSize = 13.sp
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                items(filtered) { notification ->
-                    NotificationCard(notification = notification)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            categoryRows.forEach { rowTypes ->
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    rowTypes.forEach { type ->
+                        NotificationCategoryCard(
+                            type = type,
+                            count = uiState.countOf(type),
+                            onClick = { onCategoryClick(type) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
+
+//            Spacer(Modifier.height(4.dp))
+
+            NotificationAdBanner(onClaimClick = onClaimClick)
         }
     }
 }
@@ -160,8 +170,12 @@ private fun NotificationTabRow(
     selectedTab: NotificationTab,
     onTabSelected: (NotificationTab) -> Unit
 ) {
-    val colors = LocalAppColors.current
-    Row(modifier = Modifier.fillMaxWidth()) {
+    val tabColors = LocalAppColors.current.notification.tab
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
         notificationTabs.forEach { (tab, labelRes) ->
             val isSelected = tab == selectedTab
             Column(
@@ -175,72 +189,20 @@ private fun NotificationTabRow(
             ) {
                 Text(
                     text = stringResource(labelRes),
-                    color = if (isSelected) colors.notification.tab.activeText else colors.notification.tab.inactiveText,
-                    fontSize = 16.sp,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                    color = if (isSelected) tabColors.activeText else tabColors.inactiveText,
+                    fontSize = 14.sp,
+                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
+                        .padding(horizontal = 8.dp)
                         .height(2.dp)
-                        .background(
-                            if (isSelected) colors.accent.primary else Color.Transparent,
-                            RoundedCornerShape(1.dp)
+                        .then(
+                            if (isSelected) Modifier.background(tabColors.indicator, RoundedCornerShape(1.dp))
+                            else Modifier
                         )
-
-                )
-            }
-        }
-    }
-}
-
-private val notificationFilters = listOf(
-    NotificationCategoryFilter.ALL to R.string.notifications_filter_all,
-    NotificationCategoryFilter.SYSTEM to R.string.notifications_filter_system,
-    NotificationCategoryFilter.ACTIVITY to R.string.notifications_filter_activity,
-    NotificationCategoryFilter.PROMO to R.string.notifications_filter_promo
-)
-
-@Composable
-private fun NotificationFilterRow(
-    selectedCategory: NotificationCategoryFilter,
-    onCategorySelected: (NotificationCategoryFilter) -> Unit
-) {
-    val colors = LocalAppColors.current
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        notificationFilters.forEach { (filter, labelRes) ->
-            val isSelected = filter == selectedCategory
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .background(
-                        if (isSelected) colors.notification.filter.selectedBackground else Color.Transparent,
-                        RoundedCornerShape(50)
-                    )
-                    .border(
-                        1.5.dp,
-                        if (isSelected) colors.notification.filter.selectedBorder else colors.notification.filter.unselectedBorder,
-                        RoundedCornerShape(50)
-                    )
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onCategorySelected(filter) }
-                    .padding(horizontal = 8.dp, vertical = 6.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(labelRes),
-                    color = if (isSelected) colors.notification.filter.selectedText else colors.notification.filter.unselectedText,
-                    fontSize = 14.sp,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                 )
             }
         }
@@ -248,33 +210,14 @@ private fun NotificationFilterRow(
 }
 
 private val previewNotifications = listOf(
-    NotificationResponse(
-        id = "1",
-        type = NotificationType.PROMO,
-        title = "Double Rewards Weekend",
-        message = "Earn 2x tokens on every scan & pay transaction this weekend only.",
-        isRead = false,
-        createdAt = System.currentTimeMillis() - 5 * 60_000
-    ),
-    NotificationResponse(
-        id = "2",
-        type = NotificationType.SYSTEM,
-        title = "Security Check Passed",
-        message = "Your recent login was verified successfully from a new device.",
-        isRead = false,
-        createdAt = System.currentTimeMillis() - 15 * 60_000
-    ),
-    NotificationResponse(
-        id = "3",
-        type = NotificationType.ACTIVITY,
-        title = "Payment Sent",
-        message = "Your payment of PHP 500.00 to John Cruz was completed successfully.",
-        isRead = true,
-        createdAt = System.currentTimeMillis() - 2 * 60 * 60_000
-    )
+    NotificationResponse("1", NotificationType.SYSTEM, "Security Check Passed", "", isRead = false, createdAt = 0L),
+    NotificationResponse("2", NotificationType.SYSTEM, "App Updated", "", isRead = false, createdAt = 0L),
+    NotificationResponse("3", NotificationType.TRANSACTION, "Payment Sent", "", isRead = false, createdAt = 0L),
+    NotificationResponse("4", NotificationType.TRANSACTION, "Money Received", "", isRead = true, createdAt = 0L),
+    NotificationResponse("5", NotificationType.TODO, "Complete Your Profile", "", isRead = false, createdAt = 0L),
 )
 
-@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF030F1B)
+@Preview(name = "Neon", showBackground = true, backgroundColor = 0xFF0B1423)
 @Composable
 private fun NotificationsScreenPreviewNeon() {
     AppTheme(colors = NeonColors) {
@@ -284,12 +227,13 @@ private fun NotificationsScreenPreviewNeon() {
             onBack = {},
             onSettingsClick = {},
             onTabSelected = {},
-            onCategorySelected = {}
+            onCategoryClick = {},
+            onClaimClick = {}
         )
     }
 }
 
-@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF050505)
+@Preview(name = "Black Gold", showBackground = true, backgroundColor = 0xFF0C0906)
 @Composable
 private fun NotificationsScreenPreviewBlackGold() {
     AppTheme(colors = BlackGoldColors) {
@@ -299,7 +243,8 @@ private fun NotificationsScreenPreviewBlackGold() {
             onBack = {},
             onSettingsClick = {},
             onTabSelected = {},
-            onCategorySelected = {}
+            onCategoryClick = {},
+            onClaimClick = {}
         )
     }
 }

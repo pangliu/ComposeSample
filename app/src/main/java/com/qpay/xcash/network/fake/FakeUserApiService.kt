@@ -118,7 +118,7 @@ class FakeUserApiService : UserApiService {
                 userEmail = "hank.fake@gmail.com",
                 cashBalance = 12500.50,
                 tokenBalance = 8888.0,
-                defaultBankName = "gcash",
+                defaultBankName = "xcash",
                 defaultCardNumber = "5353"
             )
 //            result = null
@@ -249,7 +249,7 @@ class FakeUserApiService : UserApiService {
             result = listOf(
                 NotificationResponse(
                     id = "N001",
-                    type = NotificationType.PROMO,
+                    type = NotificationType.PROMOTIONS,
                     title = "Double Rewards Weekend",
                     message = "Earn 2x tokens on every scan & pay transaction this weekend only.",
                     isRead = false,
@@ -265,7 +265,7 @@ class FakeUserApiService : UserApiService {
                 ),
                 NotificationResponse(
                     id = "N003",
-                    type = NotificationType.ACTIVITY,
+                    type = NotificationType.TRANSACTION,
                     title = "Payment Sent",
                     message = "Your payment of PHP 500.00 to John Cruz was completed successfully.",
                     isRead = false,
@@ -273,7 +273,7 @@ class FakeUserApiService : UserApiService {
                 ),
                 NotificationResponse(
                     id = "N004",
-                    type = NotificationType.PROMO,
+                    type = NotificationType.PROMOTIONS,
                     title = "Cash In Bonus Unlocked",
                     message = "Cash in PHP 1,000 or more today and receive a free reward voucher.",
                     isRead = true,
@@ -289,11 +289,35 @@ class FakeUserApiService : UserApiService {
                 ),
                 NotificationResponse(
                     id = "N006",
-                    type = NotificationType.ACTIVITY,
+                    type = NotificationType.TODO,
                     title = "Weekly Summary Ready",
                     message = "Check out your spending summary and quest progress from last week.",
                     isRead = true,
                     createdAt = now - 8 * 24 * 60 * 60_000
+                ),
+                NotificationResponse(
+                    id = "N007",
+                    type = NotificationType.TRANSACTION,
+                    title = "Money Received",
+                    message = "You received PHP 1,200.00 from Maria Santos.",
+                    isRead = false,
+                    createdAt = now - 45 * 60_000
+                ),
+                NotificationResponse(
+                    id = "N008",
+                    type = NotificationType.TODO,
+                    title = "Complete Your Profile",
+                    message = "Verify your ID to unlock higher transfer limits.",
+                    isRead = false,
+                    createdAt = now - 3 * 60 * 60_000
+                ),
+                NotificationResponse(
+                    id = "N009",
+                    type = NotificationType.TODO,
+                    title = "Link a Bank Card",
+                    message = "Link your first card to enable instant cash in.",
+                    isRead = false,
+                    createdAt = now - 5 * 60 * 60_000
                 )
             )
         )

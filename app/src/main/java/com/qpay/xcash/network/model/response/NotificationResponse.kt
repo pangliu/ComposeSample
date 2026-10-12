@@ -15,6 +15,7 @@ data class NotificationResponse(
 
 enum class NotificationType {
     @Json(name = "system") SYSTEM,
-    @Json(name = "activity") ACTIVITY,
-    @Json(name = "promo") PROMO
+    @Json(name = "transaction") TRANSACTION,
+    @Json(name = "promotions") PROMOTIONS,
+    @Json(name = "todo") TODO
 }

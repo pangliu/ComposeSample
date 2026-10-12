@@ -19,29 +19,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 enum class NotificationTab { ALL, UNREAD, READ }
-enum class NotificationCategoryFilter { ALL, SYSTEM, ACTIVITY, PROMO }
 
 data class NotificationsUiState(
     val isLoading: Boolean = true,
     val notifications: List<NotificationResponse> = emptyList(),
-    val selectedTab: NotificationTab = NotificationTab.ALL,
-    val selectedCategory: NotificationCategoryFilter = NotificationCategoryFilter.ALL
+    val selectedTab: NotificationTab = NotificationTab.ALL
 ) {
-    val filteredNotifications: List<NotificationResponse>
+    // 依目前分頁（All / Unread / Read）篩選後的通知
+    val tabNotifications: List<NotificationResponse>
         get() = notifications.filter { notification ->
-            val matchesTab = when (selectedTab) {
+            when (selectedTab) {
                 NotificationTab.ALL -> true
                 NotificationTab.UNREAD -> !notification.isRead
                 NotificationTab.READ -> notification.isRead
             }
-            val matchesCategory = when (selectedCategory) {
-                NotificationCategoryFilter.ALL -> true
-                NotificationCategoryFilter.SYSTEM -> notification.type == NotificationType.SYSTEM
-                NotificationCategoryFilter.ACTIVITY -> notification.type == NotificationType.ACTIVITY
-                NotificationCategoryFilter.PROMO -> notification.type == NotificationType.PROMO
-            }
-            matchesTab && matchesCategory
         }
+
+    // 各類別卡片右上角 badge 數字：目前分頁下該類別的通知數，0 則不顯示 badge
+    fun countOf(type: NotificationType): Int = tabNotifications.count { it.type == type }
 }
 
 @HiltViewModel
@@ -80,9 +75,5 @@ class NotificationsViewModel @Inject constructor(
 
     fun setTab(tab: NotificationTab) {
         _uiState.update { it.copy(selectedTab = tab) }
-    }
-
-    fun setCategoryFilter(filter: NotificationCategoryFilter) {
-        _uiState.update { it.copy(selectedCategory = filter) }
     }
 }
