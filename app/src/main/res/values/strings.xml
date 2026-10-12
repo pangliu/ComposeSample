@@ -631,6 +631,7 @@
     <string name="select_friend_empty">No friends found</string>
     <string name="wallet_transfer_receiving_method_hint">Select a receiving method</string>
     <string name="wallet_transfer_receiving_method_desc">Select receiving method</string>
+    <string name="wallet_transfer_friend_receiving_method">Xcash</string>
     <string name="wallet_transfer_account_hint">Enter Account No.</string>
     <string name="wallet_transfer_scan_desc">Scan QR code</string>
     <string name="wallet_transfer_amount_hint">Enter Amount</string>

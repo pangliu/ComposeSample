@@ -101,10 +101,11 @@ fun WalletTransferScreen(
     )
 
     if (uiState.showSelectFriendDialog) {
+        val friendReceivingMethod = stringResource(R.string.wallet_transfer_friend_receiving_method)
         SelectFriendDialog(
             friendList = uiState.friendList,
             onDismiss = viewModel::dismissSelectFriendDialog,
-            onSelect = viewModel::selectFriend
+            onSelect = { friend -> viewModel.selectFriend(friend, friendReceivingMethod) }
         )
     }
 

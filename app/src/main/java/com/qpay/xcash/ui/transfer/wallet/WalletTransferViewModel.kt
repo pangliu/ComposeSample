@@ -63,6 +63,8 @@ data class WalletTransferUiState(
     val showSelectFriendDialog: Boolean = false,
     // 收款方式模式：false = Manual Input、true = Friends；取消 / 取得好友失敗時退回 Manual Input
     val isFriendsMode: Boolean = false,
+    // 欄位目前是否由 SelectFriendDialog 選定的好友帶入；切回 Manual Input 時據此清除欄位
+    val isFriendSelected: Boolean = false,
 ) {
     val isLoading: Boolean get() = isSubmittingTransfer || isFetchingFriends
 
@@ -114,8 +116,22 @@ class WalletTransferViewModel @Inject constructor(
         _uiState.update { it.copy(accountName = channelName) }
     }
 
+    // 切回 Manual Input：若欄位是由好友帶入，清空收款方式 / 帳號 / 金額（手續費隨收款方式一併歸零），讓使用者重新輸入
     fun selectManualMode() {
-        _uiState.update { it.copy(isFriendsMode = false) }
+        _uiState.update {
+            if (it.isFriendSelected) {
+                it.copy(
+                    isFriendsMode = false,
+                    isFriendSelected = false,
+                    accountName = "",
+                    accountNumber = "",
+                    amount = "",
+                    fee = 0
+                )
+            } else {
+                it.copy(isFriendsMode = false)
+            }
+        }
     }
 
     // 點選 Friends 模式：呼叫 friend_list API，成功後顯示 SelectFriendDialog；失敗則退回 Manual Input
@@ -148,14 +164,15 @@ class WalletTransferViewModel @Inject constructor(
         _uiState.update { it.copy(showSelectFriendDialog = false, isFriendsMode = false) }
     }
 
-    // SelectFriendDialog 選定好友後回填收款方名稱與帳號（手機號碼）；已選好友即解除掃碼鎖定
-    fun selectFriend(friend: FriendResponse) {
+    // SelectFriendDialog 選定好友後回填收款方式（好友皆為 Xcash 用戶，固定帶 Xcash）與帳號（手機號碼）；已選好友即解除掃碼鎖定
+    fun selectFriend(friend: FriendResponse, receivingMethodName: String) {
         _uiState.update {
             it.copy(
                 showSelectFriendDialog = false,
-                accountName = friend.name,
+                accountName = receivingMethodName,
                 accountNumber = friend.phoneNumber.orEmpty(),
-                isAccountNumberLocked = false
+                isAccountNumberLocked = false,
+                isFriendSelected = true
             )
         }
     }
