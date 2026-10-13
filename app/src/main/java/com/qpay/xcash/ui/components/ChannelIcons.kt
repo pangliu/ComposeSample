@@ -22,7 +22,7 @@ private val channelIconEntries = listOf(
     ChannelIconEntry("qrph", listOf("QRPh"), R.mipmap.ic_ewallet_qr_ph),
     ChannelIconEntry("shopee_pay", listOf("ShopeePay"), R.mipmap.ic_ewallet_shopee_pay),
     // Bank
-    ChannelIconEntry("bdo_business", listOf("BDO Business"), R.mipmap.ic_bank_bdo_business),
+    ChannelIconEntry("bdo_business", listOf("BDO Business", "BDO Unibank"), R.mipmap.ic_bank_bdo_business),
     ChannelIconEntry("uno_digital_bank", listOf("UNO Digital Bank"), R.mipmap.ic_bank_uno_digital_bank),
     ChannelIconEntry("komo", listOf("Komo"), R.mipmap.ic_bank_komo),
     ChannelIconEntry("metrobank", listOf("Metrobank"), R.mipmap.ic_bank_metrobank),

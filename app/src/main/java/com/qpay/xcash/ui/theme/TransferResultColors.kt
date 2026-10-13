@@ -10,12 +10,14 @@ data class TransferResultColors(
     val statusIconBackground: Color,      // 成功 / 失敗圓形圖示內部底色；Black Gold = 透明
     val successIconTint: Color,           // 成功圖示（勾勾）
     val successIconBorder: Color,         // 成功圓形外框
+    val failIconBackground: Color,        // 失敗圓形圖示內部底色
     val failIconTint: Color,              // 失敗圖示（X）
     val failIconBorder: Color,            // 失敗圓形外框
     val titleText: Color,                 // Transfer Successful / Failed 標題
     val successAmountText: Color,         // 成功時的金額文字
     val failAmountText: Color,            // 失敗時的金額文字
     val subtitleText: Color,              // 日期時間文字
+    val failSubtitleText: Color,          // 失敗時的日期時間文字
     val failureReasonText: Color,         // 失敗原因文字
     val payCardBackground: Color,         // 付款方卡片底色
     val payCardBorder: Brush,             // 付款方卡片邊框；Black Gold = 金色橫向漸層
@@ -38,18 +40,26 @@ data class TransferResultColors(
     val shareButtonFill: Brush,           // Share Transfer Details 按鈕填滿；Neon = 透明
     val shareButtonBorder: Color,         // Share Transfer Details 按鈕邊框
     val shareButtonText: Color,           // Share Transfer Details 按鈕文字
+    val tryAgainButtonFill: Brush,        // 失敗時 Try Again 按鈕填滿；Black Gold = 焦糖金橫向漸層
+    val tryAgainButtonBorder: Color,      // 失敗時 Try Again 按鈕邊框
+    val tryAgainButtonText: Color,        // 失敗時 Try Again 按鈕文字
+    val reloadWalletButtonFill: Brush,    // 失敗時 Reload Wallet 按鈕填滿；Black Gold = 金色橫向漸層
+    val reloadWalletButtonBorder: Color,  // 失敗時 Reload Wallet 按鈕邊框
+    val reloadWalletButtonText: Color,    // 失敗時 Reload Wallet 按鈕文字
 )
 
 val NeonTransferResultColors = TransferResultColors(
     statusIconBackground = neonIconDark,
     successIconTint = neonAzure,
     successIconBorder = neonAzure,
+    failIconBackground = neonIconDark,
     failIconTint = neonRed,
     failIconBorder = neonRed,
     titleText = themeWhite,
     successAmountText = neonAzure,
     failAmountText = neonRed,
     subtitleText = neonMistGray,
+    failSubtitleText = neonMistGray,
     failureReasonText = neonRed,
     payCardBackground = neonCardNavy,
     payCardBorder = SolidColor(neonAzure),
@@ -72,19 +82,28 @@ val NeonTransferResultColors = TransferResultColors(
     shareButtonFill = SolidColor(neonShareFill),
     shareButtonBorder = neonLilac,
     shareButtonText = neonLilac,
+    // 設計稿未提供 Neon 失敗畫面，Try Again 沿用 Share、Reload Wallet 沿用 Done 的配色
+    tryAgainButtonFill = SolidColor(neonShareFill),
+    tryAgainButtonBorder = neonLilac,
+    tryAgainButtonText = neonLilac,
+    reloadWalletButtonFill = SolidColor(neonSkyBlue),
+    reloadWalletButtonBorder = neonAzure,
+    reloadWalletButtonText = neonDeepNavyText,
 )
 
 val BlackGoldTransferResultColors = TransferResultColors(
     statusIconBackground = Color.Transparent,
     successIconTint = antiqueGold,
     successIconBorder = antiqueGold,
-    failIconTint = coralRed,
-    failIconBorder = coralRed,
+    failIconBackground = goldCircleBlack,
+    failIconTint = goldFailRed,
+    failIconBorder = goldFailRed,
     titleText = themeWhite,
     successAmountText = amberGold,
-    failAmountText = coralRed,
+    failAmountText = goldFailAmountRed,
     subtitleText = warmSand,
-    failureReasonText = coralRed,
+    failSubtitleText = steelGray,
+    failureReasonText = steelGray,
     payCardBackground = charcoalBlack,
     // 由左至右：oldGold → amberGold → champagneGold → amberGold → oldGold（與 ConfirmTransferScreen 卡片一致）
     payCardBorder = Brush.horizontalGradient(
@@ -117,4 +136,16 @@ val BlackGoldTransferResultColors = TransferResultColors(
     ),
     shareButtonBorder = apricotGold,
     shareButtonText = apricotGold,
+    // 由左至右：caramelGold → apricotGold → caramelGold
+    tryAgainButtonFill = Brush.horizontalGradient(
+        colors = listOf(caramelGold, apricotGold, caramelGold)
+    ),
+    tryAgainButtonBorder = Color.Transparent,
+    tryAgainButtonText = espressoBrown,
+    // 由左至右：bronzeGold → paleChampagne → bronzeGold
+    reloadWalletButtonFill = Brush.horizontalGradient(
+        colors = listOf(bronzeGold, paleChampagne, bronzeGold)
+    ),
+    reloadWalletButtonBorder = Color.Transparent,
+    reloadWalletButtonText = espressoBrown,
 )

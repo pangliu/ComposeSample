@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.aspectRatio
+import com.qpay.xcash.ui.components.channelIconResByName
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -72,6 +75,8 @@ fun TransferResultScreen(
     onDone: () -> Unit = {},
     onTransactionHistoryClick: () -> Unit = {},
     onAddFriendClick: () -> Unit = {},
+    onTryAgainClick: () -> Unit = {},
+    onReloadWalletClick: () -> Unit = {},
     viewModel: WalletTransferViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -85,6 +90,8 @@ fun TransferResultScreen(
         onDone = onDone,
         onTransactionHistoryClick = onTransactionHistoryClick,
         onAddFriendClick = onAddFriendClick,
+        onTryAgainClick = onTryAgainClick,
+        onReloadWalletClick = onReloadWalletClick,
         onShareClick = { result ->
             val shareText = context.getString(
                 R.string.transfer_result_share_text,
@@ -108,6 +115,8 @@ private fun TransferResultContent(
     onDone: () -> Unit = {},
     onTransactionHistoryClick: () -> Unit = {},
     onAddFriendClick: () -> Unit = {},
+    onTryAgainClick: () -> Unit = {},
+    onReloadWalletClick: () -> Unit = {},
     onShareClick: (TransferResultInfo) -> Unit = {}
 ) {
     val colors = LocalAppColors.current
@@ -143,7 +152,10 @@ private fun TransferResultContent(
                 Box(
                     modifier = Modifier
                         .size(56.dp)
-                        .background(resultColors.statusIconBackground, CircleShape)
+                        .background(
+                            if (isSuccess) resultColors.statusIconBackground else resultColors.failIconBackground,
+                            CircleShape
+                        )
                         .border(
                             1.5.dp,
                             if (isSuccess) resultColors.successIconBorder else resultColors.failIconBorder,
@@ -199,7 +211,7 @@ private fun TransferResultContent(
                             if (isSuccess) R.string.transfer_result_success_subtitle else R.string.transfer_result_failed_subtitle,
                             dateText
                         ),
-                        color = resultColors.subtitleText,
+                        color = if (isSuccess) resultColors.subtitleText else resultColors.failSubtitleText,
                         fontSize = 12.sp
                     )
                     val monkeyRes = assets.transferResultMonkeyIcon
@@ -244,8 +256,10 @@ private fun TransferResultContent(
                         .size(24.dp)
                 )
 
+                // 收款方 icon 依名稱對應渠道 logo（與 ConfirmTransferScreen 一致），對應不到時沿用預設 icon
                 AccountCard(
                     iconRes = assets.confirmTransferAccountIcon,
+                    channelIconRes = channelIconResByName(result.recipientName),
                     name = result.recipientName,
                     subText = maskAccountNumber(result.recipientAccountNumber),
                     colors = resultColors,
@@ -364,22 +378,41 @@ private fun TransferResultContent(
                         .padding(bottom = 24.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    ResultActionButton(
-                        text = stringResource(R.string.transfer_result_done_button),
-                        fill = resultColors.doneButtonFill,
-                        border = resultColors.doneButtonBorder,
-                        textColor = resultColors.doneButtonText,
-                        onClick = onDone,
-                        modifier = Modifier.weight(1f)
-                    )
-                    ResultActionButton(
-                        text = stringResource(R.string.transfer_result_share_button),
-                        fill = resultColors.shareButtonFill,
-                        border = resultColors.shareButtonBorder,
-                        textColor = resultColors.shareButtonText,
-                        onClick = { onShareClick(result) },
-                        modifier = Modifier.weight(1f)
-                    )
+                    if (isSuccess) {
+                        ResultActionButton(
+                            text = stringResource(R.string.transfer_result_done_button),
+                            fill = resultColors.doneButtonFill,
+                            border = resultColors.doneButtonBorder,
+                            textColor = resultColors.doneButtonText,
+                            onClick = onDone,
+                            modifier = Modifier.weight(1f)
+                        )
+                        ResultActionButton(
+                            text = stringResource(R.string.transfer_result_share_button),
+                            fill = resultColors.shareButtonFill,
+                            border = resultColors.shareButtonBorder,
+                            textColor = resultColors.shareButtonText,
+                            onClick = { onShareClick(result) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    } else {
+                        ResultActionButton(
+                            text = stringResource(R.string.transfer_result_try_again_button),
+                            fill = resultColors.tryAgainButtonFill,
+                            border = resultColors.tryAgainButtonBorder,
+                            textColor = resultColors.tryAgainButtonText,
+                            onClick = onTryAgainClick,
+                            modifier = Modifier.weight(1f)
+                        )
+                        ResultActionButton(
+                            text = stringResource(R.string.transfer_result_reload_wallet_button),
+                            fill = resultColors.reloadWalletButtonFill,
+                            border = resultColors.reloadWalletButtonBorder,
+                            textColor = resultColors.reloadWalletButtonText,
+                            onClick = onReloadWalletClick,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
         }
@@ -393,7 +426,8 @@ private fun AccountCard(
     subText: String,
     colors: TransferResultColors,
     cardBackground: Color,
-    cardBorder: Brush
+    cardBorder: Brush,
+    @DrawableRes channelIconRes: Int? = null  // 有值時改顯示渠道 logo（橫向長方形，與渠道方塊同比例）
 ) {
     Row(
         modifier = Modifier
@@ -404,19 +438,31 @@ private fun AccountCard(
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(colors.cardIconBackground),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(iconRes),
+        if (channelIconRes != null) {
+            Image(
+                painter = painterResource(channelIconRes),
                 contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier.size(26.dp)
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .height(40.dp)
+                    .aspectRatio(1.9f)
+                    .clip(RoundedCornerShape(8.dp))
             )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(colors.cardIconBackground),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(iconRes),
+                    contentDescription = null,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(26.dp)
+                )
+            }
         }
         Spacer(Modifier.width(12.dp))
         Column {
@@ -470,8 +516,9 @@ private fun ResultActionButton(
 }
 
 // 保留前 3 碼與後 3 碼，中間以 * 遮罩（例：09123456687 → 091*****687）
+// 已遮罩過的帳號（例：GeneralTransfer 選卡帶入的 "**** 1234"）原樣顯示，避免重複遮罩
 private fun maskAccountNumber(value: String): String {
-    if (value.length <= 6) return value
+    if (value.length <= 6 || value.contains('*')) return value
     return value.take(3) + "*".repeat(value.length - 6) + value.takeLast(3)
 }
 
@@ -486,6 +533,8 @@ private val previewSuccessResult = TransferResultInfo(
 
 private val previewFailedResult = previewSuccessResult.copy(
     isSuccess = false,
+    recipientName = "BDO Unibank",
+    recipientAccountNumber = "**** 1234",
     failureReason = "Insufficient available balance."
 )
 

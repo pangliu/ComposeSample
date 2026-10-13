@@ -539,6 +539,9 @@ fun AppNavigation(
                         },
                         onTransactionHistoryClick = { navController.navigate(Routes.TRANSACTION_HISTORY) },
                         onAddFriendClick = { navController.navigate(Routes.ADD_FRIEND) },
+                        // 失敗時：Try Again 回到 ConfirmTransferScreen 重新驗證送出；Reload Wallet 前往儲值
+                        onTryAgainClick = { navController.popBackStack() },
+                        onReloadWalletClick = { navController.navigate(Routes.CASH_IN) },
                         viewModel = viewModel
                     )
                 }

@@ -53,9 +53,10 @@ class FakePaymentApiService : PaymentApiService {
             errorMsg = "success",
             result = ConfirmPaymentResponse(
                 transactionId = "TRF${System.currentTimeMillis()}",
+                // 🎯 目前模擬「業務性失敗」（HTTP 200 但交易被拒）→ TransferResultScreen 顯示失敗畫面
+                // 測試成功流程時改回 status = "SUCCESS"
                 status = "SUCCESS"
-                // 🎯 測試「業務性失敗」（HTTP 200 但交易被拒）時，改用下面這組：
-                // status = "FAILED"
+//                status = "FAILED"
             )
         )
     }

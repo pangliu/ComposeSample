@@ -678,6 +678,8 @@
     <string name="transfer_result_add_friend_button">Add to Friends List</string>
     <string name="transfer_result_done_button">Done</string>
     <string name="transfer_result_share_button">Share Transfer Details</string>
+    <string name="transfer_result_try_again_button">Try Again</string>
+    <string name="transfer_result_reload_wallet_button">Reload Wallet</string>
     <string name="transfer_result_share_text">Transfer of PHP %1$s to %2$s successful.\nRef No. %3$s</string>
     <string name="transfer_result_status_icon_desc">Status</string>
     <string name="transfer_result_transfer_arrow_desc">Transfer To</string>
